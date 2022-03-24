@@ -20,12 +20,12 @@
 
 显示所有配置，包括三层级别的配置
 
-```
+```git
 git config --list 
 ```
 
 可以使用参数 -l
-```
+```git
 git config -l 
 ```
 
@@ -37,7 +37,7 @@ git config -l
 
 ### 参数system:查看系统的所有配置
 
-```
+```git
 git config --system –list
 ```
 ![图片2](../pics/config/图片2.png)
