@@ -28,7 +28,7 @@ https://www.runoob.com/git/git-workspace-index-repo.html
   - 修改：特定key的配置值 section.key value
   - 删除：删除特定键值 unset
   - 编辑器编辑:edit或-e
-- [Git - 工作区操作](../app/git_workspace.md)
+- [Git - 工作区操作](./app/git_workspace.md)
   - 添加/删除/更改:使用IDE
   - 查看:使用命令 ls(powershell)/dir(CMD)
   - 查看历史:工作区指定文件的修改历史git blame
