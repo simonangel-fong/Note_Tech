@@ -83,12 +83,12 @@ A[root]
     - [x] 更新内容
     - [x] 更新link
     - [x] log日志
-  - [ ] 创建git_stage.md:缓存区操作 
+  - [x] 创建git_stage.md:缓存区操作 
     - [x] 创建git_stage.md
-    - [ ] 更新内容
-    - [ ] 更新link
-    - [ ] 更新git_index.md
-    - [ ] log日志
+    - [x] 更新内容
+    - [x] 更新link
+    - [x] 更新git_index.md
+    - [x] log日志
    
 
 [回到目录](#目录)
