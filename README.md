@@ -1,6 +1,6 @@
-# Tech_Notes
+# Tech-Notes
 
-**目录**
+### 目录 
   - [Introduction 简介](#introduction-简介)
   - [Structure 结构](#structure-结构)
   - [Log 日志](#log-日志)
@@ -8,6 +8,7 @@
 ***
 
 ## Introduction 简介
+
 All technological notes.
 
 
@@ -16,6 +17,8 @@ This repository is to store and sort technological notes.
 
 Notes include notes of VBA(excel), C#, Python, CSS, Azure, etc.
 技术笔记包括VBA、C#、Python、CSS、Azure等。
+
+[回到目录](#目录)
 
 ***
 
@@ -45,12 +48,28 @@ A[root]
         E --> I[lab]
 ```
 
+[回到目录](#目录)
+
 ***
 
 ## Log 日志
 
 - 2022/03/23
-  1. 创建远程仓库Tech_Notes;
-  2. 创建README_md;
-  3. 创建文件夹结构；
+  - [x] 创建远程仓库Tech_Notes
+    - [x] 创建Github远程仓库Tech_Notes
+    - [x] 创建README_md
+    - [x] 创建文件夹结构
+  - [x] Log日志  
 
+- 2022/03/24
+  - [ ] 上存push笔记到rep
+    - [x] 在本地整理笔记
+    - [ ] 上存push笔记到rep
+  - [ ] 删除仓库Note_Git
+    - [ ] 迁移仓库Note_Git到仓库Tech_Notes;
+    - [ ] 删除仓库Note_Git;
+  - [ ] Log日志  
+
+[回到目录](#目录)
+
+***
