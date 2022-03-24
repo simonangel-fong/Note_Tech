@@ -78,11 +78,17 @@ A[root]
     - [x] 设置主题theme
     - [x] 更新link
     - [x] Log日志 
-  - [x] 创建git_workspace.md
+  - [x] 创建git_workspace.md:工作区
     - [x] 创建git_workspace.md
     - [x] 更新内容
     - [x] 更新link
     - [x] log日志
+  - [ ] 创建git_stage.md:缓存区操作 
+    - [x] 创建git_stage.md
+    - [ ] 更新内容
+    - [ ] 更新link
+    - [ ] 更新git_index.md
+    - [ ] log日志
    
 
 [回到目录](#目录)

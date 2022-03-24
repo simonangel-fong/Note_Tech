@@ -37,6 +37,16 @@ https://www.runoob.com/git/git-workspace-index-repo.html
   - 恢复:从缓存区复制到工作区 git checkout
     - 参数\<filename>: 恢复指定缓存区指定文件到工作区
     - 参数-f:强制恢复缓存区所有文件
+- [Git - 缓存区操作](./app/git_stage.md)
+  - 查看:缓存区中文件 git ls-files
+  - 添加/更新：从工作区添加 git add
+    - 参数<filename>:添加/更新指定文件到缓存区
+    - 参数[dir]: 添加指定目录到缓存区
+    - 参数.: 添加/更新当前目录下的所有文件到缓存区
+  - 删除：缓存区中的文件 git rm
+    - 参数cached: 只删除缓存区中的文件，保留工作区文件
+    - 参数-f：同时删除缓存区和工作区的文件
+    - 参数-r *：递归当前路径下得所有文件名
 
 ***
 
