@@ -1,6 +1,8 @@
-## 设置配置参数-增删查改
+# 设置配置参数-增删查改
 
-#### 目录
+[返回Git首页](../git_index.md)
+
+## 目录
   - [查询:所有配置的参数list](#查询所有配置的参数list)
     - [system:查看系统的所有配置](#system查看系统的所有配置)
     - [global:查看用户的所有配置](#global查看用户的所有配置)
@@ -10,11 +12,11 @@
   - [修改：特定key的配置值 section.key value](#修改特定key的配置值-sectionkey-value)
   - [删除：删除特定键值 unset](#删除删除特定键值-unset)
   - [编辑器编辑:edit或-e](#编辑器编辑edit或-e)
-  - [回到Git首页](../git_index.md)
+
 
 ***
 
-#### 查询:所有配置的参数list
+## 查询:所有配置的参数list
 
 显示所有配置，包括三层级别的配置
 
@@ -46,7 +48,7 @@ git config --system –list
 
 ***
 
-#### global:查看用户的所有配置
+### global:查看用户的所有配置
 
 ``` 
 git config --global –list 
@@ -68,7 +70,7 @@ git config --local –list
 
 ***
 
-#### 查询:特定key的配置值get section.key或section.key
+## 查询:特定key的配置值get section.key或section.key
 
 ```
 git config --global <section.key> 

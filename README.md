@@ -65,9 +65,13 @@ A[root]
   - [x] 上存push笔记到rep
     - [x] 在本地整理笔记
     - [x] 上存push笔记到rep
-  - [ ] 删除仓库Note_Git
+  - [x] 删除仓库Note_Git
     - [x] 迁移仓库Note_Git到仓库Tech_Notes;
-    - [ ] 删除仓库Note_Git;
+    - [x] 删除仓库Note_Git;
+  - [x] 创建Github Page
+    - [x] 创建Github Page
+    - [x] 设置主题theme
+    - [ ] 更新link
   - [ ] Log日志  
 
 [回到目录](#目录)
