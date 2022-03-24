@@ -71,7 +71,7 @@ A[root]
   - [x] 创建Github Page
     - [x] 创建Github Page
     - [x] 设置主题theme
-    - [ ] 更新link
+    - [x] 更新link
   - [ ] Log日志  
 
 [回到目录](#目录)
