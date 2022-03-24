@@ -54,7 +54,7 @@ A[root]
 
 ## Log 日志
 
-- 2022/03/23
+- 2022/03/23  
   - [x] 创建远程仓库Tech_Notes
     - [x] 创建Github远程仓库Tech_Notes
     - [x] 创建README_md
@@ -66,7 +66,7 @@ A[root]
     - [x] 在本地整理笔记
     - [x] 上存push笔记到rep
   - [ ] 删除仓库Note_Git
-    - [ ] 迁移仓库Note_Git到仓库Tech_Notes;
+    - [x] 迁移仓库Note_Git到仓库Tech_Notes;
     - [ ] 删除仓库Note_Git;
   - [ ] Log日志  
 
