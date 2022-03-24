@@ -4,9 +4,9 @@
 
 ## 目录
   - [查询:所有配置的参数list](#查询所有配置的参数list)
-    - [system:查看系统的所有配置](#system查看系统的所有配置)
-    - [global:查看用户的所有配置](#global查看用户的所有配置)
-    - [local:查看本地的所有配置](#local查看本地的所有配置)
+    - [参数--system:查看系统的所有配置](#参数system查看系统的所有配置)
+    - [参数--global:查看用户的所有配置](#参数global查看用户的所有配置)
+    - [参数--local:查看本地的所有配置](#参数local查看本地的所有配置)
   - [查询:特定key的配置值get section.key或section.key](#查询特定key的配置值get-sectionkey或sectionkey)
   - [添加:特定key的配置值add](#添加特定key的配置值add)
   - [修改：特定key的配置值 section.key value](#修改特定key的配置值-sectionkey-value)
@@ -35,7 +35,7 @@ git config -l
 
 ***
 
-### system:查看系统的所有配置
+### 参数system:查看系统的所有配置
 
 ```
 git config --system –list
@@ -48,9 +48,9 @@ git config --system –list
 
 ***
 
-### global:查看用户的所有配置
-
-``` 
+### 参数global:查看用户的所有配置
+命令
+```git
 git config --global –list 
 ```
 ![图片3](../pics/config/图片3.png)
@@ -59,9 +59,10 @@ git config --global –list
 
 ***  
   
-### local:查看本地的所有配置
+### 参数local:查看本地的所有配置
 
-```
+命令
+```git
 git config --local –list
 ```
 ![图片4](../pics/config/图片4.png)
@@ -72,18 +73,20 @@ git config --local –list
 
 ## 查询:特定key的配置值get section.key或section.key
 
-```
+命令
+```git
 git config --global <section.key> 
 ```
 
 ![图片5](../pics/config/图片5.png)
 
-```
+
+```git
 git config --local --get <section.key>  
 ```
 ![图片6](../pics/config/图片6.png)
 
->当没有找到key时，不会返回值：
+- 当没有找到key时，不会返回值：
 list后只有app.name，没有app.names。所以不会返回值。
 
 ![图片7](../pics/config/图片7.png)
@@ -94,13 +97,14 @@ list后只有app.name，没有app.names。所以不会返回值。
 
 ## 添加:特定key的配置值add
 
-```
+命令
+```git
 git config --global --add <section.key> <value> 
 ```
 
 ![图片8](../pics/config/图片8.png)
 
-```
+```Git
 git config --global <section.key> <value> 
 ```
 
@@ -112,7 +116,8 @@ git config --global <section.key> <value>
 
 ## 修改:特定key的配置值 section.key value
 
-```
+命令
+```git
 git config --local <section.key> <value>
 ```
 
@@ -124,7 +129,8 @@ git config --local <section.key> <value>
 
 ## 删除:删除特定键值 unset 
 
-```
+命令
+```git
 git config --local --unset < section.key >
 ```
 ![图片11](../pics/config/图片11.png)
@@ -138,7 +144,7 @@ git config --local --unset < section.key >
 ## 编辑器编辑:edit或-e
 
 调用编辑软件打开配置文件
-```
+```git
 git config --local --edit
 ```
 ![图片12](../pics/config/图片12.jpg)
