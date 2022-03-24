@@ -18,7 +18,8 @@ This repository is to store and sort technological notes.
 Notes include notes of VBA(excel), C#, Python, CSS, Azure, etc.
 技术笔记包括VBA、C#、Python、CSS、Azure等。
 
-Github Page: https://simonangel-fong.github.io/Tech_Notes/
+Github Page: 
+https://simonangel-fong.github.io/Tech_Notes/
 
 [回到目录](#目录)
 
@@ -77,6 +78,11 @@ A[root]
     - [x] 设置主题theme
     - [x] 更新link
     - [x] Log日志 
+  - [ ] 创建git_workspace.md
+    - [x] 创建git_workspace.md
+    - [x] 更新内容
+    - [ ] 更新link
+    - [ ] log日志
    
 
 [回到目录](#目录)
