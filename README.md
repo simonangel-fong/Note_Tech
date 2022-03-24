@@ -62,9 +62,9 @@ A[root]
   - [x] Log日志  
 
 - 2022/03/24
-  - [ ] 上存push笔记到rep
+  - [x] 上存push笔记到rep
     - [x] 在本地整理笔记
-    - [ ] 上存push笔记到rep
+    - [x] 上存push笔记到rep
   - [ ] 删除仓库Note_Git
     - [ ] 迁移仓库Note_Git到仓库Tech_Notes;
     - [ ] 删除仓库Note_Git;
