@@ -47,6 +47,33 @@ https://www.runoob.com/git/git-workspace-index-repo.html
     - 参数cached: 只删除缓存区中的文件，保留工作区文件
     - 参数-f：同时删除缓存区和工作区的文件
     - 参数-r *：递归当前路径下得所有文件名
+- [Git - 本地仓库操作](./app/git_local_repo.md)
+  - 创建：本地git仓库 git init
+    - 在当前目录创建git仓库
+    - 在子目录中创建git仓库
+    - 通用命令
+  - 克隆：现有的git仓库 git clone
+    - 克隆到当前路径
+    - 克隆到指定路径
+  - 查看变化：上一次提交后的文件变化git status
+    - 无参数：显示所有改动的文件
+    - 参数-s：简短输出结果
+  - 查看历史 git log
+    - 无参数：显示详细历史
+    - 参数oneline：显示简洁历史
+    - 参数graph：以拓扑图显示历史。
+    - 参数author：指定用户的历史
+  - 提交：将缓存区中的文件提交到仓库git commit
+    - 无参数：无参数时，VSC会打开一个文件并在其中编辑
+    - 参数-m <message>：提交并输入message信息
+    - 参数-a：提交缓存区最新修改
+  - 恢复版本：将仓库和缓存区退回到指定HEAD，不保留修心修改git reset
+    - 参数1<head>：退回指定HEAD
+    - 参数1 无参数：不会起作用
+    - 参数2 mixed：保留修改在工作区(默认)
+    - 参数2 soft：保留修改在缓存区
+    - 参数2 hard：不保留修改。工作区与缓存区都被恢复到指定版本
+    - 总结：reset
 
 ***
 
