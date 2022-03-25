@@ -74,6 +74,13 @@ https://www.runoob.com/git/git-workspace-index-repo.html
     - 参数2 soft：保留修改在缓存区
     - 参数2 hard：不保留修改。工作区与缓存区都被恢复到指定版本
     - 总结：reset
+- [Git - 比较差异 git diff](./app/git_diff.md)
+  - 无参数： 比较工作区与缓存区差异
+  - 参数cached: 比较缓存区与HEAD的差异
+  - 参数HEAD: 比较工作区与指定HEAD的差异
+  - 参数HEAD1 HEAD2：比较两个版本
+  - 参数\<filename>: 查看指定文件的差别
+  - 参数stat：以简短的形式返回差异
 
 ***
 

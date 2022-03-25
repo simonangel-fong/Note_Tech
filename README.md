@@ -11,7 +11,6 @@
 
 All technological notes.
 
-
 This repository is to store and sort technological notes.
 该仓库是为储存、整理技术笔记。
 
@@ -95,9 +94,14 @@ A[root]
     - [x] 更新link
     - [x] 更新git_index.md
     - [x] log日志
-  - [ ] Git - 版本操作
+
+- 2022/03/25
   - [ ] Git - 比较
-   
+    - [ ] 创建git_diff.md
+    - [ ] 更新内容
+    - [ ] 更新link
+    - [ ] 更新git_index.md
+    - [ ] log日志
 
 [回到目录](#目录)
 
