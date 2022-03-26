@@ -107,8 +107,14 @@ A[root]
 - 2022/03/26  
   - [ ] 更新git_workspace.md
     - [ ] 创建lab文件，截图
-    - [ ] 添加 `git add -u`
-    - [ ] -
+      - [ ] 创建demo1_md
+      - [ ] `status`
+      - [ ] `git add -u`
+      - [ ] 截图
+    - [ ] 添加git add -u \@ git_workspace_md 
+    - [ ] 添加总结
+    - [ ] log日志
+
 
 ###### 最新log
 
