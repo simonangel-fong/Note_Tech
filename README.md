@@ -56,6 +56,8 @@ A[root]
 
 ## Log 日志
 
+[到最新log](#最新log)
+
 - 2022/03/23  
   - [x] 创建远程仓库Tech_Notes
     - [x] 创建Github远程仓库Tech_Notes
@@ -96,12 +98,19 @@ A[root]
     - [x] log日志
 
 - 2022/03/25
-  - [ ] Git - 比较
-    - [ ] 创建git_diff.md
-    - [ ] 更新内容
-    - [ ] 更新link
-    - [ ] 更新git_index.md
-    - [ ] log日志
+  - [x] Git - 比较
+    - [x] 创建git_diff.md
+    - [x] 更新内容
+    - [x] 更新link
+    - [x] 更新git_index.md
+    - [x] log日志
+- 2022/03/26  
+  - [ ] 更新git_workspace.md
+    - [ ] 创建lab文件，截图
+    - [ ] 添加 `git add -u`
+    - [ ] -
+
+###### 最新log
 
 [回到目录](#目录)
 
