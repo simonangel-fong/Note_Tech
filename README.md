@@ -105,15 +105,15 @@ A[root]
     - [x] 更新git_index.md
     - [x] log日志
 - 2022/03/26  
-  - [ ] 更新git_workspace.md
-    - [ ] 创建lab文件，截图
-      - [ ] 创建demo1_md
-      - [ ] `status`
-      - [ ] `git add -u`
-      - [ ] 截图
-    - [ ] 添加git add -u \@ git_workspace_md 
-    - [ ] 添加总结
-    - [ ] log日志
+  - [x] 创建lab文件，截图
+    - [x] 创建demo1_md
+    - [x] `status`
+    - [x] `git add -u`
+    - [x] 截图
+  - [x] 添加git add -u \@ git_workspace_md 
+  - [x] 添加git add -A \@ git_workspace_md 
+  - [x] 添加cheat sheet \@git_stage.md, git_workspace.md, git_index.md
+  - [x] log日志
 
 
 ###### 最新log
