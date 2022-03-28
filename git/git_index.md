@@ -15,7 +15,7 @@ https://www.runoob.com/git/git-workspace-index-repo.html
 ***
 
 ## 链接
-- [Git - 配置文件及层级](./app/git_config_file.md)
+- [Git - 配置文件及层级](./app/git_config_file.md#用户级别global(优先级次之) )
 - [Git - 设置配置参数](./app/git_config.md)
 - [Git - 工作区操作](./app/git_workspace.md)
 - [Git - 缓存区操作](./app/git_stage.md)
