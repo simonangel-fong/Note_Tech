@@ -115,6 +115,18 @@ A[root]
   - [x] 添加cheat sheet \@git_stage.md, git_workspace.md, git_index.md
   - [x] log日志
 
+- 2022/03/28
+  - [x] 更新git_index.md
+
+- 2022/03/31
+  - [x] Git - 远程仓库操作
+    - [x] 创建git_remote.md
+    - [x] 更新内容
+    - [x] 更新link
+    - [x] 更新git_index.md
+  - [x] log日志
+
+
 
 ###### 最新log
 
