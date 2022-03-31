@@ -56,4 +56,19 @@ https://www.runoob.com/git/git-workspace-index-repo.html
 
 ***
 
+### **远程仓库操作**
+
+|动作|对象|命令|备注|
+|---|---|---|---|
+|**查看**|远程仓库**别名列表**|`git remote`||
+|**查看**|远程仓库**详细列表**|`git remote -v`||
+|**查看**|指定远程仓库**详细参数**|`git remote show <remote_alias>`||
+|**添加**|远程仓库**链接**|`git remote add <alias> <remote_url>`||
+|**查看**|远程仓库**指定链接**|`git remote get-url --push|--all <remote_alias>`||
+|**修改**|远程仓库**别名**|`git remote rename <old_name> <new_name>`||
+|**修改**|远程仓库**链接**|`git config remote.<remote_alias>.url <new_url>`||
+|**删除**|远程仓库|`git remote remove <remote_alias>`||
+
+***
+
 [返回Page首页](../index.md)
