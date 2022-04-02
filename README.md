@@ -126,6 +126,16 @@ A[root]
     - [x] 更新git_index.md
   - [x] log日志
 
+- 2022/04/02
+  - [x] Django - 安装与设置
+    - [x] 创建django结构
+    - [x] 创建django_index.md
+    - [x] 创建django_setup.md
+    - [x] 更新内容
+    - [x] 更新link
+    - [x] 更新django_index.md
+  - [x] log日志
+
 
 
 ###### 最新log
