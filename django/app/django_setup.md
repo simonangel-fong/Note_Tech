@@ -1,5 +1,7 @@
 # Django - 安装设置\@VS Code
 
+[返回Django首页](../django_index.md)
+
 ## 目录
 
 - [Django - 安装设置\@VS Code](#django---安装设置vs-code)
@@ -26,7 +28,7 @@
 1.	创建项目文件夹。
 2.	创建专用虚拟环境： 
     - CMD命令： `python -m venv <environment_name>`
-><environment_name>: 通常是env。由VS Code的设置的`Python: Env File`参数设定：`${workspaceFolder}/env`
+>\<environment_name\>: 通常是env。由VS Code的设置的`Python: Env File`参数设定：`${workspaceFolder}/env`
 3.	选择解析器：
     - VS Code: 
       - 1. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>
@@ -48,7 +50,7 @@
 >- “.”表示在当前路径中创建项目文件夹。
 >- 执行命令后，当前文件夹中会创建Django框架的文件夹和文件：
 >   - manage.py：当前项目的Django命令行管理实用程序。
->   - 一个以<project_directory>命名的文件夹，文件夹包括以下文件：
+>   - 一个以\<project_directory\>命名的文件夹，文件夹包括以下文件：
 >       - **\_\_init\_\_.py**：一个空的文件，用于标识本文件夹是一个Python模块包（module package）。此时可以在代码中引用该包中的py文件（如a.py存在与web_project文件夹中，则可以使用from web_project import a；否则会报错。）
 >       - **asgi.py**：用于处理具有异步功能的标准接口。
 >       - **settings.py**：包含Django项目的设置
