@@ -136,6 +136,12 @@ A[root]
     - [x] 更新django_index.md
   - [x] log日志
 
+- 2022/04/03
+  - [x] Django - 安装与设置
+    - [x] 更新内容
+    - [x] 更新link
+    - [x] log日志
+
 
 
 ###### 最新log
