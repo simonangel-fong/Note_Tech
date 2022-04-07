@@ -21,3 +21,4 @@ https://docs.djangoproject.com/en/4.0/
 ## 链接
 - [Django - 安装设置\@VS Code](./app/django_setup.md)
 - [Django - 部署到IIS](./app/django_iis.md)
+- [Django - 静态文件](./app/django_static.md)

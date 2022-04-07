@@ -143,10 +143,16 @@ A[root]
     - [x] log日志
 
 - 2022/04/04
-  - [ ] Django - 部署到iis
-    - [ ] 更新内容
-    - [ ] 更新link
-    - [ ] log日志
+  - [x] Django - 部署到iis
+    - [x] 更新内容
+    - [x] 更新link
+    - [x] log日志
+
+- 2022/04/07
+  - [x] Django - 静态文件
+    - [x] 更新内容
+    - [x] 更新link
+    - [x] log日志
 
 ###### 最新log
 
