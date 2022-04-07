@@ -90,7 +90,7 @@ STATIC_ROOT = BASE_DIR / 'static_collected'
 ```
 
 >代码说明:
->1. `{% load static %}`:说明以下代码使用`static`标记符,相当于告诉django引用`static_root`参数
+>1. \{\% load static \%\}`:说明以下代码使用`static`标记符,相当于告诉django引用`static_root`参数
 >2. `href="{% static 'argusapp/site.css' %}"`: 指明href路径是指向`static_root`参数路径下`argusapp/site.css`文件。
 
 [回到目录](#目录)
