@@ -84,7 +84,7 @@ STATIC_ROOT = BASE_DIR / 'static_collected'
 ## 3. 页面引用静态文件
 
 
-```html
+```django
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'argusapp/site.css' %}"/>
 ```
