@@ -3,6 +3,7 @@
 ## 目录
 - [Git](./git/git_index.md)
 - [Django](./django/django_index.md)
+- [MySQL](./mysql/mysql_index.md)
 
 ***
 

@@ -154,6 +154,15 @@ A[root]
     - [x] 更新link
     - [x] log日志
 
+- 2022/04/20
+  - [ ] MySQL - 安装
+    - [ ] mysql文件夹
+    - [ ] mysql/index.md
+    - [ ] mysql/app
+    - [ ] mysql/pics
+    - [ ] 下载
+    - [ ] 安装
+
 ###### 最新log
 
 [回到目录](#目录)
