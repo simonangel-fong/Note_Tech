@@ -39,6 +39,11 @@ class object_model(models.Model):
 
 ## 方法：save()
 
+- 效果：
+  - 当实例是新的对象时，相当于一条`INSERT`的SQL语句。
+  - 当实例是数据表内的对象时，相当于一条`update`的SQL语句。
+
+
 ### 无参数
 
 - 思路：
