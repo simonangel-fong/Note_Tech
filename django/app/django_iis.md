@@ -160,14 +160,19 @@
 ```
 
 >代码说明：
->- 1. **scriptProcessor的值**：\<wfastcgi_arg\>wfastcgi参数；
+>- 1. 添加handlers：
+>   - 先移除原有的MyFastCGI,在添加Python的FastCGI
+>   - 设置**scriptProcessor的值**：该值设置Python的wfastcgi库，所以其值是 `python地址|wfastcgi库地址`。如`C:\Python310\python.exe|C:\Python310\lib\site-packages\wfastcgi.py`。
 >   - 否则在IIS中的站点会显示错误500
->- 2. **WSGI_HANDLER的值**：要与Django文档中settings.py文件的WSGI_APPLICATION的值一致。
+>- 2. 设置appSettings:
+>   - 1. **WSGI_HANDLER的值**：要与Django文档中settings.py文件的WSGI_APPLICATION的值一致。
 >   - 否则无法正常运行站点。
->- 3. **PYTHONPATH的值**：设定Django文档所在文件夹路径。此处将设置为IIS站点所在的文件夹路径\<directory\>。
+>   - 2. **PYTHONPATH的值**：设定Django文档所在文件夹路径。此处将设置为IIS站点所在的文件夹路径\<directory\>。
 >   - 否则无法正常运行站点。
->- 4. **DJANGO_SETTINGS_MODULE的值**：指向Django的settings。
+>   - 3. **DJANGO_SETTINGS_MODULE的值**：指向Django的settings。
 >   - 此处设置为\<app\>.settings。否则无法正常运行站点。
+>   - 当设置好appSettings后，IIS会通过web.config文件的参数。在IIS中可以看到这些参数的键值。
+> ![图片11](../pics/iis/图片11.png)
 
 - 使用浏览器测试。
 
