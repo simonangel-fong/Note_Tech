@@ -115,13 +115,14 @@ STATICFILES_DIRS = [
 - 在html页面中使用load static标签
 
 ```html
+  <!-- 由于markdown的影响，static标签无法使用{%%}标记 -->
   load static
-  <link rel="stylesheet" type="text/css" href="{% static "/Workout/carousel.css" %}">
+  <link rel="stylesheet" type="text/css" href="static '/Workout/carousel.css' ">
 
 ```
 >代码说明:
->1. {% load static %}:说明以下代码使用`static`标记符,相当于告诉django引用`STATIC_URL`或`STATICFILES_DIRS`参数
->2. `href="{% static 'argusapp/site.css' %}"`: 指明href路径是指向`STATIC_URL`或`STATICFILES_DIRS`参数路径下静态文件。
+>1. load static:说明以下代码使用`static`标记符,相当于告诉django引用`STATIC_URL`或`STATICFILES_DIRS`参数
+>2. `href="static 'argusapp/site.css'" `: 指明href路径是指向`STATIC_URL`或`STATICFILES_DIRS`参数路径下静态文件。
 
 ***
 
