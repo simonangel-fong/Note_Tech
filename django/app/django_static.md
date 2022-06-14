@@ -112,7 +112,7 @@ STATICFILES_DIRS = [
 
 ### 页面引用: static标签
 
-- 在html页面中使用{% load static %}标签
+- 在html页面中使用{% l static %}标签
 
 ```html
   {% l static %}
