@@ -112,10 +112,10 @@ STATICFILES_DIRS = [
 
 ### 页面引用: static标签
 
-- 在html页面中使用`{% load static %}`标签
+- 在html页面中使用{% load static %}标签
 
 ```html
-  {% load static %}
+  {% l static %}
   <link rel="stylesheet" type="text/css" href="{% static "/Workout/carousel.css" %}">
 
 ```
