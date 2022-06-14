@@ -115,7 +115,7 @@ STATICFILES_DIRS = [
 - 在html页面中使用load static标签
 
 ```html
-  <!-- 由于markdown的影响，static标签无法使用{%%}标记 -->
+  <!-- 由于markdown的影响，static标签无法使用正常标记 -->
   load static
   <link rel="stylesheet" type="text/css" href="static '/Workout/carousel.css' ">
 
