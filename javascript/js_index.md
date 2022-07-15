@@ -18,3 +18,4 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Grammar_and_Types
 
 ## 链接
 - [Javascript - 安装](./app/django_setup.md)
+- [Javascript类:FileReader](./app/js_filereader.md)

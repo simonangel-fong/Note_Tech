@@ -11,12 +11,8 @@
 
 ## Waiting for sorting 未整理
 
-- Django
-  - 
 - Python
 - C#
-- JavaScript
 - CSS
-  - CSS-Bootstrap
 - SQL
 - Azure
