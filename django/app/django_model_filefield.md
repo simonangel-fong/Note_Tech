@@ -19,7 +19,7 @@
 
 ```Html
     <form id="form" action="'music_test_upload'" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+        csrf_token 
 
         <input id="music_name" name="music_name" class="form-control col-md-6 my-2" />
 
