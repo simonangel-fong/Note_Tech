@@ -58,7 +58,12 @@ A[root]
   - Git
   - Django
   - MySQL
+  - Boostrap
 
 [回到目录](#目录)
 
 ***
+
+Practice coding and sorting tech notes during the project [ArgusHome](https://github.com/simonangel-fong/ArgusHome)
+
+![ArgusHome图片](./pics/ArgusHome.png)

@@ -5,6 +5,7 @@
 - [Django](./django/django_index.md)
 - [MySQL](./mysql/mysql_index.md)
 - [Javascript](./javascript/js_index.md)
+- [Bootstrap](./bootstrap/bootstrap_index.md)
 
 ***
 
