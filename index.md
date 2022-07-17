@@ -6,6 +6,7 @@
 - [MySQL](./mysql/mysql_index.md)
 - [Javascript](./javascript/js_index.md)
 - [Bootstrap](./bootstrap/bootstrap_index.md)
+- [Bootstrap Table](./bootstrap_table/bootstrap_table_index.md)
 
 ***
 
