@@ -3,6 +3,8 @@
 
 ## Bootstrap Table 简介
 
+![pic-bootstrap table](./pics/bootstrap%20table.png)
+
 An extended table to the integration with some of the most widely used CSS frameworks.
 
 官方文档：

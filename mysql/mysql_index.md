@@ -2,8 +2,9 @@
 
 [返回Page首页](../index.md)
 
-MySQL 开源数据库。
+![pic-mysql](./pics/mysql.jpg)
 
+MySQL 开源数据库。
 
 官网地址：
 https://www.mysql.com/

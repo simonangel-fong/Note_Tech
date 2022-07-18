@@ -14,8 +14,21 @@ https://www.runoob.com/js/js-tutorial.html
 官方文档：
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Grammar_and_Types
 
-***
-
-## 链接
+### 链接
 - [Javascript - 安装](./app/django_setup.md)
 - [Javascript类:FileReader](./app/js_filereader.md)
+
+***
+
+## jQuery
+
+jQuery is a fast, small, and feature-rich JavaScript library. 
+
+教程地址：
+https://www.runoob.com/jquery/jquery-tutorial.html
+
+官方文档：
+https://api.jquery.com/
+
+### 链接
+- [jQuery类:Ajax](./app/jq_ajax.md)
