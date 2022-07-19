@@ -14,6 +14,7 @@ https://getbootstrap.com/docs/5.1/getting-started/introduction/
 ***
 
 ## 链接
-- [modal组件](./app/boostrap_modal.md)
+- [modal组件](./app/bootstrap_modal.md)
+- [表单验证](./app/bootstrap_validation.md)
 
 
