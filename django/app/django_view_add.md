@@ -11,6 +11,7 @@
   - [方法：save()](#方法save)
     - [无参数](#无参数)
     - [参数 force_insert](#参数-force_insert)
+      - [实例:添加新数据: save](#实例添加新数据-save)
   - [方法：create()](#方法create)
     - [参数**kwarg](#参数kwarg)
 
@@ -99,6 +100,40 @@ def <function>(request):
 
 ***
 
+#### 实例:添加新数据: save
+
+```python
+def workout_ajax_add(request):
+    data = {}
+
+    if request.method == "POST":
+        post_data = json.loads(request.POST["data"])
+
+        submit_dict = submitDict_to_modelDict(post_data, Workout)   #自定义函数, 根据模型字段提取数据
+        submit_data = submitDict_tran_fieldType(submit_dict, Workout)   #自定义函数, 根据模型的定义转换字段值的类型
+
+        if Workout.objects.filter(wk_date=submit_data["wk_date"]).exists():           #检查是否有相同date的数据
+            data["info"] = "error"
+            data["data"] = "Database has contain the workout record with the same date!"
+        else:
+            try:
+                wk = Workout(**submit_data)     #根据dict生成model
+                wk.save()     #保存对象
+                data["info"] = "data"
+                data['data']  =  list(Workout.objects.values().all().order_by("wk_date"))               #生成返回数据
+            except Exception as error:                      #异常时
+                data["info"] = "error"
+                data["data"] = str(error)                  #返回异常信息
+    
+    print(data)
+    return JsonResponse(data, safe=False)
+
+```
+
+[回到目录](#目录)
+
+***
+
 ## 方法：create()
 
 ### 参数**kwarg
@@ -137,4 +172,8 @@ def <function>(request):
 [回到目录](#目录)
 
 ***
+
+
+
+
 
