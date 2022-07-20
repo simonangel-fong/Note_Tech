@@ -13,6 +13,7 @@
     - [常用代码](#常用代码)
   - [方法all()：获取所有对象](#方法all获取所有对象)
   - [方法value()：获取多个对象](#方法value获取多个对象)
+      - [实例:获取查询结果:list](#实例获取查询结果list)
 
 ***
 
@@ -94,4 +95,15 @@ oms = <object_model>.objects.all()
 
 ## 方法value()：获取多个对象
 
+#### 实例:获取查询结果:list
 
+```python
+def workout_ajax_list(request):
+    if request.method == "GET":
+        query_data  =  Workout.objects.values().all().order_by("-wk_date")    #.values()将QS类型转为字典dict的集合;.all()返回所有数据; .order_by()排序
+        data_list = list(query_data)    #将字典的集合转换为字典的list
+
+    return JsonResponse(data_list,safe=False)
+```
+
+***
