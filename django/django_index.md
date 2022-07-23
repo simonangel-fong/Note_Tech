@@ -24,4 +24,5 @@ https://docs.djangoproject.com/en/4.0/
 - [Django - 静态文件](./app/django_static.md)
 - [Django - 视图：增加数据](./app/django_view_add.md)
 - [Django - model:FileField](./app/django_model_filefield.md)
+- [Django - model:_meta API](./app/django_model_meta.md)
 - [Django - View: StreamingHttpResponse](./app/django_view_streaminghttpresponse.md)
