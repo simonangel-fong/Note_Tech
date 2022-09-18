@@ -18,6 +18,7 @@
 
 
 - Database数据库
+  - [SQL](https://simonangel-fong.github.io/SQL-Tutorial/)
   - [MySQL](./mysql/mysql_index.md)
 ***
 
@@ -26,5 +27,5 @@
 - Python
 - C#
 - CSS
-- SQL
+
 - Azure
