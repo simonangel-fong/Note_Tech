@@ -1,6 +1,6 @@
 # 技术笔记: Bootstrap Table
 
-[返回 Page 首页](/index.md)
+[返回 Page 首页](../../index.md)
 
 ## Bootstrap Table 简介
 

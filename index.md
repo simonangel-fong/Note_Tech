@@ -4,7 +4,7 @@
 
 - SQL
 
-- [Python](./Programming%20Language/python/index.md)
+- [Python](./Programming_Language/python/index.md)
 
 - CCNA
 
@@ -12,7 +12,7 @@
 
 - Version control 版本控制
 
-  - [Git](./git/git_index.md)
+  - [Git](./Supportive_Tech/git/git_index.md)
 
 - Web 开发
 
@@ -23,7 +23,7 @@
 
 - Programming Language 编程语言
 
-  - [Javascript](./Programming%20Language/javascript/js_index.md)
+  - [Javascript](./Programming_Language/javascript/js_index.md)
 
 - Database 数据库
   - [SQL](https://simonangel-fong.github.io/SQL-Tutorial/)

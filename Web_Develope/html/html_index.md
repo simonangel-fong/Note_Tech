@@ -1,6 +1,6 @@
 # 技术笔记: HTML
 
-[返回Page首页](/index.md)
+[返回Page首页](../../index.md)
 
 ## HTML 简介
 

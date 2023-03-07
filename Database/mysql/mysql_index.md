@@ -1,6 +1,6 @@
 # 技术笔记: MySQL
 
-[返回 Page 首页](/index.md)
+[返回Page首页](../../index.md)
 
 ![pic-mysql](./pics/mysql.jpg)
 

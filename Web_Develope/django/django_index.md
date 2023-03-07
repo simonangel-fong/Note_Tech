@@ -1,6 +1,6 @@
 # 技术笔记: Django
 
-[返回Page首页](/index.md)
+[返回Page首页](../../index.md)
 
 ## Django 简介
 

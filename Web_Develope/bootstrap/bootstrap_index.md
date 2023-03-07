@@ -1,6 +1,6 @@
 # 技术笔记: Bootstrap
 
-[返回Page首页](/index.md)
+[返回Page首页](../../index.md)
 
 ## Bootstrap 简介
 
