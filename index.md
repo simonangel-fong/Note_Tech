@@ -24,6 +24,7 @@
 - Programming Language 编程语言
 
   - [Javascript](./Programming_Language/javascript/js_index.md)
+  - [Python](./Programming_Language/python/index.md)
 
 - Database 数据库
   - [SQL](https://simonangel-fong.github.io/SQL-Tutorial/)
