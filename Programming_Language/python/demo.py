@@ -1,11 +1,5 @@
-import random
+# Escape Character
 
-for i in range(3):
-    x= random.randrange(1, 10)
-    print("x:",x)
-'''
-x: 6
-x: 1
-x: 3
-'''
+txt = "We are the so-called \"Vikings\" from the north."
+print(txt)  # We are the so-called "Vikings" from the north.
 

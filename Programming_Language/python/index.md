@@ -36,7 +36,10 @@
   - [Comment](./comment.md)
   - [Variable](./variable.md)
   - [Data Type](./data_type.md)
+
     - [Number](./number.md)
+
+  - [String](./string.md)
 
 ---
 
