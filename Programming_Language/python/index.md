@@ -39,9 +39,12 @@
 
 - [Data Type](./datatype/data_type.md)
 
+  - [Boolean](./datatype/boolean.md)
   - [Number](./datatype/number.md)
   - [String](./datatype/string.md)
-  - [Boolean](./datatype/boolean.md)
+
+- Collection
+  - [List](./datatype/list.md)
 
 ---
 
