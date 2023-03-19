@@ -58,9 +58,9 @@ print(z)
 ```py
 fruits = ["apple", "banana", "cherry"]
 x, y, z = fruits
-print(x)
-print(y)
-print(z)
+print(x)    # apple
+print(y)    # banana
+print(z)    # cherry
 
 ```
 

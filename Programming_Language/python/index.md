@@ -32,14 +32,16 @@
 
 - Fundamental
 
-  - [Syntax](./syntax.md)
-  - [Comment](./comment.md)
-  - [Variable](./variable.md)
-  - [Data Type](./data_type.md)
+  - [Syntax](./fundamental/syntax.md)
+  - [Comment](./fundamental/comment.md)
+  - [Variable](./fundamental/variable.md)
+  - [Operator](./fundamental/operator.md)
 
-    - [Number](./number.md)
+- [Data Type](./datatype/data_type.md)
 
-  - [String](./string.md)
+  - [Number](./datatype/number.md)
+  - [String](./datatype/string.md)
+  - [Boolean](./datatype/boolean.md)
 
 ---
 

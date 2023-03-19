@@ -15,16 +15,22 @@
 
 - Python has the following data types built-in by default, in these categories:
 
+- 4 built-in data types in Python used to store collections of data:
+  - `List` is a collection which is **ordered** and **changeable**. Allows **duplicate** members.
+  - `Tuple` is a collection which is **ordered** and **unchangeable**. Allows **duplicate** members.
+  - `Set` is a collection which is **unordered**, **unchangeable**, and **unindexed**. **No duplicate** members.(but can remove and/or add items)
+  - `Dictionary` is a collection which is **ordered** and **changeable**. **No duplicate** members.
+
 | Categories     | Built-in Data Type                 |
 | -------------- | ---------------------------------- |
 | Text Type      | `str`                              |
 | Numeric Types  | `int`, `float`, `complex`          |
-| Sequence Types | `list`, `tuple`, `range`           |
-| Mapping Type   | `dict`                             |
-| Set Types      | `set`, `frozenset`                 |
 | Boolean Type   | `bool`                             |
 | Binary Types   | `bytes`, `bytearray`, `memoryview` |
 | None Type      | `NoneType`                         |
+| Sequence Types | `list`, `tuple`, `range`           |
+| Mapping Type   | `dict`                             |
+| Set Types      | `set`, `frozenset`                 |
 
 ---
 

@@ -115,7 +115,7 @@ if "expensive" not in txt:
 b = "Hello, World!"
 
 print(b[0]) # H
-print(b[0:1]) # H
+print(b[0:1]) # H not inclusive
 print(b[2:5]) # llo
 print(b[:5]) # Hello
 print(b[2:]) # llo, World!
@@ -234,14 +234,7 @@ print(txt)  # We are the so-called "Vikings" from the north.
 
 | Method           | Description                                                                                   |
 | ---------------- | --------------------------------------------------------------------------------------------- |
-| `capitalize()`   | Converts the first character to upper case                                                    |
-| `casefold()`     | Converts string into lower case                                                               |
-| `center()`       | Returns a centered string                                                                     |
-| `count()`        | Returns the number of times a specified value occurs in a string                              |
 | `encode()`       | Returns an encoded version of the string                                                      |
-| `endswith()`     | Returns true if the string ends with the specified value                                      |
-| `expandtabs()`   | Sets the tab size of the string                                                               |
-| `find()`         | Searches the string for a specified value and returns the position of where it was found      |
 | `format()`       | Formats specified values in a string                                                          |
 | `format_map()`   | Formats specified values in a string                                                          |
 | `index()`        | Searches the string for a specified value and returns the position of where it was found      |
