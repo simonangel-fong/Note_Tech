@@ -25,6 +25,7 @@
 
   - [Javascript](./Programming_Language/javascript/js_index.md)
   - [Python](./Programming_Language/python/index.md)
+  - [LeetCode](./Leetcode/724.ipynb)
 
 - Database 数据库
   - [SQL](https://simonangel-fong.github.io/SQL-Tutorial/)

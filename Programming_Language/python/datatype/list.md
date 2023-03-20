@@ -316,7 +316,6 @@ if "apple" in xlist:
 print("\n--------for in loop--------\n")
 # for in loop
 xlist = ["apple", "banana", "cherry"]
-xlist = []
 for x in xlist:
     print(x)
 
