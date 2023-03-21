@@ -46,6 +46,7 @@
 - Collection
   - [List](./datatype/list.md)
   - [Tuple](./datatype/tuple.md)
+  - [Set](./datatype/set.md)
 
 ---
 

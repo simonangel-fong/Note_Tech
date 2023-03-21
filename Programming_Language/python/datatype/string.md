@@ -235,9 +235,7 @@ print(txt)  # We are the so-called "Vikings" from the north.
 | Method           | Description                                                                                   |
 | ---------------- | --------------------------------------------------------------------------------------------- |
 | `encode()`       | Returns an encoded version of the string                                                      |
-| `format()`       | Formats specified values in a string                                                          |
 | `format_map()`   | Formats specified values in a string                                                          |
-| `index()`        | Searches the string for a specified value and returns the position of where it was found      |
 | `isalnum()`      | Returns True if all characters in the string are alphanumeric                                 |
 | `isalpha()`      | Returns True if all characters in the string are in the alphabet                              |
 | `isdecimal()`    | Returns True if all characters in the string are decimals                                     |

@@ -241,4 +241,36 @@ print("Hello World",  "Hello World".index("o", 5, 8))   # 7
 
 txt = "Hello, welcome to my world."
 print(txt.find("q"))        # -1
-print(txt.index("q"))       # ValueError: substring not found
+# print(txt.index("q"))       # ValueError: substring not found
+
+
+print("\n--------isalnum()--------\n")
+# True if all the characters are alphanumeric, meaning alphabet letter (a-z) and numbers (0-9).
+print("Company 12".isalnum())   # false
+print("Company12%".isalnum())   # false
+print("Company12".isalnum())    # true
+print("Company".isalnum())      # true
+print("1233".isalnum())         # true
+print("!$@##%^&".isalnum())     # false
+
+
+print("\n--------isalpha()--------\n")
+# True if all the characters are alphabet letters (a-z).
+print("Company 12".isalpha())   # false
+print("Company12%".isalpha())   # false
+print("1233".isalpha())         # false
+print("Company".isalpha())      # true
+
+
+print("\n--------isdecimal()--------\n")
+#  returns True if all the characters are decimals (0-9).
+a = "\u0030"  # unicode for 0
+b = "\u0047"  # unicode for G
+
+print(a.isdecimal())        # True
+print(b.isdecimal())        # False
+
+print("Company".isdecimal())      # False
+print("Company 12".isdecimal())   # false
+print("Company12%".isdecimal())   # false
+print("1233".isdecimal())         # True
