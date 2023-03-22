@@ -53,19 +53,48 @@
 
 ### List Methods
 
-| Method      | Description                                                                  |
-| ----------- | ---------------------------------------------------------------------------- |
-| `append()`  | Adds an element at the end of the list                                       |
-| `clear()`   | Removes all the elements from the list                                       |
-| `copy()`    | Returns a copy of the list                                                   |
-| `count()`   | Returns the number of elements with the specified value                      |
-| `extend()`  | Add the elements of a list (or any iterable), to the end of the current list |
-| `index()`   | Returns the index of the first element with the specified value              |
-| `insert()`  | Adds an element at the specified position                                    |
-| `pop()`     | Removes the element at the specified position                                |
-| `remove()`  | Removes the item with the specified value                                    |
-| `reverse()` | Reverses the order of the list                                               |
-| `sort()`    | Sorts the list                                                               |
+- Create List
+
+  | Method   | Description   |
+  | -------- | ------------- |
+  | `list()` | Return a list |
+
+- Add items
+
+  | Method     | Description                               |
+  | ---------- | ----------------------------------------- |
+  | `append()` | Adds an element at the end of the list    |
+  | `insert()` | Adds an element at the specified position |
+
+- Remove items
+
+  | Method     | Description                                   |
+  | ---------- | --------------------------------------------- |
+  | `pop()`    | Removes the element at the specified position |
+  | `remove()` | Removes the item with the specified value     |
+  | `clear()`  | Removes all the elements from the list        |
+
+- Copy items
+
+  | Method   | Description                |
+  | -------- | -------------------------- |
+  | `copy()` | Returns a copy of the list |
+  | `list()` | Return a list              |
+
+- Join List
+
+  | Method     | Description                                                                  |
+  | ---------- | ---------------------------------------------------------------------------- |
+  | `extend()` | Add the elements of a list (or any iterable), to the end of the current list |
+
+- Others
+
+  | Method      | Description                                                     |
+  | ----------- | --------------------------------------------------------------- |
+  | `count()`   | Returns the number of elements with the specified value         |
+  | `index()`   | Returns the index of the first element with the specified value |
+  | `reverse()` | Reverses the order of the list                                  |
+  | `sort()`    | Sorts the list                                                  |
 
 ---
 
@@ -206,7 +235,6 @@ xlist = ["apple", "banana", "cherry"]
 ydict = {"fruit1":"kiwi", "fruit2":"orange"}
 xlist.extend(ydict)    # extend a dict
 print(xlist)    # [['apple', 'banana', 'cherry', 'fruit1', 'fruit2']
-
 
 ```
 

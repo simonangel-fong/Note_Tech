@@ -236,9 +236,6 @@ print(txt)  # We are the so-called "Vikings" from the north.
 | ---------------- | --------------------------------------------------------------------------------------------- |
 | `encode()`       | Returns an encoded version of the string                                                      |
 | `format_map()`   | Formats specified values in a string                                                          |
-| `isalnum()`      | Returns True if all characters in the string are alphanumeric                                 |
-| `isalpha()`      | Returns True if all characters in the string are in the alphabet                              |
-| `isdecimal()`    | Returns True if all characters in the string are decimals                                     |
 | `isdigit()`      | Returns True if all characters in the string are digits                                       |
 | `isidentifier()` | Returns True if the string is an identifier                                                   |
 | `islower()`      | Returns True if all characters in the string are lower case                                   |

@@ -274,3 +274,40 @@ print("Company".isdecimal())      # False
 print("Company 12".isdecimal())   # false
 print("Company12%".isdecimal())   # false
 print("1233".isdecimal())         # True
+
+
+print("\n--------isdigit()--------\n")
+# Returns True if all the characters are digits, otherwise False.
+# Exponents, like ², are also considered to be a digit.
+
+
+print("\u0030".isdigit())  # true, unicode for 0
+print("\u00B2".isdigit())  # True, unicode for ²
+
+print("Company 12".isdigit())   # False
+print("Company".isdigit())      # False
+print("1233".isdigit())         # True
+print("12.33".isdigit())        # False
+
+
+print("\n--------isidentifier()--------\n")
+# Returns True if the string is a valid identifier, otherwise False.
+# A string is considered a valid identifier if it only contains alphanumeric letters (a-z) and (0-9), or underscores (_). 
+# A valid identifier cannot start with a number, or contain any spaces.
+# 字符串能否符合命名规范
+
+print("MyFolder".isidentifier())        # True
+print("Demo002".isidentifier())         # True
+print("2bring".isidentifier())          # False
+print("my demo".isidentifier())         # False
+
+
+print("\n--------islower()--------\n")
+# returns True if all the characters are in lower case, otherwise False.
+# Numbers, symbols and spaces are not checked, only alphabet characters.
+print("Hello world!".islower())     # False
+print("hello 123".islower())        # True
+print("mynameisPeter".islower())    # False
+
+
+
