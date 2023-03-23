@@ -9,6 +9,11 @@
   - [Variance 方差](#variance-方差)
   - [Standard Deviation 标准差](#standard-deviation-标准差)
   - [Percentile 百分位](#percentile-百分位)
+  - [Uniform Distribution](#uniform-distribution)
+  - [Normal Data Distribution 正太分布](#normal-data-distribution-正太分布)
+  - [Random Data Distributions](#random-data-distributions)
+  - [Visulization](#visulization)
+    - [Example](#example)
 
 ---
 
@@ -158,6 +163,169 @@ print("90% of data are lower than {}".format(percentile_90_ages))
 # 75% of data are lower than 43.0
 # 90% of data are lower than 61.0
 ```
+
+---
+
+## Uniform Distribution
+
+- 均匀分布: 只在限定范围内，范围小，均匀分布
+
+  1. Create an array of random number in uniform distribution
+  2. Create a histogram
+
+```py
+import numpy
+import matplotlib.pyplot as plt
+# 1. Create an array containing 2500 random floats between 0 and 5:
+random_list = numpy.random.uniform(0.0, 5.0, 2500)
+print(random_list)
+
+# 2. display data using a histogram with 100 bars
+plt.hist(random_list, 100)
+plt.show()
+```
+
+![histogram](./pic/histogram_uniform_distribution.png)
+
+---
+
+## Normal Data Distribution 正太分布
+
+- `random.normal(loc=0.0, scale=1.0, size=None)`
+  - Draw random samples from a normal (Gaussian) distribution.
+  - `loc`: float, Mean (“centre”) of the distribution.均值
+  - `scale`: float, Standard deviation (spread or “width”) of the distribution. Must be non-negative. 标准差
+  - `size`: int, optional, Output shape
+
+```py
+
+# Normal Data Distribution
+
+import numpy
+import matplotlib.pyplot as plt
+# 1.create an array of random float in normal distribution
+# mean: 5
+# std: 1.0
+# size: 100000
+x = numpy.random.normal(5.0, 1.0, 100000)
+
+# create a histogram with 100 bars
+plt.hist(x, 100)
+plt.show()
+
+```
+
+![histogram](./pic/histogram_normal_distribution.png)
+
+---
+
+## Random Data Distributions
+
+1. create two arrays that are both filled with 1000 random numbers from a normal data distribution.
+2. create a scatter plot
+
+```py
+import numpy as np
+import matplotlib.pyplot as plt
+
+x_list = np.random.normal(5.0, 1.0, 1000)
+y_list = np.random.normal(10.0, 2.0, 1000)
+
+plt.scatter(x_list, y_list)
+plt.show()
+```
+
+![histogram](./pic/scatter_plot_normal.png)
+
+- the dots are concentrated around the value 5 on the x-axis, and 10 on the y-axis.
+
+- the spread is wider on the y-axis than on the x-axis.
+
+---
+
+## Visulization
+
+- `histogram`
+
+  - A histogram is a graph showing frequency distributions.
+  - `matplotlib.pyplot.hist()`: Compute and plot a histogram.
+
+- `scatter plot`
+  - a diagram where each value in the data set is represented by a **dot**.
+  - `matplotlib.pyplot.scatter()`: method to draw a scatter plot diagram
+
+```py
+# scatter plot
+import matplotlib.pyplot as plt
+
+x = [5, 7, 8, 7, 2, 17, 2, 9, 4, 11, 12, 9, 6]
+y = [99, 86, 87, 88, 111, 86, 103, 87, 94, 78, 77, 85, 86]
+
+plt.scatter(x, y)
+plt.show()
+
+```
+
+![histogram](./pic/scatter_plot.png)
+
+```py
+# Draw two plots on the same figure
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# day one, the age and speed of 13 cars:
+x = np.array([5, 7, 8, 7, 2, 17, 2, 9, 4, 11, 12, 9, 6])
+y = np.array([99, 86, 87, 88, 111, 86, 103, 87, 94, 78, 77, 85, 86])
+plt.scatter(x, y)
+
+# day two, the age and speed of 15 cars:
+x = np.array([2, 2, 8, 1, 15, 8, 12, 9, 7, 3, 11, 4, 7, 14, 12])
+y = np.array([100, 105, 84, 105, 90, 99, 90, 95, 94, 100, 79, 112, 91, 80, 85])
+plt.scatter(x, y)
+
+plt.show()
+```
+
+![histogram](./pic/compare_plot.png)
+
+### Example
+
+- Color
+
+```py
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.array([5, 7, 8, 7, 2, 17, 2, 9, 4, 11, 12, 9, 6])
+y = np.array([99, 86, 87, 88, 111, 86, 103, 87, 94, 78, 77, 85, 86])
+plt.scatter(x, y, color='hotpink')
+
+x = np.array([2, 2, 8, 1, 15, 8, 12, 9, 7, 3, 11, 4, 7, 14, 12])
+y = np.array([100, 105, 84, 105, 90, 99, 90, 95, 94, 100, 79, 112, 91, 80, 85])
+plt.scatter(x, y, color='#88c999')
+
+plt.show()
+```
+
+![histogram](./pic/scatter_plot_color.png)
+
+- Size
+
+```py
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.array([5,7,8,7,2,17,2,9,4,11,12,9,6])
+y = np.array([99,86,87,88,111,86,103,87,94,78,77,85,86])
+sizes = np.array([20,50,100,200,500,1000,60,90,10,300,600,800,75])
+
+plt.scatter(x, y, s=sizes)
+
+plt.show()
+```
+
+![histogram](./pic/scatter_plot_size.png)
 
 ---
 
