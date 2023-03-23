@@ -44,10 +44,29 @@
   - [String](./datatype/string.md)
 
 - Collection
+
   - [List](./datatype/list.md)
   - [Tuple](./datatype/tuple.md)
   - [Set](./datatype/set.md)
   - [Dictionary](./datatype/dictionary.md)
+
+- [Condition](./condition/condition.md)
+
+  - if
+  - if...else
+  - if...elif...else
+  - pass
+  - break
+  - continue
+
+- [Loop](./loop/loop.md)
+
+  - while
+  - for
+  - range()
+  - pass
+  - break
+  - continue
 
 ---
 

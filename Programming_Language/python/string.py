@@ -310,4 +310,31 @@ print("hello 123".islower())        # True
 print("mynameisPeter".islower())    # False
 
 
+print("\n--------isnumeric()--------\n")
+# returns True if all the characters are numeric (0-9), otherwise False.
+# Exponents, like ² and ¾ are also considered to be numeric values.
+# "-1" and "1.5" are NOT considered numeric values, 
+# because all the characters in the string must be numeric, and the - and the . are not.
+print("Hello world!".isnumeric())     # False
+print("\u0030".isnumeric())     # True, unicode for 0
+print("\u00B2".isnumeric())     # True, unicode for &sup2
+print("10km2".isnumeric())      # False
+print("-1".isnumeric())         # False
+print("1.5".isnumeric())        # False
+print("1234".isnumeric())       # True
+
+
+print("\n--------isprintable()--------\n")
+# returns True if all the characters are printable, otherwise False.
+print("Hello world!".isprintable())             # True
+print("Hello! Are you #1?".isprintable())       # True
+print("Hello!\nAre you #1?".isprintable())      # False
+
+
+print("\n--------isspace()--------\n")
+# returns True if all the characters in a string are whitespaces, otherwise False.
+print("Helloworld!".isspace())      # False
+print("Hello world!".isspace())     # False
+print("   s   ".isspace())          # False
+print("      ".isspace())           # True
 
