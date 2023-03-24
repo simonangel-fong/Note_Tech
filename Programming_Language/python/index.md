@@ -68,6 +68,8 @@
   - break
   - continue
 
+- [Function](./function/function.md)
+
 ---
 
 [TOP](#python)
