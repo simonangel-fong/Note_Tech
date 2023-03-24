@@ -37,6 +37,9 @@
 ---
 
 - [Statistics](./statistics.md)
+- [Regression](./regression.md)
+  - Linear Regression
+  - Polynomial Regression
 
 ---
 
