@@ -236,12 +236,6 @@ print(txt)  # We are the so-called "Vikings" from the north.
 | ---------------- | --------------------------------------------------------------------------------------------- |
 | `encode()`       | Returns an encoded version of the string                                                      |
 | `format_map()`   | Formats specified values in a string                                                          |
-| `isdigit()`      | Returns True if all characters in the string are digits                                       |
-| `isidentifier()` | Returns True if the string is an identifier                                                   |
-| `islower()`      | Returns True if all characters in the string are lower case                                   |
-| `isnumeric()`    | Returns True if all characters in the string are numeric                                      |
-| `isprintable()`  | Returns True if all characters in the string are printable                                    |
-| `isspace()`      | Returns True if all characters in the string are whitespaces                                  |
 | `istitle()`      | Returns True if the string follows the rules of a title                                       |
 | `isupper()`      | Returns True if all characters in the string are upper case                                   |
 | `join()`         | Joins the elements of an iterable to the end of the string                                    |

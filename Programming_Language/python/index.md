@@ -70,6 +70,10 @@
 
 - [Function](./function/function.md)
 
+- [Class](./class/class.md)
+
+  - [Inheritance](./class/inheritance.md)
+
 ---
 
 [TOP](#python)

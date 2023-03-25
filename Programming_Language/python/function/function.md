@@ -3,16 +3,17 @@
 [Back](../index.md)
 
 - [Python Functions](#python-functions)
-- [Function](#function)
+  - [Function](#function)
   - [Parameters / Arguments](#parameters--arguments)
   - [Arbitrary Arguments, `*args`](#arbitrary-arguments-args)
   - [Keyword Arguments](#keyword-arguments)
   - [Arbitrary Keyword Arguments, `**kwargs`](#arbitrary-keyword-arguments-kwargs)
   - [Recursion](#recursion)
+  - [Lambda](#lambda)
 
 ---
 
-# Function
+## Function
 
 - A function is a block of code which **only runs when it is called**.
 
@@ -228,6 +229,54 @@ print(f"Sum of 1-{num}: ", sumInteger(num))
 # 6
 # 10
 # Sum of 1-4:  10
+
+```
+
+---
+
+## Lambda
+
+- A lambda function is a **small anonymous function**.
+
+- A lambda function can take any number of arguments, but can **only have one expression**.
+
+- **Syntax**
+
+  - `lambda arguments : expression`
+
+- **Adventage**:
+  - Use lambda functions when an **anonymous function** is required for a short period of time.
+
+```py
+print("\n--------Lambda--------\n")
+
+xlambda = lambda a: a + 10
+
+ylambda = lambda a, b,c : a*b*c
+
+print(xlambda(5))
+print(ylambda(3,4,5))
+
+print("\n--------Lambda--------\n")
+
+
+def xlambda(n):
+    return lambda a: a * n  # anomymous function inside a function
+
+# 好处: 该处将n定义为2, 然后在随后的调用中定义a, 则ylambda变成2的倍数计算器
+ylambda = xlambda(2)
+
+print(ylambda(1))   # 2
+print(ylambda(2))   # 4
+print(ylambda(3))   # 6
+
+# 灵活性:只需定义一个新变量并传递参数为4, 则调用时变成4的倍数计算器
+zlambda = xlambda(4)
+
+print(zlambda(1))   # 4
+print(zlambda(2))   # 8
+print(zlambda(3))   # 12
+
 
 ```
 

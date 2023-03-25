@@ -10,6 +10,9 @@
   - [Polynomial Regression 多项式回归](#polynomial-regression-多项式回归)
     - [Example: Predict car age and speed](#example-predict-car-age-and-speed-1)
     - [Exmaple: Bad Fit](#exmaple-bad-fit)
+  - [Multiple Regression](#multiple-regression)
+    - [Example: Predict CO2 emission with Weight and Volume](#example-predict-co2-emission-with-weight-and-volume)
+  - [Scale Standardization](#scale-standardization)
 
 ---
 
@@ -274,6 +277,130 @@ print(r2_score(speed_list, predict_model(age_list)))
 ![polynomial_regression_bad_fit](./pic/polynomial_regression_bad_fit.png)
 
 - The result: `0.00995` indicates a very bad relationship, and tells us that this data set is not suitable for polynomial regression.
+
+---
+
+## Multiple Regression
+
+- `Multiple regression`
+
+  - the regression with **more than one independent value** to predict a value based on two or more variables.
+
+- Using `Pandas` module
+
+  - load data
+  - cleaning data
+
+- Using `sklearn.linear_model`
+  - create model
+  - fit training data
+  - predict value
+
+---
+
+### Example: Predict CO2 emission with Weight and Volume
+
+```py
+# Example: Predict CO2 emission with Weight and Volume
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+
+FILE_PATH = "./data.csv"
+data = pd.read_csv(FILE_PATH)
+
+# print(data.info)        # Print a concise summary of a DataFrame.
+# print(data.columns)        # Print columns' names
+# data.shape              # 36 rows(heading included) and 5 columns
+
+# values: exclude heading
+x_list = data[["Weight", "Volume"]].values
+
+y_list = data[["CO2"]].values
+# print(x_list)
+# print(y_list)
+
+# 普通最小二乘法（OLS）是一种用于在线性回归模型中估计未知参数的线性最小二乘法
+# return an object of the class Ordinary least squares Linear Regression
+predict_model = linear_model.LinearRegression()
+
+# print(type(predict_model))       # <class 'sklearn.linear_model._base.LinearRegression'>
+# print(isinstance(predict_model, linear_model.LinearRegression))     # True
+
+# Fit linear model.
+# x: Training data.
+# y: Target values.
+predict_model.fit(x_list, y_list)
+
+# Estimated coefficients for the linear regression problem.
+coefficients_list = predict_model.coef_
+
+print("Coefficients: ",coefficients_list)        # [[0.00755095 0.00780526]]
+# if the weight increase by 1kg, the CO2 emission increases by 0.00755095g.
+print("Weight coefficient: ",coefficients_list[0][0])
+#  if the engine size (Volume) increases by 1 cm3, the CO2 emission increases by 0.00780526 g.
+print("Volume coefficient: ",coefficients_list[0][1])
+
+# predict(): Predict using the linear model.
+# X: array-like
+# Returns: Returns predicted values.
+predict_value = predict_model.predict([[3300, 1300]])
+# print("predict_value",predict_value)            #  [[114.75968007]]
+
+# get predict values based on the training data
+predict_list = predict_model.predict(x_list)
+print("predict_list: ",predict_list)
+
+```
+
+---
+
+## Scale Standardization
+
+- 在上例中, weight, volume, co2 使用不同的单位, 难以衡量数据特征
+- 标准化（Standardization）
+
+  - 标准化需要缩放数据，以适应标准的正态分布。
+  - 标准正态分布（standard normal distribution）定义是一个均值为 0，标准差为 1 的分布。
+
+- Formula:
+
+  - `z = (x - u) / s`
+  - `z`: the scaled value
+  - `x`: the original value
+  - `u`: the mean
+  - `s`: the standard deviation
+
+- Example:
+
+  - take the **weight** column from the data set above, the first value is 790, and the scaled value will be
+    - `(790 - 1292.23) / 238.74 = -2.1`
+  - take the **volume** column from the data set above, the first value is 1.0 liters(1000 cm3), and the scaled value will be
+    - `(1.0 - 1.61) / 0.38 = -1.59`
+  - compare -2.1 with -1.59 instead of comparing 790 with 1.0.
+    - 即使用一个标准化的数字代替实际数字, 以描述数据
+
+- `sklearn.preprocessing.StandardScaler()`
+  - 计算每点的标准化值
+
+```py
+# Scale Standardization
+
+import pandas
+from sklearn import linear_model
+from sklearn.preprocessing import StandardScaler
+stdScale = StandardScaler()
+
+df = pandas.read_csv("data.csv")
+
+x_list = df[['Weight', 'Volume']].values
+
+scaled_xlist = stdScale.fit_transform(x_list)
+
+print("scaled_xlist:", scaled_xlist)
+print("first_scaled:", scaled_xlist[0])
+```
 
 ---
 

@@ -338,3 +338,54 @@ print("Hello world!".isspace())     # False
 print("   s   ".isspace())          # False
 print("      ".isspace())           # True
 
+
+print("\n--------istitle()--------\n")
+# returns True if all words in a text start with a upper case letter, 
+# AND the rest of the word are lower case letters, otherwise False.
+# Symbols and numbers are ignored.
+print("HELLO WORLD".istitle())                          # False
+print("hello world".istitle())                          # False
+print("Hello world".istitle())                          # False
+print("Hello World".istitle())                          # True
+print("123 Hello World".istitle())                      # True
+print("Hello World %'!?".istitle())                     # True
+
+
+print("\n--------isupper()--------\n")
+# returns True if all the characters are in upper case, otherwise False.
+# Numbers, symbols and spaces are not checked, only alphabet characters.
+print("hello world".isupper())                          # False
+print("Hello world".isupper())                          # False
+print("Hello World".isupper())                          # False
+print("HELLO WORLD".isupper())                          # True
+print("HELLO WORLD 123".isupper())                      # True
+print("HELLO WORLD %'!?".isupper())                     # True
+
+
+print("\n--------join()--------\n")
+# takes all items in an iterable and joins them into one string.
+# A string must be specified as the separator.
+# separator.join(iterable)
+# Parameter iterable	Required. Any iterable object where all the returned values are strings
+
+xSeparator = ","
+
+xStr = "John"
+result = xSeparator.join(xStr)
+print(result)   # J,o,h,n
+
+# set is not iterable, so get an error.
+xSet = {"1","2","3"}
+result = xSeparator.join(xSet)
+print(result)   # 3,1,2 由于set是无序的,所以每次输出是
+
+xList = ["1","2","3"]
+result = xSeparator.join(xList)
+print(result)   # 1,2,3
+
+xDict = {"name": "John", "country": "Norway"}
+xSeparator = "TT"
+result = xSeparator.join(xDict)
+
+print(result)   # nameTTcountry
+
