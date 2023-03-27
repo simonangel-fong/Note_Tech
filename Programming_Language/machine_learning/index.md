@@ -40,6 +40,9 @@
 - [Regression](./regression.md)
   - Linear Regression
   - Polynomial Regression
+  - Multiple Regression
+- [Train/Test](./train_test.md)
+- [Decision Tree](./decision_tree.md)
 
 ---
 

@@ -286,6 +286,8 @@ print(r2_score(speed_list, predict_model(age_list)))
 
   - the regression with **more than one independent value** to predict a value based on two or more variables.
 
+  - 多元回归分析（Multiple Regression Analysis）是指在相关变量中将一个变量视为因变量，其他一个或多个变量视为自变量，建立多个变量之间线性或非线性数学模型数量关系式并利用样本数据进行分析的统计分析方法。
+
 - Using `Pandas` module
 
   - load data
