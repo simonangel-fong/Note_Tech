@@ -8,33 +8,12 @@
 
 ---
 
-## Python Introduction
-
-- Python is a popular **programming language**.
-
-  - Python is an **interpreted** programming language, this means that as a developer you write Python (`.py`) files in a text editor and then put those files into the python interpreter to be executed.
-
-- Tutorial:
-  - w3schools: https://www.w3schools.com/python/default.asp
-  -
-
----
-
-## Python Install
-
-- Download Website: https://www.python.org/
-
-- 本机版本: python 3.9, 因为太新的版本未必能支持一些工具包
-
-- Verify/Check python version: `python --version`
-
----
-
 - Fundamental
 
   - [Syntax](./fundamental/syntax.md)
   - [Comment](./fundamental/comment.md)
   - [Variable](./fundamental/variable.md)
+  - [Scope](./fundamental/scope.md)
   - [Operator](./fundamental/operator.md)
 
 - [Data Type](./datatype/data_type.md)
@@ -73,6 +52,29 @@
 - [Class](./class/class.md)
 
   - [Inheritance](./class/inheritance.md)
+  - [Iterator](./class/iterator.md)
+
+---
+
+## Python Introduction
+
+- Python is a popular **programming language**.
+
+  - Python is an **interpreted** programming language, this means that as a developer you write Python (`.py`) files in a text editor and then put those files into the python interpreter to be executed.
+
+- Tutorial:
+  - w3schools: https://www.w3schools.com/python/default.asp
+  -
+
+---
+
+## Python Install
+
+- Download Website: https://www.python.org/
+
+- 本机版本: python 3.9, 因为太新的版本未必能支持一些工具包
+
+- Verify/Check python version: `python --version`
 
 ---
 

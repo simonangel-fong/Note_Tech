@@ -236,9 +236,6 @@ print(txt)  # We are the so-called "Vikings" from the north.
 | ---------------- | --------------------------------------------------------------------------------------------- |
 | `encode()`       | Returns an encoded version of the string                                                      |
 | `format_map()`   | Formats specified values in a string                                                          |
-| `istitle()`      | Returns True if the string follows the rules of a title                                       |
-| `isupper()`      | Returns True if all characters in the string are upper case                                   |
-| `join()`         | Joins the elements of an iterable to the end of the string                                    |
 | `ljust()`        | Returns a left justified version of the string                                                |
 | `lower()`        | Converts a string into lower case                                                             |
 | `lstrip()`       | Returns a left trim version of the string                                                     |

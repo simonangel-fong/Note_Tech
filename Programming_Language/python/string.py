@@ -389,3 +389,31 @@ result = xSeparator.join(xDict)
 
 print(result)   # nameTTcountry
 
+
+print("\n--------ljust()--------\n")
+# left align the string, using a specified character (space is default) as the fill character.
+# Parameter	Description
+# length	Required. The length of the returned string
+# character	Optional. A character to fill the missing space (to the right of the string). Default is " " (space).
+print("Hello".ljust(10),"|")            # Hello      |
+print("Hello".ljust(10,"*"),"|")        # Hello***** |
+
+
+print("\n--------lower()--------\n")
+# returns a string where all characters are lower case.
+print("HELLO WORLD".lower())                          # hello world
+print("hello world".lower())                          # hello world
+print("Hello World".lower())                          # hello world
+print("123 Hello World".lower())                      # 123 hello world
+print("Hello World %'!?".lower())                     # hello world %'!?
+
+
+print("\n--------lstrip()--------\n")
+# removes any leading characters (space is the default leading character to remove)
+# Parameter	Description
+# characters	Optional. A set of characters to remove as leading characters
+print("        HELLO WORLD          ".lstrip(),"|")                             # HELLO WORLD           |
+print(",,,,,ssaaww.....HELLO".lstrip(",.asw"),"|")                              # HELLO |
+
+
+
