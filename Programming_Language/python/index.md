@@ -15,19 +15,18 @@
   - [Variable](./fundamental/variable.md)
   - [Scope](./fundamental/scope.md)
   - [Operator](./fundamental/operator.md)
+  - [Function](./fundamental/function.md)
 
 - [Data Type](./datatype/data_type.md)
 
   - [Boolean](./datatype/boolean.md)
   - [Number](./datatype/number.md)
   - [String](./datatype/string.md)
-
-- Collection
-
-  - [List](./datatype/list.md)
-  - [Tuple](./datatype/tuple.md)
-  - [Set](./datatype/set.md)
-  - [Dictionary](./datatype/dictionary.md)
+  - Collection
+    - [List](./datatype/list.md)
+    - [Tuple](./datatype/tuple.md)
+    - [Set](./datatype/set.md)
+    - [Dictionary](./datatype/dictionary.md)
 
 - [Condition](./condition/condition.md)
 
@@ -47,12 +46,16 @@
   - break
   - continue
 
-- [Function](./function/function.md)
-
 - [Class](./class/class.md)
 
   - [Inheritance](./class/inheritance.md)
   - [Iterator](./class/iterator.md)
+
+- [Module](./module/module.md)
+
+  - [datetime](./module/datetime.md)
+  - [json](./module/json.md)
+  - [math](./module/math.md)
 
 ---
 
