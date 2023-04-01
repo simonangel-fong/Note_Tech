@@ -30,21 +30,7 @@
 
 - [Condition](./condition/condition.md)
 
-  - if
-  - if...else
-  - if...elif...else
-  - pass
-  - break
-  - continue
-
 - [Loop](./loop/loop.md)
-
-  - while
-  - for
-  - range()
-  - pass
-  - break
-  - continue
 
 - [Class](./class/class.md)
 
@@ -54,8 +40,10 @@
 - [Module](./module/module.md)
 
   - [datetime](./module/datetime.md)
-  - [json](./module/json.md)
   - [math](./module/math.md)
+  - [json](./module/json.md)
+  - [regex](./module/regex.md)
+  - [Package](./module/package.md)
 
 ---
 

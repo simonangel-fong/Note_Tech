@@ -416,4 +416,68 @@ print("        HELLO WORLD          ".lstrip(),"|")                             
 print(",,,,,ssaaww.....HELLO".lstrip(",.asw"),"|")                              # HELLO |
 
 
+print("\n--------maketrans()--------\n")
+# returns a mapping table that can be used with the translate() method to replace specified characters.
+# returns a dictionary describing each replacement, in unicode.
+# Parameter	Description
+# x	        Required. If only one parameter is specified, this has to be a dictionary describing how to perform the replace. If two or more parameters are specified, this parameter has to be a string specifying the characters you want to replace.
+# y	        Optional. A string with the same length as parameter x. Each character in the first parameter will be replaced with the corresponding character in this string.
+# z	        Optional. A string describing which characters to remove from the original string.
+
+txt = "Hi Sam!"
+x = "mSa"
+y = "eJo"
+
+xtb = str.maketrans(x, y)
+print(txt.translate(xtb))       # Hi Joe!
+
+txt = "Good night Sam!"
+x = "mSa"
+y = "eJo"
+z = "odnght"
+
+xtb = str.maketrans(x, y, z)
+print(xtb)
+# {109: 101, 83: 74, 97: 111, 111: None, 100: None, 110: None, 103: None, 104: None, 116: None}    
+print(txt.translate(xtb))           # G i Joe!
+
+
+print("\n--------partition()--------\n")
+# searches for a specified string, and splits the string into a tuple containing three elements.
+# note: searches for the first occurrence of the specified string
+#   The first element contains the part before the specified string.
+#   The second element contains the specified string.
+#   The third element contains the part after the string.
+# If the specified value is not found, the partition() method returns a tuple containing: 
+#   1 - the whole string, 
+#   2 - an empty string, 
+#   3 - an empty string
+# Parameter	Description
+# value	    Required. The string to search for
+txt = "I could eat bananas all day"
+
+xFound = txt.partition("bananas")
+print(xFound)                    # ('I could eat ', 'bananas', ' all day')
+
+xNotFound = txt.partition("apples")
+print(xNotFound)                # ('I could eat bananas all day', '', '')
+
+
+print("\n--------replace()--------\n")
+# replaces a specified phrase with another specified phrase.
+# All occurrences of the specified phrase will be replaced, if nothing else is specified.
+# Parameter	Description
+# oldvalue	Required. The string to search for
+# newvalue	Required. The string to replace the old value with
+# count	    Optional. A number specifying how many occurrences of the old value you want to replace. Default is all occurrences
+txt = "one one was a race horse, two two was one too."
+
+xReplace = txt.replace("one", "three")
+print(xReplace)             # three three was a race horse, two two was three too.
+
+xReplaceNotFound = txt.replace("xxx", "three")
+print(xReplaceNotFound)        # one one was a race horse, two two was one too.
+
+xReplaceCount = txt.replace("one", "three", 2)
+print(xReplaceCount)        # three three was a race horse, two two was one too.
 
