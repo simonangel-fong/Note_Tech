@@ -51,7 +51,11 @@
   - [Logistic Regression](./logistic_regression.md)
 
 - Optimum
+
   - [Grid Search](./grid_search.md)
+
+- Preprocessing
+  - [Categorical Data](./categorical_data.md)
 
 ---
 
