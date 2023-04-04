@@ -37,12 +37,21 @@
 ---
 
 - [Statistics](./statistics.md)
-- [Regression](./regression.md)
-  - Linear Regression
-  - Polynomial Regression
-  - Multiple Regression
+
 - [Train/Test](./train_test.md)
-- [Decision Tree](./decision_tree.md)
+
+- Models
+
+  - [Regression](./regression.md)
+    - Linear Regression
+    - Polynomial Regression
+    - Multiple Regression
+  - [Decision Tree](./decision_tree.md)
+  - [Hierarchical Clustering](./hierarchical_clustering.md)
+  - [Logistic Regression](./logistic_regression.md)
+
+- Optimum
+  - [Grid Search](./grid_search.md)
 
 ---
 

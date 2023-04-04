@@ -481,3 +481,47 @@ print(xReplaceNotFound)        # one one was a race horse, two two was one too.
 xReplaceCount = txt.replace("one", "three", 2)
 print(xReplaceCount)        # three three was a race horse, two two was one too.
 
+
+print("\n--------rfind()--------\n")
+# finds the last occurrence of the specified value.
+# returns -1 if the value is not found.
+# Parameter	Description
+# value	    Required. The value to search for
+# start	    Optional. Where to start the search. Default is 0
+# end	    Optional. Where to end the search. Default is to the end of the string
+print("Hello World",  "Hello World".rfind(""))              # 11, the length of string
+print("Hello World",  "Hello World".rfind("w"))             # -1
+print("Hello World",  "Hello World".rfind("W"))             # 6
+print("Hello World",  "Hello World".rfind("o"))             # 7
+print("Hello World",  "Hello World".rfind("o", 7))          # 7 inclusive
+print("Hello World",  "Hello World".rfind("o", 8))          # -1
+print("Hello World",  "Hello World".rfind("o", 0, 7))       # 4 exclusive
+print("Hello World",  "Hello World".rfind("o", 0, 8))       # 7
+
+
+print("\n--------rindex()--------\n")
+# finds the last occurrence of the specified value.
+# raises an exception if the value is not found.
+# Parameter	Description
+# value	    Required. The value to search for
+# start	    Optional. Where to start the search. Default is 0
+# end	    Optional. Where to end the search. Default is to the end of the string
+print("Hello World",  "Hello World".rindex(""))             # 11, the length of string
+print("Hello World",  "Hello World".rindex("o"))            # 7
+print("Hello World",  "Hello World".rindex("o", 7))         # 7, inclusive
+# print("Hello World",  "Hello World".rindex("o", 8))       # ValueError: substring not found
+print("Hello World",  "Hello World".rindex("o", 0, 7))      # 4, exclusive
+# print("Hello World",  "Hello World".rindex("o", 0, 4))      # ValueError: substring not found
+
+
+print("\n--------rjust()--------\n")
+# right align the string, using a specified character (space is default) as the fill character.
+# Parameter	Description
+# length	Required. The length of the returned string
+# character	Optional. A character to fill the missing space (to the left of the string). Default is " " (space).
+print("Hello".rjust(10),"|")            #      Hello |
+print("Hello".rjust(10,"*"),"|")        # *****Hello |
+# print("Hello".rjust(10,"*-"),"|")       # TypeError: The fill character must be exactly one character long
+
+
+

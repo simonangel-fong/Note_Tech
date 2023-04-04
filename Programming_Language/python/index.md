@@ -45,6 +45,11 @@
   - [regex](./module/regex.md)
   - [Package](./module/package.md)
 
+- [Exception](./exception/exception.md)
+
+- IO
+  - [Input](./io/input.md)
+
 ---
 
 ## Python Introduction

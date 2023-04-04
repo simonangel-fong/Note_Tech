@@ -181,7 +181,13 @@ print(txt,age)  # My name is John, I am 36
 
   - The `format()` method takes the passed **arguments**, formats them, and places them in the string where the placeholders `{}`.
   - The `format()` method takes **unlimited number of arguments**, and are placed into the respective placeholders
+
+- **Index Numbers**
   - use index numbers `{0}` to be sure the arguments are placed in the correct placeholders
+
+- **Named Indexes**
+  - use named indexes by entering a name inside the curly brackets `{carname}`, but then must use names when you pass the parameter values `txt.format(carname = "Ford")`.
+
 
 ```py
 # String Format
@@ -203,6 +209,10 @@ itemno = 567
 price = 49.95
 myorder = "I want to pay {2} dollars for {0} pieces of item {1}."
 print(myorder.format(quantity, itemno, price))  # I want to pay 49.95 dollars for 3 pieces of item 567.
+
+myorder = "I have a {carname}, it is a {model}."
+print(myorder.format(carname = "Ford", model = "Mustang"))
+# I have a Ford, it is a Mustang.
 ```
 
 ---
