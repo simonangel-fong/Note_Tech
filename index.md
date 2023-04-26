@@ -1,45 +1,50 @@
 # 技术笔记
 
-## 假期
+- Fundamental
 
-- SQL
+  - [ ] Statictics
+  - [ ] **Data Structure**
+  - [ ] [Git](./Fundamental/git/git_index.md)
 
-- [Python](./Programming_Language/python/index.md)
+- Programming Language
 
-  - [Machine Learning](./Programming_Language/machine_learning/index.md)
+  - [ ] [Python](./Programming_Language/python/index.md)
+  - [ ] Java
+  - [ ] JavaScript
 
-- CCNA
+- OS
 
-## 目录
+  - [ ] AWS CCP
+  - [ ] Linux
+    - [ ] Bash
+  - [ ] Andriod
 
-- Version control 版本控制
+- Database
 
-  - [Git](./Supportive_Tech/git/git_index.md)
+  - [ ] SQL
+  - [ ] MySQL(PY)
+  - [ ] MongoDB(PY)
+  - [ ] Hadoop
 
-- Web 开发
+- Web
 
-  - [Html](./Web_Develope/html/html_index.md)
-  - [Django](./Web_Develope/django/django_index.md)
-  - [Bootstrap](./Web_Develope/bootstrap/bootstrap_index.md)
-  - [Bootstrap Table](./Web_Develope/bootstrap_table/bootstrap_table_index.md)
+  - [ ] Django
+  - [ ] HTML
+  - [ ] CSS
+  - [ ] React
 
-- Programming Language 编程语言
+- Data Analytics
 
-  - [Javascript](./Programming_Language/javascript/js_index.md)
-  - [Python](./Programming_Language/python/index.md)
-  - [LeetCode](./Leetcode/724.ipynb)
+  - [ ] Matplotlib
+  - [ ] Numpy
+  - [ ] Panda
+  - [ ] Scikit-learn
+  - [ ] OpenCV
 
-- Database 数据库
-  - [SQL](https://simonangel-fong.github.io/SQL-Tutorial/)
-  - [MySQL](./Database/mysql/mysql_index.md)
+- Machine Learning
 
----
+  - [ ] Yolo
+  - [ ] Tensorflow
+  - [ ] Pytorch
 
 [Notes @ Humber College - ITS](https://simonangel-fong.github.io/Humber_ITS_Note/)
-
-## To be sorted 未整理
-
-- Python
-- C#
-- CSS
-- Azure

@@ -1,6 +1,6 @@
 # Python Syntax
 
-[Back](./index.md)
+[Back](../index.md)
 
 - [Python Syntax](#python-syntax)
   - [Syntax](#syntax)
@@ -11,6 +11,16 @@
 ## Syntax
 
 - Python syntax can be **executed** by writing directly in the Command Line or in a python file
+
+- `Expression`: the code that returns a value.
+
+  - Example: `1+1`
+
+- `Statement`: the operation on a value.
+  - Example: `a=1`
+  - a program is formed by a series of statements
+  - can put statements in one line using semicolon
+    - Example: `a=1;print(a)`
 
 ## Indentation 缩进
 

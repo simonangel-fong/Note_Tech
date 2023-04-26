@@ -60,7 +60,7 @@
 
 - Tutorial:
   - w3schools: https://www.w3schools.com/python/default.asp
-  -
+  - freecodecamp: https://www.youtube.com/watch?v=eWRfhZUzrAc&list=PLl9oEwQSSN-HqbWyM0jqvkoVWAhRV41NN&index=4&t=16083s
 
 ---
 

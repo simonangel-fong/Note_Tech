@@ -11,7 +11,9 @@
   - [String Function](#string-function)
   - [String Concatenation](#string-concatenation)
   - [String Format](#string-format)
+    - [str.format() Method](#strformat-method)
   - [Escape Character](#escape-character)
+    - [F-string Method](#f-string-method)
   - [String Methods](#string-methods)
 
 ---
@@ -177,17 +179,19 @@ print(txt,age)  # My name is John, I am 36
 
 ## String Format
 
+### str.format() Method
+
 - combine strings and numbers by using the `format()` method!
 
   - The `format()` method takes the passed **arguments**, formats them, and places them in the string where the placeholders `{}`.
   - The `format()` method takes **unlimited number of arguments**, and are placed into the respective placeholders
 
 - **Index Numbers**
+
   - use index numbers `{0}` to be sure the arguments are placed in the correct placeholders
 
 - **Named Indexes**
   - use named indexes by entering a name inside the curly brackets `{carname}`, but then must use names when you pass the parameter values `txt.format(carname = "Ford")`.
-
 
 ```py
 # String Format
@@ -240,33 +244,123 @@ print(txt)  # We are the so-called "Vikings" from the north.
 
 ---
 
+### F-string Method
+
+- prefix the string with the letter `F`, the string becomes the `f-string` itself.
+
+  - The `f-string` can be formatted in much **same as** the `str.format()` method.
+  - The F-string offers a convenient way to embed Python expression inside string literals for formatting.
+
+- Speed
+
+  - The reason for adapting this formatting style is its speed. The f-string evaluates at runtime rather than constant values. It embeds expression inside string literals, using minimal syntax. It is fast because it evaluates at runtime, not a constant value.
+
+- Python expressions
+
+  - can put all valid Python expressions in them. 大括号中可以是变量, 表达式, 函数, 对象
+
+- Dictionary
+
+  - There is a different quotation to use dictionary keys and f-string. 注意: 在引用字典键时, 使用引号需要和字符串的引号不同.
+
+- Braces
+  - To make appear braces in the code, you should use the double quotes as follows. 需要显示大括号时,需要双括号.
+  - If we use the triple braces, it will display single braces in our string.
+  - can display the more braces if we use more than triple braces.
+
+```py
+
+print("\n--------f-string--------\n")
+
+print("\n--------variable--------")
+val = 'Geeks'
+# GeeksforGeeks is a portal for Geeks.
+print(f"{val}for{val} is a portal for {val}.")
+name = 'Tushar'
+age = 23
+# Hello, My name is Tushar and I'm 23 years old.
+print(f"Hello, My name is {name} and I'm {age} years old.")
+
+
+print("\n--------expressions--------")
+print(f"{2 * 30}")  # 60
+
+
+print("\n--------fuction--------")
+
+
+def upercase(input):
+    return input.upper()
+
+
+name = "Sachin Tendulkar"
+print(f"{upercase(name)} is great.")    # SACHIN TENDULKAR is great.
+
+
+print("\n--------fuction--------")
+
+
+class Actor:
+    def __init__(self, first_name, last_name, movie):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.movie = movie
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}'s superhit movie is {self.movie}."
+
+    def __repr__(self):
+        return f"{self.first_name} {self.last_name}  {self.movie}. Superhi!"
+
+
+ac = Actor('Keenu', 'Reevs', 'Matrix')
+print(f"{ac}")  # Keenu Reevs's superhit movie is Matrix.
+
+
+print("\n--------Dictionary--------")
+
+detail = {"name": "John", "age": 19}
+# John is 19 years old.
+print(f"{detail['name']} is {detail['age']} years old.")
+
+
+print("\n--------Braces--------")
+
+print(f"{70 + 40}")         # 110
+print(f"{{70 + 40}}")       # {70 + 40}
+print(f"{{{70 + 40}}}")     # {110}
+print(f"{{{{70 + 4}}}}")    # {{70 + 4}}
+```
+
+---
+
 ## String Methods
 
-| Method           | Description                                                                                   |
-| ---------------- | --------------------------------------------------------------------------------------------- |
-| `encode()`       | Returns an encoded version of the string                                                      |
-| `format_map()`   | Formats specified values in a string                                                          |
-| `ljust()`        | Returns a left justified version of the string                                                |
-| `lower()`        | Converts a string into lower case                                                             |
-| `lstrip()`       | Returns a left trim version of the string                                                     |
-| `maketrans()`    | Returns a translation table to be used in translations                                        |
-| `partition()`    | Returns a tuple where the string is parted into three parts                                   |
-| `replace()`      | Returns a string where a specified value is replaced with a specified value                   |
-| `rfind()`        | Searches the string for a specified value and returns the last position of where it was found |
-| `rindex()`       | Searches the string for a specified value and returns the last position of where it was found |
-| `rjust()`        | Returns a right justified version of the string                                               |
-| `rpartition()`   | Returns a tuple where the string is parted into three parts                                   |
-| `rsplit()`       | Splits the string at the specified separator, and returns a list                              |
-| `rstrip()`       | Returns a right trim version of the string                                                    |
-| `split()`        | Splits the string at the specified separator, and returns a list                              |
-| `splitlines()`   | Splits the string at line breaks and returns a list                                           |
-| `startswith()`   | Returns true if the string starts with the specified value                                    |
-| `strip()`        | Returns a trimmed version of the string                                                       |
-| `swapcase()`     | Swaps cases, lower case becomes upper case and vice versa                                     |
-| `title()`        | Converts the first character of each word to upper case                                       |
-| `translate()`    | Returns a translated string                                                                   |
-| `upper()`        | Converts a string into upper case                                                             |
-| `zfill()`        | Fills the string with a specified number of 0 values at the beginning                         |
+| Method         | Description                                                                                   |
+| -------------- | --------------------------------------------------------------------------------------------- |
+| `encode()`     | Returns an encoded version of the string                                                      |
+| `format_map()` | Formats specified values in a string                                                          |
+| `ljust()`      | Returns a left justified version of the string                                                |
+| `lower()`      | Converts a string into lower case                                                             |
+| `lstrip()`     | Returns a left trim version of the string                                                     |
+| `maketrans()`  | Returns a translation table to be used in translations                                        |
+| `partition()`  | Returns a tuple where the string is parted into three parts                                   |
+| `replace()`    | Returns a string where a specified value is replaced with a specified value                   |
+| `rfind()`      | Searches the string for a specified value and returns the last position of where it was found |
+| `rindex()`     | Searches the string for a specified value and returns the last position of where it was found |
+| `rjust()`      | Returns a right justified version of the string                                               |
+| `rpartition()` | Returns a tuple where the string is parted into three parts                                   |
+| `rsplit()`     | Splits the string at the specified separator, and returns a list                              |
+| `rstrip()`     | Returns a right trim version of the string                                                    |
+| `split()`      | Splits the string at the specified separator, and returns a list                              |
+| `splitlines()` | Splits the string at line breaks and returns a list                                           |
+| `startswith()` | Returns true if the string starts with the specified value                                    |
+| `strip()`      | Returns a trimmed version of the string                                                       |
+| `swapcase()`   | Swaps cases, lower case becomes upper case and vice versa                                     |
+| `title()`      | Converts the first character of each word to upper case                                       |
+| `translate()`  | Returns a translated string                                                                   |
+| `upper()`      | Converts a string into upper case                                                             |
+| `zfill()`      | Fills the string with a specified number of 0 values at the beginning                         |
 
 ---
 

@@ -1,6 +1,6 @@
 # Python Operator
 
-[Back](./index.md)
+[Back](../index.md)
 
 - [Python Operator](#python-operator)
   - [Arithmetic Operator](#arithmetic-operator)
@@ -16,15 +16,15 @@
 
 ## Arithmetic Operator
 
-| Operator | Name           | Example  |
-| -------- | -------------- | -------- |
-| `+`      | Addition       | x + y    |
-| `-`      | Subtraction    | x - y    |
-| `*`      | Multiplication | x \* y   |
-| `/`      | Division       | x / y    |
-| `%`      | Modulus        | x % y    |
-| `**`     | Exponentiation | x \*\* y |
-| `//`     | Floor division | x//y     |
+| Operator | Name                  | Example  |
+| -------- | --------------------- | -------- |
+| `+`      | Addition              | x + y    |
+| `-`      | Subtraction           | x - y    |
+| `*`      | Multiplication        | x \* y   |
+| `/`      | Division              | x / y    |
+| `%`      | Modulus 取模(余数)    | x % y    |
+| `**`     | Exponentiation        | x \*\* y |
+| `//`     | Floor division 取整除 | x//y     |
 
 ---
 

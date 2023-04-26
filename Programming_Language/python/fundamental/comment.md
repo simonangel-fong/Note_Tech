@@ -1,6 +1,6 @@
 # Python Comment
 
-[back](./index.md)
+[back](../index.md)
 
 - [Python Comment](#python-comment)
   - [Comments](#comments)
@@ -21,7 +21,7 @@
 
 ## Creating a Comment
 
-- Comments starts with a `#`, and Python will ignore them.
+- Comments starts with a **hash mark** `#`, and Python will ignore them.
 
 - Comments can be placed at the **end of a line**, and Python will ignore the rest of the line
 

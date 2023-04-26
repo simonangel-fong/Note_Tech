@@ -1,8 +1,9 @@
 # Python Variable
 
-[Back](./index.md)
+[Back](../index.md)
 
 - [Python Variable](#python-variable)
+  - [Variable](#variable)
   - [Creating Variables](#creating-variables)
     - [Declare multiple variables in one line](#declare-multiple-variables-in-one-line)
     - [Unpack a Collection](#unpack-a-collection)
@@ -12,7 +13,11 @@
 
 ---
 
-- `Variables` are **containers** for storing data values.
+## Variable
+
+- `Variables`: **containers** for storing data values.
+
+---
 
 ## Creating Variables
 
@@ -35,9 +40,9 @@ print(x)
 
 ```py
 x, y, z = "Orange", "Banana", "Cherry"
-print(x)
-print(y)
-print(z)
+print(x)    # Orange
+print(y)    # Banana
+print(z)    # Cherry
 
 ```
 
@@ -45,9 +50,9 @@ print(z)
 
 ```py
 x = y = z = "Orange"
-print(x)
-print(y)
-print(z)
+print(x)    # Orange
+print(y)    # Orange
+print(z)    # Orange
 
 ```
 
