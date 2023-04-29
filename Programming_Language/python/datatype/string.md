@@ -1,10 +1,11 @@
-# Python String
+# Python - String
 
-[Back](./index.md)
+[Back](../index.md)
 
-- [Python String](#python-string)
+- [Python - String](#python---string)
   - [Strings](#strings)
   - [Strings are Arrays](#strings-are-arrays)
+  - [String: More than one line](#string-more-than-one-line)
   - [String Length: `len()`](#string-length-len)
   - [String Check: `in`](#string-check-in)
   - [String Slicing](#string-slicing)
@@ -12,8 +13,8 @@
   - [String Concatenation](#string-concatenation)
   - [String Format](#string-format)
     - [str.format() Method](#strformat-method)
-  - [Escape Character](#escape-character)
     - [F-string Method](#f-string-method)
+  - [Escape Character](#escape-character)
   - [String Methods](#string-methods)
 
 ---
@@ -74,6 +75,21 @@ for x in a:
 # l
 # d
 # !
+```
+
+---
+
+## String: More than one line
+
+- Three quotational marks.
+
+```py
+xStr = ''' Hello,
+    world'''
+
+print(xStr)
+#  Hello,
+#     world
 ```
 
 ---
@@ -221,29 +237,6 @@ print(myorder.format(carname = "Ford", model = "Mustang"))
 
 ---
 
-## Escape Character
-
-An escape character is a backslash `\` followed by the character you want to insert.
-
-| Code   | Result          |
-| ------ | --------------- |
-| `\'`   | Single Quote    |
-| `\\`   | Backslash       |
-| `\n`   | New Line        |
-| `\r`   | Carriage Return |
-| `\t`   | Tab             |
-| `\b`   | Backspace       |
-| `\f`   | Form Feed       |
-| `\ooo` | Octal value     |
-| `\xhh` | Hex value       |
-
-```py
-txt = "We are the so-called \"Vikings\" from the north."
-print(txt)  # We are the so-called "Vikings" from the north.
-```
-
----
-
 ### F-string Method
 
 - prefix the string with the letter `F`, the string becomes the `f-string` itself.
@@ -334,10 +327,40 @@ print(f"{{{{70 + 4}}}}")    # {{70 + 4}}
 
 ---
 
+## Escape Character
+
+An escape character is a backslash `\` followed by the character you want to insert.
+
+| Code   | Result          |
+| ------ | --------------- |
+| `\'`   | Single Quote    |
+| `\\`   | Backslash       |
+| `\n`   | New Line        |
+| `\r`   | Carriage Return |
+| `\t`   | Tab             |
+| `\b`   | Backspace       |
+| `\f`   | Form Feed       |
+| `\ooo` | Octal value     |
+| `\xhh` | Hex value       |
+
+```py
+txt = "We are the so-called \"Vikings\" from the north."
+print(txt)  # We are the so-called "Vikings" from the north.
+```
+
+---
+
 ## String Methods
+
+- Return a new string.
+  - The original string remains.
 
 | Method         | Description                                                                                   |
 | -------------- | --------------------------------------------------------------------------------------------- |
+| `capitalize()` | Converts the first character to upper case                                                    |
+| `casefold()`   | Converts string into lower case                                                               |
+| `center()`     | Returns a centered string                                                                     |
+| `count()`      | Returns the number of times a specified value occurs in a string                              |
 | `encode()`     | Returns an encoded version of the string                                                      |
 | `format_map()` | Formats specified values in a string                                                          |
 | `ljust()`      | Returns a left justified version of the string                                                |
@@ -364,4 +387,4 @@ print(f"{{{{70 + 4}}}}")    # {{70 + 4}}
 
 ---
 
-[TOP](#python-string)
+[TOP](#python---string)

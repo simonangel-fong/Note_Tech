@@ -1,8 +1,8 @@
-# Python List
+# Python - List
 
 [Back](../index.md)
 
-- [Python List](#python-list)
+- [Python - List](#python---list)
   - [List](#list)
     - [List Methods](#list-methods)
     - [Create a list](#create-a-list)
@@ -551,9 +551,10 @@ print(xlist)    # ['cherry', 'Kiwi', 'Orange', 'banana']
 
 - cannot copy a list simply by typing `list2 = list1`, because: list2 will only be a **reference to** list1, and changes made in list1 will automatically also be made in list2.
 
-- use the built-in List method `copy()`.
-- Another way to make a copy is to use the built-in method `list()`.
-- List Comprehension.`[x for x in xlist]`
+1. use the built-in List method `copy()`.
+2. Another way to make a copy is to use the built-in method `list()`.
+3. Using slicing `[:]`
+4. List Comprehension.`[x for x in xlist]`
 
 ```py
 print("\n---------Copy list--------\n")
@@ -586,6 +587,15 @@ print(xlist is ylist)   # False
 print("\n---------List Comprehension--------\n")
 xlist = ["apple", "banana", "cherry"]
 ylist = [x for x in xlist]
+xlist[0] = "orange"
+print(xlist)    # ['orange', 'banana', 'cherry']
+print(ylist)    # ['apple', 'banana', 'cherry']
+print(xlist is ylist)   # False
+
+
+print("\n---------Slice--------\n")
+xlist = ["apple", "banana", "cherry"]
+ylist = xlist[:]
 xlist[0] = "orange"
 print(xlist)    # ['orange', 'banana', 'cherry']
 print(ylist)    # ['apple', 'banana', 'cherry']
@@ -683,4 +693,4 @@ print(fruits.index(32))     # 3
 
 ---
 
-[TOP](#python-list)
+[TOP](#python---list)

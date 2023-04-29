@@ -521,7 +521,180 @@ print("\n--------rjust()--------\n")
 # character	Optional. A character to fill the missing space (to the left of the string). Default is " " (space).
 print("Hello".rjust(10),"|")            #      Hello |
 print("Hello".rjust(10,"*"),"|")        # *****Hello |
+print("Hello world!".rjust(10,"*"),"|") # Hello world! |
 # print("Hello".rjust(10,"*-"),"|")       # TypeError: The fill character must be exactly one character long
 
 
+print("\n--------rpartition()--------\n")
+# searches for the last occurrence of a specified string, and splits the string into a tuple containing three elements.
+# note: 
+#   The first element contains the part before the specified string.
+#   The second element contains the specified string.
+#   The third element contains the part after the string.
+# If the specified value is not found, the rpartition() method returns a tuple containing: 
+#   1 - an empty string, 
+#   2 - an empty string, 
+#   3 - the whole string:
+# Parameter	Description
+# value	    Required. The string to search for
+txt = "I could eat bananas all day, bananas are my favorite fruit"
+xFound = txt.rpartition("bananas")
+print(xFound)       # ('I could eat bananas all day, ', 'bananas', ' are my favorite fruit')
+xFound = txt.rpartition("apples")
+print(xFound)       # ('', '', 'I could eat bananas all day, bananas are my favorite fruit')
 
+
+print("\n--------split()--------\n")
+# splits a string into a list.
+# Parameter Description
+# separator	Optional. Specifies the separator to use when splitting the string. By default any whitespace is a separator
+# maxsplit	Optional. Specifies how many splits to do. Default value is -1, which is "all occurrences" When maxsplit is specified, the list will contain the specified number of elements plus one.
+txt = "welcome to the jungle"
+xList = txt.split()
+print(xList)        # ['welcome', 'to', 'the', 'jungle']
+
+txt = "hello, my name is Peter, I am 26 years old"
+xList = txt.split(", ")
+print(xList)        # ['hello', 'my name is Peter', 'I am 26 years old']
+
+txt = "apple#banana#cherry#orange"
+xList = txt.split("#")
+print(xList)        # ['apple', 'banana', 'cherry', 'orange']
+
+txt = "apple#banana#cherry#orange"
+# setting the maxsplit parameter to 1, will return a list with 2 elements!
+x = txt.split("#", -1)
+print(x)            # ['apple', 'banana', 'cherry', 'orange']
+x = txt.split("#", 0)
+print(x)            # ['apple#banana#cherry#orange']
+x = txt.split("#", 1)
+print(x)            # ['apple', 'banana#cherry#orange']
+x = txt.split("#", 2)
+print(x)            # ['apple', 'banana', 'cherry#orange']
+x = txt.split("#", 3)
+print(x)            # ['apple', 'banana', 'cherry', 'orange']
+x = txt.split("#", 4)
+print(x)            # ['apple', 'banana', 'cherry', 'orange']
+
+
+print("\n--------rsplit()--------\n")
+# splits a string into a list, starting from the right.
+# Parameter Description
+# separator	Optional. Specifies the separator to use when splitting the string. By default any whitespace is a separator
+# maxsplit	Optional. Specifies how many splits to do. Default value is -1, which is "all occurrences" When maxsplit is specified, the list will contain the specified number of elements plus one.
+txt = "welcome to the jungle"
+xList = txt.rsplit()
+print(xList)        # ['welcome', 'to', 'the', 'jungle']
+
+txt = "hello, my name is Peter, I am 26 years old"
+xList = txt.rsplit(", ")
+print(xList)        # ['hello', 'my name is Peter', 'I am 26 years old']
+
+# txt = "apple#banana#cherry#orange"
+# xList = txt.split("#")
+# print(xList)        # ['apple', 'banana', 'cherry', 'orange']
+
+txt = "apple#banana#cherry#orange"
+# setting the maxsplit parameter to 1, will return a list with 2 elements!
+x = txt.split("#", -1)
+print(x)            # ['apple', 'banana', 'cherry', 'orange']
+x = txt.rsplit("#", 0)
+print(x)            # ['apple#banana#cherry#orange']
+x = txt.rsplit("#", 1)
+print(x)            # ['apple#banana#cherry', 'orange']
+x = txt.rsplit("#", 2)
+print(x)            # ['apple#banana', 'cherry', 'orange']
+x = txt.rsplit("#", 3)
+print(x)            # ['apple', 'banana', 'cherry', 'orange']
+x = txt.rsplit("#", 4)
+print(x)            # ['apple', 'banana', 'cherry', 'orange']
+
+
+print("\n--------rstrip()--------\n")
+# removes any trailing characters (characters at the end a string), space is the default trailing character to remove.
+# Parameter	Description
+# characters	Optional. A set of characters to remove as trailing characters
+print("        HELLO WORLD          ".rstrip(),"|")     #         HELLO WORLD |
+print(",,,,,ssaaww.....HELLO,,,,,ssaaww.....".rstrip(",.asw"),"|")      # ,,,,,ssaaww.....HELLO |
+
+
+print("\n--------splitlines()--------\n")
+# splits a string into a list. The splitting is done at line breaks.
+# Parameter         Description
+# keeplinebreaks	Optional. Specifies if the line breaks should be included (True), or not (False). Default value is False
+print("Thank you for the music\nWelcome to the jungle".splitlines())        # ['Thank you for the music', 'Welcome to the jungle']
+print("Thank you for the music\nWelcome to the jungle".splitlines(True))    # ['Thank you for the music\n', 'Welcome to the jungle']
+
+
+print("\n--------startswith()--------\n")
+# returns True if the string starts with the specified value, otherwise False.
+# Parameter	Description
+# value	    Required. The value to check if the string starts with
+# start	    Optional. An Integer specifying at which position to start the search
+# end	    Optional. An Integer specifying at which position to end the search
+print("Hello, welcome to my world.".startswith("Hello"))                # True
+print("Hello, welcome to my world.".startswith("wel", 7, 20))           # True
+
+
+print("\n--------strip()--------\n")
+# removes any leading (spaces at the beginning) and trailing (spaces at the end) characters (space is the default leading character to remove)
+# Parameter 	Description
+# characters	Optional. A set of characters to remove as leading/trailing characters
+print("     banana     ".strip())       # banana
+print(",,,,,rrttgg.....banana....rrr".strip(",.grt"))       # banana
+
+
+print("\n--------swapcase()--------\n")
+# returns a string where all the upper case letters are lower case and vice versa.
+print("Hello My Name Is PETER".swapcase())      # hELLO mY nAME iS peter
+
+
+print("\n--------title()--------\n")
+# returns a string where the first character in every word is upper case. Like a header, or a title.
+# If the word contains a number or a symbol, the first letter after that will be converted to upper case.
+print("Welcome to my world".title())            # Welcome To My World
+print("Welcome to my 2nd world".title())        # Welcome To My 2Nd World
+print("hello b2b2b2 and 3g3g3g".title())        # Hello B2B2B2 And 3G3G3G
+
+
+print("\n--------translate()--------\n")
+# returns a string where some specified characters are replaced with the character described in a dictionary, or in a mapping table.
+# Use the maketrans() method to create a mapping table.
+# If a character is not specified in the dictionary/table, the character will not be replaced.
+# If you use a dictionary, you must use ascii codes instead of characters.
+# Parameter	Description
+# table	    Required. Either a dictionary, or a mapping table describing how to perform the replace
+
+xTable = str.maketrans("S", "P")
+print("Hello Sam!".translate(xTable))       # Hello Pam!
+
+xTable = str.maketrans("mSa", "eJo")
+print("Hi Sam!".translate(xTable))          # Hi Joe! 
+
+# The third parameter in the mapping table describes characters that you want to remove from the string
+mytable = str.maketrans("mSa", "eJo", "odnght")
+print("Good night Sam!".translate(mytable))     # G i Joe!
+
+# When using a dictionary instead of a mapping table, must use ascii codes instead of characters.
+xDict = {109: 101, 83: 74, 97: 111, 111: None, 100: None, 110: None, 103: None, 104: None, 116: None}
+print("Good night Sam!".translate(xDict))       # G i Joe!
+
+
+print("\n--------upper()--------\n")
+# returns a string where all characters are in upper case.
+# Symbols and Numbers are ignored.
+
+print("Hello my friends".upper())       # HELLO MY FRIENDS
+print("Hello World! (123)".upper())     # HELLO WORLD! (123)
+
+
+print("\n--------zfill()--------\n")
+# adds zeros (0) at the beginning of the string, until it reaches the specified length.
+# If the value of the len parameter is less than the length of the string, no filling is done.
+# Parameter	Description
+# len	    Required. A number specifying the desired length of the string
+
+print("50".zfill(10))                       # 0000000050
+print("hello".zfill(10))                    # 00000hello
+print("welcome to the jungle".zfill(10))    # welcome to the jungle
+print("10.000".zfill(10))                   # 000010.000

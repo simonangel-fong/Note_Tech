@@ -1,8 +1,8 @@
-# Python JSON
+# Python - Json Library
 
 [Back](../index.md)
 
-- [Python JSON](#python-json)
+- [Python - Json Library](#python---json-library)
   - [JSON](#json)
   - [`json.loads()`: String -\> Dict](#jsonloads-string---dict)
   - [`json.dumps()`: Dict -\> String](#jsondumps-dict---string)
@@ -118,4 +118,4 @@ print("None:\t\t", json.dumps(None))                            # None:         
 
 ---
 
-[TOP](#python-json)
+[TOP](#python---json-library)

@@ -1,8 +1,8 @@
-# Python Conditions
+# Python - Conditions
 
 [Back](../index.md)
 
-- [Python Conditions](#python-conditions)
+- [Python - Conditions](#python---conditions)
   - [IF Statement](#if-statement)
   - [Conditional expressions](#conditional-expressions)
   - [Equivalent Expression](#equivalent-expression)
@@ -169,4 +169,4 @@ print((lambda: b, lambda: a)[a < b]())
 
 ---
 
-[TOP](#python-conditions)
+[TOP](#python---conditions)

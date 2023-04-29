@@ -1,9 +1,11 @@
 # Python Boolean
 
-[Back](./index.md)
+[Back](../index.md)
 
 - [Python Boolean](#python-boolean)
   - [`bool()` function](#bool-function)
+  - [all() function](#all-function)
+  - [any() function](#any-function)
 
 ---
 
@@ -112,6 +114,76 @@ print("\n--------others--------\n")
 print(bool(False))     # False
 print(bool(None))     # False
 
+```
+
+---
+
+## all() function
+
+- `all(iterable)`:
+  - returns True if **all items** in an iterable are `True`, otherwise it returns `False`.
+  - If the iterable object is **empty**, the all() function also returns `True`.
+- Parameter
+  - iterable: An iterable object (list, tuple, dictionary)
+  - When used on a dictionary, the all() function checks if all the keys are true, not the values.
+
+```py
+print("\n--------all()--------\n")
+
+print("\n--------list--------")
+print(all([]))                  # True
+print(all([0, 1, 1]))           # False
+print(all([1, 1, 1]))           # True
+
+print("\n--------tuple--------")
+print(all(()))                  # True
+print(all((1, True, False)))    # False
+print(all((1, True, True)))     # True
+
+print("\n--------set--------")
+print(all({}))                  # True
+print(all({0, 1, 0}))           # False
+print(all({1, 1, True}))        # False
+
+print("\n--------dict--------")
+print(all(dict()))                      # True
+print(all({0: "Apple", 1: "Orange"}))   # False
+print(all({1: "Apple", 2: "Orange"}))   # True
+```
+
+---
+
+## any() function
+
+- `all(iterable)`:
+- returns True if **any item** in an iterable are `True`, otherwise it returns `False`.
+- If the iterable object is **empty**, the any() function will return `False`.
+- Parameter
+  - iterable: An iterable object (list, tuple, dictionary)
+  - When used on a dictionary, the any() function checks if any of the **keys** are true, not the values.
+
+```py
+print("\n--------any()--------\n")
+
+print("\n--------list--------")
+print(any([]))                  # False
+print(any([0, 1, 1]))           # True
+print(any([0, 0, 0]))           # False
+
+print("\n--------tuple--------")
+print(any(()))                  # True
+print(any((1, True, False)))    # False
+print(any((0, False, False)))   # False
+
+print("\n--------set--------")
+print(any({}))                  # False
+print(any({0, 1, True}))        # True
+print(any({0, 0, False}))       # False
+
+print("\n--------dict--------")
+print(any(dict()))                      # False
+print(any({0: "Apple", 1: "Orange"}))   # True
+print(any({0: "Apple", 0: "Orange"}))   # False
 ```
 
 ---

@@ -1,8 +1,8 @@
-# Python Try Except
+# Python - Exception
 
 [Back](../index.md)
 
-- [Python Try Except](#python-try-except)
+- [Python - Exception](#python---exception)
   - [Try Except](#try-except)
   - [Exception Handling](#exception-handling)
   - [Raise an exception](#raise-an-exception)
@@ -110,4 +110,4 @@ except Exception as ex:
 
 ---
 
-[TOP](#python-try-except)
+[TOP](#python---exception)

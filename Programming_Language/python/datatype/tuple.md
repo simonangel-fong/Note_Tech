@@ -1,8 +1,8 @@
-# Python Tuple
+# Python - Tuple
 
 [Back](../index.md)
 
-- [Python Tuple](#python-tuple)
+- [Python - Tuple](#python---tuple)
   - [Tuple](#tuple)
     - [Tuple Method](#tuple-method)
     - [Create a tuple](#create-a-tuple)
@@ -362,4 +362,4 @@ print(x)    # 3
 
 ---
 
-[TOP](#python-tuple)
+[TOP](#python---tuple)

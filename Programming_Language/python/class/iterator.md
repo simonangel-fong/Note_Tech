@@ -1,8 +1,8 @@
-# Python Iterators
+# Python - Iterators
 
 [Back](../index.md)
 
-- [Python Iterators](#python-iterators)
+- [Python - Iterators](#python---iterators)
   - [Iterators](#iterators)
     - [Create an Iterator](#create-an-iterator)
     - [StopIteration](#stopiteration)
@@ -134,4 +134,4 @@ for x in iter:
 
 ---
 
-[TOP](#python-iterators)
+[TOP](#python---iterators)

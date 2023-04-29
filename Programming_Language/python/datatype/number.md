@@ -1,8 +1,8 @@
-# Python Number
+# Python - Number
 
-[Back](./index.md)
+[Back](../index.md)
 
-- [Python Number](#python-number)
+- [Python - Number](#python---number)
   - [Int](#int)
   - [Float](#float)
   - [Complex](#complex)
@@ -128,4 +128,4 @@ x: 3
 
 ---
 
-[TOP](#python-number)
+[TOP](#python---number)

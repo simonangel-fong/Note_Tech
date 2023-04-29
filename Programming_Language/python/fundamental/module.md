@@ -1,21 +1,25 @@
-# Python Modules
+# Python - Modules
 
 [Back](../index.md)
 
-- [Python Modules](#python-modules)
+- [Python - Modules](#python---modules)
   - [Module](#module)
     - [Example](#example)
   - [Built-in Modules](#built-in-modules)
   - [`dir()` Function](#dir-function)
+  - [Python Built-in Library](#python-built-in-library)
+  - [Run a .py File](#run-a-py-file)
 
 ---
 
 ## Module
 
-- `module`: a file containing Python **definitions and statements**
+- `module`: A document with definitions of functions and various statements written in Python
 
+  - Every python file is a module.
   - A module can define `functions`, `classes`, and `variables`.
   - A module can also include **runnable code**.
+  - A module can be imported from another python file.
 
 - **Create a Module**
 
@@ -133,4 +137,50 @@ print(x)
 
 ---
 
-[TOP](#python-modules)
+## Python Built-in Library
+
+| Library name | Description                   |
+| ------------ | ----------------------------- |
+| `math`       | math utilities                |
+| `re`         | regular expressions           |
+| `json`       | JSON                          |
+| `datetime`   | date and time                 |
+| `sqlite3`    | use SQLite                    |
+| `os`         | os utilities                  |
+| `random`     | random number generation      |
+| `statistics` | statistics generation         |
+| `requests`   | perform HTTP network requests |
+| `http`       | to create HTTP servers        |
+| `urllib`     | to manage urlsservers         |
+
+---
+
+## Run a .py File
+
+- Command Line:
+
+```shell
+# target file: main.py
+python main.py
+```
+
+- Pass arguments from command line
+
+  - py file:
+    - imort sys
+    - using `sys.argv` to accept arguments
+  - CLI: `python file_name.py [arguement]`
+
+```shell
+py Programming_Language\python\lab.py john 16
+```
+
+```py
+import sys
+
+print(sys.argv[1:])   # ['john', '16']
+```
+
+---
+
+[TOP](#python---modules)

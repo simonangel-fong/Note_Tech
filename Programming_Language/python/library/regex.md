@@ -1,8 +1,8 @@
-# Python RegEx
+# Python - RegEx Library
 
 [Back](../index.md)
 
-- [Python RegEx](#python-regex)
+- [Python - RegEx Library](#python---regex-library)
   - [RegEx Module](#regex-module)
   - [RegEx Functions](#regex-functions)
   - [Metacharacters](#metacharacters)
@@ -223,4 +223,4 @@ print("string:\t\t", xMatch.string)         # string:          The rain in Spain
 
 ---
 
-[Top](#python-regex)
+[Top](#python---regex-library)

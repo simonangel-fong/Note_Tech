@@ -1,8 +1,8 @@
-# Python Datetime
+# Python - Datetime Library
 
 [Back](../index.md)
 
-- [Python Datetime](#python-datetime)
+- [Python - Datetime Library](#python---datetime-library)
   - [Date Object](#date-object)
   - [`datetime()`: Creating Date Objects](#datetime-creating-date-objects)
   - [`strftime()`](#strftime)
@@ -69,8 +69,6 @@ print("type():\t\t", type(xtime))           # type():          <class 'datetime.
 - `strftime()`: Formats date objects into readable strings
   - parameter: format, to specify the format of the returned string
 
-
-
 ---
 
-[TOP](#python-datetime)
+[TOP](#python---datetime-library)

@@ -1,8 +1,8 @@
-# Python Loops
+# Python - Loops
 
 [Back](../index.md)
 
-- [Python Loops](#python-loops)
+- [Python - Loops](#python---loops)
   - [while Loop](#while-loop)
   - [for Loop](#for-loop)
   - [Nested Loops](#nested-loops)
@@ -230,4 +230,4 @@ for x in adj:
 
 ---
 
-[TOP](#python-loops)
+[TOP](#python---loops)

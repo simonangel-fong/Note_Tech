@@ -1,8 +1,8 @@
-# Python Classes/Objects
+# Python - Classes/Objects
 
 [back](../index.md)
 
-- [Python Classes/Objects](#python-classesobjects)
+- [Python - Classes/Objects](#python---classesobjects)
   - [Classes/Objects](#classesobjects)
   - [Object Methods](#object-methods)
 
@@ -127,4 +127,4 @@ del p1.age
 
 ---
 
-[TOP](#python-classesobjects)
+[TOP](#python---classesobjects)

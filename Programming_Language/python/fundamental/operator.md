@@ -6,6 +6,7 @@
   - [Arithmetic Operator](#arithmetic-operator)
   - [Comparison Operator](#comparison-operator)
   - [Logical Operator](#logical-operator)
+  - [Ternary Operator](#ternary-operator)
   - [Identity Operators](#identity-operators)
   - [Membership Operators](#membership-operators)
   - [Operator Precedence](#operator-precedence)
@@ -48,6 +49,17 @@
 | `and`    | Returns True if both statements are true                | x < 5 and x < 10      |
 | `or`     | Returns True if one of the statements is true           | x < 5 or x < 4        |
 | `not`    | Reverse the result, returns False if the result is true | not(x < 5 and x < 10) |
+
+---
+
+## Ternary Operator
+
+```py
+# Ternary operator
+a, b = 10, 20
+min = a if a < b else b
+print(min)    # 10
+```
 
 ---
 

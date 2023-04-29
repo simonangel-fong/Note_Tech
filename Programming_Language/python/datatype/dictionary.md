@@ -1,8 +1,8 @@
-# Python Dictionary
+# Python - Dictionary
 
 [Back](../index.md)
 
-- [Python Dictionary](#python-dictionary)
+- [Python - Dictionary](#python---dictionary)
   - [Dictionary](#dictionary)
     - [Dictionary Methods](#dictionary-methods)
     - [Create a dictionary](#create-a-dictionary)
@@ -630,4 +630,4 @@ print(x)    # white
 
 ---
 
-[TOP](#python-dictionary)
+[TOP](#python---dictionary)

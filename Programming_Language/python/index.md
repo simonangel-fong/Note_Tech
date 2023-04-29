@@ -15,7 +15,9 @@
   - [Variable](./fundamental/variable.md)
   - [Scope](./fundamental/scope.md)
   - [Operator](./fundamental/operator.md)
-  - [Function](./fundamental/function.md)
+  - [Module](./fundamental/module.md)
+  - [Package](./fundamental/package.md)
+  - [CLI](./fundamental/command_line_interface.md)
 
 - [Data Type](./datatype/data_type.md)
 
@@ -28,27 +30,33 @@
     - [Set](./datatype/set.md)
     - [Dictionary](./datatype/dictionary.md)
 
-- [Condition](./condition/condition.md)
+- [Function](./function/function.md)
 
-- [Loop](./loop/loop.md)
+  - [String Function](./function/string_function.md)
+  - [Built-in Function](./function/built_in_func.md)
+
+- Control Statement
+
+  - [Conditional Statement](./control_statement/condition.md)
+  - [Loop Statement](./control_statement/loop.md)
 
 - [Class](./class/class.md)
 
   - [Inheritance](./class/inheritance.md)
   - [Iterator](./class/iterator.md)
+  - [Enum](./class/enum.md)
 
-- [Module](./module/module.md)
+- Built-in Library
 
-  - [datetime](./module/datetime.md)
-  - [math](./module/math.md)
-  - [json](./module/json.md)
-  - [regex](./module/regex.md)
-  - [Package](./module/package.md)
+  - [datetime](./library/datetime.md)
+  - [math](./library/math.md)
+  - [json](./library/json.md)
+  - [regex](./library/regex.md)
 
 - [Exception](./exception/exception.md)
 
 - IO
-  - [Input](./io/input.md)
+  - [Input & Print](./io/input_print.md)
 
 ---
 

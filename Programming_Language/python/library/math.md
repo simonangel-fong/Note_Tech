@@ -1,8 +1,8 @@
-# Python Math
+# Python - Math Library
 
 [Back](../index.md)
 
-- [Python Math](#python-math)
+- [Python - Math Library](#python---math-library)
   - [Built-in Functions](#built-in-functions)
   - [Math](#math)
 
@@ -30,4 +30,4 @@ print("pow(4, 3):\t\t", pow(4, 3))                  # pow(4, 3):               6
 
 ---
 
-[Top](#python-math)
+[Top](#python---math-library)

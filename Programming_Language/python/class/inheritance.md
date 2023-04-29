@@ -1,11 +1,11 @@
-# Python Inheritance
+# Python - Inheritance
 
 [Back](../index.md)
 
-- [Python Inheritance](#python-inheritance)
+- [Python - Inheritance](#python---inheritance)
   - [Inheritance](#inheritance)
   - [Method](#method)
-    - [Example: Inheritance](#example-inheritance)
+  - [Example: Inheritance](#example-inheritance)
 
 ---
 
@@ -32,7 +32,7 @@
 
 ---
 
-### Example: Inheritance
+## Example: Inheritance
 
 ```py
 print("\n--------Class: Inheritance--------\n")
@@ -75,4 +75,4 @@ std.printID()               # ID: 001
 
 ---
 
-[TOP](#python-inheritance)
+[TOP](#python---inheritance)

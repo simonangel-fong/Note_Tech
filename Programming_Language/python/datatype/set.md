@@ -1,8 +1,8 @@
-# Python Set
+# Python - Set
 
 [Back](../index.md)
 
-- [Python Set](#python-set)
+- [Python - Set](#python---set)
   - [Set](#set)
     - [Set Methods](#set-methods)
     - [Create a set](#create-a-set)
@@ -13,6 +13,7 @@
   - [Join Two Sets 并集](#join-two-sets-并集)
   - [Keep ONLY the Duplicates 交集](#keep-only-the-duplicates-交集)
   - [Keep All, But NOT the Duplicates 差集](#keep-all-but-not-the-duplicates-差集)
+  - [Check Subset](#check-subset)
 
 ---
 
@@ -249,8 +250,9 @@ if "apple" in xlist:
 
 ## Join Two Sets 并集
 
-- `union()`: returns a new set containing all items from both sets
 - `update()`: inserts all the items from one set into another
+- `union()`: returns a new set containing all items from both sets
+- `|`: same as `union()`
 
 ```py
 print("\n---------Join Set: union()--------\n")
@@ -270,6 +272,15 @@ yset = {1, 2, 3}
 xset.update(yset)
 print(xset)     # {1, 2, 3, 'c', 'a', 'b'}
 
+
+print("\n---------Join Set: |--------\n")
+xSet = {"apple", "banana", "cherry"}
+ySet = {"google", "microsoft", "apple"}
+unionsection = xSet | ySet
+
+print(xSet)     # {'banana', 'apple', 'cherry'}
+print(ySet)     # {'microsoft', 'google', 'apple'}
+print(unionsection)     # {'cherry', 'google', 'banana', 'microsoft', 'apple'}
 ```
 
 ---
@@ -279,6 +290,8 @@ print(xset)     # {1, 2, 3, 'c', 'a', 'b'}
 - `intersection_update()`: keep only the items that are present in both sets.
 
 - `intersection()`: return a new set, that only contains the items that are present in both sets.
+
+- `&`: same as `intersection()`
 
 ```py
 print("\n---------Keep ONLY the Duplicates--------\n")
@@ -295,6 +308,16 @@ y = {"google", "microsoft", "apple"}
 z = x.intersection(y)        # will not update x, y, but return a new set.
 
 print(z)        # {'apple'}
+
+
+# &
+xSet = {"apple", "banana", "cherry"}
+ySet = {"google", "microsoft", "apple"}
+intersection = xSet & ySet
+
+print(xSet)     # {'banana', 'apple', 'cherry'}
+print(ySet)     # {'microsoft', 'google', 'apple'}
+print(intersection)     # {'apple'}
 ```
 
 ---
@@ -304,6 +327,8 @@ print(z)        # {'apple'}
 - `symmetric_difference_update()`: keep only the elements that are NOT present in both sets.
 
 - `symmetric_difference()`: return a new set, that contains only the elements that are NOT present in both sets.
+
+- `-`: same as `symmetric_difference()`
 
 - Note: The values True and 1 are considered the same value in sets, and are treated as duplicates:
 
@@ -330,8 +355,34 @@ y = {"google", 1, "apple", 2}
 z = x.symmetric_difference(y)       # {2, 'banana', 'google', 'cherry'}
 
 print(z)
+
+
+# -
+xSet = {"apple", "banana", "cherry"}
+ySet = {"google", "microsoft", "apple"}
+unionsection = xSet - ySet
+
+print(xSet)     # {'banana', 'apple', 'cherry'}
+print(ySet)     # {'microsoft', 'google', 'apple'}
+print(unionsection)     # {'cherry', 'banana'}
 ```
 
 ---
 
-[TOP](#python-set)
+## Check Subset
+
+```py
+print("\n---------Check Subset--------\n")
+
+xSet = {"apple", "banana", "cherry"}
+ySet = {"apple", "banana"}
+print(xSet > ySet)      # True
+print(ySet > xSet)      # False
+
+print(xSet < ySet)      # False
+print(ySet < xSet)      # True
+```
+
+---
+
+[TOP](#python---set)
