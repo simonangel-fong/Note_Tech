@@ -1,8 +1,8 @@
-# Python Boolean
+# Python - Boolean
 
 [Back](../index.md)
 
-- [Python Boolean](#python-boolean)
+- [Python - Boolean](#python---boolean)
   - [`bool()` function](#bool-function)
   - [all() function](#all-function)
   - [any() function](#any-function)
@@ -188,4 +188,4 @@ print(any({0: "Apple", 0: "Orange"}))   # False
 
 ---
 
-[TOP](#python-boolean)
+[TOP](#python---boolean)

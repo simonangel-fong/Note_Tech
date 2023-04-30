@@ -5,6 +5,7 @@
 - [Python - Classes/Objects](#python---classesobjects)
   - [Classes/Objects](#classesobjects)
   - [Object Methods](#object-methods)
+  - [Operators Overloading](#operators-overloading)
 
 ---
 
@@ -120,10 +121,170 @@ del p1.age
 - `__str__()`
   - returns the object representation in a **string format**. This method is supposed to return a human-readable format which is used to display some information about the object
 
-```py
+---
 
+## Operators Overloading
+
+- `operator overloading`
+
+  - define the function to use the operator by instances of user-defined data type class.
+
+- When the user uses the operator on the user-defined data types of class, then a **magic function that is associated with the operator** will be invoked automatically. The process of changing the behaviour of the operator is as simple as the behaviour of the function or method defined.
+
+```py
+print("\n--------Example: Operator overloading--------\n")
+
+
+class example01:
+    def __init__(self, X):
+        self.X = X
+
+    # adding two objects
+    def __add__(self, U):
+        return self.X + U.X
+
+
+object_1 = example01(int(input("Please enter the value: ")))
+object_2 = example01(int(input("Please enter the value: ")))
+print(": ", object_1 + object_2)
+
+object_3 = example01(str(input("Please enter the value: ")))
+object_4 = example01(str(input("Please enter the value: ")))
+print(": ", object_3 + object_4)
+
+# Please enter the value: 23
+# Please enter the value: 23
+# :  46
+# Please enter the value: dfsd
+# Please enter the value: fesfe
+# :  dfsdfesfe
+
+
+class example02:
+    def __init__(self, X, Y):
+        self.X = X
+        self.Y = Y
+
+    # Now, we will add the two objects
+    def __add__(self, U):
+        return self.X + U.X, self.Y + U.Y
+
+
+Object_1 = example02(23, 12)
+Object_2 = example02(21, 22)
+Object_3 = Object_1 + Object_2
+print(Object_3)         # (44, 34)
+
+
+class example03:
+    def __init__(self, X: int):
+        self.X = X
+
+    def __gt__(self, U) -> bool:
+        if (self.X > U.X):
+            return True
+        else:
+            return False
+
+
+object_1 = example03(int(input(("Please enter the value: "))))
+object_2 = example03(int(input(("Please enter the value: "))))
+if (object_1 > object_2):
+    print("The object_1 is greater than object_2")
+else:
+    print("The object_2 is greater than object_1")
+# Please enter the value: 11
+# Please enter the value: 22
+# The object_2 is greater than object_1
+
+
+class example04:
+    def __init__(self, X):
+        self.X = X
+
+    def __lt__(self, U):
+        if (self.X < U.X):
+            return "object_1 is less than object_2"
+        else:
+            return "object_2 is less than object_1"
+
+    def __eq__(self, U):
+        if (self.X == U.X):
+            return "Both the objects are equal"
+        else:
+            return "Objects are not equal"
+
+
+object_1 = example04(int(input("Please enter the value: ")))
+object_2 = example04(int(input("Please enter the value: ")))
+print(": ", object_1 < object_2)
+# Please enter the value: 11
+# Please enter the value: 23
+# :  object_1 is less than object_2
+
+
+object_3 = example04(int(input("Please enter the value: ")))
+object_4 = example04(int(input("Please enter the value: ")))
+print(": ", object_3 == object_4)
+# Please enter the value: 1
+# Please enter the value: 1
+# :  Both the objects are equal
 
 ```
+
+- Binary Operators
+
+| Operator | Magic Function            |
+| -------- | ------------------------- | ------------------- |
+|          |                           |
+| `-`      | **add**(self, other)      |
+| `*`      | **sub**(self, other)      |
+| `-`      | **mul**(self, other)      |
+| `/`      | **truediv**(self, other)  |
+| `//`     | **floordiv**(self, other) |
+| `%`      | **mod**(self, other)      |
+| `**`     | **pow**(self, other)      |
+| `>>`     | **rshift**(self, other)   |
+| `<<`     | **lshift**(self, other)   |
+| `&`      | **and**(self, other)      |
+| `        | `                         | **or**(self, other) |
+| `^`      | **xor**(self, other)      |
+
+- Comparison Operators
+
+| Operator | Magic Function      |
+| -------- | ------------------- |
+| `<`      | **LT**(SELF, OTHER) |
+| `>`      | **GT**(SELF, OTHER) |
+| `<=`     | **LE**(SELF, OTHER) |
+| `=`      | **GE**(SELF, OTHER) |
+| `==`     | **EQ**(SELF, OTHER) |
+| `!=`     | **NE**(SELF, OTHER) |
+
+- Assignment Operators
+
+| Operator | Magic Function             |
+| -------- | -------------------------- | -------------------- |
+| `-=`     | **ISUB**(SELF, OTHER)      |
+| `+=`     | **IADD**(SELF, OTHER)      |
+| `*=`     | **IMUL**(SELF, OTHER)      |
+| `/=`     | **IDIV**(SELF, OTHER)      |
+| `//=`    | **IFLOORDIV**(SELF, OTHER) |
+| `%=`     | **IMOD**(SELF, OTHER)      |
+| `**=`    | **IPOW**(SELF, OTHER)      |
+| `=`      | **IRSHIFT**(SELF, OTHER)   |
+| `<<=`    | **ILSHIFT**(SELF, OTHER)   |
+| `&=`     | **IAND**(SELF, OTHER)      |
+| `        | =`                         | **IOR**(SELF, OTHER) |
+| `^=`     | **IXOR**(SELF, OTHER)      |
+
+- Unary Operator:
+
+| Operator | Magic Function          |
+| -------- | ----------------------- |
+| `*`      | **NEG**(SELF, OTHER)    |
+| `-`      | **POS**(SELF, OTHER)    |
+| `~`      | **INVERT**(SELF, OTHER) |
 
 ---
 

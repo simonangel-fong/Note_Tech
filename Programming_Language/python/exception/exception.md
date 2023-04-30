@@ -6,6 +6,8 @@
   - [Try Except](#try-except)
   - [Exception Handling](#exception-handling)
   - [Raise an exception](#raise-an-exception)
+  - [Customized Exception Class](#customized-exception-class)
+  - [With Statement](#with-statement)
 
 ---
 
@@ -106,6 +108,66 @@ except TypeError as ex:
     print("TypeError: {ex}".format(ex=ex))      # TypeError: Only integers are allowed
 except Exception as ex:
     print("Exception: {ex}".format(ex=ex))
+```
+
+---
+
+## Customized Exception Class
+
+- Inheriate from Exception class
+
+```py
+
+class CustomizedException(Exception):
+    print("inside")
+    pass
+
+
+try:
+    raise CustomizedException()
+except CustomizedException:
+    print("Raised customized exception.")
+
+# inside
+# Raised customized exception.
+```
+
+---
+
+## With Statement
+
+```py
+print("\n--------Example: with statement--------\n")
+
+print("\n--------try except")
+filename = "test.txt"
+
+
+try:
+    file = open(filename, 'r')
+    try:
+        content = file.read()
+        print(content)
+    except Exception as err:
+        print(err)
+    finally:
+        file.close()
+except FileNotFoundError as err:
+    print(err)
+else:
+    print("success")
+
+
+print("\n--------with statement")
+try:
+    with open(filename, 'r') as file:
+        content = file.read()
+        print(content)
+except Exception as err:
+    print(err)
+else:
+    print("success")
+
 ```
 
 ---

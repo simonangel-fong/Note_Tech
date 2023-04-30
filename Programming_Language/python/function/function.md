@@ -15,6 +15,7 @@
   - [Lambda](#lambda)
   - [Nested Function](#nested-function)
   - [Closure](#closure)
+  - [Annotation](#annotation)
 
 ---
 
@@ -336,27 +337,46 @@ print(xFunc('John'))      # ('John', 'Wick', 88, [1, 2, 3])
 
 - Python also accepts function recursion, which means a defined **function can call itself**.
 
+  - Common use: factorial calculation.`阶乘n!`
+
 - `Recursion` is a common mathematical and programming concept. It means that a **function calls itself**. This has the benefit of meaning that you can loop through data to reach a result.
   - The developer should be very careful with recursion as it can be quite easy to slip into writing a <u>function which never terminates</u>, or one that <u>uses excess amounts of memory or processor power</u>.
   - However, when written correctly recursion can be a very efficient and mathematically-elegant approach to programming.
 
 ```py
-def sumInteger(num):
-    if num > 0:
-        result = num + sumInteger(num-1)
-        print(result)
+print("\n--------Recursion: Factorial--------\n")
+
+# 阶乘
+def factorial(number):
+    if number > 1:
+        return number*factorial(number-1)
     else:
-        result = 0
-    return result
+        return 1
 
 
-num = 4
-print(f"Sum of 1-{num}: ", sumInteger(num))
-# 1
-# 3
-# 6
-# 10
-# Sum of 1-4:  10
+print(factorial(0))     # 1
+print(factorial(1))     # 1
+print(factorial(2))     # 2
+print(factorial(3))     # 6
+print(factorial(4))     # 24
+print(factorial(5))     # 120
+
+
+print("\n--------Recursion: Sum Progression--------\n")
+# 自然数求和
+def sum_progression(number):
+    if number > 0:
+        return number + sum_progression(number-1)
+    else:
+        return 0
+
+print(sum_progression(0))     # 0
+print(sum_progression(1))     # 1
+print(sum_progression(2))     # 3
+print(sum_progression(3))     # 6
+print(sum_progression(4))     # 10
+print(sum_progression(5))     # 15
+
 
 ```
 
@@ -529,6 +549,34 @@ add_8 = add_num(8)      # n 8
 print(add_8(4))         # x 4; 12
 
 print(add_8(add_2(7)))  # 17: 2+7+8=17
+```
+
+---
+
+## Annotation
+
+```py
+print("\n--------Annotation: Function--------\n")
+
+
+def fibonacci(n: int, res: 'list' = []) -> 'list':
+    if n == 0:
+        return res
+    else:
+        if len(res) < 2:
+            res.append(1)
+            fibonacci(n-1, res)
+        else:
+            last = res[-1]
+            second_last = res[-2]
+            res.append(last + second_last)
+            fibonacci(n-1, res)
+        return res
+
+
+print(fibonacci(8))     # [1, 1, 2, 3, 5, 8, 13, 21]
+# print(fibonacci("8"))        # TypeError: unsupported operand type(s) for -: 'str' and 'int'
+
 ```
 
 ---

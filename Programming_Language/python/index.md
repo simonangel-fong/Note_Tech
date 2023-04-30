@@ -32,6 +32,7 @@
 
 - [Function](./function/function.md)
 
+  - [Decorator](./function/decorator.md)
   - [String Function](./function/string_function.md)
   - [Built-in Function](./function/built_in_func.md)
 
