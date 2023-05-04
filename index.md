@@ -3,7 +3,7 @@
 - Fundamental
 
   - [ ] Statictics
-  - [ ] **Data Structure**
+  - [ ] [Data Structure](./Fundamental/Data_Structure/index.md)
   - [ ] [Git](./Fundamental/git/git_index.md)
 
 - Programming Language
