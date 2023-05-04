@@ -20,7 +20,11 @@
 
 ## Catalog
 
-- [Data Structure]
+- [Big O Notation](./big_o.md)
+
+- Array
+  - [Array(Dynamic Array)](./array/array.md)
+  - [Java - ArrayList](./array/arraylist.md)
 
 ---
 
