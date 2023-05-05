@@ -19,6 +19,10 @@
 - [Management and Development](./management_and_developers_tools/tool.md)
 - [Shared Responsibility Model](./shared_responsibility_model/shared_responsibility_model.md)
 
+- [Compute](./compute/compute.md)
+- [Storage](./storage/storage.md)
+- [Database](./database/database.md)
+
 ---
 
 [TOP](#aws---ccp)
