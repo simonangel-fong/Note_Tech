@@ -7,6 +7,9 @@
   - [Data Warehouse](#data-warehouse)
   - [A Key/Value Store](#a-keyvalue-store)
   - [Document Store](#document-store)
+  - [NoSQL Database Services](#nosql-database-services)
+  - [Relational Database Services](#relational-database-services)
+  - [Other Database Services](#other-database-services)
 
 ---
 
@@ -78,6 +81,66 @@
   - Document stores are sub-class of Key/Value stores.
 
 ![document store](./pic/database_document_store.png)
+
+---
+
+## NoSQL Database Services
+
+- `DynamoDB`
+
+  - a serverless NoSQL key/value and document database.
+  - It is designed to scale to billions of records with guaranteed consisted data return in at least a second.
+  - For users who want a massively scalable database.
+
+- `DocumentDB`
+
+  - a NoSQL document database that is **MongoDB compatible**.
+  - For users who want a `MongoDB` database.
+
+- `Amoazon Keyspaces`
+
+  - a fully managed Apache `Cassardra` database.
+  - For users who want to use `Apache Cassandra`
+
+- `Cassandra`
+  - an open-souce NoSQL key/value database.
+
+---
+
+## Relational Database Services
+
+- `Relational Database Service (RDS)`
+
+  - a relational database service that supports multiple SQL engines. Relational is synonymous with `SQL` and `Online Transactional Processing (OLTP)`.
+
+  - Supported SQL Engine
+
+  ![SQL Engin](./pic/database_sql_engine.png)
+
+- `Aurora`
+
+  - a fully managed database of either MySQL and PSQL database.
+  - For users who want a relational database for Postgres or MySQL.
+
+- `Aurora Severless`
+
+  - the serverless on-demand version of Aurora.
+  - For users who want most of the benefits of Aurora but can trade to have cold-starts or don't have lots of traffic demand.
+
+- `RDS on VMware`
+  - allow to deploy RDS supported engines to an on-premise data-center.
+  - For users who want databases managed by RDS on user's own datacenter.
+
+---
+
+## Other Database Services
+
+- `Redshift`
+  - a petabyte-size data-warehouse.
+  - Data-warehouses are for Online Analytical Processing (OLAP) and can run a very complex query and a large amount of data and get that data back very fast.
+  - For users who want to quickly generate analytics or reports from a large amount of data.
+
+![other](./pic/database_other_services.png)
 
 ---
 

@@ -1,0 +1,274 @@
+# AWS - Identity
+
+[Back](../index.md)
+
+- [AWS - Identity](#aws---identity)
+  - [Zero Trust Model](#zero-trust-model)
+  - [Zero Trust on AWS](#zero-trust-on-aws)
+  - [Zero Trust on AWS with Third Party.](#zero-trust-on-aws-with-third-party)
+  - [Directory Service](#directory-service)
+  - [Active Directory](#active-directory)
+  - [Identity Providers(IdPs)](#identity-providersidps)
+  - [Single-Sign-On (SSO)](#single-sign-on-sso)
+  - [LDAP](#ldap)
+  - [Multi-Factor-Authenication](#multi-factor-authenication)
+  - [Security Keys](#security-keys)
+  - [AWS IAM](#aws-iam)
+  - [IAM Policy](#iam-policy)
+  - [Principle of Least Privilege (PoLP)](#principle-of-least-privilege-polp)
+  - [AWS Account Root User](#aws-account-root-user)
+  - [AWS Single-Sign On](#aws-single-sign-on)
+
+---
+
+## Zero Trust Model
+
+- `Network-Centric`: Old-Way
+
+  - Traditional security focused on firewalls and VPNs
+    - Since there were few employees or workstations outside the office or they were in specific remote offices.
+
+- `Identity-Centric`: New-Way
+
+  - We have **identity based security controls** like MFA, or providing provisional access based on the level of risk from where, when,and what a user wants to access.
+  - Since Bring-your-own-device, remote workstations is much more common, we cannot trust if the employee is a secure location.
+
+- `Primary Security Perimeter`
+
+  - The primary or new security perimeter **defines the first line of defense** and its security controls that protect a company's cloud resources and assets.
+
+- `Zero Trust Model`
+
+  - operates on the principle of trust no one, verify everything.
+
+- In the Zero Trust Model, **Identity** becomes the `primary security perimeter`.
+
+- `Identity-Centric` does not replace but **arguments** `network-centric security`.
+
+---
+
+## Zero Trust on AWS
+
+- `Identity Security Controls`
+  - user can implement on AWS to meet the `Zero Trust`.
+
+![IAM](./pic/identity_IAM.png)
+
+- AWS does not have a ready-to-use identity controls are intelligent, which is why AWS is considered to not have a true Zero Trust offering for customers, and **third-party services need to be used.**
+
+- A collection of AES services can be setup to intelligent-ish detection concerns but requires expert knowledge.
+
+---
+
+## Zero Trust on AWS with Third Party.
+
+- AWS does technically **implement a Zero Trust Model** but does not allow for intelligent identity security controls.
+
+- 要实现智能, 需要使用第三方.
+
+![3rd](./pic/identity_third_party.png)
+
+---
+
+## Directory Service
+
+- `Directory Service`
+
+  - maps the names of network resource to their network address.
+  - shared information infrastructure for **locating, managing, adminstering, and organizing** resources.
+    - Each resource on the network is considered an **object** by the directory server.
+    - Information about a particular resource is stored as collection of attributes associated with that resource or object.
+
+- A direcotry service is a critical component of a network operating system.
+
+- `directory server (name server)`
+  - a server which provides a directory service.
+
+![Directory Service](./pic/directory_service.png)
+
+---
+
+## Active Directory
+
+- Used by windows.(了解即可)
+
+![Active Directory](./pic/active_directory.png)
+
+---
+
+## Identity Providers(IdPs)
+
+- `Identity Provider (IdP)`
+
+  - a system entity that creates, maintains, and manages identity information for principals and also **provides authentication services** to applications with a **federation** or distributed network.
+
+- `Federated identity`
+
+  - a method of linking a user's identity across multiple separate identity management systems.
+
+- A trusted provider of user identity lets user use authenticate to access other services.
+
+- Identity Providers: **Facebook, Amazon, Google, Twitter, Github, LinkedIn**.
+
+- Protocol
+
+  ![Protocol](./pic/protocol.png)
+
+---
+
+## Single-Sign-On (SSO)
+
+- `Single-Sign-On (SSO)`
+
+  - an authentication scheme that allows a user to log in **with a single ID and password** to **different systems and software**.
+
+- Exmaple: Active Directory
+
+  ![sso](./pic/sso_example.png)
+
+---
+
+## LDAP
+
+- `Lightweight Directory Access Protocol (LDAP)`
+
+  - an open, vendor-neutral, industry standard **application protocol** for accessing and maintaining distributed directory information services over an internet Protocal netowork.
+  - common use of LDAP is to provide a central place to store usernames and password.
+
+- LDAP enables for SSO.
+- SSO allows users to single ID and password, but they have to enter it in every time they want to login.
+
+  ![ldap](./pic/ldap.png)
+
+---
+
+## Multi-Factor-Authenication
+
+- `Multi-Factor Authenication (MFA)`
+
+  - a security control where after user fill in username/email and password, user have to use a second device such as a phone to confirm that its logging in.
+
+- MFA protects against people who have stolen user's password.
+
+![mfa](./pic/mfa.png)
+
+---
+
+## Security Keys
+
+- `Security Keys`
+
+  - a secondary device used as second step in authentication process to gain access to a device, workstation, or application.
+
+- A security key can resemble a memory stick which will generate an autofill a security token.
+
+![security_keys](./pic/security_keys.png)
+
+---
+
+## AWS IAM
+
+- `AWS Identity and Access Management (IAM)`
+
+  - user can create and manage AWS users and groups, and permissions to allow and deny access to AWS resources.
+
+- `IAM Policies`
+
+  - JSON documents which grant permissions for a specific user, group, or role to access services.
+  - Policies are attached to IAM Identities.
+
+- `IAM Permission`
+
+  - The API action that can or cannot be performed.
+  - are represented in the IAM Policy document.
+
+- `IAM Identities`
+
+  - `IAM Users`
+
+    - **End users who log into the console** or interact with AWS resources programmatically or via clicking UI interfaces.
+
+  - `IAM Groups`
+
+    - Group up users who all **share permission levels** of the group.
+
+  - `IAM Roles`
+    - Roles grant AWS resources permissions to specific **AWS API actions.**
+    - Associate policies to Role and assign it to an AWS resource.
+
+---
+
+## IAM Policy
+
+- `IAM Policy`
+  - are written in JSON,
+  - contains the permission which determin what API actions are allowed or denied.
+
+![policy](./pic/policy.png)
+
+---
+
+## Principle of Least Privilege (PoLP)
+
+- `Principle of Least Privilege (PoLP)`
+
+  - the computer security concept of providing a user, role, or application **the least amount of permissions** to perform a operation or action.
+
+- `Just-Enough-Access (JEA)`
+
+  - **permitting only the exact actions** for the identity to perform a task
+
+- `Just-In-Time (JIT)`
+
+  - **permitting the smallest length of duration** an identity can use permissions.
+
+- `Risk-based adaptive policies`
+
+  - Each attempt to access a resource generate a risk score of how likely the request is to be from a compromised source.
+  - The risk score could be based on many factors. e.g. device, user location, IP address what service is being accessed and when.
+
+- AWS at the time of this recording does not have Risk-based adaptative policies built into IAM.
+
+---
+
+## AWS Account Root User
+
+- `AWS Account`
+
+  - the account which holds all user's AWS resources
+
+- `Root User`
+
+  - a special user who is created at the time of AWS account creation
+  - a special account with full access that cannot be deleted.
+
+  - **Administrative Task**
+
+  ![admin task](./pic/admin_task.png)
+
+- `User`
+
+  - a user for common tasks that is assigned permissions.
+
+  |             | Root User               | Regular User           |
+  | ----------- | ----------------------- | ---------------------- |
+  | Login       | Email + pwd             | Account ID/Alias + PWD |
+  | Delete      | Cannot be deleted       | Can                    |
+  | Permissions | Full, cannot be limited | Can be denied          |
+  | Number      | One per AWS acount      | Many                   |
+  | Task        | Specialized tasks       | Daily or common tasks  |
+  | Access Keys | Never use               | Recommended            |
+  | MFA         | Strongly recommended    | Recommended            |
+
+---
+
+## AWS Single-Sign On
+
+- `AWS Single-Sign On`
+  - where user create or connect workforce identities in AWS **once** and manage access centrally across AWS organization.
+
+![sso](./pic/aws_sso.png)
+
+---
+
+[TOP](#aws---identity)
