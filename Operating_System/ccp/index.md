@@ -33,6 +33,14 @@
 - [Logging Service](./logging_services/logging_services.md)
 - [Well-Architecture](./well_architecture/well_architecture.md)
 
+- [Total Cost of Ownership](./cost/tco.md)
+- [Billing](./billing/billing.md)
+- [Security](./security/security.md)
+
+- [Billing](./billing/billing.md)
+- [Cost](./cost/tco.md)
+- [Variation Study](./variation_study/variation.md)
+
 ---
 
 [TOP](#aws---ccp)
