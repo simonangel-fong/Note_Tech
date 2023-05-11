@@ -18,10 +18,10 @@
 
 - `Solution Architect`:
 
-  - A role in a technical organization that architects a technical solution using multiple systems via researching , documentation, experimentation.
+  - A role in a technical organization that architects a technical solution using multiple systems via researching, documentation, experimentation.
 
 - `Cloud Architect`
-  - A solution architect that is focused solely on architecting technical solution using cloud services.s
+  - A solution architect that is focused solely on architecting technical solution **using cloud services**.
   - needs to understand the following terms and factor them into their designed architecture based on the business requirement.
     - Availability: The ability to ensure a service remains available. e.g. Highly Available(HA)
     - Scalability: The ability to grow rapidly or unimpeded.
@@ -35,7 +35,7 @@
 
 ## High Availability
 
-- The ability for the service to remain available by ensuring there is no single point of failure and/or ensure a certain level of performance.
+- The ability for the service to **remain available** by ensuring there is **no single point of failure** and/or ensure a certain level of performance.
 
 - Example: Multiple Availability Zones
   ![high availability](./pic/high_availability.png)
@@ -54,13 +54,14 @@
 
 ## High Scalability
 
-- The ablity to increase the capacity based on the increasing demand of traffic, memory and computing power.
+- The ablity to **increase the capacity** based on the increasing demand of traffic, memory and computing power.
 
 - `Vertical Scaling`:
 
   - `Scaling Up`: Upgrade to a bigger server.
 
 - `Horizonal Scaling`
+
   - `Scaling Out`: Add more servers of the same size.
 
 ---
@@ -96,7 +97,7 @@
 
 ## High Durability
 
-- The ability to recover from a disaster and to prevent the loss of data.
+- The ability to **recover** from a disaster and to **prevent the loss of data**.
 
 - `Disaster Revocery (DR)`
 

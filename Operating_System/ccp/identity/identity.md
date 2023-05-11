@@ -4,20 +4,20 @@
 
 - [AWS - Identity](#aws---identity)
   - [Zero Trust Model](#zero-trust-model)
-  - [Zero Trust on AWS](#zero-trust-on-aws)
-  - [Zero Trust on AWS with Third Party.](#zero-trust-on-aws-with-third-party)
-  - [Directory Service](#directory-service)
-  - [Active Directory](#active-directory)
-  - [Identity Providers(IdPs)](#identity-providersidps)
-  - [Single-Sign-On (SSO)](#single-sign-on-sso)
-  - [LDAP](#ldap)
-  - [Multi-Factor-Authenication](#multi-factor-authenication)
-  - [Security Keys](#security-keys)
-  - [AWS IAM](#aws-iam)
-  - [IAM Policy](#iam-policy)
+    - [Zero Trust on AWS](#zero-trust-on-aws)
+    - [Intelligent Zero Trust on AWS: with Third Party.](#intelligent-zero-trust-on-aws-with-third-party)
+    - [Identity Providers(IdPs)](#identity-providersidps)
+  - [Technologies](#technologies)
+    - [Directory Service](#directory-service)
+    - [Single-Sign-On (SSO)](#single-sign-on-sso)
+    - [LDAP](#ldap)
+    - [Multi-Factor-Authenication](#multi-factor-authenication)
+    - [Security Keys](#security-keys)
   - [Principle of Least Privilege (PoLP)](#principle-of-least-privilege-polp)
-  - [AWS Account Root User](#aws-account-root-user)
-  - [AWS Single-Sign On](#aws-single-sign-on)
+  - [AWS IAM](#aws-iam)
+    - [IAM Policy](#iam-policy)
+    - [AWS Account Root User](#aws-account-root-user)
+    - [AWS IAM Identity Center - SSO](#aws-iam-identity-center---sso)
 
 ---
 
@@ -47,7 +47,7 @@
 
 ---
 
-## Zero Trust on AWS
+### Zero Trust on AWS
 
 - `Identity Security Controls`
   - user can implement on AWS to meet the `Zero Trust`.
@@ -60,7 +60,7 @@
 
 ---
 
-## Zero Trust on AWS with Third Party.
+### Intelligent Zero Trust on AWS: with Third Party.
 
 - AWS does technically **implement a Zero Trust Model** but does not allow for intelligent identity security controls.
 
@@ -70,37 +70,11 @@
 
 ---
 
-## Directory Service
-
-- `Directory Service`
-
-  - maps the names of network resource to their network address.
-  - shared information infrastructure for **locating, managing, adminstering, and organizing** resources.
-    - Each resource on the network is considered an **object** by the directory server.
-    - Information about a particular resource is stored as collection of attributes associated with that resource or object.
-
-- A direcotry service is a critical component of a network operating system.
-
-- `directory server (name server)`
-  - a server which provides a directory service.
-
-![Directory Service](./pic/directory_service.png)
-
----
-
-## Active Directory
-
-- Used by windows.(了解即可)
-
-![Active Directory](./pic/active_directory.png)
-
----
-
-## Identity Providers(IdPs)
+### Identity Providers(IdPs)
 
 - `Identity Provider (IdP)`
 
-  - a system entity that creates, maintains, and manages identity information for principals and also **provides authentication services** to applications with a **federation** or distributed network.
+  - a system entity that creates, maintains, and manages **identity information** for principals and also **provides authentication services** to applications with a **federation** or distributed network.
 
 - `Federated identity`
 
@@ -116,7 +90,33 @@
 
 ---
 
-## Single-Sign-On (SSO)
+## Technologies
+
+### Directory Service
+
+- `Directory Service`
+
+  - maps the names of network resource to their network address.
+  - shared information infrastructure for **locating, managing, adminstering, and organizing** resources.
+    - Each resource on the network is considered an **object** by the directory server.
+    - Information about a particular resource is stored as **collection of attributes** associated with that resource or object.
+
+- A direcotry service is a critical component of a network operating system.
+
+- `directory server (name server)`
+  - a server which provides a directory service.
+
+![Directory Service](./pic/directory_service.png)
+
+- Active Directory - Windows
+
+  - Used by windows.(了解即可)
+
+  ![Active Directory](./pic/active_directory.png)
+
+---
+
+### Single-Sign-On (SSO)
 
 - `Single-Sign-On (SSO)`
 
@@ -128,11 +128,11 @@
 
 ---
 
-## LDAP
+### LDAP
 
 - `Lightweight Directory Access Protocol (LDAP)`
 
-  - an open, vendor-neutral, industry standard **application protocol** for accessing and maintaining distributed directory information services over an internet Protocal netowork.
+  - an open, vendor-neutral, industry standard **application protocol** for accessing and maintaining distributed directory information services over an internet Protocol netowork.
   - common use of LDAP is to provide a central place to store usernames and password.
 
 - LDAP enables for SSO.
@@ -142,7 +142,7 @@
 
 ---
 
-## Multi-Factor-Authenication
+### Multi-Factor-Authenication
 
 - `Multi-Factor Authenication (MFA)`
 
@@ -154,7 +154,7 @@
 
 ---
 
-## Security Keys
+### Security Keys
 
 - `Security Keys`
 
@@ -163,48 +163,6 @@
 - A security key can resemble a memory stick which will generate an autofill a security token.
 
 ![security_keys](./pic/security_keys.png)
-
----
-
-## AWS IAM
-
-- `AWS Identity and Access Management (IAM)`
-
-  - user can create and manage AWS users and groups, and permissions to allow and deny access to AWS resources.
-
-- `IAM Policies`
-
-  - JSON documents which grant permissions for a specific user, group, or role to access services.
-  - Policies are attached to IAM Identities.
-
-- `IAM Permission`
-
-  - The API action that can or cannot be performed.
-  - are represented in the IAM Policy document.
-
-- `IAM Identities`
-
-  - `IAM Users`
-
-    - **End users who log into the console** or interact with AWS resources programmatically or via clicking UI interfaces.
-
-  - `IAM Groups`
-
-    - Group up users who all **share permission levels** of the group.
-
-  - `IAM Roles`
-    - Roles grant AWS resources permissions to specific **AWS API actions.**
-    - Associate policies to Role and assign it to an AWS resource.
-
----
-
-## IAM Policy
-
-- `IAM Policy`
-  - are written in JSON,
-  - contains the permission which determin what API actions are allowed or denied.
-
-![policy](./pic/policy.png)
 
 ---
 
@@ -224,23 +182,65 @@
 
 - `Risk-based adaptive policies`
 
-  - Each attempt to access a resource generate a risk score of how likely the request is to be from a compromised source.
+  - Each attempt to access a resource **generate a risk score** of how likely the request is to be from a compromised source.
   - The risk score could be based on many factors. e.g. device, user location, IP address what service is being accessed and when.
 
 - AWS at the time of this recording does not have Risk-based adaptative policies built into IAM.
 
 ---
 
-## AWS Account Root User
+## AWS IAM
+
+- `AWS Identity and Access Management (IAM)`
+
+  - user can create and manage AWS users and groups, and permissions **to allow and deny** access to AWS resources.
+
+- `IAM Policies`
+
+  - **JSON documents which grant permissions** for a specific user, group, or role **to access services**.
+  - Policies are attached to IAM Identities.
+
+- `IAM Permission`
+
+  - The API **action that can or cannot be performed**.
+  - are represented in the IAM Policy document.
+
+- `IAM Identities`
+
+  - `IAM Users`
+
+    - **End users who log into the console** or interact with AWS resources programmatically or via clicking UI interfaces.
+
+  - `IAM Groups`
+
+    - Group up users who all **share permission levels** of the group.
+
+  - `IAM Roles`
+    - Roles grant AWS **resources permissions** to specific **AWS API actions.**
+    - Associate policies to Role and assign it to an AWS resource.
+
+---
+
+### IAM Policy
+
+- `IAM Policy`
+  - are written in JSON,
+  - contains the permission which determin what API actions are allowed or denied.
+
+![policy](./pic/policy.png)
+
+---
+
+### AWS Account Root User
 
 - `AWS Account`
 
-  - the account which holds all user's AWS resources
+  - the account which **holds all user's AWS resources**
 
 - `Root User`
 
-  - a special user who is created at the time of AWS account creation
-  - a special account with full access that cannot be deleted.
+  - a special user **who is created** at the time of AWS account creation
+  - a special account with **full access** that **cannot be deleted**.
 
   - **Administrative Task**
 
@@ -262,10 +262,13 @@
 
 ---
 
-## AWS Single-Sign On
+### AWS IAM Identity Center - SSO
 
-- `AWS Single-Sign On`
-  - where user create or connect workforce identities in AWS **once** and manage access centrally across AWS organization.
+- `IAM Identity Center`
+
+  - successor to AWS Single Sign-On
+  - helps users securely create or connect your workforce identities and manage their access centrally across AWS accounts and applications.
+  - is the recommended approach for workforce authentication and authorization on AWS for organizations of any size and type.
 
 ![sso](./pic/aws_sso.png)
 

@@ -3,46 +3,61 @@
 [Back](../index.md)
 
 - [AWS - Security](#aws---security)
-  - [Defense-In-Depth](#defense-in-depth)
+  - [AWS 7 Layers of Security](#aws-7-layers-of-security)
   - [Security Principle: Confidentiality, Integrity, and Availability (CIA) triad](#security-principle-confidentiality-integrity-and-availability-cia-triad)
-  - [Vulnerabilities](#vulnerabilities)
-  - [Encryption](#encryption)
-  - [Hashing and Salting](#hashing-and-salting)
-  - [Digital Signatures and Signing](#digital-signatures-and-signing)
-  - [Encryption In-Transit and At-Rest](#encryption-in-transit-and-at-rest)
-  - [Common Compliance Programs](#common-compliance-programs)
+  - [Encryption - Confidentiality](#encryption---confidentiality)
+    - [Terminology](#terminology)
+    - [Symmetric Encryption vs Asymmetric Encryption](#symmetric-encryption-vs-asymmetric-encryption)
+    - [Hashing and Salting](#hashing-and-salting)
+    - [Encryption In-Transit and At-Rest](#encryption-in-transit-and-at-rest)
+    - [Digital Signatures and Signing](#digital-signatures-and-signing)
   - [Penetration Testing](#penetration-testing)
-  - [AWS Artifact](#aws-artifact)
-  - [AWS Inspect](#aws-inspect)
+  - [Hardening](#hardening)
+    - [AWS Inspect - Benchmark](#aws-inspect---benchmark)
   - [Distributed Denial of Service (DDos)](#distributed-denial-of-service-ddos)
-  - [AWS Shield](#aws-shield)
-  - [Amazon Guard Duty](#amazon-guard-duty)
-  - [Amazon Macie](#amazon-macie)
-  - [AWS Virtual Private Network (VPN)](#aws-virtual-private-network-vpn)
-  - [AWS Web Application Firewall (WAF)](#aws-web-application-firewall-waf)
+    - [AWS Shield - DDoS](#aws-shield---ddos)
+  - [Intrusion Detection System / Intrusion Protection System (IDS/IPS)](#intrusion-detection-system--intrusion-protection-system-idsips)
+    - [Amazon Guard Duty - Malicious Activity Monitor](#amazon-guard-duty---malicious-activity-monitor)
+  - [Amazon Macie - S3 Monitor](#amazon-macie---s3-monitor)
+  - [VPN](#vpn)
+    - [AWS Virtual Private Network (VPN)](#aws-virtual-private-network-vpn)
+  - [Firewall](#firewall)
+    - [AWS Web Application Firewall (WAF) - Firewall](#aws-web-application-firewall-waf---firewall)
   - [Hardware Security Module](#hardware-security-module)
-  - [AWS Key Management Service](#aws-key-management-service)
-  - [CloudHSM](#cloudhsm)
+    - [AWS Key Management Service - Encryption keys](#aws-key-management-service---encryption-keys)
+    - [CloudHSM - Encryption keys](#cloudhsm---encryption-keys)
 
 ---
 
-## Defense-In-Depth
+## AWS 7 Layers of Security
 
-- The 7 Layers of Security
-  - 1. Data
-    - access to business and customer data, and encryption to protect data.
-  - 2. Application
-    - applications are secure and free of security valnerabilities.
-  - 3. Compute
-    - Access to virtual machines (ports, on-premise, cloud)
-  - 4. Nextwork
-    - limit communication between resources using segmentation and access controls
-  - 5. Perimeter
-    - distributed denial of service (DDoS) protection to filter large-scale attacks before they can cause a denial of service for users.
-  - 6. Identity and access
-    - controlling access to infrastructure and change control.
-  - 7. Physical
-    - Limiting access to a datacenter to only authorized personnel.
+- 1. Physical
+
+  - Limiting access to a datacenter to only authorized personnel.
+
+- 2. Identity and access
+
+  - controlling access to infrastructure and change control.
+
+- 3. Perimeter
+
+  - distributed denial of service (DDoS) protection to filter large-scale attacks before they can cause a denial of service for users.
+
+- 4. Nextwork
+
+  - limit communication between resources using segmentation and access controls
+
+- 5. Compute
+
+  - Access to virtual machines (ports, on-premise, cloud)
+
+- 6. Application
+
+  - applications are secure and free of security valnerabilities.
+
+- 7. Data
+
+  - access to business and customer data, and encryption to protect data.
 
 ![layers](./pic/security_layers.png)
 
@@ -56,30 +71,28 @@
 
 - `Confidentiality`
 
-  - a component of privacy that implements to protect user's data from unauthorized viewers.
+  - a component of privacy that implements to **protect user's data from unauthorized viewers.**
   - In practice, it can be using **cryptographic keys to encrypt data**, and using keys to encrypt keys.
 
 - `Integrity`
 
-  - maintaining and assuring the accuracy and completeness of data over its entire lifecycle.
+  - maintaining and **assuring the accuracy and completeness** of data over its entire lifecycle.
   - In practice, utilizing ACID compliant databases for valid transactions, utilizing tamper-evident or tamper proof `Hardware Security Modules (HSM)`.
 
 - `Availability`
-  - Information needs to be made be available when needed.
+  - Information needs to be made be **available** when needed.
   - In practice: High Availability, Migtigating DDoS, Decryption access.
 
 ![cia](./pic/cia.png)
-
----
-
-## Vulnerabilities
 
 - `Vulnerabilities`
   - A hole or a weekness in the applications, which can be a design flaw or an implementation bug, that allows an attacker to cause harm to the stakeholders of an application.
 
 ---
 
-## Encryption
+## Encryption - Confidentiality
+
+### Terminology
 
 - `Cryptography密码术`
 
@@ -88,7 +101,7 @@
 
 - `Encryption密码术`
 
-  - the process of encoding(scrabbling) information using a key and a cypher 密码 to store sensitive data in an unintelligible 费解的 format as a means of protection.
+  - the process of encoding(scrabbling) information using a key and a cypher 密码算法 to store sensitive data in an unintelligible 费解的 format as a means of protection.
   - An encryption takes in **plaintext 明码文本** and produces **ciphertext 密文**.
   - the way to encrypt and decrypt data.
 
@@ -103,7 +116,11 @@
 
 - `Crytographic key`
 
-  - a variable used in conjunction with an encryption algorithm in order to encrypt or decrypt data.
+  - a **variable** used in conjunction with an encryption algorithm in order to encrypt or decrypt data.
+
+---
+
+### Symmetric Encryption vs Asymmetric Encryption
 
 - `Symmetric Encryption对称加密`
 
@@ -121,7 +138,7 @@
 
 ---
 
-## Hashing and Salting
+### Hashing and Salting
 
 - `Hashing`
 
@@ -132,7 +149,7 @@
 - `Hashing function`
 
   - A function that accepts arbitrary size value and maps it to a fixed-size data structure.
-  - A deterministic function always **returns the same output for the same input**.
+  - A deterministic function that always **returns the same output for the same input**.
 
 ![Hashing function](./pic/hashing_function.png)
 
@@ -144,47 +161,14 @@
 
   - If attacks know what hashing function are used and steal a database, they could enumerated a dictionary of password to detemine the password.
 
+---
+
 - `Salting Passowrds`
   - A `salt` is a **random string** not known to the attacker that the hashing function accepts to **mitigate the deterministic nature** of hashing functions.
 
 ---
 
-## Digital Signatures and Signing
-
-- `Digital Signature`
-
-  - a mathematical scheme to verify the authenticity of digital messages or document.
-
-- `Digital signature` gives users tamper-evidence.
-
-- Three algorithms to digital signatures:
-
-  - `Key generation`, generates a public and private key.
-  - `Signing`, the process of generating a digital signature with a **private key** and inputted message.
-  - `Signing Verification`, verify the authenticity of the message with a **public key**.
-
-  ![Digital signature](./pic/digital_signature.png)
-
-- `SSH` uses a **public and private key** to authorize remote access into a remote machine.
-
-  - eg.Virtual Machine, it is common to use `RSA(Asymmetric Encryption)`.
-  - `ssh-keygen`, a well known command to generate a **public** and **private** key.
-    - `ssh-keygen -t rsa`
-
-- `Code Signing`
-
-  - a process by which the software developer **signs** the applications and executables before releasing them.
-  - by **placing a digital signature** onto the executable, program, software update or file.
-
-- `Code Signing Certificate`
-  - assesses whether the software that is being **downloaded comes directly** from the publisher.
-  - ensures that the software **has not been tempered**and the user can safely download it.
-  - proves the publisher’s **authenticity** and code **integrity**.
-  - allows users to trust any upgrades, and all major browsers and operating systems support code signing.
-
----
-
-## Encryption In-Transit and At-Rest
+### Encryption In-Transit and At-Rest
 
 - `Encryption In-Transit`
 
@@ -203,6 +187,8 @@
   - It uses both **symmetric and asymmetric cryptography**.
   - provides **server** authentication and **client** authentication
 
+---
+
 - `Encryption At-Rest`
   - encryption that is used to help protect data that is **stored on a disk** (including solid-state drives) or backup media.
   - Data that is secure when residing on storage or within a database.
@@ -210,18 +196,38 @@
 
 ---
 
-## Common Compliance Programs
+### Digital Signatures and Signing
 
-- `Compliance Programs`
-  - a set of internal **policies and procedures** of a company to comply with laws, rules, and regulations or to uphold business reputation.
+- `Digital Signature`
 
-![Compliance Programs](./pic/compliance_program01.png)
+  - a mathematical scheme to **verify the authenticity** of digital messages or document.
 
-![Compliance Programs](./pic/compliance_program02.png)
+- `Digital signature` gives users tamper-evidence 防篡改.
 
-![Compliance Programs](./pic/compliance_program03.png)
+- Three algorithms to digital signatures:
 
-![Compliance Programs](./pic/compliance_program04.png)
+  - `Key generation`, generates a public and private key.
+  - `Signing`, the process of **generating a digital signature** with a private key and inputted message.
+  - `Signing Verification`, verify the authenticity of the message with a **public key**.
+
+  ![Digital signature](./pic/digital_signature.png)
+
+- `SSH` uses a **public and private key** to authorize remote access into a remote machine.
+
+  - eg.Virtual Machine, it is common to use `RSA(Asymmetric Encryption)`.
+  - `ssh-keygen`, a well known command to generate a **public** and **private** key.
+    - `ssh-keygen -t rsa`
+
+- `Code Signing`
+
+  - a process by which the software developer **signs** the applications and executables before releasing them.
+  - by **placing a digital signature** onto the executable, program, software update or file.
+
+- `Code Signing Certificate`
+  - assesses whether the software that is being **downloaded comes directly** from the publisher.
+  - ensures that the software **has not been tempered** and the user can safely download it.
+  - proves the publisher’s **authenticity** and code **integrity**.
+  - allows users to trust any upgrades, and all major browsers and operating systems support code signing.
 
 ---
 
@@ -237,20 +243,16 @@
 
 ---
 
-## AWS Artifact
-
-- `AWS Artifact`
-  - a self-serve portal for on-demand access to **AWS compliance reports**.
-  - provides on-demand access to security and compliance reports from AWS
-
----
-
-## AWS Inspect
+## Hardening
 
 - `Hardening`
 
   - In computer security, hardening is usually the process of securing a system by reducing its surface of vulnerability.
-  - is common for Virtual Machines where user runs a collection of security checks, known as a `security benchmark`.
+  - is common for Virtual Machines where user runs a collection of **security checks**, known as a `security benchmark`.
+
+---
+
+### AWS Inspect - Benchmark
 
 - `AWS Inspector`
   - runs a security benchmark against specific EC2 instances.
@@ -271,10 +273,10 @@
 
 ---
 
-## AWS Shield
+### AWS Shield - DDoS
 
 - `AWS Shield`
-  - a managed DDoS (Distributed Denial of Service) protection service that safeguards application running on AWS.
+  - a managed **DDoS (Distributed Denial of Service) protection service** that safeguards application running on AWS.
 
 ![Shield](./pic/shield01.png)
 
@@ -284,16 +286,19 @@
 
 ---
 
-## Amazon Guard Duty
+## Intrusion Detection System / Intrusion Protection System (IDS/IPS)
 
-- `IDS/IPS`
+- `Intrusion Detection System / Intrusion Protection System (IDS/IPS)`
 
-  - `Intrusion Detection System / Intrusion Protection System`
   - A device or software application that monitors a network or systems for malicious activity or policy violations.
 
-- `Guard Duty`
+---
 
-  - a threat detection service that continuously **monitors** for malicious, suspicious activity and unauthorized behavior.
+### Amazon Guard Duty - Malicious Activity Monitor
+
+- `Amazon Guard Duty`
+
+  - a threat detection service that continuously **monitors for malicious**, suspicious activity and unauthorized behavior.
   - It uses Machine Learning to analyze AWS logs:
     - CloudTrail Logs
     - VPC Flow Logs
@@ -303,7 +308,7 @@
 
 ---
 
-## Amazon Macie
+## Amazon Macie - S3 Monitor
 
 - `Macie`
 
@@ -315,11 +320,18 @@
 
 ---
 
-## AWS Virtual Private Network (VPN)
+## VPN
+
+### AWS Virtual Private Network (VPN)
+
+- `Internet Protocol Security (IPsec)`
+
+  - a **secure network protocol suite** that **authenticates and encrypts the packets** of data to provide secure encrypted communication between two computers over an Internet Protocol network.
+  - Used in `AWS VPN`
 
 - `AWS Virtual Private Network (VPN)`
 
-  - allow to establish a secure and private tunnel from user's network or device to the AWS global network.
+  - allow to establish a secure and private tunnel from **user's network or device** to **the AWS global network**.
 
 - 2 types
 
@@ -330,21 +342,19 @@
   - `AWS Client VPN`
     - securely connect **users** to **AWS or on-premises networks**.
 
-- `Internet Protocol Security (IPsec)`
-  - a **secure network protocol suite** that **authenticates and encrypts the packets** of data to provide secure encrypted communication between two computers over an Internet Protocol network.
-  - Used in `AWS VPN`
-
 ---
 
-## AWS Web Application Firewall (WAF)
+## Firewall
+
+### AWS Web Application Firewall (WAF) - Firewall
 
 - `AWS Web Application Firewall (WAF)`
 
   - protect web applications from common web exploits.
 
-- Write users their own rules to ALLOW or DENY traffic based on the contents of an HTTP requests.
+- Write users their own rules to **ALLOW or DENY traffic** based on the contents of an HTTP requests.
 
-- Can use a ruleset from a trusted AWS Security Partner in the AWS WAF rules Marketplace.
+- Can use a ruleset from a trusted AWS Security Partner in the AWS WAF rules **Marketplace**.
 - Can be attached to either `CloudFront` or an `Application Load Balancer`.
 
 ![waf](./pic/waf.png)
@@ -371,11 +381,11 @@
 
 ---
 
-## AWS Key Management Service
+### AWS Key Management Service - Encryption keys
 
 - `AWS Key Management Service (KMS)`
 
-  - a managed service that makes it easy to create and control the encryption keys used to encrypt data.
+  - a managed service that makes it easy to create and control the **encryption keys** used to encrypt data.
 
 - KMS is a multi-tenant `HSM (Hardware Security Module)`
 - Many AWS services are integrated to use KMS to **encrypt data** with a simple checkbox.
@@ -389,7 +399,7 @@
 
 ---
 
-## CloudHSM
+### CloudHSM - Encryption keys
 
 - `CloudHSM`
 
