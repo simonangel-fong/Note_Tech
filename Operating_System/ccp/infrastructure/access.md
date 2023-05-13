@@ -1,12 +1,11 @@
-# AWS - Management and Developers Tools
+# AWS - Infrastructures Access and Management
 
 [Back](../index.md)
 
-- [AWS - Management and Developers Tools](#aws---management-and-developers-tools)
+- [AWS - Infrastructures Access and Management](#aws---infrastructures-access-and-management)
   - [AWS Access Fundamental](#aws-access-fundamental)
     - [Account ID](#account-id)
     - [Amazon Resource Name (ARN)](#amazon-resource-name-arn)
-    - [Access Keys](#access-keys)
     - [AWS Documentation](#aws-documentation)
   - [API](#api)
   - [Access AWS](#access-aws)
@@ -15,10 +14,12 @@
       - [AWS CloudShell](#aws-cloudshell)
       - [AWS Tools for Powershell](#aws-tools-for-powershell)
     - [AWS SDK](#aws-sdk)
-  - [Infrastructure as Code (IaC)](#infrastructure-as-code-iac)
-    - [CloudFormation](#cloudformation)
+  - [Manage Infrastructure](#manage-infrastructure)
+    - [Infrastructure as Code (IaC)](#infrastructure-as-code-iac)
+    - [CloudFormation - Free](#cloudformation---free)
+      - [CloudFormation Templates](#cloudformation-templates)
+      - [CloudFormation Stack Designer - 可视化](#cloudformation-stack-designer---可视化)
     - [Cloud Development Kit (CDK)](#cloud-development-kit-cdk)
-  - [AWS Toolkit for VSCdoe](#aws-toolkit-for-vscdoe)
 
 ---
 
@@ -87,29 +88,6 @@
 - Paths can include a wildcard character, namely an asterisk (`*`)
 
   ![asterisk](./pic/arn_asterisk.png)
-
----
-
-### Access Keys
-
-- `Access Keys`
-
-  - a **key** and **secret** required to have **programmatic access to AWS resources** when interacting with the AWS API outside of the AWS Management Console.
-  - An Access Key is commonly referred to as `AWS Credentials`
-
-- **Never share** user's access keys
-- **Never commit** access keys to a codebase
-- An user can have **two** active Access Keys
-- An user can **deactivate** Access Keys.
-- Access Keys have whatever access a user has to AWS resources.
-
-![access key](./pic/access_key01.png)
-
-![access key](./pic/access_key02.png)
-
-- Create Access Key
-
-![create access key](./pic/access_key_create.png)
 
 ---
 
@@ -258,7 +236,11 @@
 
 ---
 
-## Infrastructure as Code (IaC)
+
+
+## Manage Infrastructure
+
+### Infrastructure as Code (IaC)
 
 - `Infrastructure as Code (IaC)`
 
@@ -267,6 +249,7 @@
   - allow to easily share, version or inventory cloud infrastructure.
 
 - AWS has two offering for writing Infrastructure as Code.
+
   - `AWS CloudFormation (CFN)`: CFN is a Declarative IaC tool
     - Declarative
       - What user see is what user get. Explicit
@@ -281,17 +264,48 @@
 
 ---
 
-### CloudFormation
+### CloudFormation - Free
 
 - `AWS CloudFormation`
 
   - allows user to write `Infrastructure as Code (IaC)` as either a `JSON` or `YAML` file.
+  - a declarative way of **outlining your AWS Infrastructure**, for any resources (most of them are supported).
 
 - `CloudFormation` is simple but it can lead to large files or is limited in some regard to creating dynamic or repeatable infrastructure compared to CDK.
 
 - `CloudFormation` can be easier for DevOps Engineers who **do not have a background in web programming languages**.
 
+- CloudFormation creates those for you, **in the right order**, with the exact configuration that you specify
+
 - Since CDK generates out `CloudFormation`, it's still important to be able to read and understand `CloudFormation` in order to debug IaC stacks.
+
+- **Benefits**
+
+  - `Infrastructure as code`
+
+    - **No** resources are **manually** created, which is excellent for control
+    - **Changes** to the infrastructure are reviewed through code
+
+  - Cost
+
+    - Each resources within the stack is tagged with an identifier so you can **easily see how much a stack costs** you
+    - You can estimate the costs of your resources using the CloudFormation **template**
+    - Savings strategy: In Dev, you could **automation deletion of templates** at 5 PM and recreated at 8 AM, safely
+
+  - Productivity
+
+    - Ability to destroy and re-create an infrastructure on the cloud on the fly
+    - Automated generation of **Diagram** for your templates!
+    - Declarative programming (no need to figure out ordering and orchestration)
+
+  - Don’t re-invent the wheel
+
+    - Leverage existing templates on the web!
+    - Leverage the documentation
+
+  - Supports (almost) all AWS resources:
+    - Everything we’ll see in this course is supported
+    - You can use “custom resources” for resources that are not supported
 
 - Create a `CloudFormation` Stack:
 
@@ -299,6 +313,16 @@
   - CloudFormation console
 
 - AWS CloudFormation: https://aws.amazon.com/cloudformation/
+
+
+#### CloudFormation Templates
+
+- AWS CloudFormation templates are **JSON or YAML-formatted text files**. - They are **declarations of the AWS resources** that **make up a stack.**
+
+#### CloudFormation Stack Designer - 可视化
+
+- We can see all the resources
+- We can see the relations between the components
 
 ---
 
@@ -309,17 +333,23 @@
   - allows to user user's favortite programming language to write Infrastructure as Code (IaC)
   - e.g.: TypeScript, Node.js, Python, Java, .NET
 
+- You can therefore **deploy infrastructure and application**
+  runtime code together
+
+  - Great for Lambda functions
+  - Great for Docker containers in ECS / EKS
+
 - `CDK` is powered by CloudFormation (it generates out CloudFormation templates)
 
-  - The result of CDK execution will display in CloudFormation console.
+  - The **result** of CDK execution will display in CloudFormation console.
 
 - `CDK Construct`: a large library of reusable cloud components. https://constructs.dev
 
 - `CDK` comes with its own CLI
 
-- `CDK` Piplines to quickly setup CI/CD pipelines for CDK projects.
+- `CDK` **Piplines** to quickly setup CI/CD pipelines for CDK projects.
 
-- `CDK` has a testing framework for Unit and Integration Testing.
+- `CDK` has a **testing** framework for Unit and Integration Testing.
 
 - CDK documentation: https://docs.aws.amazon.com/cdk/api/v2/
 
@@ -327,20 +357,4 @@
 
 ---
 
-## AWS Toolkit for VSCdoe
-
-- `AWS Toolkit`
-
-  - an open-source plugin for VSCode to create, debug, deploy AWS resources.
-
-- `AWS Explorer`: Explore a wide range of AWS resources to user's linked AWS Account.
-
-- `AWS CDK Explorer`: Allows to explore user's stacks defined by CDK.
-
-- `Amazon Elastic Container Service`: Provides IntelliSense for ECS task-definition files.
-
-- `Serverless Applications`:Create, debug and deploy serverless applications via `SAM` and `CFN`
-
----
-
-[Top](#aws---management-and-developers-tools)
+[Top](#aws---infrastructures-access-and-management)

@@ -1,10 +1,9 @@
-# AWS - Provisioning
+# AWS - App Deployment
 
 [Back](../index.md)
 
-- [AWS - Provisioning](#aws---provisioning)
+- [AWS - App Deployment](#aws---app-deployment)
   - [Provisioning Services](#provisioning-services)
-  - [AWS Elatic Beanstalk](#aws-elatic-beanstalk)
 
 ---
 
@@ -62,18 +61,7 @@
 
 ---
 
-## AWS Elatic Beanstalk
 
-- `Plaform-as-a-Service (PaaS)`
-
-  - allows customers to develop, run, and manage application without the complexity of building and maintaining the infrastructure typically associated with developing and launching an app.
-
-- `Elastic Beanstalk`
-
-  - a **PaaS for deploying web-applications** with little-to-no knowledge of the underlying infrastucture so developer can focus on writing application code instead of setting up an automated deployment pipeline and DevOps tasks.
-  - Choose a platform, upload code, and run with little knowledge of the infrastructure.
-
-![Beanstalk](./pic/beanstalk.png)
 
 ---
 

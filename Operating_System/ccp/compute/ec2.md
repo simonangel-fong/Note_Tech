@@ -458,19 +458,25 @@
 
 ## Summary
 
-- **EC2 Instance**: 
+- **EC2 Instance**:
   - AMI (OS) + Instance Size (CPU + RAM) + Storage + security groups + EC2 User Data
 - **Security Groups**: **Firewall** attached to the EC2 instance
 - **EC2 User Data**: **Script** launched at the first start of an instance
 - **SSH**: start a terminal into our EC2 Instances (port 22)
 - **EC2 Instance Role**: link to **IAM roles**
-- **Purchasing Options**: 
-  - On-Demand, 
-  - Spot, 
-  - Reserved (Standard + Convertible + Scheduled), 
-  - Dedicated Host, 
+- **Purchasing Options**:
+
+  - On-Demand,
+  - Spot,
+  - Reserved (Standard + Convertible + Scheduled),
+  - Dedicated Host,
   - Dedicated Instance
   - Saving Plan
+
+- 3 Ways to access to Instance
+  - SSH, port 22
+  - EC2 Instance Connect, require SSH port
+  - Systems Manager (SSM) Session Manager, not require SSH port
 
 ---
 

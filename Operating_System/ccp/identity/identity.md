@@ -18,6 +18,7 @@
     - [IAM Policy](#iam-policy)
     - [AWS Account Root User](#aws-account-root-user)
     - [AWS IAM Identity Center - SSO](#aws-iam-identity-center---sso)
+    - [Access Keys](#access-keys)
     - [IAM Security Tools](#iam-security-tools)
     - [IAM Guidelines \& Best Practices](#iam-guidelines--best-practices)
     - [Shared Responsibility Model for IAM](#shared-responsibility-model-for-iam)
@@ -287,6 +288,27 @@
 ![sso](./pic/aws_sso.png)
 
 ---
+
+### Access Keys
+
+- `Access Keys`
+
+  - a **key** and **secret** required to have **programmatic access to AWS resources** when interacting with the AWS API outside of the AWS Management Console.
+  - An Access Key is commonly referred to as `AWS Credentials`
+
+- **Never share** user's access keys
+- **Never commit** access keys to a codebase
+- An user can have **two** active Access Keys
+- An user can **deactivate** Access Keys.
+- Access Keys have whatever access a user has to AWS resources.
+
+![access key](./pic/access_key01.png)
+
+![access key](./pic/access_key02.png)
+
+- Create Access Key
+
+![create access key](./pic/access_key_create.png)
 
 ### IAM Security Tools
 

@@ -42,15 +42,19 @@
   - [Security](./security/security.md)
   - [Identity - IAM](./identity/identity.md)
 
-- Technology
+- Infrastructure
 
-  - [Access, Management and Development](./management_and_developers_tools/access.md)
-  - [Global Infrastructure](./global_infrastructure/global_infrastructure.md)
+  - [Global Infrastructure](./infrastructure/global_infrastructure.md)
+  - [Access and Management](./infrastructure/access.md)
+
+- [Developer and Deployment](./infrastructure/developer.md)
+- Technology
 
   - [Compute](./compute/compute.md)
     - [EC2](./compute/ec2.md)
     - [AMI](./compute/ami.md)
-  - [Container](./container/container.md)
+    - [Container](./compute/container.md)
+    - [Others](./compute/others.md)
   - Storage
     - [EC2 Instance Storage(EBS+EFS+FSx)](./storage/ec2_storage.md)
     - [S3 + Snow + Gateway](./storage/s3.md)
