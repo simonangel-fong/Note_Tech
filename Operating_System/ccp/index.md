@@ -32,28 +32,37 @@
 - Cloud Concepts
 
   - [Cloud Architecture](./cloud_architecture/cloud_architecture.md)
-  - [Total Cost of Ownership](./cost/tco.md)
+  - [Total Cost of Ownership](./tco/tco.md)
   - [Well-Architecture](./well_architecture/well_architecture.md)
 
 - Security and Compliance
+
   - [Shared Responsibility Model](./shared_responsibility_model/shared_responsibility_model.md)
   - [Compliance](./compliance/compliance.md)
   - [Security](./security/security.md)
-  - [Identity](./identity/identity.md)
+  - [Identity - IAM](./identity/identity.md)
 
 - Technology
 
-  - [Management and Development](./management_and_developers_tools/tool.md)
+  - [Access, Management and Development](./management_and_developers_tools/access.md)
   - [Global Infrastructure](./global_infrastructure/global_infrastructure.md)
 
-
   - [Compute](./compute/compute.md)
-  - [Storage](./storage/storage.md)
-  - [Database](./database/database.md)
+    - [EC2](./compute/ec2.md)
+    - [AMI](./compute/ami.md)
+  - [Container](./container/container.md)
+  - Storage
+    - [EC2 Instance Storage(EBS+EFS+FSx)](./storage/ec2_storage.md)
+    - [S3 + Snow + Gateway](./storage/s3.md)
+  - [Database](./database/db.md)
+
+    - [RDS](./database/rds.md)
+    - [NoSQL](./database/nosql.md)
+    - [Data Analytics: Data Warehouse, Big Data](./database/data_analytics.md)
+
   - [Networking](./networking/networking.md)
 
   - [Application Integration](./application_integration/application_integration.md)
-  - [Container](./container/container.md)
   - [Goverance](./goverance/goverance.md)
   - [Provisioning](./provisioning/provisioning.md)
   - [Serverless](./serverless/serverless.md)

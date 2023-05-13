@@ -4,16 +4,24 @@
 
 - [AWS - EC2](#aws---ec2)
   - [EC2](#ec2)
-  - [EC2 Instance Families](#ec2-instance-families)
-  - [Instance Types](#instance-types)
-  - [Dedicted Host](#dedicted-host)
-  - [EC2 Tenancy](#ec2-tenancy)
-  - [Pricing Models](#pricing-models)
+    - [EC2 Instance Families](#ec2-instance-families)
+    - [Instance Types](#instance-types)
+      - [General Purpose](#general-purpose)
+      - [Compute Optimized](#compute-optimized)
+      - [Memory Optimized](#memory-optimized)
+      - [Storage Optimized](#storage-optimized)
+    - [EC2 Tenancy](#ec2-tenancy)
+  - [Pricing Models / Purchase Options](#pricing-models--purchase-options)
     - [On-Demand](#on-demand)
     - [Reserved Instances (RI)](#reserved-instances-ri)
-  - [Spot Instances](#spot-instances)
-  - [Dedicated Instances](#dedicated-instances)
-  - [Saving Plan](#saving-plan)
+      - [Capacity Reservation](#capacity-reservation)
+    - [Spot Instances](#spot-instances)
+    - [Dedicated Instances](#dedicated-instances)
+    - [Dedicated Hosts](#dedicated-hosts)
+    - [Saving Plan](#saving-plan)
+    - [Summary](#summary)
+    - [Shared Responsibility Model for IAM](#shared-responsibility-model-for-iam)
+  - [Summary](#summary-1)
 
 ---
 
@@ -29,7 +37,7 @@
 
 ---
 
-## EC2 Instance Families
+### EC2 Instance Families
 
 - `Instance Families`
 
@@ -40,26 +48,70 @@
 
 ---
 
-## Instance Types
+### Instance Types
 
 - `Instance Types`
 
-  - a combination of size and family.
+  - a combination of **size** and **family**.
 
 - EC2 Instance Sizes generally double in price and key attributes
 
----
-
-## Dedicted Host
-
-- `Dedicted Host`
-  - single-tenant EC2 instances designed to let user Bring-Your-Own-License (BYOL) based on machine characteristic.
-
-![Dedicted Host](./pic/ec2_dedicated_host.png)
+- can use different types of EC2 instances that are optimised for different use cases (https://aws.amazon.com/ec2/instance-types/)
+- AWS has the following **naming convention**:
+  `m5.2xlarge`
+- m: **instance class**
+- 5: **generation** (AWS improves them over time)
+- 2xlarge: **size** within the instance class
 
 ---
 
-## EC2 Tenancy
+#### General Purpose
+
+- Great for a diversity of workloads such as **web servers** or **code repositories**
+  - Balance between:
+  - Compute
+  - Memory
+  - Networking
+- `t2.micro`: a General Purpose EC2 instance
+
+---
+
+#### Compute Optimized
+
+- Great for compute-intensive tasks that require **high performance** processors:
+  - Batch processing workloads
+  - Media transcoding
+  - High performance web servers
+  - High performance computing (HPC)
+  - Scientific modeling & machine learning
+  - Dedicated gaming servers
+
+---
+
+#### Memory Optimized
+
+- Fast performance for workloads that **process large data sets in memory**
+- Use cases:
+  - High performance, **relational/non-relational databases**
+  - Distributed web scale cache stores
+  - **In-memory databases** optimized for BI (business intelligence)
+  - Applications performing real-time processing of big unstructured data
+
+---
+
+#### Storage Optimized
+
+- Great for storage-intensive tasks that **require high, sequential read and write access** to large data sets on local storage
+- Use cases:
+  - High frequency **online transaction processing (OLTP)** systems
+  - Relational & NoSQL databases
+  - Cache for in-memory databases (for example, Redis)
+  - Data **warehousing** applications
+  - Distributed file systems
+
+---
+
+### EC2 Tenancy
 
 - 3 levels of tenancy
   - `Dedicated Host`
@@ -71,7 +123,7 @@
 
 ---
 
-## Pricing Models
+## Pricing Models / Purchase Options
 
 - 5 ways to pay for EC2
 
@@ -85,19 +137,19 @@
 
   - Pay-As-You-Go (PAYG), where user consumes compute and then pay.
 
-- `On-demand` has **no up-front payment** and **no long-term commitment**.
+  - Pay for what you use:
+    - Linux or Windows - billing per second, after the first minute
+    - All other operating systems - billing per hour
+  - Has the **highest cost** but no upfront payment
+  - **No long-term commitment**
+  - **no up-front payment**
+  - Recommended:
+    - for **short-term** and **un-interrupted workloads**, where you can't predict how the application will behave
+    - For users whos have a new app **for deveplopment** or want to run **experiment**.
 
 - It is **by default** using On-Demand pricing when an EC2 is launched.
 
 - EC2s are charged by **per-second** (minumum of 60 seconds) or **per-hour**. When looking up pricing it will always show EC2 pricing is the **hourly rate**.
-
-  - `per-second`
-    - for Linux, Windows, Windows with SQL Enterprise, Windows with SQL Standard, and Windows with SQL Web Instances **that do not have a separate hourly charge**.
-  - `per-hour`
-    - full hour for all other instance types.
-
-- On-Demand is for applications where the **workload is for short-term, spikey or unpredictable**.
-  - For users whos have a new app **for deveplopment** or want to run **experiment**.
 
 ---
 
@@ -107,12 +159,30 @@
 
   - is designed for application that have a steady-state, predictable usage, or require reserved capacity.
 
+  - Up to 72% discount compared to On-demand
+  - **reserve a specific instance attributes** (Instance Type, Region, Tenancy, OS)
+  - **Reservation Period** (Reserved instances do **not renew automatically**.)
+    - 1 year (+discount)
+    - 3 years (+++discount)
+  - **Payment Options**
+    - No Upfront (+)
+    - Partial Upfront (++)
+    - All Upfront (+++)
+  - **Reserved Instance’s Scope**
+    - Regional
+    - Zonal (reserve capacity in an AZ)
+  - **Recommended**:
+    - for **steady-state** usage applications (like database)
+
+- can buy and sell in the Reserved Instance Marketplace
+
+- `Convertible Reserved Instance`
+
+  - Can **change** the EC2 instance type, instance family, OS, scope and tenancy
+  - Up to 66% discount
+
 - Reduced pricing is based on **Term**, **Class Offering**, **RI Attributes**, and **Payment Option**.
 
-- **Term**: The longer the term, the greater savings.
-
-  - User commit to a **1 Year** or **3 Year** contract.
-  - Reserved instances do **not renew automatically**.
   - The instance will use **On-Demand** with no interruption to service when **expiring**.
 
 - **Class**: The less flexible the greater the savings.
@@ -193,18 +263,6 @@
 
 ---
 
-- `Capacity Reservation`
-
-  - a service of EC2 that allows user to request a reserve of EC2 type for a specific Region and AZ.
-  - EC2 instances are backed by different kind of hardware, and so there is a finite amount of servers available within an AZ per instance type or family.
-    - So AWS may have ran out of a specific type of server when user launch an EC2.
-
-- The reserved capacity is charged at the selected instance type's **On-Demand rate** wether an instance is running in it or not.
-
-- User can also use regional RI with Capacity Reservations to benefit from billing discounts.
-
----
-
 - Standard RI vs Convertible RI
 
 ![difference](./pic/ec2_pricing_RI_vs_converable.png)
@@ -219,11 +277,46 @@
 
 ---
 
-## Spot Instances
+#### Capacity Reservation
+
+- `Capacity Reservation`
+
+  - a service of EC2 that allows user to request a reserve of EC2 type **for a specific Region and AZ.**
+
+  - Reserve **On-Demand instances capacity** in a **specific AZ for any duration**
+  - You always have access to EC2 capacity when you need it
+  - No time commitment (create/cancel anytime),
+  - **no billing discounts** 独立无优惠
+  - Combine with **Regional Reserved Instances and Savings Plans** to benefit from **billing discounts** 联合有优惠
+  - You’re charged at On-Demand rate whether you run instances or not
+  - **Suitable**
+
+    - for **short-term**, **uninterrupted** workloads that needs to be **in a specific AZ**
+
+  - EC2 instances are backed by different kind of hardware, and so there is a finite amount of servers available within an AZ per instance type or family.
+    - So AWS may have ran out of a specific type of server when user launch an EC2.
+
+- The reserved capacity is charged at the selected instance type's **On-Demand rate** wether an instance is running in it or not.
+
+- User can also use regional RI with Capacity Reservations to benefit from **billing discounts**.
+
+---
+
+### Spot Instances
 
 - `Spot instance` provide a discount of 90% compared to On-Demand Pricing.
 
-  - can be terminated if the computing capacity is needed by other On-Demand customers.
+  - Instances that you can **“lose”** at any point of time if your max price is **less than the current spot price**
+  - The **MOST cost-efficient** instances in AWS
+  - Useful for workloads that are **resilient to failure**
+    - Batch jobs
+    - Data analysis
+    - Image processing
+    - Any distributed workloads
+    - Workloads with a flexible start and end time
+  - **Not suitable for critical jobs or databases**
+
+  - can be **terminated** if the computing capacity is needed by other On-Demand customers.
   - AWS has unused compute capacity that they want to maximize the utility of their idle servers.
   - For application that have flexible start and end times or applications that are only feasible at very low compute costs.
 
@@ -238,12 +331,16 @@
 
 ---
 
-## Dedicated Instances
+### Dedicated Instances
 
 - `Dedicated Instances`
 
   - are designed to meet regulatory requirements.
   - For users who have strict server-bound licening that won't support multi-tenancy or cloud deployments.
+
+- Instances run on hardware that’s dedicated to you
+- May share hardware with other instances in same account
+- No control over instance placement (can move hardware after Stop / Start)
 
 - Enterprises and Large Organizations may have security concerns or obligations about against sharing the same hardware with other AWS Cutomers.
 
@@ -266,23 +363,51 @@
 
 ---
 
-## Saving Plan
+### Dedicated Hosts
+
+- `Dedicated Hosts`
+
+  - A **physical server with EC2 instance** capacity fully dedicated to your use
+  - single-tenant EC2 instances designed to let user Bring-Your-Own-License (BYOL) based on machine characteristic.
+
+- Allows you address **compliance requirements** and use your existing server-bound software **licenses** (per-socket, per-core, pe—VM software licenses)
+- Purchasing Options:
+  - On-demand – pay per second for active Dedicated Host
+  - Reserved - 1 or 3 years (No Upfront, Partial Upfront, All Upfront)
+- The **most expensive** option
+- **Recommanded**:
+  - Useful for software that have complicated licensing model (BYOL – Bring Your Own License)
+  - Or for companies that have strong regulatory or compliance needs
+
+![Dedicted Host](./pic/ec2_dedicated_host.png)
+
+---
+
+### Saving Plan
 
 - `Saving Plans`
 
   - offer users the similar disounts as RI but simplify the purchasing process.
 
+  - Commit to a certain type of usage ($10/hour for 1 or 3 years)
+  - Usage **beyond** EC2 Savings Plans is billed at the **On-Demand** price
+  - **Locked to a specific instance family & AWS region** (e.g., M5 in us-east-1)
+  - Flexible across:
+    - Instance Size (e.g., m5.xlarge, m5.2xlarge)
+    - OS (e.g., Linux, Windows)
+    - Tenancy (Host, Dedicated, Default)
+
 - 3 types of saving plans
   - `Compute`:
     - provide the most flexibility and help reduce costs by up to 66%.
-    - automatically apply to EC2 instance usage, Fargate, and Lambda service usage regardless of instance family, size, AZ, region, OS, or tenancy.
+    - **automatically** apply to EC2 instance usage, Fargate, and Lambda service usage regardless of instance family, size, AZ, region, OS, or tenancy.
   - `EC2 Instance`:
     - provide the lowest prices, offering savings up to 72% in exchange for commitment to usage of individual instance families in a region.
-    - automatically reduces cost on the selected family in that region regardless of AZ, size, OS, or tenancy.
-    - offer the flexibility to change usage between instances within a family in that region.
+    - **automatically** reduces cost on the selected family in that region regardless of AZ, size, OS, or tenancy.
+    - offer the flexibility to change usage between instances **within a family** in that region.
   - `SageMaker`
     - Help reduce SageMaker costs by up to 64%.
-    - automatically apply to SageMaker usage regardless of instance family, size, component, or AWS region.
+    - **automatically** apply to SageMaker usage regardless of instance family, size, component, or AWS region.
 
 ![types](./pic/ec2_pricing_saving_plan_types.png)
 
@@ -297,6 +422,55 @@
   - No Upfront
 
 ![Payment](./pic/ec2_pricing_saving_plan_payment.png)
+
+---
+
+### Summary
+
+| Plan                  | Suiable                                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| On demand             | coming and staying in resort **whenever** we like, we pay the **full price**                                                      |
+| Reserved              | like planning ahead and if we plan to **stay for a long time**, we may get a good discount.                                       |
+| Savings Plans         | pay a certain amount per hour **for certain period** and stay **in any room type** (e.g., King, Suite, Sea View, …)               |
+| Spot instances        | the hotel allows people to bid for the empty rooms and the highest bidder keeps the rooms. You can **get kicked out at any time** |
+| Dedicated Hosts       | We book an **entire building** of the resort                                                                                      |
+| Capacity Reservations | you book a room for a period with full price e**ven you don’t stay** in it                                                        |
+
+---
+
+### Shared Responsibility Model for IAM
+
+- AWS
+
+  - **Infrastructure** (global network security)
+  - **Isolation** on physical hosts
+  - **Replacing** faulty hardware
+  - **Compliance** validation
+
+- User
+  - **Security Groups** rules
+  - **Operating-system** patches and updates
+  - **Software and utilities** installed on the EC2 instance
+  - IAM **Roles** assigned to EC2 & IAM user access management
+  - **Data** security on your instance
+
+---
+
+## Summary
+
+- **EC2 Instance**: 
+  - AMI (OS) + Instance Size (CPU + RAM) + Storage + security groups + EC2 User Data
+- **Security Groups**: **Firewall** attached to the EC2 instance
+- **EC2 User Data**: **Script** launched at the first start of an instance
+- **SSH**: start a terminal into our EC2 Instances (port 22)
+- **EC2 Instance Role**: link to **IAM roles**
+- **Purchasing Options**: 
+  - On-Demand, 
+  - Spot, 
+  - Reserved (Standard + Convertible + Scheduled), 
+  - Dedicated Host, 
+  - Dedicated Instance
+  - Saving Plan
 
 ---
 

@@ -3,14 +3,41 @@
 [Back](../index.md)
 
 - [AWS - Containers](#aws---containers)
-  - [VMs vs Containers](#vms-vs-containers)
+  - [Docker](#docker)
+    - [Podman](#podman)
+    - [VMs vs Containers](#vms-vs-containers)
+    - [Docker images](#docker-images)
   - [Microservices](#microservices)
   - [Kuberenetes](#kuberenetes)
-  - [Docker](#docker)
-  - [Podman](#podman)
-  - [Container Services](#container-services)
+  - [Container Services On AWS](#container-services-on-aws)
+    - [Elastic Container Service (ECS)](#elastic-container-service-ecs)
 
-## VMs vs Containers
+## Docker
+
+- `Docker`
+  - a set of Platform as Service (PaaS) products that use OS-level virtualization to deliver software in **packages called containers**.
+  - a software development platform **to deploy apps**
+- Apps are **packaged** in **containers** that can be run on any OS
+- Apps **run the same**, regardless of where they’re run
+  - Any machine
+  - No compatibility issues
+  - Predictable behavior
+  - Less work
+  - Easier to maintain and deploy
+  - Works with any language, any OS, any technology
+- Scale containers up and down very quickly (seconds)
+
+![docker](./pic/docker.png)
+
+---
+
+### Podman
+
+![podman](./pic/podman.png)
+
+---
+
+### VMs vs Containers
 
 - `VMs`
 
@@ -22,6 +49,13 @@
   - Launch new containers and configures OS Dependencies per container.
 
 ![container](./pic/vm_vs_container.png)
+
+---
+
+### Docker images
+
+- `Docker images` are stored in **Docker Repositories**
+- Private: `Amazon ECR (Elastic Container Registry)`
 
 ---
 
@@ -57,22 +91,16 @@
 
 ---
 
-## Docker
+## Container Services On AWS
 
-- `Docker`
-  - a set of Platform as Service (PaaS) products that use OS-level virtualization to deliver software in packages called containers.
+### Elastic Container Service (ECS)
 
-![docker](./pic/docker.png)
-
----
-
-## Podman
-
-![podman](./pic/podman.png)
-
----
-
-## Container Services
+- `Elastic Container Service (ECS)`
+  - Launch Docker **containers** on AWS
+- Has integrations with the `Application Load Balancer`
+- You **must provision & maintain the infrastructure (the EC2
+  instances)**
+- AWS takes care of starting / stopping containers
 
 ![services](./pic/container_services.png)
 

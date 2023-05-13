@@ -207,10 +207,10 @@
 
 - `AWS Budgets`
 
-  - allow to setup alerts if AWS Resources exceed or approach user's defined budget.
+  - allow to **setup alerts** if AWS Resources exceed or approach user's defined budget.
   - Create Cost, Usage, or Revervation Budgets.
-  - Can track at the monthly, quarterly, or yearly levels, with customizable start and end dates.
-  - can forecast costs but is limited, compared to Cost Explorer or analysis with AWS Cost and Usage Reports along with Business Intelligence tool.
+  - Can **track** at the monthly, quarterly, or yearly levels, with customizable start and end dates.
+  - can **forecast** costs but is limited, compared to Cost Explorer or analysis with AWS Cost and Usage Reports along with Business Intelligence tool.
 
 - Alerts support EC2, RDS, Redshift, and ElasticCache reservations.
 

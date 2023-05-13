@@ -8,6 +8,8 @@
   - [Higher Performance Computing Services](#higher-performance-computing-services)
   - [Edge and Hybrid Computing Services](#edge-and-hybrid-computing-services)
   - [Cost and Capacity Management Computing Services](#cost-and-capacity-management-computing-services)
+  - [EC2 User Data](#ec2-user-data)
+  - [Security Groups - Firewall](#security-groups---firewall)
 
 ---
 
@@ -127,7 +129,7 @@
 
 - `Edge Computing`
 
-  - when user pushes computing workloads outside of user's networks to run close to the destination location.
+  - when user pushes computing workloads outside of user's networks to run **close to the destination location**.
   - eg.Pushing computing to run on phones, loT Devices, or external servers not within user's Cloud Network.
 
 - `Hybrid Computing`
@@ -185,6 +187,57 @@
 
 - `AWS Elastic Beanstalk (EB)`
   - is for easily deploying web-applications without developers having to worry about setting up and understanding the underlying AWS services.
+
+---
+
+## EC2 User Data
+
+- It is possible to bootstrap our instances using an EC2 User data script.
+- `bootstrapping`
+  - lunching commands when a machine starts
+- That script is **only run once** at the instance **first start**
+- EC2 user data is used to automate boot tasks such as:
+  - Installing updates
+  - Installing software
+  - Downloading common files from the internet
+  - Anything you can think of
+- The EC2 User Data Script runs with the **root user**
+
+---
+
+## Security Groups - Firewall
+
+- `Security Groups`
+  - the fundamental of network security in AWS
+  - They control how traffic is allowed into or out of our EC2 Instances.
+  - acting as a **“firewall”** on EC2 instances
+- Security groups **only** contain **allow** rules
+- Security groups rules can reference by **IP** or by **security group**
+
+- They regulate:
+
+  - Access to **Ports**
+  - Authorised **IP** ranges – IPv4 and IPv6
+  - Control of **inbound** network (from other to the instance)
+  - Control of **outbound** network (from the instance to other)
+
+- One security Group can be attached to multiple instances.
+- One instance can have multiple Security Groups.
+- Locked down to a region / VPC combination
+- Does live **“outside”** the EC2 – if traffic is blocked the EC2 instance won’t see it
+- It’s good to maintain **one separate security group for SSH** access
+- If your application is not accessible (**time out**), then it’s a **security group** issue
+- If your application gives a “**connection refused**“ error, then it’s an **application error** or it’s not launched
+- All **inbound traffic is blocked by default**
+- All **outbound traffic is authorised by default**
+
+- Classic Ports to know
+  - 21 = `FTP (File Transfer Protocol)` – upload files into a file share
+  - 22 = `SSH (Secure Shell)` - log into a Linux instance
+  - 22 = `SFTP (Secure File Transfer Protocol)` – upload files using SSH
+  - 80 = `HTTP` – access unsecured websites
+  - 443 = `HTTPS` – access secured websites
+  - 3389 = `RDP (Remote Desktop Protocol)` – log into a Windows instance
 
 ---
 

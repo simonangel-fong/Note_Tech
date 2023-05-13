@@ -3,17 +3,18 @@
 [Back](../index.md)
 
 - [AWS - Management and Developers Tools](#aws---management-and-developers-tools)
-  - [Fundamental](#fundamental)
+  - [AWS Access Fundamental](#aws-access-fundamental)
     - [Account ID](#account-id)
     - [Amazon Resource Name (ARN)](#amazon-resource-name-arn)
     - [Access Keys](#access-keys)
     - [AWS Documentation](#aws-documentation)
   - [API](#api)
-  - [Console](#console)
-  - [AWS CloudShell](#aws-cloudshell)
-    - [AWS Tools for Powershell](#aws-tools-for-powershell)
-  - [AWS CLI](#aws-cli)
-  - [AWS Software Developement Kit (SDK)](#aws-software-developement-kit-sdk)
+  - [Access AWS](#access-aws)
+    - [AWS Console](#aws-console)
+    - [AWS CLI](#aws-cli)
+      - [AWS CloudShell](#aws-cloudshell)
+      - [AWS Tools for Powershell](#aws-tools-for-powershell)
+    - [AWS SDK](#aws-sdk)
   - [Infrastructure as Code (IaC)](#infrastructure-as-code-iac)
     - [CloudFormation](#cloudformation)
     - [Cloud Development Kit (CDK)](#cloud-development-kit-cdk)
@@ -21,19 +22,19 @@
 
 ---
 
-## Fundamental
+## AWS Access Fundamental
 
 ### Account ID
 
-- Every AWS Account has a unique Account ID.
+- Every AWS Account has a **unique** Account ID.
 
 - The Account ID can be easily found by dropping down the current user in the Global Navigation.
 
-- The AWS Account ID is composed of 12 digits.
+- The AWS Account ID is composed of **12** digits.
 
 - The AWS Account ID is used:
 
-  - When **logging in** with a non-root user account
+  - When **logging in** with a **non-root** user account
   - Cross-account roles
   - Support cases
 
@@ -93,13 +94,13 @@
 
 - `Access Keys`
 
-  - a key and secret required to have programmatic access to AWS resources when interacting with the AWS API outside of the AWS Management Console.
+  - a **key** and **secret** required to have **programmatic access to AWS resources** when interacting with the AWS API outside of the AWS Management Console.
   - An Access Key is commonly referred to as `AWS Credentials`
 
-- Never share user's access keys
-- Never commit access keys to a codebase
-- An user can have two active Access Keys
-- An user can deactivate Access Keys.
+- **Never share** user's access keys
+- **Never commit** access keys to a codebase
+- An user can have **two** active Access Keys
+- An user can **deactivate** Access Keys.
 - Access Keys have whatever access a user has to AWS resources.
 
 ![access key](./pic/access_key01.png)
@@ -146,7 +147,19 @@
 
 ---
 
-## Console
+## Access AWS
+
+- To access AWS, you have three options:
+
+| Access                             | protected by   |
+| ---------------------------------- | -------------- |
+| `AWS Management Console`           | password + MFA |
+| `AWS Command Line Interface (CLI)` | access keys    |
+| `AWS Software Developer Kit (SDK)` | access keys    |
+
+---
+
+### AWS Console
 
 - `Management Console`
 
@@ -159,47 +172,11 @@
 
 ---
 
-## AWS CloudShell
-
-- `AWS CloudShell`
-  - a browser based shell built into the AWS Management Console.
-  - is scoped per region
-  - same credentials as logged in user
-  - Free Service
-  - Include 1GB of storage free per AWS region
-  - Saved files and settings
-    - files saved in home directory are available in future sessions for the same AWS region.
-  - Preinstalled Tools
-    - AWS CLI, Python, Node.js, git, make,pip, sudo, tar, tmux,vim wget, and zip and more.
-
----
-
-### AWS Tools for Powershell
-
-- `Powershell`
-  - a task automation and configuration management framework.
-  - A command-line shell and a scripting lauguage.
-- Unlinke most shells, which accept and return text, PowerShell is built on top of the `.NET` Common Language Runtime (CLR), and accepts and returns `.NET` objects.
-
-- `Cmdlet`
-
-  - a special type of command in PowerShell in the form of capitalized verb-and-noun e.g.`New-S3Bucket`
-
-- `AWS Tools for Powershell` lets user interact with the AWS API via PowerShell `Cmdlets`.
-
-- `pwsh`: Command to Switch to PowerShell in AWS CloudShell
-
-  ![pwsh](./pic/aws_cloudshell_powershell01.png)
-
-- Documentation: https://docs.aws.amazon.com/powershell/index.html
-
----
-
-## AWS CLI
+### AWS CLI
 
 - `Command Line Interface (CLI)`
 
-  - processes commands to a computer program in the form of lines of text.
+  - processes commands to a computer program **in the form of lines of text**.
   - OS implement a command-line interface **in a shell**.
 
 - `Terminal`
@@ -227,11 +204,48 @@
 
 ---
 
-## AWS Software Developement Kit (SDK)
+#### AWS CloudShell
+
+- `AWS CloudShell`
+  - a **browser based shell** built into the AWS Management Console.
+  - is scoped per region
+  - **Only available in some regions**
+  - same credentials as logged in user
+  - Free Service
+  - Include 1GB of storage free per AWS region
+  - Saved files and settings
+    - files saved in home directory are available in future sessions for the same AWS region.
+  - Preinstalled Tools
+    - AWS CLI, Python, Node.js, git, make,pip, sudo, tar, tmux,vim wget, and zip and more.
+
+---
+
+#### AWS Tools for Powershell
+
+- `Powershell`
+  - a task automation and configuration management framework.
+  - A command-line shell and a scripting lauguage.
+- Unlinke most shells, which accept and return text, PowerShell is built on top of the `.NET` Common Language Runtime (CLR), and accepts and returns `.NET` objects.
+
+- `Cmdlet`
+
+  - a special type of command in PowerShell in the form of capitalized verb-and-noun e.g.`New-S3Bucket`
+
+- `AWS Tools for Powershell` lets user interact with the AWS API via PowerShell `Cmdlets`.
+
+- `pwsh`: Command to Switch to PowerShell in AWS CloudShell
+
+  ![pwsh](./pic/aws_cloudshell_powershell01.png)
+
+- Documentation: https://docs.aws.amazon.com/powershell/index.html
+
+---
+
+### AWS SDK
 
 - `Software Developement Kit (SDK)`
 
-  - a collection of software development tools in one installable package.
+  - a collection of **software development tools** in one installable package.
 
 - `AWS SDK`
 

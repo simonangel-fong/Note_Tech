@@ -57,8 +57,8 @@
   - Acts as a virtual firewall at the instance level.
   - Implicitly **denies all traffic**.
   - user creates **only Allow** rules.
-  - eg. allow an EC2 instance access on port 22 for SSH
-  - eg. user cannot block a single IP address.
+    - eg. allow an EC2 instance access on port 22 for SSH
+    - eg. user cannot block a single IP address.
 
 ![vs](./pic/networking_nacl_group.png)
 

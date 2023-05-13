@@ -18,6 +18,10 @@
     - [IAM Policy](#iam-policy)
     - [AWS Account Root User](#aws-account-root-user)
     - [AWS IAM Identity Center - SSO](#aws-iam-identity-center---sso)
+    - [IAM Security Tools](#iam-security-tools)
+    - [IAM Guidelines \& Best Practices](#iam-guidelines--best-practices)
+    - [Shared Responsibility Model for IAM](#shared-responsibility-model-for-iam)
+  - [IAM Section – Summary](#iam-section--summary)
 
 ---
 
@@ -218,6 +222,16 @@
   - `IAM Roles`
     - Roles grant AWS **resources permissions** to specific **AWS API actions.**
     - Associate policies to Role and assign it to an AWS resource.
+    - Some AWS service will need to perform actions on user's behalf.To do so, permissions are need to be assigned to AWS services with `IAM Roles`
+      - - Common roles:
+        - EC2 Instance Roles
+        - Lambda Function Roles
+        - Roles for CloudFormation
+
+- 总结:
+  - user 是用户, 其 permission 是用户的 action 权限;
+  - role 可以是 AWS Servcie, 其其 permission 是该服务的 action 权限.
+    - 例如将 role 赋权给 EC2 服务,则该服务有 action 的权限.
 
 ---
 
@@ -271,6 +285,66 @@
   - is the recommended approach for workforce authentication and authorization on AWS for organizations of any size and type.
 
 ![sso](./pic/aws_sso.png)
+
+---
+
+### IAM Security Tools
+
+- `IAM Credentials Report` (account-level)
+
+  - a report that lists all your account's **users and the status** of their various credentials
+  - 应用: 检查账号的安全状况
+
+- `IAM Access Advisor` (user-level)
+  - Access advisor shows the service **permissions** granted to a user and when those services were **last accessed**.
+  - You can use this information to revise your policies.
+  - 应用: 列出授权, 然后适用 Principle of Least Privilege
+
+---
+
+### IAM Guidelines & Best Practices
+
+- Don’t use the **root account** except for **AWS account setup**
+- **One physical user = One AWS user**
+- Assign users to **groups** and assign permissions to groups
+- Create a **strong password** policy
+- Use and enforce the use of Multi Factor Authentication (**MFA**)
+- Create and use **Roles** for giving permissions to AWS **services**
+- Use **Access Keys** for **Programmatic Access (CLI / SDK)**
+- **Audit** permissions of your account using **IAM Credentials Report & IAM Access Advisor**
+- **Never share** IAM users & Access Keys
+
+---
+
+### Shared Responsibility Model for IAM
+
+- AWS
+
+  - **Infrastructure** (global network security)
+  - Configuration and **vulnerability** analysis
+  - **Compliance** validation
+
+- User
+  - **Users, Groups, Roles, Policies** management and monitoring
+  - Enable **MFA** on all accounts
+  - Rotate all your **keys** often
+  - Use IAM tools to apply appropriate **permissions**
+  - Analyze **access** patterns & review **permissions**
+
+---
+
+## IAM Section – Summary
+
+- Users:
+  - mapped to a **physical user**, has a password for AWS Console
+- Groups: contains **users** only
+- Policies: JSON document that outlines **permissions for users or groups**
+- Roles: for EC2 instances or **AWS services**
+- Security: **MFA + Password** Policy
+- AWS CLI: **manage your AWS services** using the command-line
+- AWS SDK: **manage your AWS services** using a programming language
+- Access Keys: access AWS using the **CLI or SDK**
+- Audit: IAM **Credential Reports** & IAM **Access Advisor**
 
 ---
 
