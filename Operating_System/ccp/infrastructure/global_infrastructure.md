@@ -3,26 +3,54 @@
 [Back](../index.md)
 
 - [AWS - Global Infrastructure](#aws---global-infrastructure)
-  - [Regional vs Global Services](#regional-vs-global-services)
-  - [Global Infrastructure](#global-infrastructure)
+  - [Global Application](#global-application)
+    - [Regional vs Global Services](#regional-vs-global-services)
+    - [Global Applications Architecture](#global-applications-architecture)
+  - [Global Services](#global-services)
+    - [Route 53 - DNS](#route-53---dns)
+      - [Routing Policies](#routing-policies)
+    - [CloudFront - CDN, DDoS, Shield, WAF](#cloudfront---cdn-ddos-shield-waf)
+      - [CloudFront vs S3 Cross Region Replication](#cloudfront-vs-s3-cross-region-replication)
+    - [S3 Transfer Acceleration](#s3-transfer-acceleration)
+    - [Global Accelerator - performance](#global-accelerator---performance)
+      - [AWS Global Accelerator vs CloudFront](#aws-global-accelerator-vs-cloudfront)
+  - [AWS Global Infrastructure](#aws-global-infrastructure)
     - [Region](#region)
     - [Availability Zones](#availability-zones)
+    - [Edge Locations / Point of Presence (Pop)](#edge-locations--point-of-presence-pop)
+      - [Local Zones](#local-zones)
+      - [Wavelength Zones](#wavelength-zones)
+      - [AWS Ground Station](#aws-ground-station)
+      - [AWS Outposts](#aws-outposts)
     - [Global Network](#global-network)
-    - [Point of Presence (Pop)](#point-of-presence-pop)
-    - [Direct Connection Locations](#direct-connection-locations)
-    - [Local Zones](#local-zones)
-    - [Wavelength Zones](#wavelength-zones)
-    - [AWS Ground Station](#aws-ground-station)
-    - [AWS Outposts](#aws-outposts)
+      - [Direct Connection Locations - Connection on-premise and AWS](#direct-connection-locations---connection-on-premise-and-aws)
   - [AWS Government](#aws-government)
   - [AWS China](#aws-china)
   - [Fault Tolenrance](#fault-tolenrance)
   - [Data Residency](#data-residency)
-  - [Sustainability](#sustainability)
 
 ---
 
-## Regional vs Global Services
+## Global Application
+
+- global application
+  - an application **deployed in multiple geographies**
+- On AWS: this could be **Regions** and / or **Edge Locations**
+
+- **Advantages**
+  - **Decreased Latency**
+    - `Latency` is the time it takes for a network packet to reach a server
+    - It takes time for a packet from Asia to reach the US
+    - Deploy your applications **closer to your users** to decrease latency, better experience
+  - **Disaster Recovery (DR)**
+    - If an AWS region goes down (earthquake, storms, power shutdown, politics)…
+    - You can **fail-over** to another region and have your application still working
+    - A DR plan is important to increase the **availability** of your application
+  - **Attack protection**: distributed global infrastructure is harder to attack
+
+---
+
+### Regional vs Global Services
 
 - `Regional Services`
 
@@ -41,7 +69,114 @@
 
 ---
 
-## Global Infrastructure
+### Global Applications Architecture
+
+|                                  | Availability | Global Latency              | Difficulty |
+| -------------------------------- | ------------ | --------------------------- | ---------- |
+| Single Region, Single AZ         | Low          | High                        | Low        |
+| Single Region, Multi AZ          | High         | High                        | Medium     |
+| Multi Region, **Active-Passive** | High         | Read: Low, Write: High      | Medium     |
+| Multi Region, **Active-Active**  | High         | **Read: High, Write: High** | Hight      |
+
+---
+
+## Global Services
+
+### Route 53 - DNS
+
+- Route53 is a Managed **DNS (Domain Name System)**
+- DNS is **a collection of rules and records** which helps clients understand **how to reach a server through URLs.**
+
+- Feature
+  - Domain Registration,
+  - DNS,
+  - Health Checks,
+  - Routing Policy
+
+#### Routing Policies
+
+- `SIMPLE ROUTING POLICY`: No health checks, 唯一检查健康
+- `WEIGHTED ROUTING POLICY`: 按权重
+- `LATENCY ROUTING POLICY`: find the closest
+- `FAILOVER ROUTING POLICY`: Disaster Recovery
+
+---
+
+### CloudFront - CDN, DDoS, Shield, WAF
+
+- CloudFront **uses Edge Location to cache content**, and therefore bring more of your content closer to your viewers to improve read performance.
+
+- `Content Delivery Network (CDN)`
+- Improves **read performance**, content is **cached at the edge**
+- Improves users experience
+- 216 Point of Presence globally (edge locations)
+- **DDoS protection** (because worldwide), integration with **Shield**, AWS **Web Application Firewall**
+
+- **Origins**
+
+  - **S3 bucket**
+
+    - For distributing files and caching them at the edge
+    - Enhanced **security** with `CloudFront Origin Access Control (OAC)` + S3 policy
+    - OAC is replacing Origin Access Identity (OAI)
+    - CloudFront can be used as an **ingress** (to upload files to S3)
+
+  - **Custom Origin (HTTP)**
+    - **Application Load Balancer**
+    - **EC2 instance**
+    - S3 website (must first enable the bucket as a** static S3 website)**
+    - **Any HTTP backend** you want
+
+---
+
+#### CloudFront vs S3 Cross Region Replication
+
+- **CloudFront**:
+
+  - Global **Edge** network
+  - Files are **cached for a TTL** (maybe a day)
+  - Great for **static content** that must be available **everywhere**
+
+- **S3 Cross Region Replication:**
+  - Must be **setup** for each region you want replication to happen
+  - Files are updated in near **real-time**
+  - **Read only**
+  - Great for **dynamic content** that needs to be available at low-latency **in few regions**
+
+---
+
+### S3 Transfer Acceleration
+
+- **Increase transfer speed by transferring** file to an AWS edge location which will forward the data to the **S3 bucket in the target region**
+
+---
+
+### Global Accelerator - performance
+
+- Improve global application **availability and performance** using the `AWS global network`
+- Leverage the AWS internal network to optimize the route to your application (60% improvement)
+- **2 Anycast IP are created** for your application and traffic is sent through Edge Locations
+- The Edge locations send the traffic to your application
+
+#### AWS Global Accelerator vs CloudFront
+
+- They **both use the AWS global network and its edge locations** around the world
+- Both services integrate with AWS **Shield for DDoS protection**.
+
+- **CloudFront** – Content Delivery Network
+
+  - Improves performance for your **cacheable content** (such as images and videos)
+  - Content is **served at the edge**
+
+- **Global Accelerator**
+  - **No caching**, proxying packets at the edge to applications running in one or more AWS Regions.
+  - **Improves performance** for a wide range of applications over **TCP or UDP**
+  - Good for HTTP use cases that require **static IP addresses**
+  - Good for HTTP use cases that required **deterministic, fast regional failover**
+
+---
+
+## AWS Global Infrastructure
 
 - `Global Infrastructure`;
 
@@ -65,6 +200,7 @@
 - `Region`:
 
   - **geographically distinct locations** consiting of one or more Availability Zone.
+  - For deploying applications and infrastructure
 
 - Featrues:
 
@@ -83,7 +219,7 @@
 
 - Diagram: 使用小旗子标记
 
-  ![Region Diagram](../global_infrastructure/pic/region_diagram.png)
+  ![Region Diagram](../infrastructure/pic/region_diagram.png)
 
 ---
 
@@ -111,31 +247,18 @@
 
 - Diagram: 虚线方框
 
-  ![AZ Diagram](../global_infrastructure/pic/az_diagram.png)
+  ![AZ Diagram](../infrastructure/pic/az_diagram.png)
 
 - Region and Zone
-  ![Region and Zone](../global_infrastructure/pic/region_az_visualized.png)
+  ![Region and Zone](../infrastructure/pic/region_az_visualized.png)
 
 ---
 
-### Global Network
-
-- `AWS Global Network`:
-
-  - represent the interconnections between AWS Global Infrastructure.
-  - aka, `the backbone of AWS`
-  - a private expressway, where things can move very fast between datacenters.
-
-- Example services regarding to the Global Network:
-
-  ![Global Network](./pic/global_network.png)
-
----
-
-### Point of Presence (Pop)
+### Edge Locations / Point of Presence (Pop)
 
 - `Point of Presence (Pop)`:
 
+  - for content delivery **as close as possible to users**
   - an **intermediate location** between as `AWS Region` and the `end user`, and this location could be a **datacenter or collection of hardware**.
   - For AWS, a `point of presence` is a **data center owned** by AWS or a trusted partner that is utilized by AWS Services related for content delivery or expediated upload.
   - POP resources are Edge Locations and Regional Edge Caches.
@@ -161,7 +284,115 @@
 
 ---
 
-### Direct Connection Locations
+#### Local Zones
+
+- `Local Zone`:
+
+  - **datacenters** located very close to a densely populated area to provide single-digit millisecond low latency performance for that area.
+
+- Purpose of Local Zone
+
+  - support highly-demanding applications sensitive to latencies
+
+- Example: Los Angeles, California
+
+  - the first Local Zone to be deployed.
+  - It is logical extension of the US-West Region
+  - The identifier looks like: `us-west-2-lax-1a`
+  - Only specific AWS Service have been made available.
+
+- Places AWS compute, storage, database, and other selected AWS services **closer
+  to end users** to run latency-sensitive applications
+- Extend your VPC to more locations – **“Extension of an AWS Region”**
+- Compatible with EC2, RDS, ECS, EBS, ElastiCache, Direct Connect …
+- Example:
+  - AWS Region: N. Virginia (us-east-1)
+  - AWS Local Zones: Boston, Chicago, Dallas, Houston, Miami, …
+
+---
+
+#### Wavelength Zones
+
+- `AWS Wavelength Zones`
+
+  - allows for edge-computing **on 5G networks**.
+  - Applications will have ultra-low latency being as close as possible to the users.
+  - User creates a Subnet tied to a Wavelength Zone and then can launch Virtual Machine(VMs) to the edge of the targeted 5G Networks.
+
+- WaveLength Zones are infrastructure deployments embedded **within the telecommunications providers’ datacenters** at the edge of the 5G networks
+- Brings AWS services to the edge of the 5G networks
+- Example: EC2, EBS, VPC…
+- **Ultra-low latency** applications through **5G** networks
+- **Traffic doesn’t leave the Communication Service Provider’s (CSP) network**
+- High-bandwidth and secure connection to the parent AWS Region
+- **No additional charges or service agreements**
+- Use cases:
+  - Smart Cities, ML-assisted diagnostics, Connected Vehicles, Interactive Live Video Streams, AR/VR, Real-time Gaming, …
+
+---
+
+#### AWS Ground Station
+
+- `AWS Ground Station`:
+
+  - a fully managed service that lets user control satellite communication.
+
+- Use case:
+  ![ground station](./pic/ground_station.png)
+
+---
+
+#### AWS Outposts
+
+- `AWS Outposts`:
+
+  - a fully managed service that offers the same AWS infracture, AWS servicess, APIs, and tools to virtually any datacenter, co-location space, or on-premises facility for a truly consistent **hybrid** exprience.
+  - is **rack of servers** running AWS Infrastructure **on users' physical location**.
+
+- **Hybrid** Cloud:
+
+  - businesses that keep an on-premises **infrastructure** alongside a cloud **infrastructure**
+
+- Therefore, two ways of dealing with IT systems:
+
+  - One for the **AWS cloud** (using the AWS console, CLI, and AWS APIs)
+  - One for their **on-premises** infrastructure
+
+- `AWS Outposts` are “**server racks**” that offers the
+  same AWS infrastructure, services, APIs & tools
+  to build your own applications **on-premises just as in the cloud**
+
+- AWS will setup and manage “Outposts Racks” within your on-premises infrastructure and you can start leveraging AWS services on-premises
+
+- **Responsibility**
+
+  - You are responsible for the Outposts Rack **physical security**
+
+- **Benefits**:
+  - Low-**latency** access to on-premises systems
+  - **Local data** processing
+  - Data **residency**
+  - **Easier migration** from on-premises to the cloud
+  - Fully managed service
+  - Some services that work on Outposts
+
+---
+
+### Global Network
+
+- `AWS Global Network`:
+
+  - represent the interconnections between AWS Global Infrastructure.
+  - aka, `the backbone of AWS`
+  - a private expressway, where things can move very fast between datacenters.
+
+- Example services regarding to the Global Network:
+
+  ![Global Network](./pic/global_network.png)
+
+---
+
+#### Direct Connection Locations - Connection on-premise and AWS
 
 - `AWS Direct Connect`:
 
@@ -177,52 +408,6 @@
 - `Direct Connect Locations` are trusted partnered **datacenters** that you can establish a dedicated high speed, low-latenecy connection from your on-premise to AWS.
 
 - Users would use the `AWS Direct Connect service` to order and establish a connection.
-
----
-
-### Local Zones
-
-- `Local Zone`:
-
-  - **datacenters** located very close to a densely populated area to provide single-digit millisecond low latency performance for that area.
-
-- Purpose of Local Zone
-
-  - support highly-demanding applications sensitive to latencies
-
-- Example: Los Angeles, California
-  - the first Local Zone to be deployed.
-  - It is logical extension of the US-West Region
-  - The identifier looks like: `us-west-2-lax-1a`
-  - Only specific AWS Service have been made available.
-
----
-
-### Wavelength Zones
-
-- `AWS Wavelength Zones`
-  - allows for edge-computing **on 5G networks**.
-  - Applications will have ultra-low latency being as close as possible to the users.
-  - User creates a Subnet tied to a Wavelength Zone and then can launch Virtual Machine(VMs) to the edge of the targeted 5G Networks.
-
----
-
-### AWS Ground Station
-
-- `AWS Ground Station`:
-
-  - a fully managed service that lets user control satellite communication.
-
-- Use case:
-  ![ground station](./pic/ground_station.png)
-
----
-
-### AWS Outposts
-
-- `AWS Outposts`:
-  - a fully managed service that offers the same AWS infracture, AWS servicess, APIs, and tools to virtually any datacenter, co-location space, or on-premises facility for a truly consistent hybrid exprience.
-  - is **rack of servers** running AWS Infrastructure **on users' physical location**.
 
 ---
 
@@ -328,12 +513,6 @@
     - User can create rules to continuous check AWS resources configuration. If rules deviate from userss expectations users are alerted or AWS Config can in some cases auto-remediate.
   - `IAM Policies`:
     - can be explicitly deny access to specific AWS regions. A `Service Control Policy` (SCP) are permissions applied organization wide.
-
----
-
-## Sustainability
-
-- website: https://sustainability.aboutamazon.com/
 
 ---
 

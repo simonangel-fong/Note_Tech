@@ -11,7 +11,7 @@
     - [Managed Blockchain - Decentralization](#managed-blockchain---decentralization)
   - [Data Analytics](#data-analytics)
     - [Elastic MapReduce (EMR) - Hadoop, Big Data](#elastic-mapreduce-emr---hadoop-big-data)
-    - [Amazon Athena - S3, Serverless](#amazon-athena---s3-serverless)
+    - [Amazon Athena - S3, Serverless, analyze](#amazon-athena---s3-serverless-analyze)
     - [Amazon QuickSight - Serverless, BI](#amazon-quicksight---serverless-bi)
   - [Supportive Tools](#supportive-tools)
     - [AWS Glue - serverless, ETL](#aws-glue---serverless-etl)
@@ -122,9 +122,9 @@
 
 ---
 
-### Amazon Athena - S3, Serverless
+### Amazon Athena - S3, Serverless, analyze
 
-- **Serverless** query service to analyze data stored in Amazon S3
+- **Serverless** query service to **analyze** data stored in Amazon S3
 - Uses standard **SQL** language to query the files
 - Supports CSV, JSON, ORC, Avro, and Parquet (built on Presto)
 - Pricing: **$5.00 per TB **of data scanned

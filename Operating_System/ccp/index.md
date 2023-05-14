@@ -44,7 +44,7 @@
 
 - Infrastructure
 
-  - [Global Infrastructure](./infrastructure/global_infrastructure.md)
+  - [Global Infrastructure and Global Application](./infrastructure/global_infrastructure.md)
   - [Access and Management](./infrastructure/access.md)
 
 - [Developer and Deployment](./infrastructure/developer.md)
@@ -64,9 +64,11 @@
     - [NoSQL](./database/nosql.md)
     - [Data Analytics: Data Warehouse, Big Data](./database/data_analytics.md)
 
+  - [Cloud Integration](./integration/integration.md)
+  - [Cloud Monitoring](./monitoring/monitoring.md)
+
   - [Networking](./networking/networking.md)
 
-  - [Application Integration](./application_integration/application_integration.md)
   - [Goverance](./goverance/goverance.md)
   - [Provisioning](./provisioning/provisioning.md)
   - [Serverless](./serverless/serverless.md)
