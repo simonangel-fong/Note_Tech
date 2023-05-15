@@ -7,23 +7,23 @@
     - [Regional vs Global Services](#regional-vs-global-services)
     - [Global Applications Architecture](#global-applications-architecture)
   - [Global Services](#global-services)
-    - [Route 53 - DNS](#route-53---dns)
+    - [`Route 53` - DNS](#route-53---dns)
       - [Routing Policies](#routing-policies)
-    - [CloudFront - CDN, DDoS, Shield, WAF](#cloudfront---cdn-ddos-shield-waf)
+    - [`CloudFront` - CDN, DDoS](#cloudfront---cdn-ddos)
       - [CloudFront vs S3 Cross Region Replication](#cloudfront-vs-s3-cross-region-replication)
-    - [S3 Transfer Acceleration](#s3-transfer-acceleration)
-    - [Global Accelerator - performance](#global-accelerator---performance)
+    - [`S3 Transfer Acceleration` - upload S3](#s3-transfer-acceleration---upload-s3)
+    - [`Global Accelerator` - performance, short-cut](#global-accelerator---performance-short-cut)
       - [AWS Global Accelerator vs CloudFront](#aws-global-accelerator-vs-cloudfront)
   - [AWS Global Infrastructure](#aws-global-infrastructure)
     - [Region](#region)
     - [Availability Zones](#availability-zones)
     - [Edge Locations / Point of Presence (Pop)](#edge-locations--point-of-presence-pop)
-      - [Local Zones](#local-zones)
-      - [Wavelength Zones](#wavelength-zones)
-      - [AWS Ground Station](#aws-ground-station)
-      - [AWS Outposts](#aws-outposts)
+      - [`Local Zones`](#local-zones)
+      - [`Wavelength Zones`](#wavelength-zones)
+      - [`AWS Ground Station`](#aws-ground-station)
+      - [`AWS Outposts` - rack of servers, hybrid](#aws-outposts---rack-of-servers-hybrid)
     - [Global Network](#global-network)
-      - [Direct Connection Locations - Connection on-premise and AWS](#direct-connection-locations---connection-on-premise-and-aws)
+      - [`Direct Connection Locations` - Connection on-premise and AWS](#direct-connection-locations---connection-on-premise-and-aws)
   - [AWS Government](#aws-government)
   - [AWS China](#aws-china)
   - [Fault Tolenrance](#fault-tolenrance)
@@ -82,7 +82,7 @@
 
 ## Global Services
 
-### Route 53 - DNS
+### `Route 53` - DNS
 
 - Route53 is a Managed **DNS (Domain Name System)**
 - DNS is **a collection of rules and records** which helps clients understand **how to reach a server through URLs.**
@@ -102,7 +102,7 @@
 
 ---
 
-### CloudFront - CDN, DDoS, Shield, WAF
+### `CloudFront` - CDN, DDoS
 
 - CloudFront **uses Edge Location to cache content**, and therefore bring more of your content closer to your viewers to improve read performance.
 
@@ -145,13 +145,13 @@
 
 ---
 
-### S3 Transfer Acceleration
+### `S3 Transfer Acceleration` - upload S3
 
 - **Increase transfer speed by transferring** file to an AWS edge location which will forward the data to the **S3 bucket in the target region**
 
 ---
 
-### Global Accelerator - performance
+### `Global Accelerator` - performance, short-cut
 
 - Improve global application **availability and performance** using the `AWS global network`
 - Leverage the AWS internal network to optimize the route to your application (60% improvement)
@@ -284,7 +284,7 @@
 
 ---
 
-#### Local Zones
+#### `Local Zones`
 
 - `Local Zone`:
 
@@ -311,7 +311,7 @@
 
 ---
 
-#### Wavelength Zones
+#### `Wavelength Zones`
 
 - `AWS Wavelength Zones`
 
@@ -331,7 +331,7 @@
 
 ---
 
-#### AWS Ground Station
+#### `AWS Ground Station`
 
 - `AWS Ground Station`:
 
@@ -342,7 +342,7 @@
 
 ---
 
-#### AWS Outposts
+#### `AWS Outposts` - rack of servers, hybrid
 
 - `AWS Outposts`:
 
@@ -392,7 +392,7 @@
 
 ---
 
-#### Direct Connection Locations - Connection on-premise and AWS
+#### `Direct Connection Locations` - Connection on-premise and AWS
 
 - `AWS Direct Connect`:
 

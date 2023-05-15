@@ -7,12 +7,12 @@
     - [A Key/Value Store](#a-keyvalue-store)
     - [Document Store](#document-store)
   - [NoSQL Database Services](#nosql-database-services)
-    - [DynamoDB - Serverless, Low latency retrieval](#dynamodb---serverless-low-latency-retrieval)
+    - [`DynamoDB` - Serverless, Low latency retrieval](#dynamodb---serverless-low-latency-retrieval)
       - [Global Tables - a low latency feature](#global-tables---a-low-latency-feature)
-    - [DynamoDB Accelerator(DAX) - In-memory Cache](#dynamodb-acceleratordax---in-memory-cache)
-    - [DocumentDB - MongoDB](#documentdb---mongodb)
+    - [`DynamoDB Accelerator(DAX)` - In-memory Cache](#dynamodb-acceleratordax---in-memory-cache)
+    - [`DocumentDB` - MongoDB](#documentdb---mongodb)
   - [Others NoSQL](#others-nosql)
-    - [Amoazon Keyspaces - Cassandra](#amoazon-keyspaces---cassandra)
+    - [`Amoazon Keyspaces` - Cassandra](#amoazon-keyspaces---cassandra)
 
 ---
 
@@ -63,7 +63,7 @@
 
 ## NoSQL Database Services
 
-### DynamoDB - Serverless, Low latency retrieval
+### `DynamoDB` - Serverless, Low latency retrieval
 
 - `DynamoDB`
 
@@ -87,7 +87,7 @@
 
 ---
 
-### DynamoDB Accelerator(DAX) - In-memory Cache
+### `DynamoDB Accelerator(DAX)` - In-memory Cache
 
 - Fully Managed **in-memory cache** for DynamoDB
 - 10x **performance** improvement – single- digit millisecond latency to microseconds latency – when accessing your DynamoDB tables
@@ -98,7 +98,7 @@
 
 ---
 
-### DocumentDB - MongoDB
+### `DocumentDB` - MongoDB
 
 - Aurora is an “AWS-implementation” of PostgreSQL / MySQL …
 - DocumentDB is the same for **MongoDB (which is a NoSQL database)**
@@ -112,7 +112,7 @@
 
 ## Others NoSQL
 
-### Amoazon Keyspaces - Cassandra
+### `Amoazon Keyspaces` - Cassandra
 
 - `Cassandra`
 

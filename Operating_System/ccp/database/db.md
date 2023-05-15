@@ -67,7 +67,7 @@
 - **Decentralization**
   - `Amazon Managed Blockchain`: managed **Hyperledger Fabric** & **Ethereum** blockchains
 - **ETL Tools**
-  - Glue: Managed ETL (Extract Transform Load) and Data Catalog service (serverless)
+  - `Glue`: Managed ETL (Extract Transform Load) and Data Catalog service (serverless)
 - **Database Migration**:
   - `DMS`
 - **Graph database**

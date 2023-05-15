@@ -5,10 +5,10 @@
 - [AWS - Global Infrastructure](#aws---global-infrastructure)
   - [Terminologies](#terminologies)
   - [High Availability](#high-availability)
-    - [Elastic Load Balancer (ELB)](#elastic-load-balancer-elb)
+    - [`Elastic Load Balancer (ELB)`](#elastic-load-balancer-elb)
   - [High Scalability](#high-scalability)
   - [High Elasticity](#high-elasticity)
-    - [Auto Scaling Groups (ASG)](#auto-scaling-groups-asg)
+    - [`Auto Scaling Groups (ASG)`](#auto-scaling-groups-asg)
   - [Hight Agility](#hight-agility)
   - [Highly Fault Tolerant](#highly-fault-tolerant)
   - [High Durability](#high-durability)
@@ -62,7 +62,7 @@
 
 ---
 
-### Elastic Load Balancer (ELB)
+### `Elastic Load Balancer (ELB)`
 
 - `Load Balancing`
 
@@ -149,7 +149,7 @@
 
 ---
 
-### Auto Scaling Groups (ASG)
+### `Auto Scaling Groups (ASG)`
 
 - `Auto Scaling Groups (ASG)`
 

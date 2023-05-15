@@ -4,19 +4,19 @@
 
 - [AWS - Data Analytics](#aws---data-analytics)
   - [Data Warehouse](#data-warehouse)
-    - [Redshift - analytics, data warehousing, BI](#redshift---analytics-data-warehousing-bi)
+    - [`Redshift` - analytics, data warehousing, BI](#redshift---analytics-data-warehousing-bi)
   - [Other Database](#other-database)
-    - [Neptune - Graph, Latency](#neptune---graph-latency)
-    - [Quantum Ledger Database (QLDB) - Financial regulation, Immutable, Centralization](#quantum-ledger-database-qldb---financial-regulation-immutable-centralization)
-    - [Managed Blockchain - Decentralization](#managed-blockchain---decentralization)
+    - [`Neptune` - Graph, Latency](#neptune---graph-latency)
+    - [`Quantum Ledger Database (QLDB)` - Financial regulation, Immutable, Centralization](#quantum-ledger-database-qldb---financial-regulation-immutable-centralization)
+    - [`Managed Blockchain` - Decentralization](#managed-blockchain---decentralization)
   - [Data Analytics](#data-analytics)
-    - [Elastic MapReduce (EMR) - Hadoop, Big Data](#elastic-mapreduce-emr---hadoop-big-data)
-    - [Amazon Athena - S3, Serverless, analyze](#amazon-athena---s3-serverless-analyze)
-    - [Amazon QuickSight - Serverless, BI](#amazon-quicksight---serverless-bi)
+    - [`Elastic MapReduce (EMR)` - Hadoop, Big Data](#elastic-mapreduce-emr---hadoop-big-data)
+    - [`Amazon Athena` - S3, Serverless, analyze](#amazon-athena---s3-serverless-analyze)
+    - [`Amazon QuickSight` - Serverless, BI](#amazon-quicksight---serverless-bi)
   - [Supportive Tools](#supportive-tools)
-    - [AWS Glue - serverless, ETL](#aws-glue---serverless-etl)
-    - [Glue Data Catalog](#glue-data-catalog)
-    - [Database Migration Service (DMS)](#database-migration-service-dms)
+    - [`AWS Glue` - serverless, ETL](#aws-glue---serverless-etl)
+    - [`Glue Data Catalog` - Datasets](#glue-data-catalog---datasets)
+    - [`Database Migration Service (DMS)` - Migration](#database-migration-service-dms---migration)
 
 ---
 
@@ -42,7 +42,7 @@
 
 ---
 
-### Redshift - analytics, data warehousing, BI
+### `Redshift` - analytics, data warehousing, BI
 
 - Redshift is based on **PostgreSQL**, but it’s **not** used for **OLTP**
 - It’s **OLAP** – **online analytical processing** (**analytics** and **data** **warehousing**)
@@ -58,7 +58,7 @@
 
 ## Other Database
 
-### Neptune - Graph, Latency
+### `Neptune` - Graph, Latency
 
 - A popular **graph dataset** would be a social network
 
@@ -83,7 +83,7 @@
 
 ---
 
-### Quantum Ledger Database (QLDB) - Financial regulation, Immutable, Centralization
+### `Quantum Ledger Database (QLDB)` - Financial regulation, Immutable, Centralization
 
 - A `ledger` is a book **recording financial transactions**
 - Fully Managed, Serverless, High available, Replication across **3 AZ**
@@ -94,7 +94,7 @@
 
 ---
 
-### Managed Blockchain - Decentralization
+### `Managed Blockchain` - Decentralization
 
 - Blockchain makes it possible to build applications where **multiple parties** can execute transactions **without** the need for a trusted, **central** authority.
 - Amazon Managed Blockchain is a managed service to:
@@ -106,7 +106,7 @@
 
 ## Data Analytics
 
-### Elastic MapReduce (EMR) - Hadoop, Big Data
+### `Elastic MapReduce (EMR)` - Hadoop, Big Data
 
 - `Elastic MapReduce (EMR)`
   - EMR helps creating **Hadoop clusters (Big Data)** to analyze and process vast amount of data
@@ -122,7 +122,7 @@
 
 ---
 
-### Amazon Athena - S3, Serverless, analyze
+### `Amazon Athena` - S3, Serverless, analyze
 
 - **Serverless** query service to **analyze** data stored in Amazon S3
 - Uses standard **SQL** language to query the files
@@ -138,7 +138,7 @@
 
 ---
 
-### Amazon QuickSight - Serverless, BI
+### `Amazon QuickSight` - Serverless, BI
 
 - Serverless machine learning-powered **business intelligence service** to create interactive dashboards
 - Fast, automatically scalable, embeddable, with per-session pricing
@@ -153,7 +153,7 @@
 
 ## Supportive Tools
 
-### AWS Glue - serverless, ETL
+### `AWS Glue` - serverless, ETL
 
 - Managed **extract, transform, and load (ETL)** service
 - Useful to **prepare and transform data for analytics**
@@ -161,14 +161,14 @@
 
 ---
 
-### Glue Data Catalog
+### `Glue Data Catalog` - Datasets
 
 - catalog of **datasets**
 - can be used by Athena, Redshift, EMR
 
 ---
 
-### Database Migration Service (DMS)
+### `Database Migration Service (DMS)` - Migration
 
 - Quickly and securely **migrate databases to AWS**, resilient, self healing
 - The source database remains available during the migration

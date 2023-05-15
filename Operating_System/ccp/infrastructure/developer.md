@@ -5,12 +5,12 @@
 - [AWS - Developer and Deployment](#aws---developer-and-deployment)
   - [Plaform-as-a-Service (PaaS)](#plaform-as-a-service-paas)
   - [Deployment Services](#deployment-services)
-    - [AWS Elatic Beanstalk - Paas, Deploy Code, free](#aws-elatic-beanstalk---paas-deploy-code-free)
+    - [`AWS Elatic Beanstalk` - Paas, Deploy Code, free](#aws-elatic-beanstalk---paas-deploy-code-free)
       - [Elastic Beanstalk – Health Monitoring(CloudWatch)](#elastic-beanstalk--health-monitoringcloudwatch)
-    - [AWS CodeDeploy - Hybrid, app deploy and upgrade](#aws-codedeploy---hybrid-app-deploy-and-upgrade)
-    - [AWS Systems Manager (SSM) - commands, patch \& configure Server, Hybrid](#aws-systems-manager-ssm---commands-patch--configure-server-hybrid)
+    - [`AWS CodeDeploy` - Hybrid, app deploy and upgrade](#aws-codedeploy---hybrid-app-deploy-and-upgrade)
+    - [`AWS Systems Manager (SSM)` - commands, patch \& configure Server, Hybrid](#aws-systems-manager-ssm---commands-patch--configure-server-hybrid)
       - [Systems Manager (SSM) Session Manager](#systems-manager-ssm-session-manager)
-    - [AWS OpsWorks - as SSM with Chef \& Puppet](#aws-opsworks---as-ssm-with-chef--puppet)
+    - [`AWS OpsWorks` - as SSM with Chef \& Puppet](#aws-opsworks---as-ssm-with-chef--puppet)
   - [Developer Services](#developer-services)
     - [AWS CodeCommit - Code repository](#aws-codecommit---code-repository)
     - [AWS CodeBuild - Compile, serverless](#aws-codebuild---compile-serverless)
@@ -33,7 +33,7 @@
 
 ## Deployment Services
 
-### AWS Elatic Beanstalk - Paas, Deploy Code, free
+### `AWS Elatic Beanstalk` - Paas, Deploy Code, free
 
 - `Elastic Beanstalk`
 
@@ -74,7 +74,7 @@
 
 ---
 
-### AWS CodeDeploy - Hybrid, app deploy and upgrade
+### `AWS CodeDeploy` - Hybrid, app deploy and upgrade
 
 - We want to deploy our application automatically
 - **Hybrid** service
@@ -84,7 +84,7 @@
 
 ---
 
-### AWS Systems Manager (SSM) - commands, patch & configure Server, Hybrid
+### `AWS Systems Manager (SSM)` - commands, patch & configure Server, Hybrid
 
 - Helps you manage your **EC2 and On-Premises systems at scale**
 - Another **Hybrid** AWS service
@@ -113,7 +113,7 @@
 
 ---
 
-### AWS OpsWorks - as SSM with Chef & Puppet
+### `AWS OpsWorks` - as SSM with Chef & Puppet
 
 - `Chef` & `Puppet` help you perform server configuration automatically, or repetitive actions
 - They work great with EC2 & On-Premises VM

@@ -4,13 +4,13 @@
 
 - [AWS - RDS](#aws---rds)
   - [Relational Databases](#relational-databases)
-  - [Relational Database Service (RDS)](#relational-database-service-rds)
-    - [Aurora - Performance, PostgreSQL and MySQL, not free](#aurora---performance-postgresql-and-mysql-not-free)
-    - [ElastiCache - In-memory](#elasticache---in-memory)
-    - [RDS Deployments](#rds-deployments)
-      - [Read Replicas](#read-replicas)
-      - [Multi-AZ](#multi-az)
-      - [Multi-Region (Read Replicas)](#multi-region-read-replicas)
+  - [`Relational Database Service (RDS)`](#relational-database-service-rds)
+  - [`Aurora` - Performance, PostgreSQL and MySQL, not free](#aurora---performance-postgresql-and-mysql-not-free)
+  - [`ElastiCache` - In-memory](#elasticache---in-memory)
+  - [RDS Deployments](#rds-deployments)
+    - [Read Replicas](#read-replicas)
+    - [Multi-AZ](#multi-az)
+    - [Multi-Region (Read Replicas)](#multi-region-read-replicas)
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Relational Database Service (RDS)
+## `Relational Database Service (RDS)`
 
 - `Relational Database Service (RDS)`
 
@@ -57,7 +57,7 @@
 
 ---
 
-### Aurora - Performance, PostgreSQL and MySQL, not free
+## `Aurora` - Performance, PostgreSQL and MySQL, not free
 
 - `Aurora`
 
@@ -77,7 +77,7 @@
 
 ---
 
-### ElastiCache - In-memory
+## `ElastiCache` - In-memory
 
 - The same way RDS is to get managed **Relational Databases**…
 - ElastiCache is to get managed Redis or Memcached
@@ -87,23 +87,23 @@
 
 ---
 
-### RDS Deployments
+## RDS Deployments
 
-#### Read Replicas
+### Read Replicas
 
 - Scale the **read** workload of your DB
 - Can create up to **15** Read Replicas
 - Data is **only written to the main** DB
 - main purpose is **scalability**
 
-#### Multi-AZ
+### Multi-AZ
 
 - Failover in case of AZ **outage** (high availability)
 - Data is **only read/written to the main** database
 - Can **only have 1 other AZ** as failover
 - main purpose is high **availability**
 
-#### Multi-Region (Read Replicas)
+### Multi-Region (Read Replicas)
 
 - Disaster recovery in case of **region issue**
 - Local performance for **global reads**

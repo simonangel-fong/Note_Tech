@@ -3,13 +3,13 @@
 [Back](../index.md)
 
 - [AWS - Other Computing Services](#aws---other-computing-services)
-  - [Amazon Lightsail - All-in-one, little cloud experience](#amazon-lightsail---all-in-one-little-cloud-experience)
+  - [`Amazon Lightsail` - All-in-one, little cloud experience](#amazon-lightsail---all-in-one-little-cloud-experience)
   - [Summary](#summary)
 
 ---
 
 
-## Amazon Lightsail - All-in-one, little cloud experience
+## `Amazon Lightsail` - All-in-one, little cloud experience
 
 - Virtual servers, storage, databases, and networking
 - Low & predictable pricing

@@ -3,59 +3,187 @@
 [Back](../index.md)
 
 - [AWS - Billing](#aws---billing)
-  - [AWS Free Services](#aws-free-services)
-  - [AWS Support Plans (会考)](#aws-support-plans-会考)
-  - [Technical Account Manager (TAM)](#technical-account-manager-tam)
-  - [AWS Marketplace](#aws-marketplace)
-  - [Consolidated Billing](#consolidated-billing)
-  - [AWS Trusted Advisor](#aws-trusted-advisor)
-  - [Service Level Agreements (SLA)](#service-level-agreements-sla)
-  - [Service Health Dashboard](#service-health-dashboard)
-  - [Personal Service Health Dashboard](#personal-service-health-dashboard)
-  - [AWS Abuse](#aws-abuse)
-  - [Free Tier](#free-tier)
-  - [AWS Credits](#aws-credits)
-  - [AWS Partner Network (APN)](#aws-partner-network-apn)
-  - [AWS Budgets](#aws-budgets)
-  - [AWS Cost and Usage Reports (CUR)](#aws-cost-and-usage-reports-cur)
-  - [Cost Allocation Tags](#cost-allocation-tags)
-  - [Billing Alerts/Alarms](#billing-alertsalarms)
-  - [AWS Cost Explorer](#aws-cost-explorer)
-  - [AWS Pricing API](#aws-pricing-api)
+  - [Billing and Costing Tools](#billing-and-costing-tools)
+    - [`AWS Pricing Calculator` - Estimate the cost](#aws-pricing-calculator---estimate-the-cost)
+    - [`AWS Billing Dashboard` - Tracking, Dashboard](#aws-billing-dashboard---tracking-dashboard)
+    - [`Cost Allocation Tags` - Tracking, detailed](#cost-allocation-tags---tracking-detailed)
+      - [Tagging and `Resource Groups`](#tagging-and-resource-groups)
+    - [`Cost and Usage Reports` - Tracking, comprehensive](#cost-and-usage-reports---tracking-comprehensive)
+    - [`Cost Explorer` - tracking, Visualize, Forecast, Savings Plan](#cost-explorer---tracking-visualize-forecast-savings-plan)
+    - [`Billing Alarms` in CloudWatch - Monitor, simple Alarm](#billing-alarms-in-cloudwatch---monitor-simple-alarm)
+    - [`AWS Budgets` - monitor, budget, alarms, forecasted](#aws-budgets---monitor-budget-alarms-forecasted)
+    - [`AWS Cost Anomaly Detection` - monitor, Anomaly, alerts](#aws-cost-anomaly-detection---monitor-anomaly-alerts)
+  - [Supportive Services](#supportive-services)
+    - [`AWS Compute Optimizer` - recommend optimal,ml, s3](#aws-compute-optimizer---recommend-optimalml-s3)
+    - [`AWS Service Quotas` - Alarms, Quotas](#aws-service-quotas---alarms-quotas)
+    - [`AWS Credits` - Credit](#aws-credits---credit)
+    - [`AWS Marketplace`](#aws-marketplace)
+    - [Service Level Agreements (SLA)](#service-level-agreements-sla)
+    - [`AWS Partner Network (APN)`](#aws-partner-network-apn)
+  - [Best Practices](#best-practices)
+  - [Summary](#summary)
 
 ---
 
-## AWS Free Services
+## Billing and Costing Tools
 
-- `AWS Free services`
-  - are free forever, unlike the 'free-tier', to a point of usage or time.
-
-![free](./pic/free.png)
-
----
-
-## AWS Support Plans (会考)
-
-- Available for root user and IM user
-- Changing of the support only for root user.
-
-![plan](./pic/support_plan01.png)
-
-![plan](./pic/support_plan02.png)
+- **Estimating** costs in the cloud:
+  - `Pricing Calculator`
+- **Tracking** costs in the cloud:
+  - `Billing Dashboard`
+  - `Cost Allocation Tags`
+  - `Cost and Usage Reports`
+  - `Cost Explorer`
+- **Monitoring** against costs plans:
+  - `Billing Alarms`
+  - `Budgets`
 
 ---
 
-## Technical Account Manager (TAM)
+### `AWS Pricing Calculator` - Estimate the cost
 
-- `Technical Account Manager (TAM)`
-
-  - provides both procative guidance and reactive support to help user succeed with AWS journey.
-
-![tam](./pic/tam.png)
+- Available at https://calculator.aws/
+- **Estimate the cost** for your solution architecture
 
 ---
 
-## AWS Marketplace
+### `AWS Billing Dashboard` - Tracking, Dashboard
+
+---
+
+### `Cost Allocation Tags` - Tracking, detailed
+
+- Use **cost allocation tags** to **track** your AWS costs on a detailed level
+- **AWS generated tags**
+  - **Automatically** applied to the resource you create
+  - Starts with Prefix **aws**: (e.g. aws: createdBy)
+- **User-defined tags**
+  - Defined by the user
+  - Starts with Prefix **user**:
+
+#### Tagging and `Resource Groups`
+
+- Tags are used for **organizing resources**:
+
+  - EC2: instances, images, load balancers, security groups…
+  - RDS, VPC resources, Route 53, IAM users, etc…
+  - Resources created by CloudFormation are all tagged the same way
+
+- Free naming, common tags are: Name, Environment, Team …
+- **Tags** can be used to create `Resource Groups`
+  - Create, maintain, and view a **collection of resources that share common tags**
+  - Manage these tags using the **Tag Editor**
+
+---
+
+### `Cost and Usage Reports` - Tracking, comprehensive
+
+- Dive deeper into your AWS costs and usage
+- The AWS Cost & Usage Report contains the **most comprehensive** set of AWS **cost and usage** data available, including additional **metadata** about AWS services, pricing, and reservations (e.g., Amazon EC2 Reserved Instances (RIs)).
+- The AWS Cost & Usage Report lists AWS usage for each service category used by an account and its IAM users in hourly or daily line items, as well as any tags that you have activated for cost allocation purposes.
+- Can be integrated with **Athena, Redshift or QuickSight**
+
+---
+
+### `Cost Explorer` - tracking, Visualize, Forecast, Savings Plan
+
+- **Visualize**, understand, and manage your AWS costs and usage **over time**
+- Create custom reports that analyze **cost and usage** data.
+- Analyze your data **at a high level**: total costs and usage across all accounts
+- Or Monthly, hourly, **resource level** granularity
+- Choose an optimal `Savings Plan` (to lower prices on your bill)
+- Forecast usage up to **12 months** based on previous usage
+- Use case:
+  - Monthly Cost by AWS Service
+  - Hourly & Resource Level
+  - **Savings Plan - Alternative to Reserved Instances**
+  - Forecast Usage
+
+---
+
+### `Billing Alarms` in CloudWatch - Monitor, simple Alarm
+
+- Billing data metric is **stored** in CloudWatch `us-east1`
+- Billing data are **for overall worldwide** AWS costs
+- It’s for **actual cost**, **not for projected costs**
+- Intended a **simple alarm** (not as powerful as AWS Budgets)
+
+---
+
+### `AWS Budgets` - monitor, budget, alarms, forecasted
+
+- Create **budget** and send **alarms** when costs exceeds the budget
+- **forecasted** to exceed your budgeting
+- 4 types of **budgets**:
+  - Usage, Cost, Reservation, Savings Plans
+- For Reserved Instances (RI)
+  - Track utilization
+  - Supports EC2, ElastiCache, RDS, Redshift
+- Up to **5 SNS notifications** per budget
+- Can **filter** by: Service, Linked Account, Tag, Purchase Option, Instance Type, Region, Availability Zone, API Operation, etc…
+- Same options as AWS Cost Explorer!
+- **2 budgets are free**, then $0.02/day/budget
+
+---
+
+### `AWS Cost Anomaly Detection` - monitor, Anomaly, alerts
+
+- Continuously monitor your cost and usage using **ML** to detect unusual spends
+- It learns your unique, historic spend patterns to detect one-time cost spike
+  and/or continuous cost increases (you don’t need to define thresholds)
+- **Monitor** AWS services, member accounts, cost allocation tags, or cost categories
+- Sends you the anomaly detection report with root-cause analysis
+- Get notified with individual **alerts** or daily/weekly summary (using SNS)
+
+---
+
+## Supportive Services
+
+### `AWS Compute Optimizer` - recommend optimal,ml, s3
+
+- **Reduce costs** and **improve performance** by **recommending optimal AWS resources** for your workloads
+
+- Helps you choose optimal configurations and right-size your workloads (over/under provisioned)
+
+- Uses **Machine Learning** to analyze your resources’ configurations and their utilization `CloudWatch metrics`
+
+- Supported resources
+
+  - EC2 instances
+  - EC2 Auto Scaling Groups
+  - EBS volumes
+  - Lambda functions
+
+- Lower your costs by up to 25%
+- Recommendations can be **exported to S3**
+
+---
+
+### `AWS Service Quotas` - Alarms, Quotas
+
+- Notify you when you’re close to a service quota value threshold
+- Create `CloudWatch Alarms` on the Service Quotas console
+- Example: Lambda concurrent executions
+- Request a quota **increase** from AWS Service Quotas or shutdown resources before limit is reached
+
+---
+
+### `AWS Credits` - Credit
+
+- `AWS Promotional Credit`
+
+  - are the equivalent to USD dollars on the AWS platform.
+
+- AWS Credits can be earned several ways, such as joining the AWS Activate startup program.
+
+- AWS Credits generally have an expiry date attached to them.
+
+- AWS Credits can be used for most services but there are **exceptions** where AWS Credits cannot be used .
+  - e.g.: purchasing a domain via Route53.
+
+---
+
+### `AWS Marketplace`
 
 - `AWS Marketplace`
 
@@ -67,49 +195,7 @@
 
 ---
 
-## Consolidated Billing
-
-- `Consolidated Billing`
-
-  - a feature of AWS Organizations that allows to pay for multiple AWS accounts **with one bill**.
-  - AWS treats all the accounts in an organization as if they were one account.
-
-- User can designate one `master account` that **pays the charges** of all the other `member accounts`.
-
-- Consolidated billing is offered at no additional cost.
-
-  - using **Cost Explorer** to visualize usage for consolidated billing.
-
-- User can combine the usage across all accounts in the organization to share the volume pricing discounts.
-
-![Consolidated Billing](./pic/consolidated_billing.png)
-
-- `Volume Discounts`
-  - the more user use, the more user save.
-  - User can take advantage of Volume Discounts.
-  - a feature of AWS Organizations.
-
----
-
-## AWS Trusted Advisor
-
-- `AWS Trusted Advisor`
-
-  - a recommendation tool which automatically and actively monitors AWS account to provide actional recommendations across a series of categories.
-  - like an automated checklist of best practices on AWS.
-
-- The 5 categories of AWS Trusted Advisor
-  - Cost Optimization, how to save money.
-  - Performanace, how to improve performance.
-  - Security, how to improve security.
-  - Fault Tolerance, how to prevent a disaster or data loss.
-  - Service Limits, Whether to hit the maximum limit for a service.
-
-![Trusted Advisor](./pic/advisor.png)
-
----
-
-## Service Level Agreements (SLA)
+### Service Level Agreements (SLA)
 
 - `Service Level Agreements (SLA)`
 
@@ -136,64 +222,7 @@
 
 ---
 
-## Service Health Dashboard
-
-- `Service Health Dashboard`
-  - shows the **general status of AWS services**.
-
----
-
-## Personal Service Health Dashboard
-
-- `Service Health Dashboard`
-
-  - provides **alerts and guidance** for AWS events that might **affect user's evironment**.
-
-- **All AWS customers** can access the Personal Health Dashboard.
-
-- The personal Health Dashboard shows recent events to help user manage active evnets, and shows proactive notifications so user can plan for scheduled activities.
-
-- Use these alerts to get notified about changes that can affect AWS resources, and then follow the guidance to diagnose and resolve issues.
-
----
-
-## AWS Abuse
-
-- `AWS Trust & Safety`
-
-  - a team that specifically deals with abuses occuring on the AWS platform for the following issues:
-
-  ![abuse](./pic/abuse.png)
-
-- AWS Support does not deal with Abuse tickets. User need to contact abuse@amazonaws.com or fill out the Report Amazon AWS abuse form.
-
----
-
-## Free Tier
-
-- `AWS Free Tier`
-  - allows to use AWS resources at no cost for the first 12 months of signup or free usage up to a certain montly limit forever.
-
-![Free Tier](./pic/free_tier.png)
-
----
-
-## AWS Credits
-
-- `AWS Promotional Credit`
-
-  - are the equivalent to USD dollars on the AWS platform.
-
-- AWS Credits can be earned several ways, such as joining the AWS Activate startup program.
-
-- AWS Credits generally have an expiry date attached to them.
-
-- AWS Credits can be used for most services but there are **exceptions** where AWS Credits cannot be used .
-  - e.g.: purchasing a domain via Route53.
-
----
-
-## AWS Partner Network (APN)
+### `AWS Partner Network (APN)`
 
 - `AWS Partner Network (APN)`
   - a global partner program for AWS.
@@ -203,67 +232,92 @@
 
 ---
 
-## AWS Budgets
+## Best Practices
 
-- `AWS Budgets`
+- Account
 
-  - allow to **setup alerts** if AWS Resources exceed or approach user's defined budget.
-  - Create Cost, Usage, or Revervation Budgets.
-  - Can **track** at the monthly, quarterly, or yearly levels, with customizable start and end dates.
-  - can **forecast** costs but is limited, compared to Cost Explorer or analysis with AWS Cost and Usage Reports along with Business Intelligence tool.
+  - `Organizations`
 
-- Alerts support EC2, RDS, Redshift, and ElasticCache reservations.
+    - Operate **multiple accounts**
+    - Use `SCP (service control policies)` to **restrict account power**
 
-- `Budget Reports`
-  - used to create and send daily, weekly, or monthyly reports to monitor the performance of AWS Budget that will be emailed to specific emails.
+  - `IAM` guidelines:
 
----
+    - MFA, least-privilege, password policy, password rotation
 
-## AWS Cost and Usage Reports (CUR)
+  - If your Account is **compromised**:
 
-- `AWS Cost and Usage Reports (CUR)`
+    - change the root **password**, delete and rotate all passwords / keys, contact the **AWS support**
 
-  - generate a detailed spreadsheet, enabling user to better analyze and understand AWS costs.
+- Compliance
 
-- Can place the reports into `S3`
-- Can use `Athena` to turn the report into a queryable database.
-- Can use `QuickSight` to visualize billing data as graphs.
+  - `AWS Control Tower`
 
----
+    - Easily setup multiple accounts with best-practices
 
-## Cost Allocation Tags
+  - `AWS Service Catalog`
+    - Allow users to create **pre-defined stacks** defined by admins
 
-- `Cost Allocation Tags`
-  - optional metadata that can be attached to AWS resource.
-  - Use tags to better analyze data in a Cost and Usage Report.
+- Monitoring
 
----
+  - `CloudTrail`
 
-## Billing Alerts/Alarms
+    - to record API calls made within your account
 
-- Users can create their own Alarm in `CloudWtch` Alarms, `Billing Alarms`, to monitor spend.
+  - `Tags & Cost Allocation Tags`
 
-- User first need to turn on Billing Alerts.
+    - easy management & billing
 
----
+  - `Config`
 
-## AWS Cost Explorer
+    - to **record** all resources configurations & compliance over time
 
-- `AWS Cost Explorer`
-  - used to visualize, understand, and manage AWS costs and usage over time.
+  - `CloudFormation`
+
+    - to **deploy stacks** across accounts and regions
+
+  - Send Service Logs and Access Logs to S3 or `CloudWatch Logs`
 
 ---
 
-## AWS Pricing API
+## Summary
 
-- User can programmatically access pricing information to ge the lastest price offering for services.
+- Predict
 
-- Two version of API:
+  - `Pricing Calculator`:
+    - cost of services on AWS
 
-  - Query API: the Pricing Service API via JSON
-  - Batch API: the Price List API via HTML
+- Tracking 查看
 
-- Can subscribe to `Simple Notification Service (SNS)` to get alerts when prices for the services change.
+  - `Billing Dashboard`:
+    - high level overview + free tier **dashboard**
+  - `Cost Allocation Tags`:
+    - tag resources to create **detailed** reports
+  - `Cost and Usage Reports`:
+    - most **comprehensive** billing dataset
+  - `Cost Explorer`:
+    - **View** current usage (detailed) and **forecast** usage
+
+- Monitoring 警报
+
+  - `Billing Alarms`:
+    - in **us-east-1** – **track** overall and per-service billing
+  - `Budgets`: more advanced – track usage, costs, RI, and get **alerts**
+  - `Cost Anomaly Detection`:
+    - detect unusual spends using **Machine Learning**
+
+- Optimal
+
+  - `Compute Optimizer`:
+
+    - **recommends** resources’ configurations to reduce cost
+
+  - `Savings Plans`:
+
+    - easy way to save based on **long-term usage** of AWS
+
+  - `Service Quotas`:
+    - notify you when you’re close to service quota threshold
 
 ---
 

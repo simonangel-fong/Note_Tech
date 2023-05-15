@@ -17,12 +17,17 @@
   - [AWS IAM](#aws-iam)
     - [IAM Policy](#iam-policy)
     - [AWS Account Root User](#aws-account-root-user)
-    - [AWS IAM Identity Center - SSO](#aws-iam-identity-center---sso)
+    - [`AWS IAM Identity Center` - SSO](#aws-iam-identity-center---sso)
     - [Access Keys](#access-keys)
     - [IAM Security Tools](#iam-security-tools)
+    - [`IAM Access Analyzer` - Access outside, Zone of Trust](#iam-access-analyzer---access-outside-zone-of-trust)
     - [IAM Guidelines \& Best Practices](#iam-guidelines--best-practices)
     - [Shared Responsibility Model for IAM](#shared-responsibility-model-for-iam)
-  - [IAM Section – Summary](#iam-section--summary)
+    - [`AWS Directory Services` - Microsoft AD, on-premise](#aws-directory-services---microsoft-ad-on-premise)
+    - [`AWS IAM Identity Center` - SSO](#aws-iam-identity-center---sso-1)
+    - [`AWS STS (SecurityToken Service)` - temporary, limited-privileges credentials](#aws-sts-securitytoken-service---temporary-limited-privileges-credentials)
+    - [`Amazon Cognito (simplified)` - app user, db](#amazon-cognito-simplified---app-user-db)
+  - [IAM – Summary](#iam--summary)
 
 ---
 
@@ -261,6 +266,24 @@
 
   ![admin task](./pic/admin_task.png)
 
+- **Root user privileges**
+
+  - `Root user` = `Account Owner` (created when the account is created)
+  - Has **complete access** to all AWS services and resources
+  - **Lock away** your AWS account root user **access keys**!
+  - Do **not** use the root account for **everyday tasks**, even administrative tasks
+
+  - Actions that can be performed **only by the root user**:
+    - Register as a seller in the **Reserved Instance Marketplace**
+    - View certain **tax invoices**
+    - Change or cancel your AWS **Support plan**
+    - Change account **settings** (account name, email address, root user password, root user access keys)
+    - **Restore** IAM user **permissions**
+    - Configure an Amazon S3 bucket to **enable MFA**
+    - Edit or delete an Amazon **S3 bucket policy** that includes an **invalid** VPC ID or VPC endpoint ID
+    - Sign up for **GovCloud**
+    - **Close** your AWS account
+
 - `User`
 
   - a user for common tasks that is assigned permissions.
@@ -277,7 +300,7 @@
 
 ---
 
-### AWS IAM Identity Center - SSO
+### `AWS IAM Identity Center` - SSO
 
 - `IAM Identity Center`
 
@@ -310,6 +333,8 @@
 
 ![create access key](./pic/access_key_create.png)
 
+---
+
 ### IAM Security Tools
 
 - `IAM Credentials Report` (account-level)
@@ -321,6 +346,20 @@
   - Access advisor shows the service **permissions** granted to a user and when those services were **last accessed**.
   - You can use this information to revise your policies.
   - 应用: 列出授权, 然后适用 Principle of Least Privilege
+
+---
+
+### `IAM Access Analyzer` - Access outside, Zone of Trust
+
+- Find out which resources are **shared externally**
+  - S3 Buckets
+  - IAM Roles
+  - KMS Keys
+  - Lambda Functions and Layers
+  - SQS queues
+  - Secrets Manager Secrets
+- Define **Zone of Trust** = AWS Account or AWS Organization
+- Access outside zone of trusts => findings
 
 ---
 
@@ -355,18 +394,91 @@
 
 ---
 
-## IAM Section – Summary
+### `AWS Directory Services` - Microsoft AD, on-premise
 
-- Users:
+- `AWS Managed Microsoft AD`
+  - **Create your own AD** in AWS, manage users locally, supports **MFA**
+  - Establish “trust” connections **with your on-premise AD**
+- `AD Connector`
+  - Directory Gateway (proxy) to **redirect to on-premise AD**, supports MFA
+  - Users are managed on the on-premise AD
+- `Simple AD`
+  - AD-compatible managed directory on AWS
+  - **Cannot** be joined with on-premise AD
+
+---
+
+### `AWS IAM Identity Center` - SSO
+
+- (successor to `AWS Single Sign-On`)
+- **One login** (single sign-on) **for all** your
+
+  - **AWS accounts in AWS Organizations**
+  - Business cloud applications (e.g., Salesforce, Box, Microsoft 365, …)
+  - SAML2.0-enabled applications
+  - EC2 Windows Instances
+
+- **Identity providers**
+  - **Built-in identity store** in IAM Identity Center
+  - **3rd party**: Active Directory (AD), OneLogin, Okta…
+
+---
+
+### `AWS STS (SecurityToken Service)` - temporary, limited-privileges credentials
+
+- Enables you to create **temporary, limited-privileges credentials** to access your AWS resources
+- Short-term credentials: you configure **expiration period**
+- **Use cases**
+  - Identity federation: manage user identities in **external systems**, and provide them with `STS tokens` to access AWS resources
+  - IAM Roles for **cross**/same **account access**
+  - IAM Roles for Amazon EC2: provide **temporary credentials** for EC2 instances to access AWS resources
+
+---
+
+### `Amazon Cognito (simplified)` - app user, db
+
+- Identity for your Web and Mobile **applications users** (potentially millions)
+- Instead of creating them an IAM user, you create a user in Cognito
+
+---
+
+## IAM – Summary
+
+- **Users**:
   - mapped to a **physical user**, has a password for AWS Console
-- Groups: contains **users** only
-- Policies: JSON document that outlines **permissions for users or groups**
-- Roles: for EC2 instances or **AWS services**
-- Security: **MFA + Password** Policy
-- AWS CLI: **manage your AWS services** using the command-line
-- AWS SDK: **manage your AWS services** using a programming language
-- Access Keys: access AWS using the **CLI or SDK**
-- Audit: IAM **Credential Reports** & IAM **Access Advisor**
+- **Groups**:
+  - contains **users** only
+- **Policies**:
+  - JSON document that outlines **permissions for users or groups**
+- **Roles**:
+  - for EC2 instances or **AWS services**
+- **Security**:
+  - **MFA + Password** Policy
+- **Access Keys**:
+  - access AWS using the **CLI or SDK**
+- **Audit**:
+
+  - IAM **Credential Reports** & IAM **Access Advisor**
+
+- `AWS CLI`:
+  - **manage your AWS services** using the command-line
+- `AWS SDK`:
+
+  - **manage your AWS services** using a programming language
+
+- `IAM`
+  - **Identity and Access Management** inside your AWS account
+  - For users that you **trust** and belong to your company
+- `Organizations`
+  - manage **multiple AWS accounts**
+- `Directory Services `
+  - integrate **Microsoft Active Directory** in AWS
+- `IAM Identity Center `
+  - **one login for multiple AWS accounts** & applications
+- `Security Token Service (STS)`
+  - **temporary, limited-privileges credentials** to access AWS resources
+- `Cognito`
+  - create a **database of users** for your mobile & web applications
 
 ---
 

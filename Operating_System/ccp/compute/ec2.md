@@ -475,7 +475,7 @@
 
 - 3 Ways to access to Instance
   - SSH, port 22
-  - EC2 Instance Connect, require SSH port
+  - `EC2 Instance Connect`, require SSH port
   - Systems Manager (SSM) Session Manager, not require SSH port
 
 ---

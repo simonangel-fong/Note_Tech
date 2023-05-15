@@ -3,21 +3,21 @@
 [Back](../index.md)
 
 - [AWS - EC2 Storage](#aws---ec2-storage)
-  - [Elastic Block Store (EBS)](#elastic-block-store-ebs)
+  - [`Elastic Block Store (EBS)` - EC2](#elastic-block-store-ebs---ec2)
     - [Delete on Termination attribute](#delete-on-termination-attribute)
     - [EBS Snapshots](#ebs-snapshots)
-  - [EC2 Instance Store](#ec2-instance-store)
-  - [Elastic File System (EFS)](#elastic-file-system-efs)
-    - [EFS Infrequent Access (EFS-IA)](#efs-infrequent-access-efs-ia)
-  - [Amazon FSx – high-performance](#amazon-fsx--high-performance)
-    - [Amazon FSx for Windows File Server](#amazon-fsx-for-windows-file-server)
-    - [Amazon FSx for Lustre](#amazon-fsx-for-lustre)
+  - [`EC2 Instance Store` - high-performance](#ec2-instance-store---high-performance)
+  - [`Elastic File System (EFS)` - nas,multiple mounted](#elastic-file-system-efs---nasmultiple-mounted)
+    - [`EFS Infrequent Access (EFS-IA)`](#efs-infrequent-access-efs-ia)
+  - [`Amazon FSx` – 3rd party, high-performance](#amazon-fsx--3rd-party-high-performance)
+    - [`Amazon FSx for Windows File Server`](#amazon-fsx-for-windows-file-server)
+    - [`Amazon FSx for Lustre`](#amazon-fsx-for-lustre)
   - [Shared Responsibility Model](#shared-responsibility-model)
   - [EC2 Instance Storage Summary](#ec2-instance-storage-summary)
 
 ---
 
-## Elastic Block Store (EBS)
+## `Elastic Block Store (EBS)` - EC2
 
 - `Elastic Block Store (EBS)` - Block
 
@@ -83,7 +83,7 @@
 
 ---
 
-## EC2 Instance Store
+## `EC2 Instance Store` - high-performance
 
 - EBS volumes are network drives with good but “limited” performance
 - If you need a **high-performance hardware disk**, use `EC2 Instance Store`
@@ -98,7 +98,7 @@
 
 ---
 
-## Elastic File System (EFS)
+## `Elastic File System (EFS)` - nas,multiple mounted
 
 - `AWS Elastic File System (EFS)`
 
@@ -117,7 +117,7 @@
 
 ---
 
-### EFS Infrequent Access (EFS-IA)
+### `EFS Infrequent Access (EFS-IA)`
 
 - `EFS Infrequent Access (EFS-IA)`
   - Storage class that is **cost-optimized** for **files not accessed every day**
@@ -143,7 +143,7 @@
 
 ---
 
-## Amazon FSx – high-performance
+## `Amazon FSx` – 3rd party, high-performance
 
 - Launch **3rd party high-performance file systems** on AWS
 - Fully managed service
@@ -154,7 +154,7 @@
 
 ---
 
-### Amazon FSx for Windows File Server
+### `Amazon FSx for Windows File Server`
 
 - A fully managed, highly reliable, and scalable Windows native shared file system
 - Built on **Windows File Server**
@@ -164,7 +164,7 @@
 
 ---
 
-### Amazon FSx for Lustre
+### `Amazon FSx for Lustre`
 
 - A fully managed, high-performance, scalable file storage for **High Performance Computing (HPC)**
 - The name Lustre is derived from “**Linux**” and “cluster”
