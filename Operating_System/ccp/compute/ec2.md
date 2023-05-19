@@ -149,7 +149,7 @@
 
 - It is **by default** using On-Demand pricing when an EC2 is launched.
 
-- EC2s are charged by **per-second** (minumum of 60 seconds) or **per-hour**. When looking up pricing it will always show EC2 pricing is the **hourly rate**.
+- EC2s are charged by **per-second** (minumum of **60 seconds**) or **per-hour**. When looking up pricing it will always show EC2 pricing is the **hourly rate**.
 
 ---
 
@@ -398,18 +398,19 @@
     - Tenancy (Host, Dedicated, Default)
 
 - 3 types of saving plans
-  - `Compute`:
-    - provide the most flexibility and help reduce costs by up to 66%.
-    - **automatically** apply to EC2 instance usage, Fargate, and Lambda service usage regardless of instance family, size, AZ, region, OS, or tenancy.
+
   - `EC2 Instance`:
     - provide the lowest prices, offering savings up to 72% in exchange for commitment to usage of individual instance families in a region.
-    - **automatically** reduces cost on the selected family in that region regardless of AZ, size, OS, or tenancy.
+    - **automatically** reduces cost on the **selected family** in that region regardless of AZ, size, OS, or tenancy.
     - offer the flexibility to change usage between instances **within a family** in that region.
   - `SageMaker`
     - Help reduce SageMaker costs by up to 64%.
     - **automatically** apply to SageMaker usage regardless of instance family, size, component, or AWS region.
+  - `Compute`:
 
-![types](./pic/ec2_pricing_saving_plan_types.png)
+    - provide the most flexibility and help reduce costs by up to 66%. - **automatically** apply to **EC2** instance usage, **Fargate**, and **Lambda** service usage regardless of instance family, size, AZ, region, OS, or tenancy.
+
+    ![types](./pic/ec2_pricing_saving_plan_types.png)
 
 - Terms:
 

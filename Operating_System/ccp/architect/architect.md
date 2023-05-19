@@ -192,10 +192,10 @@
 
 - Foundations
 
-  - `IAM`
-  - `Amazon VPC`
-  - `AWS Quotas`
-  - `AWS Trusted Advisor`
+  - **`IAM`**
+  - **`Amazon VPC`**
+  - **`AWS Quotas`**
+  - **`AWS Trusted Advisor`**
 
 - Change Management
 

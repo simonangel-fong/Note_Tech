@@ -3,13 +3,13 @@
 [Back](../index.md)
 
 - [AWS - AMI](#aws---ami)
-  - [AMI](#ami)
+  - [`AMI` - region](#ami---region)
   - [AMI Process](#ami-process)
-  - [EC2 Image Builder](#ec2-image-builder)
+  - [`EC2 Image Builder`](#ec2-image-builder)
 
 ---
 
-## AMI
+## `AMI` - region
 
 - `AMI`
 
@@ -35,7 +35,7 @@
 
 ---
 
-## EC2 Image Builder
+## `EC2 Image Builder`
 
 - `EC2 Image Builder`
   - Used to **automate the creation** of Virtual Machines or container images

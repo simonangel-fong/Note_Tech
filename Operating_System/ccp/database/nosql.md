@@ -8,10 +8,9 @@
     - [Document Store](#document-store)
   - [NoSQL Database Services](#nosql-database-services)
     - [`DynamoDB` - Serverless, Low latency retrieval](#dynamodb---serverless-low-latency-retrieval)
-      - [Global Tables - a low latency feature](#global-tables---a-low-latency-feature)
+      - [`Global Tables` - low latency, Active-Active, multiple-regions](#global-tables---low-latency-active-active-multiple-regions)
     - [`DynamoDB Accelerator(DAX)` - In-memory Cache](#dynamodb-acceleratordax---in-memory-cache)
     - [`DocumentDB` - MongoDB](#documentdb---mongodb)
-  - [Others NoSQL](#others-nosql)
     - [`Amoazon Keyspaces` - Cassandra](#amoazon-keyspaces---cassandra)
 
 ---
@@ -80,7 +79,7 @@
 - **Standard** & **Infrequent Access (IA)** Table Class
 - Can Create table without a database
 
-#### Global Tables - a low latency feature
+#### `Global Tables` - low latency, Active-Active, multiple-regions
 
 - Make a DynamoDB table accessible with low latency in multiple-regions
 - Active-Active replication (read/write to any AWS Region)
@@ -109,8 +108,6 @@
 - Automatically scales to workloads with millions of requests per seconds
 
 ---
-
-## Others NoSQL
 
 ### `Amoazon Keyspaces` - Cassandra
 

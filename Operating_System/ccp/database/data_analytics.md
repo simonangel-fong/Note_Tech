@@ -12,7 +12,7 @@
   - [Data Analytics](#data-analytics)
     - [`Elastic MapReduce (EMR)` - Hadoop, Big Data](#elastic-mapreduce-emr---hadoop-big-data)
     - [`Amazon Athena` - S3, Serverless, analyze](#amazon-athena---s3-serverless-analyze)
-    - [`Amazon QuickSight` - Serverless, BI](#amazon-quicksight---serverless-bi)
+    - [`Amazon QuickSight` - Serverless,visualizations , BI](#amazon-quicksight---serverlessvisualizations--bi)
   - [Supportive Tools](#supportive-tools)
     - [`AWS Glue` - serverless, ETL](#aws-glue---serverless-etl)
     - [`Glue Data Catalog` - Datasets](#glue-data-catalog---datasets)
@@ -138,7 +138,7 @@
 
 ---
 
-### `Amazon QuickSight` - Serverless, BI
+### `Amazon QuickSight` - Serverless,visualizations , BI
 
 - Serverless machine learning-powered **business intelligence service** to create interactive dashboards
 - Fast, automatically scalable, embeddable, with per-session pricing

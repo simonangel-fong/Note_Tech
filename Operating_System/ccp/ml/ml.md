@@ -4,7 +4,7 @@
 
 - [AWS - ML, AI, And Big Data](#aws---ml-ai-and-big-data)
   - [Terminology](#terminology)
-  - [`Amazon QuickSight`](#amazon-quicksight)
+  - [`Amazon QuickSight` - BI](#amazon-quicksight---bi)
   - [`Amazon Rekognition` - object recognition](#amazon-rekognition---object-recognition)
   - [`Amazon Textract` - Scan \>\> text](#amazon-textract---scan--text)
   - [`Amazon Transcribe` - speech-to-text](#amazon-transcribe---speech-to-text)
@@ -58,7 +58,7 @@
 
 ---
 
-## `Amazon QuickSight`
+## `Amazon QuickSight` - BI
 
 - `Amazon QuickSight`
   - a Business Intelligence (BI) Dashboard that allows to ingest data from various AWS storage or database services to quickly visualize business data with minimal programming or data formula knowledge.

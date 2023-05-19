@@ -12,12 +12,12 @@
       - [Systems Manager (SSM) Session Manager](#systems-manager-ssm-session-manager)
     - [`AWS OpsWorks` - as SSM with Chef \& Puppet](#aws-opsworks---as-ssm-with-chef--puppet)
   - [Developer Services](#developer-services)
-    - [AWS CodeCommit - Code repository](#aws-codecommit---code-repository)
-    - [AWS CodeBuild - Compile, serverless](#aws-codebuild---compile-serverless)
-    - [AWS CodePipeline - Pipline](#aws-codepipeline---pipline)
-    - [AWS CodeArtifact - dependencies](#aws-codeartifact---dependencies)
-    - [AWS CodeStar - UI to start a project](#aws-codestar---ui-to-start-a-project)
-    - [AWS Cloud9 - IDE, pair programming](#aws-cloud9---ide-pair-programming)
+    - [`AWS CodeCommit` - Code repository](#aws-codecommit---code-repository)
+    - [`AWS CodeBuild` - Compile, serverless](#aws-codebuild---compile-serverless)
+    - [`AWS CodePipeline` - Pipline](#aws-codepipeline---pipline)
+    - [`AWS CodeArtifact` - dependencies](#aws-codeartifact---dependencies)
+    - [`AWS CodeStar` - UI to start a project](#aws-codestar---ui-to-start-a-project)
+    - [`AWS Cloud9` - IDE, pair programming](#aws-cloud9---ide-pair-programming)
     - [AWS Toolkit for VSCdoe](#aws-toolkit-for-vscdoe)
   - [Summary](#summary)
 
@@ -127,7 +127,7 @@
 
 ## Developer Services
 
-### AWS CodeCommit - Code repository
+### `AWS CodeCommit` - Code repository
 
 - Developers usually store code in a **repository**, **using the Git technology**
 - A famous public offering is GitHub, AWS’ competing product is CodeCommit
@@ -142,7 +142,7 @@
 
 ---
 
-### AWS CodeBuild - Compile, serverless
+### `AWS CodeBuild` - Compile, serverless
 
 - **Code building service** in the cloud (name is obvious)
 - **Compiles** source code, run **tests**, and **produces packages** that are ready to be deployed (by CodeDeploy for example)
@@ -154,7 +154,7 @@
 
 ---
 
-### AWS CodePipeline - Pipline
+### `AWS CodePipeline` - Pipline
 
 - Orchestrate the different steps to have the code **automatically** pushed to production
 - `Code => Build => Test => Provision => Deploy`
@@ -165,7 +165,7 @@
 
 ---
 
-### AWS CodeArtifact - dependencies
+### `AWS CodeArtifact` - dependencies
 
 - `artifact management`
   - Storing and retrieving the code dependencies
@@ -176,7 +176,7 @@
 
 ---
 
-### AWS CodeStar - UI to start a project
+### `AWS CodeStar` - UI to start a project
 
 - **Unified UI** to easily manage software development activities in one place
 - “Quick way” to **get started to correctly set-up** CodeCommit, CodePipeline,
@@ -185,7 +185,7 @@
 
 ---
 
-### AWS Cloud9 - IDE, pair programming
+### `AWS Cloud9` - IDE, pair programming
 
 - AWS Cloud9 is **a cloud IDE** (Integrated Development Environment) for writing, running
   and debugging code

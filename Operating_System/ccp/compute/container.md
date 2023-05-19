@@ -8,16 +8,16 @@
     - [VMs vs Containers](#vms-vs-containers)
     - [Docker images](#docker-images)
   - [Container Services On AWS](#container-services-on-aws)
-    - [Elastic Container Service (ECS) - Docker + Instances](#elastic-container-service-ecs---docker--instances)
-    - [Fargate - Docker, Serverless](#fargate---docker-serverless)
-    - [Elastic Container Registry (ECR) - Docker images](#elastic-container-registry-ecr---docker-images)
-    - [Batch - dynamically instance](#batch---dynamically-instance)
+    - [`Elastic Container Service (ECS)` - Docker + Instances](#elastic-container-service-ecs---docker--instances)
+    - [`Fargate` - Docker, Serverless](#fargate---docker-serverless)
+    - [`Elastic Container Registry (ECR)` - Docker images](#elastic-container-registry-ecr---docker-images)
+    - [`Batch` - dynamically instance](#batch---dynamically-instance)
       - [Batch vs Lambda](#batch-vs-lambda)
   - [Kuberenetes](#kuberenetes)
-    - [Elastic Kubernetes Service (EKS)](#elastic-kubernetes-service-eks)
+    - [`Elastic Kubernetes Service (EKS)` - Kubernetes](#elastic-kubernetes-service-eks---kubernetes)
   - [Serverless](#serverless)
-    - [Lambda - Serverless](#lambda---serverless)
-    - [API Gateway - serverless API, with Lambda](#api-gateway---serverless-api-with-lambda)
+    - [`Lambda` - Serverless](#lambda---serverless)
+    - [`API Gateway` - serverless API, with Lambda](#api-gateway---serverless-api-with-lambda)
   - [Microservices](#microservices)
   - [Summary](#summary)
 
@@ -72,7 +72,7 @@
 
 ## Container Services On AWS
 
-### Elastic Container Service (ECS) - Docker + Instances
+### `Elastic Container Service (ECS)` - Docker + Instances
 
 - `Elastic Container Service (ECS)`
   - Launch **Docker containers** on AWS
@@ -82,7 +82,7 @@
 
 ---
 
-### Fargate - Docker, Serverless
+### `Fargate` - Docker, Serverless
 
 - `Fargate`
 
@@ -94,7 +94,7 @@
 
 ---
 
-### Elastic Container Registry (ECR) - Docker images
+### `Elastic Container Registry (ECR)` - Docker images
 
 - Elastic Container Registry
 
@@ -104,7 +104,7 @@
 
 ---
 
-### Batch - dynamically instance
+### `Batch` - dynamically instance
 
 - Fully managed **batch processing** at any scale
 - Efficiently run 100,000s of computing batch jobs on AWS
@@ -152,7 +152,7 @@
 
 ---
 
-### Elastic Kubernetes Service (EKS)
+### `Elastic Kubernetes Service (EKS)` - Kubernetes
 
 - `Elastic Kubernetes Service (EKS)`
   - a managed Kubernetes service to run Kubernetes in the AWS cloud and on-premises data centers.
@@ -177,7 +177,7 @@
 
 ---
 
-### Lambda - Serverless
+### `Lambda` - Serverless
 
 - Amazon EC2
 
@@ -232,7 +232,7 @@
 
 ---
 
-### API Gateway - serverless API, with Lambda
+### `API Gateway` - serverless API, with Lambda
 
 - Example:
   - building a **serverless** **API**

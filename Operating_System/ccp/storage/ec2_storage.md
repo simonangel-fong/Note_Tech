@@ -6,7 +6,7 @@
   - [`Elastic Block Store (EBS)` - EC2](#elastic-block-store-ebs---ec2)
     - [Delete on Termination attribute](#delete-on-termination-attribute)
     - [EBS Snapshots](#ebs-snapshots)
-  - [`EC2 Instance Store` - high-performance](#ec2-instance-store---high-performance)
+  - [`EC2 Instance Store` - high-performance, risk, temporary block-level storage](#ec2-instance-store---high-performance-risk-temporary-block-level-storage)
   - [`Elastic File System (EFS)` - nas,multiple mounted](#elastic-file-system-efs---nasmultiple-mounted)
     - [`EFS Infrequent Access (EFS-IA)`](#efs-infrequent-access-efs-ia)
   - [`Amazon FSx` – 3rd party, high-performance](#amazon-fsx--3rd-party-high-performance)
@@ -83,7 +83,7 @@
 
 ---
 
-## `EC2 Instance Store` - high-performance
+## `EC2 Instance Store` - high-performance, risk, temporary block-level storage
 
 - EBS volumes are network drives with good but “limited” performance
 - If you need a **high-performance hardware disk**, use `EC2 Instance Store`

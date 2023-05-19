@@ -22,7 +22,7 @@
 
 - `Solution Architect`:
 
-  - A role in a technical organization that architects a technical solution using multiple systems via researching, documentation, experimentation.
+  - A role in a technical organization that **architects a technical solution** using multiple systems via researching, documentation, experimentation.
 
 - `Cloud Architect`
   - A solution architect that is focused solely on architecting technical solution **using cloud services**.

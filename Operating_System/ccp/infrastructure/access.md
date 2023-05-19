@@ -9,17 +9,17 @@
     - [AWS Documentation](#aws-documentation)
   - [API](#api)
   - [Access AWS](#access-aws)
-    - [AWS Console](#aws-console)
-    - [AWS CLI](#aws-cli)
-      - [AWS CloudShell](#aws-cloudshell)
+    - [`AWS Console`](#aws-console)
+    - [`AWS CLI`](#aws-cli)
+      - [`AWS CloudShell`](#aws-cloudshell)
       - [AWS Tools for Powershell](#aws-tools-for-powershell)
-    - [AWS SDK](#aws-sdk)
+    - [`AWS SDK`](#aws-sdk)
   - [Manage Infrastructure](#manage-infrastructure)
     - [Infrastructure as Code (IaC)](#infrastructure-as-code-iac)
-    - [CloudFormation - Free](#cloudformation---free)
+    - [`CloudFormation` - Free, IaC, template](#cloudformation---free-iac-template)
       - [CloudFormation Templates](#cloudformation-templates)
       - [CloudFormation Stack Designer - 可视化](#cloudformation-stack-designer---可视化)
-    - [Cloud Development Kit (CDK)](#cloud-development-kit-cdk)
+    - [`Cloud Development Kit (CDK)`- programming language, IaC](#cloud-development-kit-cdk--programming-language-iac)
 
 ---
 
@@ -137,7 +137,7 @@
 
 ---
 
-### AWS Console
+### `AWS Console`
 
 - `Management Console`
 
@@ -150,7 +150,7 @@
 
 ---
 
-### AWS CLI
+### `AWS CLI`
 
 - `Command Line Interface (CLI)`
 
@@ -182,7 +182,7 @@
 
 ---
 
-#### AWS CloudShell
+#### `AWS CloudShell`
 
 - `AWS CloudShell`
   - a **browser based shell** built into the AWS Management Console.
@@ -219,7 +219,7 @@
 
 ---
 
-### AWS SDK
+### `AWS SDK`
 
 - `Software Developement Kit (SDK)`
 
@@ -236,8 +236,6 @@
 
 ---
 
-
-
 ## Manage Infrastructure
 
 ### Infrastructure as Code (IaC)
@@ -248,7 +246,7 @@
   - is a blueprint of infrastructure.
   - allow to easily share, version or inventory cloud infrastructure.
 
-- AWS has two offering for writing Infrastructure as Code.
+- AWS has two offering for writing **Infrastructure as Code**.
 
   - `AWS CloudFormation (CFN)`: CFN is a Declarative IaC tool
     - Declarative
@@ -264,7 +262,7 @@
 
 ---
 
-### CloudFormation - Free
+### `CloudFormation` - Free, IaC, template
 
 - `AWS CloudFormation`
 
@@ -314,7 +312,6 @@
 
 - AWS CloudFormation: https://aws.amazon.com/cloudformation/
 
-
 #### CloudFormation Templates
 
 - AWS CloudFormation templates are **JSON or YAML-formatted text files**. - They are **declarations of the AWS resources** that **make up a stack.**
@@ -326,7 +323,7 @@
 
 ---
 
-### Cloud Development Kit (CDK)
+### `Cloud Development Kit (CDK)`- programming language, IaC
 
 - `AWS CDK`
 

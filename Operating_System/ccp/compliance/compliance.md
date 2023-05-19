@@ -6,7 +6,7 @@
   - [Compliance](#compliance)
     - [Common Compliance Programs](#common-compliance-programs)
     - [`AWS Artifact` - Compliance Reports, Agreements, internal audit](#aws-artifact---compliance-reports-agreements-internal-audit)
-    - [`AWS Config` - audit record AWS resources, per-region/across](#aws-config---audit-record-aws-resources-per-regionacross)
+    - [`AWS Config` - audit record change AWS resources, per-region/across](#aws-config---audit-record-change-aws-resources-per-regionacross)
   - [Summary](#summary)
 
 ---
@@ -51,7 +51,7 @@
 
 ---
 
-### `AWS Config` - audit record AWS resources, per-region/across
+### `AWS Config` - audit record change AWS resources, per-region/across
 
 - Helps with auditing and recording compliance of your AWS resources
 - Helps record configurations and changes over time

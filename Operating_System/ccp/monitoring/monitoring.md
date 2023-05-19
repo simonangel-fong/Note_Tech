@@ -3,23 +3,23 @@
 [Back](../index.md)
 
 - [AWS - Cloud Monitoring](#aws---cloud-monitoring)
-  - [CloudTrail - audit](#cloudtrail---audit)
-  - [Health Dashboard - Service History](#health-dashboard---service-history)
-  - [Health Dashboard –Your Account](#health-dashboard-your-account)
-  - [CloudWatch Metrics](#cloudwatch-metrics)
-  - [CloudWatch Alarms](#cloudwatch-alarms)
-  - [CloudWatch Logs](#cloudwatch-logs)
-    - [CloudWatch Logs for EC2 - Hibrid](#cloudwatch-logs-for-ec2---hibrid)
-    - [CloudWatch Logs Insights - analyze](#cloudwatch-logs-insights---analyze)
-  - [CodeGuru - ML, code reviews, recommendations](#codeguru---ml-code-reviews-recommendations)
-    - [Amazon CodeGuru Reviewer - ML, code debug](#amazon-codeguru-reviewer---ml-code-debug)
-    - [Amazon CodeGuru Profiler - runtime behavior, hybrid](#amazon-codeguru-profiler---runtime-behavior-hybrid)
-  - [X-Ray - log analysis, Debugging for distributed](#x-ray---log-analysis-debugging-for-distributed)
+  - [`CloudTrail` - audit, API](#cloudtrail---audit-api)
+  - [`Health Dashboard - Service History` -status of AWS services,rss](#health-dashboard---service-history--status-of-aws-servicesrss)
+  - [`Health Dashboard –Your Account` - impact](#health-dashboard-your-account---impact)
+  - [`CloudWatch Metrics`](#cloudwatch-metrics)
+  - [`CloudWatch Alarms`](#cloudwatch-alarms)
+  - [`CloudWatch Logs`](#cloudwatch-logs)
+    - [`CloudWatch Logs for EC2` - Hibrid](#cloudwatch-logs-for-ec2---hibrid)
+    - [`CloudWatch Logs Insights` - analyze](#cloudwatch-logs-insights---analyze)
+  - [`CodeGuru` - ML, code reviews, recommendations](#codeguru---ml-code-reviews-recommendations)
+    - [`Amazon CodeGuru Reviewer` - ML, code debug](#amazon-codeguru-reviewer---ml-code-debug)
+    - [`Amazon CodeGuru Profiler` - runtime behavior, hybrid](#amazon-codeguru-profiler---runtime-behavior-hybrid)
+  - [`X-Ray` - log analysis, Debugging for distributed](#x-ray---log-analysis-debugging-for-distributed)
   - [Summary](#summary)
 
 ---
 
-## CloudTrail - audit
+## `CloudTrail` - audit, API
 
 - `AWS CloudTrail`
 
@@ -48,7 +48,7 @@
 
 ---
 
-## Health Dashboard - Service History
+## `Health Dashboard - Service History` -status of AWS services,rss
 
 - Shows **all regions, all services** health
 - Shows historical information **for each day**
@@ -57,7 +57,7 @@
 
 ---
 
-## Health Dashboard –Your Account
+## `Health Dashboard –Your Account` - impact 
 
 - Previously called AWS Personal Health Dashboard (PHD)
 - AWS Account Health Dashboard **provides alerts and remediation guidance** when AWS is experiencing **events that may impact you**.
@@ -71,7 +71,7 @@
 
 ---
 
-## CloudWatch Metrics
+## `CloudWatch Metrics`
 
 - `Metric`
 
@@ -102,7 +102,7 @@
 
 ---
 
-## CloudWatch Alarms
+## `CloudWatch Alarms`
 
 - `CloudWatch Alarm`
 
@@ -124,7 +124,7 @@
 
 ---
 
-## CloudWatch Logs
+## `CloudWatch Logs`
 
 - CloudWatch Logs can **collect log** from:
   - Elastic Beanstalk: collection of logs **from application**
@@ -150,7 +150,7 @@
 
 ---
 
-### CloudWatch Logs for EC2 - Hibrid
+### `CloudWatch Logs for EC2` - Hibrid
 
 - By **default, no logs** from your EC2 instance will go to CloudWatch
 - You need to **run a CloudWatch agent on EC2** to push the log files you want
@@ -159,7 +159,7 @@
 
 ---
 
-### CloudWatch Logs Insights - analyze
+### `CloudWatch Logs Insights` - analyze
 
 - `CloudWatch Logs Insights`
 
@@ -175,14 +175,14 @@
 
 ---
 
-## CodeGuru - ML, code reviews, recommendations
+## `CodeGuru` - ML, code reviews, recommendations
 
 - An **ML-powered** service for automated **code reviews** and application performance recommendations
 - Provides two functionalities
 - CodeGuru Reviewer: automated code reviews for static code analysis (development)
 - CodeGuru Profiler: visibility/recommendations about application performance during runtime (production)
 
-### Amazon CodeGuru Reviewer - ML, code debug
+### `Amazon CodeGuru Reviewer` - ML, code debug
 
 - Identify critical issues, security vulnerabilities, and hard-to-find **bugs**
 - Example: common coding best practices, resource leaks, security detection, input validation
@@ -191,7 +191,7 @@
 - Supports Java and Python
 - Integrates with **GitHub, Bitbucket, and AWS CodeCommit**
 
-### Amazon CodeGuru Profiler - runtime behavior, hybrid
+### `Amazon CodeGuru Profiler` - runtime behavior, hybrid
 
 - Helps understand the **runtime behavior** of your application
 - Example: identify if your application is consuming excessive CPU capacity on a logging routine
@@ -206,7 +206,7 @@
 
 ---
 
-## X-Ray - log analysis, Debugging for distributed
+## `X-Ray` - log analysis, Debugging for distributed
 
 - Debugging in Production, the good old way:
   - Test locally

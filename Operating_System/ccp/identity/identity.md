@@ -12,9 +12,9 @@
     - [Single-Sign-On (SSO)](#single-sign-on-sso)
     - [LDAP](#ldap)
     - [Multi-Factor-Authenication](#multi-factor-authenication)
-    - [Security Keys](#security-keys)
+    - [Security Keys - u2f security key](#security-keys---u2f-security-key)
   - [Principle of Least Privilege (PoLP)](#principle-of-least-privilege-polp)
-  - [AWS IAM](#aws-iam)
+  - [`AWS IAM`](#aws-iam)
     - [IAM Policy](#iam-policy)
     - [AWS Account Root User](#aws-account-root-user)
     - [`AWS IAM Identity Center` - SSO](#aws-iam-identity-center---sso)
@@ -164,7 +164,7 @@
 
 ---
 
-### Security Keys
+### Security Keys - u2f security key
 
 - `Security Keys`
 
@@ -199,7 +199,7 @@
 
 ---
 
-## AWS IAM
+## `AWS IAM`
 
 - `AWS Identity and Access Management (IAM)`
 
@@ -228,7 +228,7 @@
   - `IAM Roles`
     - Roles grant AWS **resources permissions** to specific **AWS API actions.**
     - Associate policies to Role and assign it to an AWS resource.
-    - Some AWS service will need to perform actions on user's behalf.To do so, permissions are need to be assigned to AWS services with `IAM Roles`
+    - Some AWS service will need to perform actions **on user's behalf** To do so, permissions are need to be assigned to AWS services with `IAM Roles`
       - - Common roles:
         - EC2 Instance Roles
         - Lambda Function Roles

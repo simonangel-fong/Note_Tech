@@ -4,9 +4,9 @@
 
 - [AWS - Goverance](#aws---goverance)
   - [Organizations And Accounts](#organizations-and-accounts)
-  - [AWS Control Tower](#aws-control-tower)
-  - [AWS Config](#aws-config)
-  - [AWS Quick Starts](#aws-quick-starts)
+  - [`AWS Control Tower`](#aws-control-tower)
+  - [`AWS Config`](#aws-config)
+  - [`AWS Quick Starts` - deploy architecture](#aws-quick-starts---deploy-architecture)
   - [Tagging](#tagging)
   - [Resource Groups](#resource-groups)
   - [Business Centric Service](#business-centric-service)
@@ -43,7 +43,7 @@
 
 ---
 
-## AWS Control Tower
+## `AWS Control Tower`
 
 - `AWS Control Tower`
   - helps Enterprises quickly set-up a secure, AWS multi-account.
@@ -53,7 +53,7 @@
 
 ---
 
-## AWS Config
+## `AWS Config`
 
 - `Change Management`
 
@@ -77,7 +77,7 @@
 
 ---
 
-## AWS Quick Starts
+## `AWS Quick Starts` - deploy architecture
 
 - `AWS Quick Starts`
 

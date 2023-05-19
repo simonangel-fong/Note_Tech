@@ -149,10 +149,10 @@
 
 - Supported resources
 
-  - EC2 instances
-  - EC2 Auto Scaling Groups
-  - EBS volumes
-  - Lambda functions
+  - **EC2 instances**
+  - **EC2 Auto Scaling Groups**
+  - **EBS volumes**
+  - **Lambda functions**
 
 - Lower your costs by up to 25%
 - Recommendations can be **exported to S3**

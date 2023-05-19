@@ -4,13 +4,13 @@
 
 - [AWS - Application Integration](#aws---application-integration)
   - [Application Integration](#application-integration)
-  - [Simple Queueing Service (SQS) - Queuing, decouple, pull-based](#simple-queueing-service-sqs---queuing-decouple-pull-based)
-  - [SNS - Pub/Sub, topic 分组, push-based](#sns---pubsub-topic-分组-push-based)
-  - [Kinesis - real-time Streaming](#kinesis---real-time-streaming)
-  - [MQ](#mq)
-  - [Step Functions - State Machine](#step-functions---state-machine)
-  - [EventBridge - Event Bus, scheduled](#eventbridge---event-bus-scheduled)
-  - [API Gateway](#api-gateway)
+  - [`Simple Queueing Service (SQS)` - Queuing, decouple, pull-based](#simple-queueing-service-sqs---queuing-decouple-pull-based)
+  - [`SNS` - Pub/Sub, topic 分组, push-based](#sns---pubsub-topic-分组-push-based)
+  - [`Kinesis` - real-time Streaming](#kinesis---real-time-streaming)
+  - [`MQ`- RabbitMQ and ActiveMQ](#mq--rabbitmq-and-activemq)
+  - [`Step Functions` - State Machine](#step-functions---state-machine)
+  - [`EventBridge` - Event Bus, scheduled](#eventbridge---event-bus-scheduled)
+  - [`API Gateway`](#api-gateway)
   - [Application Integration Services](#application-integration-services)
   - [Summary](#summary)
 
@@ -46,7 +46,7 @@
 
 ---
 
-## Simple Queueing Service (SQS) - Queuing, decouple, pull-based
+## `Simple Queueing Service (SQS)` - Queuing, decouple, pull-based
 
 - `Messaging System`
 
@@ -79,7 +79,7 @@
 
 ---
 
-## SNS - Pub/Sub, topic 分组, push-based
+## `SNS` - Pub/Sub, topic 分组, push-based
 
 - `Pub/Sub`
 
@@ -102,7 +102,7 @@
 - `Simple Notification Service (SNS)`
 
   - a highly available, durable, secure, fully managed **pub/sub messaging service** that enables user **to decouple** miscroservices, distributed system, and serverless applications.
-    - push-based system
+    - **push-based** system
 
   ![sns](./pic/sns.png)
 
@@ -113,7 +113,7 @@
 
 ---
 
-## Kinesis - real-time Streaming
+## `Kinesis` - real-time Streaming
 
 - `Streaming`
 
@@ -136,12 +136,12 @@
 
 ---
 
-## MQ
+## `MQ`- RabbitMQ and ActiveMQ
 
 - SQS, SNS are “cloud-native” services: proprietary protocols from AWS
 - Traditional applications running from on-premises may use **open protocols** such as: MQTT, AMQP, STOMP, Openwire, WSS
 - **When migrating to the cloud**, instead of re-engineering the application to use SQS and SNS, we can use Amazon MQ
-- Amazon MQ is a managed message broker service for RabbitMQ and ActiveMQ.
+- Amazon MQ is a managed message broker service for **RabbitMQ** and **ActiveMQ**.
 
 - Amazon MQ **doesn’t “scale”** as much as SQS / SNS
 - Amazon MQ **runs on servers, can run in Multi-AZ** with failover
@@ -149,7 +149,7 @@
 
 ---
 
-## Step Functions - State Machine
+## `Step Functions` - State Machine
 
 - `State Machine`
 
@@ -162,7 +162,7 @@
 
 ---
 
-## EventBridge - Event Bus, scheduled
+## `EventBridge` - Event Bus, scheduled
 
 - `Event Bus`
 
@@ -185,6 +185,7 @@
   - Ability to **replay archived events**
 
 - **Event Bus**
+
   - Default Event Bus: AWS Services
   - Partner Event Bus: AWS SaaS Partners
   - Custom Event Bus: Custom Apps
@@ -197,7 +198,7 @@
 
 ---
 
-## API Gateway
+## `API Gateway`
 
 - `API Gateway`
 
