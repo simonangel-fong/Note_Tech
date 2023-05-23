@@ -6,6 +6,7 @@
   - [while Loop](#while-loop)
   - [for Loop](#for-loop)
   - [Nested Loops](#nested-loops)
+  - [`zip`: Loop multiple lists simultaneously](#zip-loop-multiple-lists-simultaneously)
 
 ---
 
@@ -226,6 +227,22 @@ for x in adj:
 # tasty apple
 # tasty banana
 # tasty cherry
+```
+
+---
+
+## `zip`: Loop multiple lists simultaneously
+
+```py
+
+xList = [1, 2, 3]
+yList = [1, 2, 4]
+
+for (x, y) in zip(xList, yList):
+    if x != y:
+        print("difference:", x, y)      # difference: 3 4
+
+
 ```
 
 ---

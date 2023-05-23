@@ -551,13 +551,24 @@ print(xlist)    # ['cherry', 'Kiwi', 'Orange', 'banana']
 
 - cannot copy a list simply by typing `list2 = list1`, because: list2 will only be a **reference to** list1, and changes made in list1 will automatically also be made in list2.
 
-1. use the built-in List method `copy()`.
-2. Another way to make a copy is to use the built-in method `list()`.
-3. Using slicing `[:]`
-4. List Comprehension.`[x for x in xlist]`
+- `shallow copy`:
+
+  - returns a new list that refences elements in the original list.
+
+- `deep copy`:
+
+  - returns a new list with new elements
+
+  1. use the built-in List method `copy()`
+  2. Another way to make a copy is to use the built-in method `list()`.
+  3. Using slicing `[:]`
+  4. List Comprehension.`[x for x in xlist]`
+  5. repeat a list `xlist*NUM`
 
 ```py
 print("\n---------Copy list--------\n")
+
+print("\n---------shallow copy:=--------\n")
 xlist = ["apple", "banana", "cherry"]
 ylist = xlist
 xlist[0] = "orange"
@@ -566,7 +577,7 @@ print(ylist)    # ['orange', 'banana', 'cherry']
 print(xlist is ylist)   # True, reference
 
 
-print("\n---------copy()--------\n")
+print("\n---------copy(): deep copy--------\n")
 xlist = ["apple", "banana", "cherry"]
 ylist = xlist.copy()
 xlist[0] = "orange"
@@ -575,7 +586,7 @@ print(ylist)    # ['apple', 'banana', 'cherry']
 print(xlist is ylist)   # False
 
 
-print("\n---------list()--------\n")
+print("\n---------list(): deep copy--------\n")
 xlist = ["apple", "banana", "cherry"]
 ylist = list(xlist)
 xlist[0] = "orange"
@@ -584,7 +595,7 @@ print(ylist)    # ['apple', 'banana', 'cherry']
 print(xlist is ylist)   # False
 
 
-print("\n---------List Comprehension--------\n")
+print("\n---------List Comprehension: deep copy--------\n")
 xlist = ["apple", "banana", "cherry"]
 ylist = [x for x in xlist]
 xlist[0] = "orange"
@@ -593,12 +604,22 @@ print(ylist)    # ['apple', 'banana', 'cherry']
 print(xlist is ylist)   # False
 
 
-print("\n---------Slice--------\n")
+print("\n---------Slice:deep copy--------\n")
 xlist = ["apple", "banana", "cherry"]
 ylist = xlist[:]
 xlist[0] = "orange"
 print(xlist)    # ['orange', 'banana', 'cherry']
 print(ylist)    # ['apple', 'banana', 'cherry']
+print(xlist is ylist)   # False
+
+
+print("\n---------Repeat:deep copy--------\n")
+xlist = ["apple", "banana", "cherry"]
+ylist = xlist*3
+xlist[0] = "orange"
+print(xlist)    # ['orange', 'banana', 'cherry']
+# ['apple', 'banana', 'cherry', 'apple', 'banana', 'cherry', 'apple', 'banana', 'cherry']
+print(ylist)
 print(xlist is ylist)   # False
 
 ```
