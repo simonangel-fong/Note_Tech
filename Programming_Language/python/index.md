@@ -61,11 +61,15 @@
   - [Input & Print](./io/input_print.md)
 
 - [Data Structure](./data_structure/data_structure.md)
+
   - [Array](./data_structure/array/dsa_array.md)
   - [Stack](./data_structure/stack/dsa_stack.md)
   - [Queue](./data_structure/queue/dsa_queue.md)
   - [Deque](./data_structure/deque/dsa_deque.md)
   - [Linked List](./data_structure/linked_list/dsa_linked_list.md)
+
+- Algorithm
+  - [Recursion](./algorithm/recursion/dsa_recursion.md)
 
 ---
 
