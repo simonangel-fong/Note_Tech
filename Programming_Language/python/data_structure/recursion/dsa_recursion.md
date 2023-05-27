@@ -14,6 +14,7 @@
   - [Memoization](#memoization)
     - [Implement memoization in Python](#implement-memoization-in-python)
     - [Problems](#problems-1)
+  - [Further Reading](#further-reading)
 
 ---
 
@@ -266,6 +267,14 @@ print(factorial(3))     # 6
 ### Problems
 
 [Practice](./problem_recursion.ipynb)
+
+---
+
+## Further Reading
+
+http://neopythonic.blogspot.com/2009/04/tail-recursion-elimination.html
+
+https://www.quora.com/Why-is-tail-recursion-optimisation-not-implemented-in-languages-like-Python-Ruby-and-Clojure-Is-it-just-difficult-or-impossible
 
 ---
 

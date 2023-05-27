@@ -1,5 +1,18 @@
 # 技术笔记
 
+- Priority
+  - [x] AWS CCP
+  - [ ] DSA
+  - [ ] SQL
+  - [ ] Python
+  - [ ] package
+    - [ ] django
+    - [ ] Numpy
+    - [ ] Pandas
+    - [ ] OpenCV
+  - [ ] 
+
+
 - Fundamental
 
   - [ ] Statictics

@@ -100,6 +100,13 @@ xEum = enumerate(('apple', 'banana', 'cherry'))
 # 1 banana
 # 2 cherry
 
+x = "abc"
+
+for i, item in enumerate(x):
+    print(i, item)
+# 0 a
+# 1 b
+# 2 c
 
 print("\n--------map()--------\n")
 # executes a specified function for each item in an iterable. The item is sent to the function as a parameter.

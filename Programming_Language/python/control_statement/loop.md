@@ -7,6 +7,7 @@
   - [for Loop](#for-loop)
   - [Nested Loops](#nested-loops)
   - [`zip`: Loop multiple lists simultaneously](#zip-loop-multiple-lists-simultaneously)
+  - [Conditional Loop: `for` + List Comprehension](#conditional-loop-for--list-comprehension)
 
 ---
 
@@ -242,6 +243,22 @@ for (x, y) in zip(xList, yList):
     if x != y:
         print("difference:", x, y)      # difference: 3 4
 
+
+```
+
+---
+
+## Conditional Loop: `for` + List Comprehension
+
+```py
+xList = [1, 5, 10, 25]
+
+target = 9
+
+for item in [x for x in xList if x < target]:
+    print(item)
+# 1
+# 5
 
 ```
 
