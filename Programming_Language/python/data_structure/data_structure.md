@@ -84,17 +84,23 @@
 - In stack data structure, elements are **stored in the `LIFO` principle**.
   - That is, the **last element** stored in a stack will be removed **first**. It works just like a pile of plates where the last plate kept on the pile will be removed first.
 
+![stack](./pic/stack_dsa.png)
+
 ---
 
 ### Queue
 
 - Unlike stack, the queue data structure works **in the `FIFO` principle** where **first element** stored in the queue will be removed **first**.
 
+![queue](./pic/queue_dsa.png)
+
 ---
 
 ### Linked List
 
 - In linked list data structure, data elements are **connected through a series of nodes**. And, each node contains the **data items** and **address** to the next node.
+
+![linked list](./pic/linked-list_dsa.png)
 
 ---
 
@@ -108,11 +114,15 @@
 
 - In graph data structure, each node is called `vertex` and each vertex is **connected to other vertices through edges**.
 
+![graph](./pic/graph_dsa.png)
+
 ---
 
 ### Tree
 
 - Similar to a graph, a tree is also a collection of vertices and edges. However, in tree data structure, there can **only be one edge between two vertices**.
+
+![tree](./pic/tree_dsa.png)
 
 ---
 

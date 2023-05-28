@@ -35,6 +35,8 @@
   - [Decorator](./function/decorator.md)
   - [String Function](./function/string_function.md)
   - [Built-in Function](./function/built_in_func.md)
+  - [Magic Method](./function/magic_method.md)
+  - [Recursion](./function/recursion.md)
 
 - Control Statement
 
@@ -72,8 +74,8 @@
     - [Linked List](./data_structure/linked_list/dsa_linked_list.md)
   - Non linear data structures
     - [Tree (Binary Tree)](./data_structure/tree/dsa_tree.md)
-      - [Heap](./data_structure/tree/dsa_heap.md)
-  - [Recursion](./data_structure/recursion/dsa_recursion.md)
+    - [Heap](./data_structure/tree/dsa_heap.md)
+    - [Binary Search Tree](./data_structure//tree/dsa_bst.md)
 
 ---
 

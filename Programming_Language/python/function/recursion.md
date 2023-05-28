@@ -1,8 +1,8 @@
-# DSA - Recursion
+# Python - Recursion
 
-[Back](../../index.md)
+[Back](../index.md)
 
-- [DSA - Recursion](#dsa---recursion)
+- [Python - Recursion](#python---recursion)
   - [Recursion 递归](#recursion-递归)
   - [Factorial function](#factorial-function)
   - [Factorial function in Python:](#factorial-function-in-python)
@@ -278,4 +278,4 @@ https://www.quora.com/Why-is-tail-recursion-optimisation-not-implemented-in-lang
 
 ---
 
-[TOP](#dsa---recursion)
+[TOP](#python---recursion)

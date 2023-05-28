@@ -13,6 +13,7 @@
   - [Binary Tree](#binary-tree)
     - [Implement a Binary Tree in Python: Using List](#implement-a-binary-tree-in-python-using-list)
     - [Implement a Binary Tree in Python: Using OOP](#implement-a-binary-tree-in-python-using-oop)
+  - [Practice](#practice)
 
 ---
 
@@ -201,6 +202,8 @@ print("preoder:\t", preorder(bi_tree))
 
 - In an `inorder traversal`, we recursively do an inorder traversal on the **left subtree**, visit the **root node**, and finally do a recursive inorder traversal of the **right subtree**.
 
+- 在 bst 排序中使用
+
 ```py
 def inorder(tree):
   if tree:
@@ -214,6 +217,8 @@ def inorder(tree):
 ### Postorder
 
 - In a `postorder traversal`, we recursively do a postorder traversal of the **left subtree** and the **right subtree** followed by a visit to the **root node**.
+
+- 在 bst 的 trim 问题中使用
 
 ```py
 def postorder(tree):
@@ -422,6 +427,12 @@ l_child.set_rootName("newLeftChild")
 print("new left child name:\t", l_child.get_rootName())
 
 ```
+
+---
+
+## Practice
+
+[problem](./problem_tree.ipynb)
 
 ---
 
