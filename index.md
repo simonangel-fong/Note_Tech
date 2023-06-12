@@ -1,6 +1,7 @@
 # 技术笔记
 
 - Priority
+
   - [x] AWS CCP
   - [ ] DSA
   - [ ] SQL
@@ -10,13 +11,12 @@
     - [ ] Numpy
     - [ ] Pandas
     - [ ] OpenCV
-  - [ ] 
-
+  - [ ]
 
 - Fundamental
 
   - [ ] Statictics
-  - [ ] [Data Structure](./Fundamental/Data_Structure/index.md)
+  - [ ] [Data Structure & Algorithm](./Fundamental/Data_Structure/index.md)
   - [ ] [Git](./Fundamental/git/git_index.md)
 
 - Programming Language

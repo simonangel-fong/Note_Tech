@@ -1,8 +1,9 @@
-# Python - Data Structure & Algorithms
+# DSA - Data Structure & Algorithms
 
-[Back](../index.md)
+[Back](./index.md)
 
-- [Python - Data Structure \& Algorithms](#python---data-structure--algorithms)
+- [DSA - Data Structure \& Algorithms](#dsa---data-structure--algorithms)
+  - [Data Structure](#data-structure)
   - [Data Structure \& Algorithms](#data-structure--algorithms)
   - [Types of Data Structure](#types-of-data-structure)
   - [Linear data structure](#linear-data-structure)
@@ -23,6 +24,13 @@
 
 ---
 
+## Data Structure
+
+- `Abstract Data Type`: an abstraction of a data strucutre which provides only the interface to which a data structure must adhere to.
+  - The interfac does not give any specific details about how something should be implemented or in what programming langugae.
+
+---
+
 ## Data Structure & Algorithms
 
 - `computer program`
@@ -39,7 +47,7 @@
 
   - `Data structure` is the collection of `data types` arranged in a specific order.
 
-- `algorithm`
+- `Algorithm`
 
   - **a collection of steps to solve a particular problem.**
 
@@ -141,4 +149,4 @@ Now that we know about linear and non-linear data structures, let's see the majo
 
 ---
 
-[TOP](#python---data-structure--algorithms)
+[TOP](#dsa---data-structure--algorithms)

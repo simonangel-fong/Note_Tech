@@ -62,27 +62,6 @@
 
   - [Input & Print](./io/input_print.md)
 
-- [Data Structure](./data_structure/data_structure.md)
-
-  - [Big O](./data_structure/big_o.md)
-  - Linear data structure
-    - [Array - index](./data_structure/array/dsa_array.md)
-    - [Stack - FILO](./data_structure/stack/dsa_stack.md)
-    - Queue
-      - [Queue - FIFO](./data_structure/queue/dsa_queue.md)
-      - [Deque - Both end](./data_structure/queue/dsa_deque.md)
-      - [Priority queue - Priority](./data_structure/queue/dsa_priority_queue.md)
-    - [Linked List](./data_structure/linked_list/dsa_linked_list.md)
-  - Non linear data structures
-
-    - [Tree (Binary Tree)](./data_structure/tree/dsa_tree.md)
-    - [Heap](./data_structure/tree/dsa_heap.md)
-    - [Binary Search Tree](./data_structure//tree/dsa_bst.md)
-    - [Graph](./data_structure/graph/dsa_graph.md)
-
-  - [Search](./data_structure/search/search.md)
-  - [Sort](./data_structure/sort/sort.md)
-
 ---
 
 ## Python Introduction

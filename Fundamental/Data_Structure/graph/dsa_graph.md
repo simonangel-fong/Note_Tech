@@ -9,6 +9,9 @@
   - [Adjacency Matrix](#adjacency-matrix)
   - [Adjacency List](#adjacency-list)
     - [Implement: Graph using Adjacency List](#implement-graph-using-adjacency-list)
+  - [Problem: Word Ladder](#problem-word-ladder)
+  - [Breadth First Search (Unfinished)](#breadth-first-search-unfinished)
+  - [Depth First Search (Unfinished)](#depth-first-search-unfinished)
 
 ---
 
@@ -264,6 +267,138 @@ g.get_all_vertice()     # [0, 1, 2, 3, 4, 5, 7]
 3 in g      # True
 10 in g     # False
 ```
+
+---
+
+## Problem: Word Ladder
+
+- `word ladder`.
+
+  - Transform the word “FOOL” into the word “SAGE”.
+  - In a word ladder puzzle you must make the change occur gradually **by changing one letter at a time**.
+  - At each step you must transform one word into another word, you are **not allowed to transform a word into a non-word**.
+
+- example
+
+  - FOOL -> POOL -> POLL -> POLE -> PALE -> SALE -> SAGE
+
+- Solution:
+
+  - Use the graph algorithm known as `breadth first search` to find an efficient path from the starting word to the ending word.
+
+- Steps:
+  - turn a large collection of words into a graph.
+  - have an edge from one word to another if the two words are only different by a single letter.
+  - Then any path from one word to another is a solution to the word ladder puzzle.
+
+```py
+class Vertex:
+    def __init__(self,key):
+        self.id = key
+        self.connectedTo = {}
+
+    def addNeighbor(self,nbr,weight=0):
+        self.connectedTo[nbr] = weight
+
+    def __str__(self):
+        return str(self.id) + ' connectedTo: ' + str([x.id for x in self.connectedTo])
+
+    def getConnections(self):
+        return self.connectedTo.keys()
+
+    def getId(self):
+        return self.id
+
+    def getWeight(self,nbr):
+        return self.connectedTo[nbr]
+
+class Graph:
+    def __init__(self):
+        self.vertList = {}
+        self.numVertices = 0
+
+    def addVertex(self,key):
+        self.numVertices = self.numVertices + 1
+        newVertex = Vertex(key)
+        self.vertList[key] = newVertex
+        return newVertex
+
+    def getVertex(self,n):
+        if n in self.vertList:
+            return self.vertList[n]
+        else:
+            return None
+
+    def __contains__(self,n):
+        return n in self.vertList
+
+    def addEdge(self,f,t,cost=0):
+        if f not in self.vertList:
+            nv = self.addVertex(f)
+        if t not in self.vertList:
+            nv = self.addVertex(t)
+        self.vertList[f].addNeighbor(self.vertList[t], cost)
+
+    def getVertices(self):
+        return self.vertList.keys()
+
+    def __iter__(self):
+        return iter(self.vertList.values())
+
+
+def buildGraph(wordFile):
+    '''function to build graph'''
+    d = {}
+    g = Graph()
+
+    # 读取单词文件
+    wfile = open(wordFile,'r')
+    # create buckets of words that differ by one letter
+    for line in wfile:
+        print(line)
+        word = line[:-1]  # 该处-1是去除换行号\n
+        print(word)
+        for i in range(len(word)):
+            bucket = word[:i] + '_' + word[i+1:]  #该处按字母顺序替换为"_"符号作为bucket
+            if bucket in d:
+                d[bucket].append(word)    # bucket作为字典的键, 目的是如果单词特征相同的,加入到value
+            else:
+                d[bucket] = [word]    # 如果bucket不存在, 则加入, 注意value是list
+    # add vertices and edges for words in the same bucket
+    # 思路:
+    # 1.遍历所有单词特征
+    # 2.嵌套遍历相同特征下的list的成员,
+    # 3.如果不是相同单词时, 向graph对象添加edge
+    # 效果: 有相同特征的单词之间建立关联
+    for bucket in d.keys():
+        for word1 in d[bucket]:
+            for word2 in d[bucket]:
+                if word1 != word2:
+                    g.addEdge(word1,word2)
+    return g
+```
+
+---
+
+## Breadth First Search (Unfinished)
+
+- Definition
+
+- Algorithm
+
+- Use case
+
+- One good way to visualize what the breadth first search algorithm does is to imagine that it is building a tree, one level of the tree at a time.
+- A breadth first search adds all children of the starting vertex before it begins to discover any of the grandchildren.
+
+---
+
+## Depth First Search (Unfinished)
+
+- Algorithm
+
+- Use case
+  - knight's tour 马走日
 
 ---
 
