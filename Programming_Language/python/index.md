@@ -13,6 +13,7 @@
   - [Syntax](./fundamental/syntax.md)
   - [Comment](./fundamental/comment.md)
   - [Variable](./fundamental/variable.md)
+  - [Point](./fundamental/pointer.md)
   - [Scope](./fundamental/scope.md)
   - [Operator](./fundamental/operator.md)
   - [Module](./fundamental/module.md)

@@ -1,8 +1,9 @@
 # DSA - Linked List
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Linked List](#dsa---linked-list)
+  - [Big O: Linked List vs List](#big-o-linked-list-vs-list)
   - [Singly Linked List](#singly-linked-list)
     - [Inserting an Element at the Head of a Singly Linked List](#inserting-an-element-at-the-head-of-a-singly-linked-list)
     - [Inserting an Element at the Tail of a Singly Linked List](#inserting-an-element-at-the-tail-of-a-singly-linked-list)
@@ -17,6 +18,12 @@
     - [Deletion of a Node](#deletion-of-a-node)
     - [Problem: Doubly Linked Lists](#problem-doubly-linked-lists)
       - [Implement a Doubly Linked List](#implement-a-doubly-linked-list)
+
+---
+
+## Big O: Linked List vs List
+
+![big o](./pic/linked_list_big_o.png)
 
 ---
 
