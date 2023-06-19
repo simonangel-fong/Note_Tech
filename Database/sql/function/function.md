@@ -3,7 +3,24 @@
 [Back](../index.md)
 
 - [SQL - Function](#sql---function)
+  - [Aggregate Functions](#aggregate-functions)
   - [`COUNT()`](#count)
+
+---
+
+## Aggregate Functions
+
+- `Aggregate Functions`
+
+  - Aggregate functions compute **a single result** from a **set of input values**.
+  - only applied to `SELECT` clause or `HAVING` clause.
+
+- Common Aggregate Functions
+  - `AVG()`: average value
+  - `COUNT()`: number of values
+  - `MAX()`: maximum value
+  - `MIN()`: minimum value
+  - `SUM()`: sum of all values
 
 ---
 
