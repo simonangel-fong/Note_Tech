@@ -195,11 +195,14 @@ class Linked_list(object):
         
 
 
-ll = Linked_list(4)
-ll.append(5)
-ll.append(6)
-ll.append(7)
-ll.print_linked_list()
+# ll = Linked_list(4)
+# ll.append(5)
+# ll.append(6)
+# ll.append(7)
+# ll.print_linked_list()
 
-ll.reverse()
-ll.print_linked_list()
+# ll.reverse()
+# ll.print_linked_list()
+
+for i in range(1):
+    print(i)

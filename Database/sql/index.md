@@ -15,6 +15,11 @@
 
 - [Database](./database.md)
 - Data QueryLanguage(SQL)
-  - [Select Statement](./select/select.md)
+
+  - [`SELECT`](./select/select.md)
+  - [`GROUP BY`](./select/group_by.md)
+  - [`JOIN`](./select/join.md)
 
 - [Function](./function/function.md)
+  
+- [Command](./command/command.md)
