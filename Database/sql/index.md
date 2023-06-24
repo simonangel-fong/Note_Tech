@@ -13,13 +13,31 @@
 
 ---
 
-- [Database](./database.md)
-- Data QueryLanguage(SQL)
+- Fundamental
 
-  - [`SELECT`](./select/select.md)
-  - [`GROUP BY`](./select/group_by.md)
-  - [`JOIN`](./select/join.md)
+  - [Database](./database.md)
+
+  - [Command](./command/command.md)
+
+- [Constraint](./constraint/constraint.md)
+
+- Data Definition Language (DDL)
+
+  - [Datatype](./DDL/datetype.md)
+  - [`CREATE TABLE`](./DDL/create_tb.md)
+  - [`ALTER TABLE`](./DDL/alter_tb.md)
+  - [`DELETE TABLE`](./DDL/delete_tb.md)
+
+- Data Query Language (DQL)
+
+  - [`SELECT`](./DQL/select.md)
+  - [`GROUP BY`](./DQL/group_by.md)
+  - [`JOIN`](./DQL/join.md)
+
+- Data Manipulation Language (DML)
+
+  - [`INSERT INTO`](./DML/insert_into.md)
+  - [`UPDATE SET`](./DML/update_set.md)
+  - [`DROP FROM`](./DML/drop_from.md)
 
 - [Function](./function/function.md)
-  
-- [Command](./command/command.md)
