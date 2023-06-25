@@ -41,3 +41,5 @@
   - [`DROP FROM`](./DML/drop_from.md)
 
 - [Function](./function/function.md)
+
+- [View](./view/view.md)

@@ -16,6 +16,10 @@
   - [Mathematical Function](#mathematical-function)
   - [String Function](#string-function)
     - [`TO_CHAR()`](#to_char)
+  - [CASE](#case)
+  - [`COLAESCE`](#colaesce)
+  - [`CAST`](#cast)
+  - [`NULLIF`](#nullif)
 
 ---
 
@@ -294,6 +298,145 @@ SELECT AGE(datetime_col)
 
 ```sql
 TO_CHAR(date_col,patern)
+```
+
+---
+
+## CASE
+
+- CASE statement
+  - execute SQL code when certain conditions are met.
+
+```sql
+-- general CASE stetement
+CASE
+  WHEN condition_1 THEN sql_code_1
+  WHEN condition_2 THEN sql_code_2
+  ELSE other_sql_code
+END
+
+-- CASE expression
+CASE expression
+  WHEN value_1 THEN sql_code_1
+  WHEN value_2 THEN sql_code_2
+  ELSE other_sql_code
+END
+```
+
+- Example:
+
+```sql
+-- General CASE statement
+SELECT customer_id,
+CASE
+	WHEN customer_id <= 100 THEN 'Premium'
+	WHEN customer_id BETWEEN 100 AND 200 THEN 'Plus'
+	ELSE	'Normal'
+END AS customer_class
+FROM customer;
+
+-- CASE expression
+SELECT customer_id,
+CASE customer_id
+	WHEN 2 THEN 'Winner'
+	WHEN 5 THEN 'Second Place'
+	ELSE 'Normal'
+END AS raffle_results
+FROM customer;
+```
+
+- Trick
+
+```SQL
+-- userful trick
+-- count rows met condition without using count()
+SELECT
+SUM(CASE rental_rate
+	WHEN 0.99 THEN 1
+	ELSE 0
+END) AS bargains,
+SUM(CASE rental_rate
+	WHEN 2.99 THEN 1
+	ELSE 0
+END) AS regular,
+SUM(CASE rental_rate
+	WHEN 4.99 THEN 1
+	ELSE 0
+END) AS premium
+FROM film;
+```
+
+---
+
+## `COLAESCE`
+
+- `COALESCE`
+  - accepts an unlimited number of arguments.
+  - returns the first not null argument.
+  - If all arguments are null, returns null.
+  - Useful when querying a table that contains null values and substituting with another value.
+
+```sql
+-- Syntax
+COALESCE(arg_1, arg_2)
+
+-- use case
+SELECT COALESCE(1, 2)   -- 1
+SELECT COALESCE(NULL, 1, 2)   -- 2
+SELECT COALESCE(NULL, NULL)   -- Null
+```
+
+---
+
+## `CAST`
+
+- `CAST` Operator
+
+  - convert from one data type into another.
+
+- Syntax
+
+```sql
+-- CAST function
+SELECT CAST('5' AS INTEGER)
+SELECT CAST(col_name AS TIMESTAMP)
+FROM tb_name;
+
+-- CAST operator
+SELECT '5'::INTEGER;
+
+-- Use case
+SELECT CHAR_LENGTH(CAST(inventory_id AS VARCHAR))
+FROM rental;
+
+```
+
+---
+
+## `NULLIF`
+
+- `NULLIF`
+
+  - takes in 2 inputs
+  - returns NULL if both are equal,
+  - Otherwise, returns the first argument passed.
+  - Useful in cases where a NULL value would cause an error or unwanted result.
+
+- Syntax
+
+```sql
+-- Syntax
+NULLIF(arg_1, arg_2)
+
+-- Example
+-- 该处存在'B'不存在的情况, 则会发生除数为零的错误
+-- 使用NULLIF函数则当除数为零时, 返回null
+-- 由于其中一个运算数是null, 所以select返回null
+SELECT (
+SUM(CASE WHEN department = 'A' THEN 1 ELSE 0 END)/
+	NULLIF(SUM(CASE WHEN department = 'B' THEN 1 ELSE 0 END),0)
+) AS department_ratio
+FROM depts;
 ```
 
 ---
