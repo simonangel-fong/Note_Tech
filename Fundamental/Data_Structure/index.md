@@ -24,7 +24,9 @@
       - [Queue - FIFO](./data_structure/queue/dsa_queue.md)
       - [Deque - Both end](./data_structure/queue/dsa_deque.md)
       - [Priority queue - Priority](./data_structure/queue/dsa_priority_queue.md)
-    - [Linked List](./linked_list/dsa_linked_list.md)
+    - Linked List
+      - [Double Linked List](./linked_list/dsa_dll.md)
+      - [Single Linked List](./linked_list/dsa_sll.md)
   - Non linear data structures
 
     - [Tree (Binary Tree)](./data_structure/tree/dsa_tree.md)

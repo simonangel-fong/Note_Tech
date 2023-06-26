@@ -1,11 +1,10 @@
-# DSA - Linked List
+# DSA - Single Linked List
 
 [Back](../index.md)
 
-- [DSA - Linked List](#dsa---linked-list)
+- [DSA - Single Linked List](#dsa---single-linked-list)
   - [Big O: Linked List vs List](#big-o-linked-list-vs-list)
   - [Singly Linked List](#singly-linked-list)
-    - [Prepend:](#prepend)
     - [Append(): `O(1)`](#append-o1)
     - [Prepend():`O(1)`](#prependo1)
     - [Pop(): `O(n)`](#pop-on)
@@ -15,16 +14,6 @@
     - [Remove(): `O(n)`](#remove-on)
     - [Reverse(): `O(n)`](#reverse-on)
     - [Print a Linked List](#print-a-linked-list)
-    - [Problem: Singly Linked List](#problem-singly-linked-list)
-      - [Implement Singly Linked List](#implement-singly-linked-list)
-      - [Singly Linked List Cycle Check](#singly-linked-list-cycle-check)
-      - [Nth to Last Node](#nth-to-last-node)
-      - [Linked List Reversal](#linked-list-reversal)
-  - [Doubly Linked Lists](#doubly-linked-lists)
-    - [Inserting and Deleting with a Doubly Linked List](#inserting-and-deleting-with-a-doubly-linked-list)
-    - [Deletion of a Node](#deletion-of-a-node)
-    - [Problem: Doubly Linked Lists](#problem-doubly-linked-lists)
-      - [Implement a Doubly Linked List](#implement-a-doubly-linked-list)
 
 ---
 
@@ -78,34 +67,6 @@ class Linked_list(object):
 
 ---
 
-### Prepend:
-
-- **Prepend**:
-
-  - Inserting an Element at the Head of a Singly Linked List
-
-- It uses space proportionally to its current number of elements.
-- To insert a new element at the head of the list:
-  - 1. We create a new node
-  - 2. Set its element to the new element
-  - 3. set its next link to refer to the current head
-  - 4. then set the list’s head to point to the new node.
-
-![insert head](./pic/single_linked_list_insert_head.png)
-
-```py
-
-new_head = Node()
-
-new_head.value = value
-new_head.next = linked_list.head
-
-linked_list.head = new_head
-
-```
-
----
-
 ### Append(): `O(1)`
 
 - **Append**
@@ -147,9 +108,16 @@ def append(self, value):
 
 ### Prepend():`O(1)`
 
-- **Prepend**
+- **Prepend**:
 
-  - Inserting an Element at the **head** of a Singly Linked List
+  - Inserting an Element at the Head of a Singly Linked List
+
+- It uses space proportionally to its current number of elements.
+- To insert a new element at the head of the list:
+  - 1. We create a new node
+  - 2. Set its element to the new element
+  - 3. set its next link to refer to the current head
+  - 4. then set the list’s head to point to the new node.
 
 ```py
 def prepend(self, value):
@@ -388,101 +356,6 @@ ll = Linked_list(4)
 ll.print_linked_list()
 
 ```
-
----
-
-### Problem: Singly Linked List
-
-#### Implement Singly Linked List
-
-For this interview problem, create a node class and show how it can be used to create a Singly Linked List
-
-[Implement singly linked list](./problem_implement_singly_linked_list.ipynb)
-
----
-
-#### Singly Linked List Cycle Check
-
-Given a singly linked list, write a function which takes in the first node in a singly linked list and returns a boolean indicating if the linked list contains a "cycle".
-
-A cycle is when a node's next point actually points back to a previous node in the list. This is also sometimes known as a circularly linked list.
-
-[Singly Linked List Cycle Check](./problem_singly_linked_list_cycle_check.ipynb)
-
----
-
-#### Nth to Last Node
-
-Write a function that takes a head node and an integer value **n** and then returns the nth to last node in the linked list.
-
-[Nth to Last Node](./problem_singly_linked_list_Nth_to_last_node.ipynb)
-
----
-
-#### Linked List Reversal
-
-Write a function to reverse a Linked List in place. The function will take in the head of the list as input and return the new head of the list.
-
-[Linked List Reversal](./problem_singly_linked_list_reversal.ipynb)
-
----
-
-## Doubly Linked Lists
-
-- `Doubly linked list`
-
-  - a linked list in which each node keeps an explicit **reference to the node before** it and a **reference to the node after** it.
-
-  - allow a greater **variety** of `O(1)`-time update operations, including insertions and deletions.
-
-- `next`:
-
-  - the reference to the node that **follows** another.
-
-- `prev`:
-
-  - the reference to the node that **precedes** it.
-
-- `sentinels (or guards)`
-  - special nodes are added at both ends of the list.
-  - a `header node` at the **beginning** of the list
-  - a `trailer node` at the **end** of the list.
-
-![double](./pic/double_linked_list.png)
-
----
-
-### Inserting and Deleting with a Doubly Linked List
-
-- Every **insertion** into our doubly linked list representation will take place between a pair of existing nodes
-
-- When a new element is **inserted at the front of** the sequence, we will simply add the new node between the **header** and the **node that is currently after** the header.
-
-![inserting](./pic/double_linked_list_inserting01.png)
-
-![inserting](./pic/double_linked_list_inserting02.png)
-
----
-
-### Deletion of a Node
-
-- The **two neighbors** of the node to be deleted are linked directly to each other
-
-- As a result, that node will no longer be considered part of the list and it can be reclaimed by the system.
-
-- Because of sentinels, the same implementation can be used when deleting the first or the last element of a sequence.
-
-![deleting](./pic/double_linked_list_deleting01.png)
-
----
-
-### Problem: Doubly Linked Lists
-
-#### Implement a Doubly Linked List
-
-For this interview problem, implement a node class and show how it can be used to create a doubly linked list.
-
-[Implement a Doubly Linked List](./problem_implement_doubly_linked_list.ipynb)
 
 ---
 
