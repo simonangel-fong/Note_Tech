@@ -1,6 +1,6 @@
 # DSA - Priority Queue
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Priority Queue](#dsa---priority-queue)
   - [Priority Queue](#priority-queue)

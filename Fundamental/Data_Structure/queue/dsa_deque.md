@@ -1,6 +1,6 @@
 # DSA - Deque
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Deque](#dsa---deque)
   - [Deque](#deque)

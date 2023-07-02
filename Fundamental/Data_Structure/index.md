@@ -19,19 +19,20 @@
   - [Big O](./big_o.md)
   - Linear data structure
     - [Array - index](./data_structure/array/dsa_array.md)
-    - [Stack - FILO](./data_structure/stack/dsa_stack.md)
+    - [Stack - FILO](./stack/dsa_stack.md)
+    - [Hash Table](./hash_table/hash_table.md)
     - Queue
-      - [Queue - FIFO](./data_structure/queue/dsa_queue.md)
-      - [Deque - Both end](./data_structure/queue/dsa_deque.md)
-      - [Priority queue - Priority](./data_structure/queue/dsa_priority_queue.md)
+      - [Queue - FIFO](./queue/dsa_queue.md)
+      - [Deque - Both end](./queue/dsa_deque.md)
+      - [Priority queue - Priority](./queue/dsa_priority_queue.md)
     - Linked List
       - [Double Linked List](./linked_list/dsa_dll.md)
       - [Single Linked List](./linked_list/dsa_sll.md)
   - Non linear data structures
 
-    - [Tree (Binary Tree)](./data_structure/tree/dsa_tree.md)
+    - [Tree (Binary Tree)](./tree/dsa_tree.md)
     - [Heap](./data_structure/tree/dsa_heap.md)
-    - [Binary Search Tree](./data_structure//tree/dsa_bst.md)
+    - [Binary Search Tree](./tree/dsa_bst.md)
     - [Graph](./data_structure/graph/dsa_graph.md)
 
   - [Search](./data_structure/search/search.md)

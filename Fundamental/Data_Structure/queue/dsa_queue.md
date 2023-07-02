@@ -1,12 +1,14 @@
 # DSA - Queue
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Queue](#dsa---queue)
   - [Queue](#queue)
-  - [Implement Queue in Python](#implement-queue-in-python)
-  - [Problem: Queue](#problem-queue)
-    - [Implement a Queue](#implement-a-queue)
+  - [Implement Queue in Python: Using Linked list](#implement-queue-in-python-using-linked-list)
+    - [Constructor](#constructor)
+    - [Enqueue():`O(1)`](#enqueueo1)
+    - [Dequeue():`O(1)`](#dequeueo1)
+  - [Implement Queue in Python: Using a list](#implement-queue-in-python-using-a-list)
 
 ---
 
@@ -33,7 +35,68 @@
 
 ---
 
-## Implement Queue in Python
+## Implement Queue in Python: Using Linked list
+
+### Constructor
+
+```py
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+class Queue:
+    def __init__(self, value):
+        new_node = Node(value)
+        self.first = new_node
+        self.last = new_node
+        self.length = 1
+
+    def print_queue(self):
+        temp = self.first
+        while temp is not None:
+            print(temp.value)
+            temp = temp.next
+```
+
+---
+
+### Enqueue():`O(1)`
+
+```py
+def enqueue(self, value):
+    new_node = Node(value)
+    if self.first is None:
+        self.first = new_node
+        self.last = new_node
+    else:
+        self.last.next = new_node
+        self.last = new_node
+    self.length += 1
+```
+
+---
+
+### Dequeue():`O(1)`
+
+```py
+def dequeue(self):
+    if self.length == 0:
+        return None
+    temp = self.first
+    if self.length == 1:
+        self.first = None
+        self.last = None
+    else:
+        self.first = self.first.next
+        temp.next = None
+    self.length -= 1
+    return temp
+```
+
+---
+
+## Implement Queue in Python: Using a list
 
 ```py
 class Queue(object):
@@ -81,21 +144,6 @@ print("size\t", s.size())               # size     0
 print("isEmpty\t", s.isEmpty())         # isEmpty  True
 
 ```
-
----
-
-## Problem: Queue
-
-### Implement a Queue
-
-It's very common to be asked to implement a Queue class! The class should be able to do the following:
-
-- Check if Queue is Empty
-- Enqueue
-- Dequeue
-- Return the size of the Queue
-
-[Implement a Queue](./problem_implement_queue.ipynb)
 
 ---
 

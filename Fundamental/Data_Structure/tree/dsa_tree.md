@@ -1,6 +1,6 @@
 # DSA - Tree
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Tree](#dsa---tree)
   - [Tree](#tree)
@@ -11,6 +11,7 @@
     - [Inorder](#inorder)
     - [Postorder](#postorder)
   - [Binary Tree](#binary-tree)
+  - [Implement a Binary Tree: Using linked list](#implement-a-binary-tree-using-linked-list)
     - [Implement a Binary Tree in Python: Using List](#implement-a-binary-tree-in-python-using-list)
     - [Implement a Binary Tree in Python: Using OOP](#implement-a-binary-tree-in-python-using-oop)
   - [Practice](#practice)
@@ -236,13 +237,17 @@ def postorder(tree):
 
   - a data structure in which **each node has at most two children**, which are referred to as the **left child** and the **right child**.
 
+- `full binary tree`
+
+  - 对每个字节, 要么没有子节, 要么有两个字节
+
 - `perfect binary tree`
 
-  - a binary tree in which **all interior nodes have two children** and all **leaves** have the same depth or **same level**.
+  - a binary tree in which **all interior nodes have two children** and all **leaves** have the same depth or **same level**. 每层都填满
 
 - `complete binary tree`
 
-  - a binary tree in which every level, except possibly the last, is **completely filled**, and all nodes in the last level are **as far left as possible**.
+  - a binary tree in which every level, except possibly the last, is **completely filled**, and all nodes in the last level are **as far left as possible**.从左到右填充
 
 - `balanced binary tree`
 
@@ -252,6 +257,14 @@ def postorder(tree):
   - used to implement `binary search trees` and `binary heaps`
   - used for efficient **searching and sorting**.
     In computing, binary trees are used in two very different ways:
+
+---
+
+## Implement a Binary Tree: Using linked list
+
+```
+
+```
 
 ---
 

@@ -1,14 +1,15 @@
 # DSA - Stack
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Stack](#dsa---stack)
   - [Stack](#stack)
-  - [Implement Stack in Python](#implement-stack-in-python)
-  - [Problem: Stack](#problem-stack)
-    - [Implement a Stack](#implement-a-stack)
-    - [Balanced Parentheses Check](#balanced-parentheses-check)
-    - [Implement a Queue - Using Two Stacks](#implement-a-queue---using-two-stacks)
+  - [Implement Stack: Using Linked List](#implement-stack-using-linked-list)
+    - [Constructor](#constructor)
+    - [Push(): `O(1)`](#push-o1)
+    - [Pop(): `O(1)`](#pop-o1)
+  - [Implement Stack in Python: Using list](#implement-stack-in-python-using-list)
+  - [Trick: Implement a Queue - Using Two Stacks](#trick-implement-a-queue---using-two-stacks)
 
 ---
 
@@ -36,7 +37,57 @@
 
 ---
 
-## Implement Stack in Python
+## Implement Stack: Using Linked List
+
+### Constructor
+
+```py
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+class Stack:
+    def __init__(self, value):
+        new_node = Node(value)
+        self.height = 1
+        self.top = new_node
+```
+
+---
+
+### Push(): `O(1)`
+
+```py
+def push(self, value):
+    new_node = Node(value)
+    if self.height == 0:
+        self.top = new_node
+    else:
+        new_node.next = self.top
+        self.top = new_node
+    self.height += 1
+```
+
+---
+
+### Pop(): `O(1)`
+
+```py
+def pop(self):
+    if self.height == 0:
+        return None
+    temp = self.top
+    self.top = self.top.next
+    temp.next = None
+    self.height -= 1
+    return temp
+```
+
+---
+
+## Implement Stack in Python: Using list
 
 ```py
 class Stack(object):
@@ -87,43 +138,54 @@ print("isEmpty\t", s.isEmpty())         # isEmpty  True
 
 ---
 
-## Problem: Stack
-
-### Implement a Stack
-
-A very common interview question is to begin by just implementing a Stack! Try your best to implement your own stack!
-
-It should have the methods:
-
-- Check if its empty
-- Push a new item
-- Pop an item
-- Peek at the top item
-- Return the size
-
-[Implement a Stack](./problem_implement_stack.ipynb)
-
----
-
-### Balanced Parentheses Check
-
-Given a string of opening and closing parentheses, check whether it’s balanced. We have 3 types of parentheses: round brackets: (), square brackets: [], and curly brackets: {}. Assume that the string doesn’t contain any other character than these, no spaces words or numbers. As a reminder, balanced parentheses require every opening parenthesis to be closed in the reverse order opened. For example ‘([])’ is balanced but ‘([)]’ is not.
-
-You can assume the input string has no spaces.
-
-[Balanced Parentheses Check](./problem_balanced_parentheses_check.ipynb)
-
----
-
-### Implement a Queue - Using Two Stacks
+## Trick: Implement a Queue - Using Two Stacks
 
 Given the Stack class below, implement a Queue class using **two** stacks! Note, this is a "classic" interview problem. Use a Python list data structure as your Stack.
 
-    # Uses lists instead of your own Stack class.
-    stack1 = []
-    stack2 = []
+```py
+class Queue2Stacks(object):
 
-[Implement a Queue](./problem_implement_queue_using_two_stacks.ipynb)
+    def __init__(self):
+
+        # Two Stacks
+        self.instack = []
+        self.outstack = []
+
+    def enqueue(self, element):
+
+        # Add an enqueue with the "IN" stack
+        self.instack.append(element)
+
+    def dequeue(self):
+        if not self.outstack:
+            while self.instack:
+                # Add the elements to the outstack to reverse the order when called
+                self.outstack.append(self.instack.pop())
+        return self.outstack.pop()
+
+'''
+## Summary
+
+- 效率:
+
+  - 最好: `O(1)`
+  - 最坏: `O(N)`
+
+- 思路:
+  - 图解:
+    - 结构:|inStack| external |outStack|
+    - 插入时: |1,2,3| external | |
+    - 取出(目标值是 1): | | external <-1 | 2,3 |
+    - 插入 4: |4 | external |2,3|
+    - 取出(目标值是 2): | 4 | external <-2 | 3 |
+  - 利用进入 stack 可以颠倒顺序
+    - 插入的新元素 stack 在 inStack 中
+    - 从 inStack 提取时, 即颠倒了顺序, 并将颠倒顺序的元素存储在 outStack
+    - outStack 作用是 buffer
+    - pop 时, 直接从 outStack pop 即可.
+  - 只有当 outStack 为空时才需要颠倒顺序; 如果不为空, 则直接从 outStack 中 pop. 提高效率.
+'''
+```
 
 ---
 

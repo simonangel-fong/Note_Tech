@@ -1,11 +1,15 @@
 # DSA - Binary Search Tree
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Binary Search Tree](#dsa---binary-search-tree)
   - [Binary Search Tree](#binary-search-tree)
   - [The complexity](#the-complexity)
-  - [Implement in Python](#implement-in-python)
+  - [Implement in Python: Linked List](#implement-in-python-linked-list)
+    - [Constructor](#constructor)
+    - [Insert(): `O(log(n))`](#insert-ologn)
+    - [Contains(): `O(log(n))`](#contains-ologn)
+  - [Implement in Python: OOP](#implement-in-python-oop)
 
 ---
 
@@ -37,7 +41,12 @@ We will see the time complexity for insertion, deletion, and searching operation
 
 Where 'n' is the number of nodes in the given tree.
 
-2. Space Complexity
+- 推导: search()
+  - 因为是每层二分, 所以最理想情况下(树是 perfect, full, complete)层数/搜索次数 O 有:`2^O -1 = n`
+  - 对以上简化并取对数, `O(log(n))`.该处 log 的底是 2.
+  - 对坏的情况是所有元素单边延续, 即实际上是 sll, 所以层数/搜索次数是`O(n)`
+
+1. Space Complexity
 
    | Operations | Space complexity |
    | ---------- | ---------------- |
@@ -49,7 +58,79 @@ The space complexity of all operations of Binary search tree is O(n).
 
 ---
 
-## Implement in Python
+对比
+
+| Operation | SLL      | BST           |
+| --------- | -------- | ------------- |
+| insert()  | **O(1)** | O(log(n))     |
+| lookup()  | O(n)     | **O(log(n))** |
+| remove()  | O(n)     | **O(log(n))** |
+
+---
+
+## Implement in Python: Linked List
+
+### Constructor
+
+```py
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+class BinarySearchTree:
+    def __init__(self):
+        self.root = None
+```
+
+---
+
+### Insert(): `O(log(n))`
+
+```py
+ def insert(self, value):
+   new_node = Node(value)
+   if self.root is None:
+      self.root = new_node
+      return True
+   temp = self.root
+   while (True):
+      if new_node.value == temp.value:
+          return False
+      if new_node.value < temp.value:
+          if temp.left is None:
+              temp.left = new_node
+              return True
+          temp = temp.left
+      else:
+          if temp.right is None:
+              temp.right = new_node
+              return True
+          temp = temp.right
+```
+
+---
+
+### Contains(): `O(log(n))`
+
+```py
+def contains(self, value):
+   temp = self.root
+   while (temp is not None):
+      if value < temp.value:
+          temp = temp.left
+      elif value > temp.value:
+          temp = temp.right
+      else:
+          return True
+   return False
+```
+
+---
+
+## Implement in Python: OOP
 
 - 使用 OOP 方法
 
