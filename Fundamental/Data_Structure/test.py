@@ -1,20 +1,27 @@
-class HashTable:
-    def __init__(self, size=7):
-        self.data_map = [None]*size
+def longest_consecutive_sequence(nums):
 
-    def __hash(self, key):
-        my_hash = 0
-        for letter in key:
-            # ord(): return ascii number of each letter
-            # 23 is a prime number; Here can be any prime number
-            my_hash = (my_hash + ord(letter)*23) % len(self.data_map)
-        return my_hash
+    num_set = set(nums)     # 之所以使用set, 是因为set本身也是hash, lookup的效率是O(1)
+    max_len = 0
 
-    def print_table(self):
-        for i, val in enumerate(self.data_map):
-            print(i, ':', val)
+    for num in nums:
+        if num - 1 not in num_set:  # 保证最小开始
+            current_num = num
+            current_len = 1
+
+            while current_num + 1 in num_set:
+                current_len += 1
+                current_num += 1
+            max_len = max(current_len, max_len)
+
+    return max_len
 
 
-my_hash_table = HashTable()
+print(longest_consecutive_sequence([100, 4, 200, 1, 3, 2]))
 
-my_hash_table.print_table()
+
+"""
+    EXPECTED OUTPUT:
+    ----------------
+    4
+
+"""

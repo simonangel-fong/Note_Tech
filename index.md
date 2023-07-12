@@ -4,14 +4,13 @@
 
   - [x] AWS CCP
   - [ ] DSA
-  - [ ] SQL
+  - [x] SQL
   - [ ] Python
   - [ ] package
     - [ ] django
     - [ ] Numpy
     - [ ] Pandas
     - [ ] OpenCV
-  - [ ]
 
 - Fundamental
 
@@ -30,7 +29,7 @@
   - [x] [AWS CCP](./Operating_System/ccp/index.md)
   - [ ] Linux
     - [ ] Bash
-  - [ ] Andriod
+  - [ ] iOS
 
 - Database
 
@@ -42,8 +41,8 @@
 - Web
 
   - [ ] Django
-  - [ ] HTML
-  - [ ] CSS
+  - [ ] [HTML](./Web/html/index.md)
+  - [ ] [CSS](./Web/css/index.md)
   - [ ] React
 
 - Data Analytics
