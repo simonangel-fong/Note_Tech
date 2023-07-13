@@ -43,6 +43,7 @@
   - [ ] Django
   - [ ] [HTML](./Web/html/index.md)
   - [ ] [CSS](./Web/css/index.md)
+  - [ ] [Bootstrap](./Web/bootstrap/index.md)
   - [ ] React
 
 - Data Analytics
