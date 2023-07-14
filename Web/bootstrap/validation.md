@@ -1,66 +1,55 @@
-# Bootstrap组件 - validation表单验证
+# Bootstrap - Validation
 
-[返回Boostrap首页](../bootstrap_index.md)
+[Back](./index.md)
 
-## 目录
+- [Bootstrap - Validation](#bootstrap---validation)
+  - [Validation](#validation)
 
-- [Bootstrap组件 - validation表单验证](#bootstrap组件---validation表单验证)
-  - [目录](#目录)
-  - [表单验证](#表单验证)
+---
 
-***
+## Validation
 
-## 表单验证
-
-- html代码
+- html
   - `<form novalidate></form>`：声明表单存在验证
   - `class="invalid-feedback"`：当验证失败时显示
 
 ```html
 <form class="needs-validation" novalidate>
   <!-- Input -->
-  <input type="text" class="form-control" id="input" required/>
-  <div class="invalid-feedback">
-    message for invalid
-  </div>
+  <input type="text" class="form-control" id="input" required />
+  <div class="invalid-feedback">message for invalid</div>
 
   <!-- Textarea -->
   <textarea class="form-control" id="textarea" required></textarea>
-  <div class="invalid-feedback">
-    message for invalid
-  </div>
+  <div class="invalid-feedback">message for invalid</div>
 
   <!-- Select -->
   <select class="form-select" id="select" required>
     <option selected disabled value="">Choose...</option>
     <option>...</option>
   </select>
-  <div class="invalid-feedback">
-    message for invalid
-  </div>
+  <div class="invalid-feedback">message for invalid</div>
 
   <!-- Checkbox -->
   <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="checkbox" required>
-    <label class="form-check-label" for="checkbox">
-      tips for checkbox
-    </label>
-    <div class="invalid-feedback">
-      message for invalid
-    </div>
+    <input
+      class="form-check-input"
+      type="checkbox"
+      value=""
+      id="checkbox"
+      required
+    />
+    <label class="form-check-label" for="checkbox"> tips for checkbox </label>
+    <div class="invalid-feedback">message for invalid</div>
   </div>
 
   <!-- file -->
-  <input type="file" class="form-control" id="file" required>
-  <div class="invalid-feedback">
-    message for invalid
-  </div>
-
+  <input type="file" class="form-control" id="file" required />
+  <div class="invalid-feedback">message for invalid</div>
 </form>
-
 ```
 
-- Javascript代码: 提交时进行验证
+- Javascript 代码: 提交时进行验证
 
 ```Javascript
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -86,14 +75,12 @@
 
 ```
 
-- 如果要重置表单，则只需移除class`was-validated`
-  
+- 如果要重置表单，则只需移除 class`was-validated`
+
 ```Javascript
 $("#form").removeClass("was-validated");
 ```
 
-[回到目录](#目录)
+---
 
-***
-
-[返回Bootstrap首页](../bootstrap_index.md)
+[TOP](#bootstrap---validation)
