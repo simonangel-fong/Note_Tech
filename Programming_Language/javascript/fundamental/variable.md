@@ -1,8 +1,9 @@
-# JavaScript Variable
+# JavaScript - Variable
 
 [Back](../index.md)
 
-- [JavaScript Variable](#javascript-variable)
+- [JavaScript - Variable](#javascript---variable)
+  - [Variable](#variable)
   - [Declaration](#declaration)
   - [Identifiers](#identifiers)
   - [`let`](#let)
@@ -12,6 +13,23 @@
     - [Redeclaring](#redeclaring)
     - [Block Scope](#block-scope)
     - [Hoisting](#hoisting-1)
+
+---
+
+## Variable
+
+- `Variable`:
+
+  - the container to store Data
+    JavaScript Variables can be declared in 4 ways:
+
+- Difference Between `var`, `let` and `const`
+
+  | Keyword | Scope | Redeclare | Reassign | Hoisted | Binds this |
+  | ------- | ----- | --------- | -------- | ------- | ---------- |
+  | `var`   | No    | Yes       | Yes      | Yes     | Yes        |
+  | `let`   | Yes   | No        | Yes      | No      | No         |
+  | `const` | Yes   | No        | No       | No      | No         |
 
 ---
 
@@ -41,17 +59,14 @@ price = 200;
 
 - After the declaration, the variable has **no value** (technically it is `undefined`).
 
-- When to Use JavaScript `var`?
-
-  - Always declare JavaScript variables with `var`,`let`, or `const`.
-  - The `var` keyword is used in all JavaScript code from 1995 to 2015.
-  - The `let` and `const` keywords were added to JavaScript in 2015.
-  - If you want your code to run **in older browsers**, you must use `var`.
-
-- `const`: the value of the variable **cannot change**.
-- `let`: the value of the variable **can be changed**.
-
 - It's a good programming practice to declare all variables **at the beginning of a script**.
+
+- Keyword:
+
+  - `const`: if the **value** should not be changed
+  - `const`: if the **type** should not be changed (Arrays and Objects)
+  - `let`: Only if const cannot be used.
+  - `var`: Only if **MUST support old browsers**.
 
 - If you `re-declare` a JavaScript variable declared with var, it will **not lose its value**.
   - You cannot re-declare a variable declared with `let` or `const`.
@@ -210,6 +225,13 @@ let x = 10;
     - Change the elements of constant array
     - Change the properties of constant object
 
+- **Use const when you declare**:
+
+  - A new `Array`
+  - A new `Object`
+  - A new `Function`
+  - A new `RegExp`
+
 - **Constant Arrays**:
 
 ```html
@@ -314,4 +336,4 @@ const x = 10;
 
 ---
 
-[TOP](#javascript-variable)
+[TOP](#javascript---variable)

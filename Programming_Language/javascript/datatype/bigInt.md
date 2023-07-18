@@ -1,17 +1,28 @@
-# JavaScript BigInt
+# JavaScript - BigInt
 
 [Back](../index.md)
 
-- [JavaScript BigInt](#javascript-bigint)
+- [JavaScript - BigInt](#javascript---bigint)
   - [BigInt](#bigint)
   - [Create BigInt](#create-bigint)
-  - [BigInt Decimals](#bigint-decimals)
 
 ---
 
 ## BigInt
 
 - JavaScript `BigInt` variables are used to store big integer values that are **too big** to be represented by a normal JavaScript Number.
+
+- BigInt Decimals
+
+  - A `BigInt` can not have decimals.
+
+```js
+var x = 5n;
+// var y = x / 2; // Error: Cannot mix BigInt and other types, use explicit conversion.
+
+var y = Number(x) / 2;
+console.log(y); //2.5
+```
 
 ---
 
@@ -27,18 +38,6 @@ console.log(typeof x); //bigint
 console.log(typeof y); //bigint
 ```
 
-## BigInt Decimals
-
-- A `BigInt` can not have decimals.
-
-```js
-var x = 5n;
-// var y = x / 2; // Error: Cannot mix BigInt and other types, use explicit conversion.
-
-var y = Number(x) / 2;
-console.log(y); //2.5
-```
-
 ---
 
-[TOP](#javascript-bigint)
+[TOP](#javascript---bigint)

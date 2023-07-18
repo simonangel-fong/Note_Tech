@@ -1,15 +1,13 @@
-# JavaScript String
+# JavaScript - String
 
 [Back](../index.md)
 
-- [JavaScript String](#javascript-string)
+- [JavaScript - String](#javascript---string)
   - [String](#string)
     - [Escape Character](#escape-character)
-    - [Breaking Long Code Lines](#breaking-long-code-lines)
+    - [String: Multiple lines text](#string-multiple-lines-text)
     - [Strings as Objects](#strings-as-objects)
-  - [Length](#length)
-  - [Method](#method)
-  - [Search Method](#search-method)
+  - [String Length: `length `](#string-length-length-)
   - [Template Literals](#template-literals)
 
 ---
@@ -18,6 +16,7 @@
 
 - A JavaScript string is zero or more characters written inside quotes.
 
+  - used to store and manipulate text.
   - single or double quotes
   - use quotes inside a string, as long as they don't match the quotes surrounding the string
 
@@ -49,7 +48,7 @@ let text = "The character \\ is called backslash.";
 
 ---
 
-### Breaking Long Code Lines
+### String: Multiple lines text
 
 - A safer way to break up a string, is to use string addition.
 
@@ -86,13 +85,13 @@ x == y; // true
 x === y; // false
 
 let z = new String("John"); // z is an object
-y == z; // false
+y == z; // false Comparing two JavaScript objects always returns false.
 y === z; // false
 ```
 
 ---
 
-## Length
+## String Length: `length `
 
 - use the built-in length property
 
@@ -102,48 +101,6 @@ y === z; // false
 let text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 let length = text.length;
 ```
-
----
-
-## Method
-
-[String example](string_method.md)
-
-| Method                        | Description                                                       |
-| ----------------------------- | ----------------------------------------------------------------- |
-| `slice(start, end)`           | extracting a part of a string                                     |
-| `substring(start, end)`       | extracting a part of a string                                     |
-| `replace(matched, target)`    | replaces a specified value with another value in a string         |
-| `replaceAll(matched, target)` | replaces all value with another value                             |
-| `toUpperCase()`               | A string is converted to **upper** case                           |
-| `toLowerCase()`               | A string is converted to **lower** case                           |
-| `concat(str, str)`            | joins two or more strings                                         |
-| `trim()`                      | removes whitespace from both sides of a string                    |
-| `trimStart()`                 | removes whitespace only from the start of a string.               |
-| `trimEnd()`                   | removes whitespace only from the end of a string                  |
-| `padStart(length, str)`       | pads a string with another string                                 |
-| `padEnd(length, str)`         | pads a string with another string                                 |
-| `charAt(index)`               | returns the character at a specified index (position) in a string |
-| `charCodeAt(index)`           | returns the unicode of the character at a specified index         |
-| `string[index]`               | returns the character at a specified index (position) in a string |
-| `split(separator)`            | returns the character at a specified index (position) in a string |
-| `String.valueOf()`            | convert a string object into a string                             |
-
----
-
-## Search Method
-
-[String example](string_method.md)
-
-| Method                             | Description                                                                      |
-| ---------------------------------- | -------------------------------------------------------------------------------- |
-| `indexOf(target, start_index)`     | returns the index of (position of) the first occurrence of a string in a string  |
-| `lastIndexOf(target, start_index)` | returns the index of the last occurrence of a specified text in a string         |
-| `search(target)`                   | returns the position of the match                                                |
-| `match(target)`                    | returns an array containing the results of matching a string against a string    |
-| `matchAll(target)`                 | returns an iterator containing the results of matching a string against a string |
-| `includes(target, start_index)`    | returns true if a string contains a specified value.                             |
-| `startsWith(target, start_index)`  | returns true if a string begins with a specified value.                          |
 
 ---
 

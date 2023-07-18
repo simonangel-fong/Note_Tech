@@ -1,8 +1,8 @@
-# JavaScript Functions
+# JavaScript - Function
 
 [Back](../index.md)
 
-- [JavaScript Functions](#javascript-functions)
+- [JavaScript - Function](#javascript---function)
   - [Function](#function)
 
 ---
@@ -54,4 +54,4 @@ document.getElementById("demo").innerHTML = toCelsius(); //return: function toCe
 
 ---
 
-[TOP](#javascript-functions)
+[TOP](#javascript---function)

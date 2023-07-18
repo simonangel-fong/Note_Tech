@@ -1,45 +1,77 @@
 # JavaScript
 
-[All Notes](../index.md)
+[All Notes](../../index.md)
 
 ---
 
-## Tech notes of JS
+## Resources
 
-- Tutorial: https://www.w3schools.com/js/default.asp
+- Udemy
+  https://www.udemy.com/course/python-and-django-full-stack-web-developer-bootcamp/
+
+- Reference:
+  https://www.w3schools.com/js/default.asp
+
+---
+
+## Course: Humber college
+
+- Course: Web Programming and Design
+
+  - Semester: Fall 2022
+  - Course ID: ITC_5101-0GC
+  - Instructor: Professor Gill
+
+- Course: XML and Java Script
+  - Semester: Winter 2023
+  - Course ID: ITC-5202
+  - Instructor: Oleksii Kachan
 
 ---
 
 ## Catalog
 
-- Fundamental
+- [Fundamental](./fundamental/fumdamental.md)
 
-  - [Statements](./fundamental/statement.md)
-  - [Syntax](./fundamental/syntax.md)
-  - [Comment](./fundamental/comment.md)
   - [Variable](./fundamental/variable.md)
   - [Operator](./fundamental/operator.md)
 
-- [Function](./function/function.md)
-
-  - [Event](./function/event.md)
-
-- [Datatype](./fundamental/data_types.md)
-
+- [Datatype](./datatype/data_types.md)
+  - Boolean
+    - [Boolean](./datatype/boolean.md)
   - String
 
     - [String](./datatype/string.md)
-    - [String Method Example](./datatype/string_method.md)
+    - [String Method](./datatype/string_method.md)
 
   - Number
 
     - [Number](./datatype/number.md)
+    - [Number Method](./datatype/number_method.md)
     - [BigInt](./datatype/bigInt.md)
 
   - Object
 
     - [Object](./datatype/object.md)
-    - [`this`](./datatype/this.md)
+
+  - Array
+    - [Array](./datatype/array.md)
+    - [Array Method](./datatype/array_method.md)
+
+- Control Statement
+  - [Conditional Statement]
+
+- [Function](./function/function.md)
+
+  - [Event](./function/event.md)
+
+---
+
+## Note
+
+NaN: not a number.
+undefined: create something but never defined.
+null: create a variable and assign it nothing or null.
 
 ---
 

@@ -21,8 +21,8 @@
 - Programming Language
 
   - [ ] [Python](./Programming_Language/python/index.md)
+  - [ ] [JavaScript](./Programming_Language/javascript/index.md)
   - [ ] Java
-  - [ ] JavaScript
 
 - OS
 
@@ -41,9 +41,9 @@
 - Web
 
   - [ ] Django
-  - [ ] [HTML](./Web/html/index.md)
-  - [ ] [CSS](./Web/css/index.md)
-  - [ ] [Bootstrap](./Web/bootstrap/index.md)
+  - [x] [HTML](./Web/html/index.md)
+  - [x] [CSS](./Web/css/index.md)
+  - [x] [Bootstrap](./Web/bootstrap/index.md)
   - [ ] React
 
 - Data Analytics

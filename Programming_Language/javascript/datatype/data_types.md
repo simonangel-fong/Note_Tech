@@ -1,19 +1,17 @@
-# JavaScript Data Types
+# JavaScript - Data Types
 
 [Back](../index.md)
 
-- [JavaScript Data Types](#javascript-data-types)
+- [JavaScript - Data Types](#javascript---data-types)
   - [Data Types](#data-types)
-  - [JavaScript Types are Dynamic](#javascript-types-are-dynamic)
-  - [Strings](#strings)
-  - [Numbers](#numbers)
-  - [Exponential Notation](#exponential-notation)
-  - [BigInt](#bigint)
-  - [Boolean](#boolean)
-  - [Arrays](#arrays)
-  - [Objects](#objects)
-  - [typeof Operator](#typeof-operator)
-  - [Undefined](#undefined)
+  - [`typeof` Operator](#typeof-operator)
+    - [Strings](#strings)
+    - [Numbers](#numbers)
+    - [BigInt](#bigint)
+    - [Boolean](#boolean)
+    - [Arrays](#arrays)
+    - [Objects](#objects)
+    - [Undefined](#undefined)
 
 ---
 
@@ -29,67 +27,79 @@
   6. Null
   7. Symbol
   8. Object
-
-- The Object Datatype
-
-  1. An object
-  2. An array
-  3. A date
+     1. An object
+     2. An array
+     3. A date
 
 - A JavaScript variable can hold **any type of data**.
 
-```js
-// Numbers:
-let length = 16;
-let weight = 7.5;
+  ```js
+  // Numbers:
+  let length = 16;
+  let weight = 7.5;
 
-// Strings:
-let color = "Yellow";
-let lastName = "Johnson";
+  // Strings:
+  let color = "Yellow";
+  let lastName = "Johnson";
 
-// Booleans
-let x = true;
-let y = false;
+  // Booleans
+  let x = true;
+  let y = false;
 
-// Object:
-const person = { firstName: "John", lastName: "Doe" };
+  // Object:
+  const person = { firstName: "John", lastName: "Doe" };
 
-// Array object:
-const cars = ["Saab", "Volvo", "BMW"];
+  // Array object:
+  const cars = ["Saab", "Volvo", "BMW"];
 
-// Date object:
-const date = new Date("2022-03-25");
-```
+  // Date object:
+  const date = new Date("2022-03-25");
+  ```
 
 - When adding a number and a string, JavaScript will treat the number as a string.
 
-- JavaScript evaluates expressions from left to right. Different sequences can produce different results
+  - JavaScript evaluates expressions from left to right. Different sequences can produce different results
+
+  ```js
+  let x = 16 + "Volvo"; //16Volvo
+
+  let x = "Volvo" + 16; //Volvo16
+
+  let x = 16 + 4 + "Volvo"; // 20Volvo
+
+  let x = "Volvo" + 16 + 4; // Volvo164
+  ```
+
+- **JavaScript Types are Dynamic**
+
+  - JavaScript has **dynamic types**. This means that the same variable can be used to hold different data types.
+
+  ```js
+  let x; // Now x is undefined
+  x = 5; // Now x is a Number
+  x = "John"; // Now x is a String
+  ```
+
+---
+
+## `typeof` Operator
+
+- The typeof operator returns the type of a variable or an expression.
 
 ```js
-let x = 16 + "Volvo"; //16Volvo
-
-let x = "Volvo" + 16; //Volvo16
-
-let x = 16 + 4 + "Volvo"; // 20Volvo
-
-let x = "Volvo" + 16 + 4; // Volvo164
+typeof ""; // Returns "string"
+typeof "John"; // Returns "string"
+typeof "John Doe"; // Returns "string"
+typeof 0; // Returns "number"
+typeof 314; // Returns "number"
+typeof 3.14; // Returns "number"
+typeof 3; // Returns "number"
+typeof (3 + 4); // Returns "number"
 ```
 
 ---
 
-## JavaScript Types are Dynamic
-
-- JavaScript has **dynamic types**. This means that the same variable can be used to hold different data types.
-
-```js
-let x; // Now x is undefined
-x = 5; // Now x is a Number
-x = "John"; // Now x is a String
-```
-
----
-
-## Strings
+### Strings
 
 - A string (or a text string) is a series of characters.
 - Strings are written with quotes. You can use **single or double quotes**.
@@ -109,26 +119,24 @@ let answer3 = 'He is called "Johnny"';
 
 ---
 
-## Numbers
+### Numbers
 
 - All JavaScript numbers are stored as decimal numbers (**floating point**).
 
 - Numbers can be written with, or without decimals
 
----
+- **Exponential Notation**
 
-## Exponential Notation
+  - Extra large or extra small numbers can be written with scientific (exponential) notation.
 
-- Extra large or extra small numbers can be written with scientific (exponential) notation.
-
-```js
-let y = 123e5; // 12300000
-let z = 123e-5; // 0.00123
-```
+  ```js
+  let y = 123e5; // 12300000
+  let z = 123e-5; // 0.00123
+  ```
 
 ---
 
-## BigInt
+### BigInt
 
 - All JavaScript numbers are stored in a a 64-bit floating-point format.
 
@@ -136,7 +144,7 @@ let z = 123e-5; // 0.00123
 
 ---
 
-## Boolean
+### Boolean
 
 - Booleans can only have two values: true or false.
 
@@ -144,7 +152,7 @@ let z = 123e-5; // 0.00123
 
 ---
 
-## Arrays
+### Arrays
 
 - JavaScript arrays are written with **square brackets**.
 
@@ -158,7 +166,7 @@ const cars = ["Saab", "Volvo", "BMW"];
 
 ---
 
-## Objects
+### Objects
 
 - JavaScript objects are written with curly braces `{}`.
 
@@ -175,24 +183,7 @@ const person = {
 
 ---
 
-## typeof Operator
-
-- The typeof operator returns the type of a variable or an expression.
-
-```js
-typeof ""; // Returns "string"
-typeof "John"; // Returns "string"
-typeof "John Doe"; // Returns "string"
-typeof 0; // Returns "number"
-typeof 314; // Returns "number"
-typeof 3.14; // Returns "number"
-typeof 3; // Returns "number"
-typeof (3 + 4); // Returns "number"
-```
-
----
-
-## Undefined
+### Undefined
 
 - In JavaScript, a variable **without a value**, has the value `undefined`. The type is also undefined.
 - Any variable can be emptied, by setting the value to undefined. The type will also be undefined.
