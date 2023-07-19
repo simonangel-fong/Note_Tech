@@ -65,15 +65,39 @@ console.log(toCelsius()); //NaN
 - Syntax:
 
 ```js
-// the function has only one statement
-const fun1 = () => returnValue; // not para
-const fun2 = (para, para) => computeResult; // arguements
-
-//
-const fun3 = (para, para) => {
-  // function code
-  return computeResult;
+// arrow function with body and return
+const funName = (paraList) => {
+  // function body
+  return returnVal;
 };
+
+// arrow function that only returns value
+const funName = () => returnVal; //without parameters
+const funName = (paraList) => returnVal; //with parameters
+
+// call arrow function
+funName();
+
+
+// High-Order Function: Function that excepts other functions as arguments
+const funName = (paraFun) = {
+  paraFun();
+  return returnVale;
+}
+
+const argFun = (para)={
+  // function body
+  return returnVal;
+}
+
+// call high-order function with named function
+funName(argFun);
+
+// call high-order function with anonymous function
+funName(()=>{
+  // anonymous function body
+})
+
 ```
 
 - `this`:

@@ -1,2 +1,1 @@
-let code = 'console.log("ggdgd")'
-eval(code);
+console.log("\n-------- fetch(): Example --------\n");

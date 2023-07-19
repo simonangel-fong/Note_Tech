@@ -40,6 +40,7 @@
 ### Creating an Array
 
 - Using `const`
+
   - It defines a **constant reference to** an array.
   - Because of this, we can still change the elements of a constant array.
 
@@ -114,10 +115,6 @@ fruits[fruits.length] = "Lemon"; // Adds a new element (Lemon) to fruits
 
 console.log(fruits); //[ 'Banana', 'Orange', 'Apple', 'Lemon' ]
 ```
-
----
-
-
 
 ---
 

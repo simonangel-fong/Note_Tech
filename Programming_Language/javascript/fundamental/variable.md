@@ -13,6 +13,9 @@
     - [Redeclaring](#redeclaring)
     - [Block Scope](#block-scope)
     - [Hoisting](#hoisting-1)
+  - [Destructuring assignment](#destructuring-assignment)
+    - [Unpack Array](#unpack-array)
+    - [Unpack Object](#unpack-object)
 
 ---
 
@@ -332,6 +335,63 @@ const x = 10;
     document.getElementById("demo").innerHTML = err; //ReferenceError: Cannot access 'carName' before initialization
   }
 </script>
+```
+
+---
+
+## Destructuring assignment
+
+- `Destructuring assignment`
+  - a JavaScript expression that unpacks values from arrays, or properties from objects, into distinct variables.
+
+### Unpack Array
+
+```js
+// destructuring array
+const arr = [1, 2, 3, 4];
+const [a1, b1] = arr;
+// console.log(a1); //1
+// console.log(b1); //2
+
+const [a2, b2, c2, d2, e2] = arr;
+console.log(a2); //1
+console.log(b2); //2
+console.log(c2); //3
+console.log(d2); //4
+console.log(e2); //undefined
+
+const [a3, b3, ...c3] = arr;
+console.log(a3); //1
+console.log(b3); //2
+console.log(c3); //[ 3, 4 ]
+```
+
+### Unpack Object
+
+```js
+const obj01 = { b1: 2, a1: 1, c1: 3, d1: 4 };
+const { a1, b1 } = obj01; //相当于 a=obj.a
+// console.log(a1); //1
+// console.log(b1); //2
+
+const obj02 = { b3: 2, a2: 1, c2: 3, d2: 4 };
+const { a2, b2, c2, d2, e2 } = obj02;
+console.log(a2); //1
+console.log(b2); //2
+console.log(c2); //3
+console.log(d2); //4
+console.log(e2); //undefined, 因为 obj 没有 e2 的属性
+
+const obj03 = { b3: 2, a3: 1, c3: 3, d3: 4 };
+const { a3, b3, ...c3 } = obj03;
+console.log(a3); //1
+console.log(b3); //2
+console.log(c3); //{ c3: 3, d3: 4 }
+
+const obj04 = { b4: 2, a4: 1, c4: 3, d4: 4 };
+const { a4: x, b4: y } = obj04; //相当于 x=obj04.a4
+console.log(x); //1
+console.log(y); //2
 ```
 
 ---
