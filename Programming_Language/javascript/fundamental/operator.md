@@ -226,6 +226,25 @@ console.log(cars instanceof Array); // true
 console.log(cars instanceof Object); // true
 console.log(cars instanceof String); // false
 console.log(cars instanceof Number); // false
+
+function Person(fname, lname) {
+  this.firstName = fname;
+  this.lastName = lname;
+}
+
+class Car {
+  constructor(brand) {
+    this.carname = brand;
+  }
+}
+
+const p1 = new Person("John", "Doe");
+const car = new Car("Ford");
+
+console.log(p1 instanceof Person); //true
+console.log(car instanceof Person); //false
+console.log(car instanceof Car); //true
+console.log(p1 instanceof Car); //false
 ```
 
 ---

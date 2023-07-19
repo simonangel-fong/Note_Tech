@@ -35,35 +35,35 @@
 
   - [Variable](./fundamental/variable.md)
   - [Operator](./fundamental/operator.md)
+  - [`this`](./fundamental/this.md)
 
 - [Datatype](./datatype/data_types.md)
-  - Boolean
-    - [Boolean](./datatype/boolean.md)
-  - String
 
-    - [String](./datatype/string.md)
-    - [String Method](./datatype/string_method.md)
-
-  - Number
-
-    - [Number](./datatype/number.md)
-    - [Number Method](./datatype/number_method.md)
-    - [BigInt](./datatype/bigInt.md)
-
-  - Object
-
-    - [Object](./datatype/object.md)
-
-  - Array
-    - [Array](./datatype/array.md)
-    - [Array Method](./datatype/array_method.md)
+  - [Boolean](./datatype/boolean.md)
+  - [Number](./datatype/number.md)
+  - [BigInt](./datatype/bigInt.md)
+  - [String](./datatype/string.md)
 
 - Control Statement
-  - [Conditional Statement]
+
+  - [Conditional Statement](./control_statement/condition.md)
+  - [Loop Statement](./control_statement/loop.md)
 
 - [Function](./function/function.md)
 
   - [Event](./function/event.md)
+  - [String Method](./datatype/string_method.md)
+  - [Number Method](./datatype/number_method.md)
+  - [Array Method](./datatype/array_method.md)
+
+- [Object](./object/object.md)
+
+  - [Array](./object/array.md)
+
+- [Class](./class/class.md)
+
+  - [Module](./class/module.md)
+  - [JSON](./class/json.md)
 
 ---
 

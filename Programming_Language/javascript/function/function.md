@@ -4,6 +4,7 @@
 
 - [JavaScript - Function](#javascript---function)
   - [Function](#function)
+  - [Arrow Function](#arrow-function)
 
 ---
 
@@ -23,23 +24,27 @@ function name(parameter1, parameter2, parameter3) {
 
   - contain letters, digits, underscores, and dollar signs (same rules as variables).
 
-- Function **parameters** are listed inside the parentheses `()` in the function definition. 形参
+- **Parameters/Arguments**:
 
-- Function **arguments** are the <u>values received by the function</u> when it is invoked.实参
+  - Function **parameters** are listed inside the parentheses `()` in the function definition. 形参
+  - Function **arguments** are the <u>values received by the function</u> when it is invoked.实参
 
-- Inside the function, the arguments (the parameters) behave as **local variables**.
+- **Function Scope**
 
+  - Inside the function, the arguments (the parameters) behave as **local variables**.
   - Local variables can only be accessed from **within the function**.
+  - Local variables are **created** when a function **starts**, and **deleted** when the function is **completed**.
+  - Since local variables are only recognized inside their functions, variables with the **same name** can be used in different functions.
 
 - **Return**:
 
   - When JavaScript reaches a return statement, the function will **stop executing**.
-  - Since local variables are only recognized inside their functions, variables with the **same name** can be used in different functions.
-  - Local variables are **created** when a function **starts**, and **deleted** when the function is **completed**.
 
 - **reuse code**:
+
   - Define the code once, and use it many times.
   - use the same code many times with different arguments, to produce different results.
+
 - **Return function object**:
   - Accessing a function without `()` will **return the function object** instead of the function result.
 
@@ -48,9 +53,31 @@ function toCelsius(fahrenheit) {
   return (5 / 9) * (fahrenheit - 32);
 }
 
-document.getElementById("demo").innerHTML = toCelsius(77); //return calculated result;
-document.getElementById("demo").innerHTML = toCelsius(); //return: function toCelsius(f) { return (5/9) * (f-32); }
+console.log(toCelsius); //[Function: toCelsius]
+console.log(toCelsius(77)); //25
+console.log(toCelsius()); //NaN
 ```
+
+---
+
+## Arrow Function
+
+- Syntax:
+
+```js
+// the function has only one statement
+const fun1 = () => returnValue; // not para
+const fun2 = (para, para) => computeResult; // arguements
+
+//
+const fun3 = (para, para) => {
+  // function code
+  return computeResult;
+};
+```
+
+- `this`:
+  - With arrow functions the `this` keyword always represents the **object that defined the arrow function**.
 
 ---
 

@@ -4,6 +4,7 @@
 
 - [JavaScript - Data Types](#javascript---data-types)
   - [Data Types](#data-types)
+  - [JavaScript Primitives](#javascript-primitives)
   - [`typeof` Operator](#typeof-operator)
     - [Strings](#strings)
     - [Numbers](#numbers)
@@ -17,7 +18,22 @@
 
 ## Data Types
 
-- JavaScript has 8 Datatypes
+## JavaScript Primitives
+
+- `primitive value`
+
+  - a value that has **no properties or methods**.
+  - `3.14` is a `primitive value`.
+
+  - **Immutable**
+    - `Primitive values` are immutable (they are hardcoded and cannot be changed).
+    - if `x = 3.14`, you can change the value of `x`, but you cannot change the value of `3.14`.
+
+- `primitive data type`
+
+  - data that has a `primitive value`.
+
+- JavaScript defines 7 types of primitive data types:
 
   1. String
   2. Number
@@ -26,10 +42,12 @@
   5. Undefined
   6. Null
   7. Symbol
-  8. Object
-     1. An object
-     2. An array
-     3. A date
+
+- Object contain values
+
+  1.  An object
+  2.  An array
+  3.  A date
 
 - A JavaScript variable can hold **any type of data**.
 

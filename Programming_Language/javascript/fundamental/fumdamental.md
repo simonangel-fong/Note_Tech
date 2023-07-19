@@ -11,6 +11,14 @@
     - [Keywords](#keywords)
     - [Operators](#operators)
     - [Expressions](#expressions)
+  - [Scope](#scope)
+    - [Block Scope](#block-scope)
+    - [Function scope](#function-scope)
+    - [Global Scope](#global-scope)
+    - [The Lifetime of JavaScript Variables](#the-lifetime-of-javascript-variables)
+  - [Hoisting](#hoisting)
+  - [Strict Mode: `use strict`](#strict-mode-use-strict)
+  - [Debugging](#debugging)
 
 ---
 
@@ -161,6 +169,238 @@
   - a combination of values, variables, and operators, which computes to a value.
   - The **computation** is called an `evaluation`.
   - The values can be of **various types**, such as numbers and strings.
+
+---
+
+## Scope
+
+- `Scope`:
+
+  - determines the **accessibility (visibility)** of variables.
+
+- JavaScript has 3 types of scope:
+  - `Block` scope
+  - `Function` scope
+  - `Global` scope
+
+---
+
+### Block Scope
+
+- `var` keyword can **NOT have block scope**.
+
+  - Variables declared inside a `{ }` block **can** be accessed from outside the block.
+
+  ```js
+  {
+    var x = 10;
+  }
+  console.log(x); //10
+  ```
+
+- `let` and `const` provide Block Scope in JavaScript.
+
+  - Variables **declared inside** a `{ }` block **cannot be accessed from outside** the block.
+
+  ```js
+  {
+    let x = 10;
+    const y = 9;
+  }
+  console.log(x); // ReferenceError: x is not defined
+  console.log(y); // ReferenceError: y is not defined
+  ```
+
+---
+
+### Function scope
+
+Function Arguments
+
+- `Local variables`
+
+  - Variables declared within a JavaScript function, become **LOCAL** to the function.
+
+- `Local variables` have `Function Scope`.
+
+  - only be accessed from **within** the function.
+  - not accessible (visible) from **outside** the function.
+  - Each function creates a **new** scope.
+    - `Local variables` are **created** when a function **starts**, and **deleted** when the function is **completed**.
+  - `var`, `let` and `const` are quite similar when declared inside a function.
+  - `Function arguments (parameters)` work as `local variables` inside functions.
+
+- Since local variables are only recognized inside their functions, variables with the **same name** can be used in different functions.
+
+```js
+function myFunction() {
+  var carName = "Volvo"; // Function Scope
+}
+function myFunction() {
+  let carName = "Volvo"; // Function Scope
+}
+function myFunction() {
+  const carName = "Volvo"; // Function Scope
+}
+```
+
+---
+
+### Global Scope
+
+- `Global Variables`
+
+  - A variable declared outside a function, becomes **GLOBAL**.
+  - can be accessed from **anywhere** in a JavaScript program.
+
+- Variables declared **Globally** (outside any function) have `Global Scope`.
+
+  - All scripts and functions on a web page can access it.
+  - Variables declared with `var`, `let` and `const` are quite similar when declared outside a block.They all have `Global Scope`.
+
+- **Automatically Global**
+
+  - If you assign a value to a variable that **has not been declared**, it will automatically become a GLOBAL variable.
+  - In "Strict Mode", undeclared variables are **not** automatically global.
+
+  ```js
+  myFunction();
+
+  // code here can use carName
+
+  function myFunction() {
+    carName = "Volvo";
+    //This code example will declare a global variable carName, even if the value is assigned inside a function.
+  }
+  ```
+
+- **Global Variables in HTML**
+
+  - With JavaScript, the `global scope` is the **JavaScript environment**.
+  - In HTML, the `global scope` is the **window object**.
+  - Global variables defined with the `var` keyword belong to the **window object**.
+  - Global variables defined with the `let` keyword do **not** belong to the window object
+  - **Do NOT** create `global variables` unless you intend to.
+    - global variables (or functions) can overwrite window variables (or functions).
+    - Any function, including the window object, can overwrite global variables and functions.
+
+---
+
+### The Lifetime of JavaScript Variables
+
+- The lifetime of a JavaScript variable **starts** when it is **declared**.
+- Function (local) variables are **deleted** when the function is **completed**.
+- In a web browser, global variables are **deleted** when you **close** the browser window (or tab).
+
+---
+
+## Hoisting
+
+- `Hoisting`
+
+  - JavaScript's default behavior of **moving all declarations to the top** of the current scope (to the top of the current script or the current function).
+
+- In JavaScript, a variable can be **declared after** it has been used.
+- In other words; a variable can be **used before** it has been declared.
+- JavaScript in `strict mode` does **not allow**variables to be used if they are not declared.
+
+- `var` variable can be used before declared
+
+  ```js
+  x = 5; // Assign 5 to x
+  console.log(x); //5
+
+  var x; // Declare x
+  ```
+
+- Using a `let` variable before declared will result in a `ReferenceError`.
+
+  ```js
+  x = 5; //ReferenceError: Cannot access 'x' before initialization
+  let x; // Declare x
+  ```
+
+- Using a `const` variable before declared will result in a `ReferenceError`.
+
+  ```js
+  x = 5;  //SyntaxError: Missing initializer in const declaration
+  const x; // Declare x
+  ```
+
+---
+
+## Strict Mode: `use strict`
+
+- `use strict`
+
+  - Defines that JavaScript code should be executed in "strict mode".
+
+- **Declaring Strict Mode**
+
+- adding "use strict"; to the **beginning** of a script or a function
+-
+- Declared at the beginning of a script
+
+  - it has global scope (all code in the script will execute in strict mode).
+
+```js
+"use strict";
+// x = 3.14; // ReferenceError: x is not defined
+
+myFunction();
+
+function myFunction() {
+  y = 3.14; // ReferenceError: y is not defined
+}
+```
+
+- Declared inside a function
+  - it has local scope (only the code inside the function is in strict mode):
+
+```js
+x = 3.14; // This will not cause an error.
+myFunction();
+
+function myFunction() {
+  "use strict";
+  y = 3.14; // ReferenceError: y is not defined
+}
+```
+
+- **Not allowed**
+  - Using a variable/object, **without declaring**
+  - **Deleting** a variable (or object)
+  - **Deleting** a function
+  - Duplicating a **parameter name**
+  - Octal numeric literals
+  - Octal escape characters
+  - Writing to a read-only property
+  - Writing to a get-only property
+  - Deleting an undeletable property
+  - `eval`, `arguments`,`with` cannot be used as a variable
+  - `eval()` is not allowed to create variables in the scope from which it was called.
+  - `this`
+    - The `this` keyword refers to the object that called the function.
+    - If the object is not specified, functions in strict mode will return `undefined`.
+
+---
+
+## Debugging
+
+- `code debugging`
+
+  - Searching for (and fixing) errors in programming code
+
+- `debugger` Keyword
+  - stops the execution of JavaScript, and calls (if available) the debugging function.
+
+```html
+<script>
+  let x = 15 * 5;
+  debugger; // stop execution
+  console.log(x);
+</script>
+```
 
 ---
 
