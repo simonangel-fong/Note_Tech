@@ -53,9 +53,9 @@
 
   - [Event](./function/event.md)
   - [Asynchronous Function](./function/async_func.md)
-  - [String Method](./datatype/string_method.md)
-  - [Number Method](./datatype/number_method.md)
-  - [Array Method](./datatype/array_method.md)
+  - [String Method](./function/string_method.md)
+  - [Number Method](./function/number_method.md)
+  - [Array Method](./function/array_method.md)
 
 - [Object](./object/object.md)
 
@@ -67,6 +67,7 @@
   - [JSON](./class/json.md)
 
 - [Web APIs](./web_api/api.md)
+- [DOM](./dom/dom.md)
 
 ---
 

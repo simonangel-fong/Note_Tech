@@ -215,12 +215,6 @@ console.log("4");
 // 3
 ```
 
-- Example: 根据 then 延迟
-
-```js
-
-```
-
 ---
 
 ### Chaining
@@ -231,7 +225,6 @@ console.log("4");
 - `.finally()`: executes without regard to whether the promise was fulfilled or rejected.
 
 ```js
-console.log("\n-------- Promise --------\n");
 console.log("\n-------- Promise --------\n");
 
 // Promise

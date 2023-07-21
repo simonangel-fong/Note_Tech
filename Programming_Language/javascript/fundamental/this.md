@@ -12,13 +12,14 @@
 
 - The `this` keyword refers to different objects depending on how it is used:
 
-  | Location              | Refer to                        |
-  | --------------------- | ------------------------------- |
-  | Alone                 | global object                   |
-  | function              | global object                   |
-  | function(strict mode) | undefined                       |
-  | event handlers        | element that received the event |
-  | object method         | object                          |
+  | Location                      | Refer to                        |
+  | ----------------------------- | ------------------------------- |
+  | Alone                         | global object                   |
+  | function                      | global object                   |
+  | function(strict mode)         | undefined                       |
+  | event handlers                | element that received the event |
+  | object method                 | object                          |
+  | object method(arrow function) | undefined                       |
 
 - **Alone**: `global object`
 

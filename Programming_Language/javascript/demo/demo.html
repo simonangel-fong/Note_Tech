@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="form" action="#" method="get">
+      <p id="demo">Submit</p>
+      <input type="text" name="search" id="search" />
+      <input type="submit" value="Submit" />
+    </form>
+
+    <!-- <script src="demo.js"></script> -->
+    <script>
+      const form = document.querySelector("#form");
+      const demo = document.querySelector("#demo");
+
+      // mouse over
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        demo.innerText = "Submit prevented";
+      });
+    </script>
+  </body>
+</html>

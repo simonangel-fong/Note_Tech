@@ -10,6 +10,8 @@
     - [Adding New Elements](#adding-new-elements)
   - [`.length`:Length of Array](#lengthlength-of-array)
   - [Looping Array Elements](#looping-array-elements)
+    - [`for` loop](#for-loop)
+    - [`.forEach()` function](#foreach-function)
 
 ---
 
@@ -32,8 +34,16 @@
   ```
 
 - The Difference Between Arrays and Objects
+
   - In JavaScript, arrays use **numbered indexes**.
   - In JavaScript, objects use **named indexes**.
+
+- The elements in an array can be different types.
+
+  ```js
+  let arr = [1, "2", null, { name: "John" }];
+  console.log(arr); //[ 1, '2', null, { name: 'John' } ]
+  ```
 
 ---
 
@@ -129,7 +139,7 @@ let length = fruits.length; //4
 
 ## Looping Array Elements
 
-- Using `for` loop
+### `for` loop
 
 ```js
 console.log("\n-------- Array: for loop --------\n");
@@ -144,7 +154,9 @@ for (let i = 0; i < fruits.length; i++) {
 // 3 Mango
 ```
 
-- Using `.forEach()` function
+---
+
+### `.forEach()` function
 
 ```js
 console.log("\n-------- Array: .forEach() --------\n");

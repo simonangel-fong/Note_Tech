@@ -23,7 +23,6 @@
 | ---------------------- | --------- |
 | condition is `true`    | `if`      |
 | condition is `false`   | `else`    |
-| condition is `false`   | `else`    |
 | new condition          | `else if` |
 | alternative conditiona | `switch`  |
 

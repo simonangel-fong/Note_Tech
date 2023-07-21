@@ -95,17 +95,17 @@
 
 ## Comparison Operators
 
-| Operator | Description                       |
-| -------- | --------------------------------- |
-| `==`     | equal to                          |
-| `===`    | equal value and equal type        |
-| `!=`     | not equal                         |
-| `!==`    | not equal value or not equal type |
-| `>`      | greater than                      |
-| `<`      | less than                         |
-| `>=`     | greater than or equal to          |
-| `<=`     | less than or equal to             |
-| `?`      | ternary operator                  |
+| Operator | Description                                  |
+| -------- | -------------------------------------------- |
+| `==`     | equal to                                     |
+| `===`    | `Strict equality`,equal value and equal type |
+| `!=`     | not equal                                    |
+| `!==`    | not equal value or not equal type            |
+| `>`      | greater than                                 |
+| `<`      | less than                                    |
+| `>=`     | greater than or equal to                     |
+| `<=`     | less than or equal to                        |
+| `?`      | ternary operator                             |
 
 ---
 
@@ -172,13 +172,13 @@ variablename = condition ? value1 : value2;
 
 - The `typeof` operator returns the type of a variable, object, function or expression.
 
-| Target      | `typeof`  |
-| ----------- | --------- |
-| `undefined` | undefined |
-| `NaN`       | number    |
-| `null`      | object    |
-| Array       | object    |
-| Date        | object    |
+| Target      | `typeof`      |
+| ----------- | ------------- |
+| `undefined` | `"undefined"` |
+| `NaN`       | `"number"`    |
+| `null`      | `"object"`    |
+| Array       | `"object"`    |
+| Date        | `"object"`    |
 
 ---
 

@@ -531,6 +531,21 @@ arr.forEach(function(currentValue, index, arr), thisValue);
 console.log("\n-------- Array: forEach() --------\n");
 
 const fruits = ["apple", "orange", "cherry"];
+
+// using callback function
+fruits.forEach(console.log);
+// apple 0 [ 'apple', 'orange', 'cherry' ]
+// orange 1 [ 'apple', 'orange', 'cherry' ]
+// cherry 2 [ 'apple', 'orange', 'cherry' ]
+
+// define a callback function
+const cb = (itm) => console.log(itm);
+fruits.forEach(cb);
+// apple
+// orange
+// cherry
+
+// using anonymous function
 fruits.forEach((itm) => {
   console.log(itm);
 });

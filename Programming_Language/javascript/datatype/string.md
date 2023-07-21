@@ -4,6 +4,7 @@
 
 - [JavaScript - String](#javascript---string)
   - [String](#string)
+    - [Immutalbe](#immutalbe)
     - [Escape Character](#escape-character)
     - [String: Multiple lines text](#string-multiple-lines-text)
     - [Strings as Objects](#strings-as-objects)
@@ -20,7 +21,26 @@
   - single or double quotes
   - use quotes inside a string, as long as they don't match the quotes surrounding the string
 
+- Strings are **immutable**
+
+  - once a string is created, its contents cannot be changed.
+
+  ```js
+  let str = "abc";
+  console.log(str[0]); // a
+  str[0] = "z";
+  console.log(str[0]); // a
+  console.log(str); // abc
+  //the string is not changed due to immutability.
+
+  str = "zyx";
+  console.log(str); // zyx
+  // here does not change the string, but change the value of variable. The old value is still in memory.
+  ```
+
 ---
+
+### Immutalbe
 
 ### Escape Character
 
