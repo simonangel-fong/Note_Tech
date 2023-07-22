@@ -69,13 +69,9 @@
 - [Web APIs](./web_api/api.md)
 - [DOM](./dom/dom.md)
 
----
-
-## Note
-
-NaN: not a number.
-undefined: create something but never defined.
-null: create a variable and assign it nothing or null.
+- Legacy Notes
+  - [ajax](./legacy/jq_ajax.md)
+  - [read file](./legacy/js_filereader.md)
 
 ---
 

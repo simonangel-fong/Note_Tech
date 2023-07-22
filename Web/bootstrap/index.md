@@ -30,7 +30,7 @@
   - [Text](./text.md)
   - [Box Model](./box_model.md)
   - [Grid](./grid.md)
-  - [Layout](./Layout.md)
+  - [Layout](./layout.md)
 
 - [Form](./form.md)
 

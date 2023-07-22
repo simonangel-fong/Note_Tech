@@ -1,17 +1,5 @@
 # 技术笔记
 
-- Priority
-
-  - [x] AWS CCP
-  - [ ] DSA
-  - [x] SQL
-  - [ ] Python
-  - [ ] package
-    - [ ] django
-    - [ ] Numpy
-    - [ ] Pandas
-    - [ ] OpenCV
-
 - Fundamental
 
   - [ ] Statictics
@@ -21,7 +9,7 @@
 - Programming Language
 
   - [ ] [Python](./Programming_Language/python/index.md)
-  - [ ] [JavaScript](./Programming_Language/javascript/index.md)
+  - [x] [JavaScript](./Programming_Language/javascript/index.md)
   - [ ] Java
 
 - OS
@@ -40,11 +28,13 @@
 
 - Web
 
-  - [ ] Django
   - [x] [HTML](./Web/html/index.md)
   - [x] [CSS](./Web/css/index.md)
   - [x] [Bootstrap](./Web/bootstrap/index.md)
+  - [ ] [jQuery](./Web/bootstrap/index.md)
   - [ ] React
+  - [ ] Django
+  - Project: [tic toc toe](./Programming_Language/javascript/tic_tac_toe/tic_tac_toe.html)
 
 - Data Analytics
 
@@ -59,5 +49,7 @@
   - [ ] Yolo
   - [ ] Tensorflow
   - [ ] Pytorch
+
+-
 
 [Notes @ Humber College - ITS](https://simonangel-fong.github.io/Humber_ITS_Note/)
