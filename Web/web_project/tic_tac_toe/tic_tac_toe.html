@@ -13,22 +13,21 @@
     <link rel="stylesheet" href="game.css" />
   </head>
   <body class="container">
-    <div class="row">
-      <div
-        class="p-4 rounded-bottom align-middle"
-        style="background-color: #eee"
-      >
-        <div class="display-5">
-          Welcome to Tic Tac Toe!
-          <button type="button" class="btn btn-secondary btn-lg float-end">
+    <header class="p-3 rounded-bottom" style="background-color: #eee">
+      <div class="row">
+        <div class="col-lg-9 col-md-12 align-self-center">
+          <p class="display-6">Welcome to Tic Tac Toe!</p>
+        </div>
+        <div class="col-lg-3 col-md-12 text-center align-self-center">
+          <button type="button" class="btn btn-secondary btn-lg">
             Restart!
           </button>
         </div>
       </div>
-    </div>
+    </header>
     <div class="row pt-4">
       <div class="row">
-        <div class="col">
+        <div class="col-lg-3 col-md-12">
           <div class="row">
             <div class="col-12 d-flex justify-content-center pt-5">
               <p id="mark_black" class="text-center">X</p>
@@ -38,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-lg-6 col-md-12">
           <table class="mx-auto">
             <tr>
               <td></td>
@@ -57,7 +56,7 @@
             </tr>
           </table>
         </div>
-        <div class="col">
+        <div class="col-lg-3 col-md-12">
           <div class="row">
             <div class="col-12 d-flex justify-content-center pt-5">
               <p id="mark_white" class="text-center">O</p>
