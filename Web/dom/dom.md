@@ -1,8 +1,8 @@
-# Javascript - DOM
+# DOM
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Javascript - DOM](#javascript---dom)
+- [DOM](#dom)
   - [HTML DOM (Document Object Model)](#html-dom-document-object-model)
   - [Connect JS file](#connect-js-file)
   - [Document Object](#document-object)

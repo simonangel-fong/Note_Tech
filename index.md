@@ -31,10 +31,12 @@
   - [x] [HTML](./Web/html/index.md)
   - [x] [CSS](./Web/css/index.md)
   - [x] [Bootstrap](./Web/bootstrap/index.md)
-  - [ ] [jQuery](./Web/bootstrap/index.md)
+  - [x] [DOM](./Web/dom/dom.md)
+  - [x] [jQuery](./Web/jquery/index.md)
   - [ ] React
   - [ ] Django
-  - Project: [tic toc toe](./Programming_Language/javascript/tic_tac_toe/tic_tac_toe.html)
+  - Project: [Tic Toc Toe](./Web/web_project/tic_tac_toe/tic_tac_toe.html)
+  - Project: [Connect Four](./Web/web_project/connect_four/connect_four.html)
 
 - Data Analytics
 

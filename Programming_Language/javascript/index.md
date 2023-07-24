@@ -67,7 +67,6 @@
   - [JSON](./class/json.md)
 
 - [Web APIs](./web_api/api.md)
-- [DOM](./dom/dom.md)
 
 - Legacy Notes
   - [ajax](./legacy/jq_ajax.md)
