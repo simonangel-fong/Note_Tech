@@ -34,8 +34,12 @@
 - [Function](./function/function.md)
 
   - [Decorator](./function/decorator.md)
-  - [String Function](./function/string_function.md)
   - [Built-in Function](./function/built_in_func.md)
+  - [String Function](./function/string_function.md)
+  - [List Function](./function/list_func.md)
+  - [Tuple Function](./function/tuple_func.md)
+  - [Set Function](./function/set_func.md)
+  - [Dict Function](./function/dict_func.md)
   - [Magic Method](./function/magic_method.md)
   - [Recursion](./function/recursion.md)
 

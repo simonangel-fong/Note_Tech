@@ -8,8 +8,9 @@
     - [Declare multiple variables in one line](#declare-multiple-variables-in-one-line)
     - [Unpack a Collection](#unpack-a-collection)
   - [Variable Names](#variable-names)
-  - [Output Variables](#output-variables)
-  - [Global Variables](#global-variables)
+  - [Scope](#scope)
+    - [Output Variables](#output-variables)
+    - [Global Variables](#global-variables)
 
 ---
 
@@ -112,7 +113,9 @@ my_variable_name = "John"
 
 ---
 
-## Output Variables
+## Scope
+
+### Output Variables
 
 - The Python `print()` function is often used to output variables.
 
@@ -140,7 +143,7 @@ print(x, y)     #5 John
 
 ---
 
-## Global Variables
+### Global Variables
 
 - `global variables`: Variables that are created **outside of a function**.
 

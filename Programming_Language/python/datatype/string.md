@@ -140,6 +140,20 @@ print(b[2:]) # llo, World!
 print(b[-5:-2]) # orl
 ```
 
+- Slice a string with step
+  - `str[begin_index: last_index: step]`
+
+```py
+
+arr = "ABCDEFG"
+
+print(arr[::])  # ABCDEFG, grap all characters
+print(arr[::1])  # ABCDEFG, grap all characters
+print(arr[::2])  # ACEG, grap characters from beginning to the end with step of 2
+print(arr[::-1])  # GFEDCBA, with step of -1 means reverse all order
+print(arr[::-2])  # GECA, reverse with step of 2
+```
+
 ---
 
 ## String Function

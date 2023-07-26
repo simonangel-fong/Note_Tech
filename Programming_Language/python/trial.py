@@ -1,9 +1,13 @@
-print("\n--------Immutable--------")
+print("\n--------- setattr(object, attribute, value) --------\n")
 
-xVar = 'abc'
-print(id(xVar))
 
-xVar = 'xyz'
-print(id(xVar))
+class Person:
+    name = "John"
+    age = 36
+    country = "Norway"
 
-# 在内存中的地址不同, 显示xVar先后指向的不是相同的对象.
+
+print(getattr(Person, 'age'))   # 36
+
+setattr(Person, 'age', 40)
+print(getattr(Person, 'age'))   # 40

@@ -64,8 +64,6 @@
 
 - 2. `tuple()` Constructor
 
-- To create a tuple with only one item, you have to add a comma after the item, otherwise Python will not recognize it as a tuple.
-
   ```py
   print("\n--------Create a tuple--------\n")
 
@@ -76,7 +74,11 @@
   # tuple() Constructor
   xtuple = tuple(("apple", "banana", "cherry"))  # note the double round-brackets
   print(xtuple)   # ('apple', 'banana', 'cherry')
+  ```
 
+- To create a tuple with **only one item**, you have to add a **comma** after the item, otherwise Python will not recognize it as a tuple.
+
+  ```py
   xtuple = ("apple",)
   print(type(xtuple))  # <class 'tuple'>
 

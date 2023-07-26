@@ -7,13 +7,17 @@
     - [Set Methods](#set-methods)
     - [Create a set](#create-a-set)
     - [Add Items](#add-items)
+      - [`add()`: adds an element](#add-adds-an-element)
+      - [`update()`: adding items from another iterable.](#update-adding-items-from-another-iterable)
     - [Remove Item](#remove-item)
+      - [`discard(value)`](#discardvalue)
+      - [`pop()`](#pop)
+      - [`remove(item)`](#removeitem)
+      - [`clear()`](#clear)
+      - [`del` Operator](#del-operator)
+  - [`copy()`: copies the set](#copy-copies-the-set)
   - [Loop Set](#loop-set)
-  - [Check if Item Exists:`in`](#check-if-item-existsin)
-  - [Join Two Sets 并集](#join-two-sets-并集)
-  - [Keep ONLY the Duplicates 交集](#keep-only-the-duplicates-交集)
-  - [Keep All, But NOT the Duplicates 差集](#keep-all-but-not-the-duplicates-差集)
-  - [Check Subset](#check-subset)
+  - [`in` Operator: Check if Item Exists](#in-operator-check-if-item-exists)
 
 ---
 
@@ -129,18 +133,25 @@ print(xset)     # {'cherry', 'banana', 'apple'}
 
 ### Add Items
 
-- `add()`: add **one item** to a set
+#### `add()`: adds an element
 
-- `update()`: add **items** from another set into the current set.
-  - does not have to be a set, it can be any **iterable object** (tuples, lists, dictionaries etc.).
+- `add()`: add **one item** to a set
 
 ```py
 print("\n--------Add a Item:add()--------\n")
 xlist = {"apple", "banana", "cherry"}
 xlist.add("orange")
 print(xlist)    # {'cherry', 'orange', 'apple', 'banana'}
+```
 
+---
 
+#### `update()`: adding items from another iterable.
+
+- `update()`: add **items** from another set into the current set.
+  - does not have to be a set, it can be any **iterable object** (tuples, lists, dictionaries etc.).
+
+```py
 print("\n---------Add items: update()--------\n")
 xset = {"apple", "banana", "cherry"}
 yset = {"pineapple", "mango", "papaya"}
@@ -163,31 +174,13 @@ print(xset)     # {'papaya', 'banana', 'apple', 'cherry', 'pineapple', 'mango'}
 
 ### Remove Item
 
-- `remove()`: remove an item in a set
+#### `discard(value)`
 
-  - If the item to remove does not exist, remove() will raise an error.
+- remove an item in a set
 
-- `discard()`: remove an item in a set
-
-  - If the item to remove does not exist, discard() will NOT raise an error.
-
-- `pop()`: remove a random item
-
-  - return value: the removed item.
-
-- `clear()`: empties the set
-
-- `del` keyword: delete the tuple completely
+  - If the item to remove does not exist, `discard()` will NOT raise an error.
 
 ```py
-print("\n---------Remove a item--------\n")
-# .remove()
-xset = {"apple", "banana", "cherry"}
-xset.remove("banana")
-print(xset)
-
-# xset.remove("banana")       # KeyError: 'banana'
-
 # .discard()
 xset = {"apple", "banana", "cherry"}
 xset.discard("banana")
@@ -195,8 +188,17 @@ print(xset)
 
 xset.discard("banana")
 xset.discard("banana")
+```
 
+---
 
+#### `pop()`
+
+- remove a random item
+
+  - return value: the removed item.
+
+```py
 # .pop()
 xset = {"apple", "banana", "cherry"}
 x = xset.pop()            #
@@ -204,20 +206,63 @@ x = xset.pop()            #
 # x = xset.pop("banana")    # TypeError: set.pop() takes no arguments (1 given)
 print(xset)
 print(x)                    # a random item removed from set
+```
 
+---
 
+#### `remove(item)`
+
+- remove an item in a set
+
+  - If the item to remove does not exist, remove() will raise an error.
+
+```py
+# .remove()
+xset = {"apple", "banana", "cherry"}
+xset.remove("banana")
+print(xset)
+
+# xset.remove("banana")       # KeyError: 'banana'
+```
+
+---
+
+#### `clear()`
+
+- empties the set
+
+```py
 # clear()
 xset = {"apple", "banana", "cherry"}
 xset.clear()
 
 print(xset)     # set()
+```
 
+---
 
+#### `del` Operator
+
+- delete the tuple completely
+
+```py
 # del
 xset = {"apple", "banana", "cherry"}
 del xset
 
 # print(xset)     # NameError: name 'xset' is not defined
+```
+
+---
+
+## `copy()`: copies the set
+
+- copies the set
+
+```py
+x_set = {"apple", "banana", "cherry"}
+y_set = x_set.copy()
+print(y_set)    # {'banana', 'apple', 'cherry'}
 ```
 
 ---
@@ -238,149 +283,12 @@ for x in xset:
 
 ---
 
-## Check if Item Exists:`in`
+## `in` Operator: Check if Item Exists
 
 ```py
 xlist = {"apple", "banana", "cherry"}
 if "apple" in xlist:
   print("Yes, 'apple' is in the fruits list")
-```
-
----
-
-## Join Two Sets 并集
-
-- `update()`: inserts all the items from one set into another
-- `union()`: returns a new set containing all items from both sets
-- `|`: same as `union()`
-
-```py
-print("\n---------Join Set: union()--------\n")
-xset = {"apple", "banana", "cherry"}
-yset = {"pineapple", "mango", "papaya"}
-xset.union(yset)
-zset = xset.union(yset)
-
-print(xset)     # {'apple', 'cherry', 'banana'}
-print(zset)     # {'papaya', 'mango', 'pineapple', 'apple', 'cherry', 'banana'}
-
-
-print("\n---------Join Set: update()--------\n")
-xset = {"a", "b" , "c"}
-yset = {1, 2, 3}
-
-xset.update(yset)
-print(xset)     # {1, 2, 3, 'c', 'a', 'b'}
-
-
-print("\n---------Join Set: |--------\n")
-xSet = {"apple", "banana", "cherry"}
-ySet = {"google", "microsoft", "apple"}
-unionsection = xSet | ySet
-
-print(xSet)     # {'banana', 'apple', 'cherry'}
-print(ySet)     # {'microsoft', 'google', 'apple'}
-print(unionsection)     # {'cherry', 'google', 'banana', 'microsoft', 'apple'}
-```
-
----
-
-## Keep ONLY the Duplicates 交集
-
-- `intersection_update()`: keep only the items that are present in both sets.
-
-- `intersection()`: return a new set, that only contains the items that are present in both sets.
-
-- `&`: same as `intersection()`
-
-```py
-print("\n---------Keep ONLY the Duplicates--------\n")
-# intersection_update()
-x = {"apple", "banana", "cherry"}
-y = {"google", "microsoft", "apple"}
-x.intersection_update(y)        # update items in x, keep only duplicate items
-
-print(x)        # {'apple'}
-
-# intersection()
-x = {"apple", "banana", "cherry"}
-y = {"google", "microsoft", "apple"}
-z = x.intersection(y)        # will not update x, y, but return a new set.
-
-print(z)        # {'apple'}
-
-
-# &
-xSet = {"apple", "banana", "cherry"}
-ySet = {"google", "microsoft", "apple"}
-intersection = xSet & ySet
-
-print(xSet)     # {'banana', 'apple', 'cherry'}
-print(ySet)     # {'microsoft', 'google', 'apple'}
-print(intersection)     # {'apple'}
-```
-
----
-
-## Keep All, But NOT the Duplicates 差集
-
-- `symmetric_difference_update()`: keep only the elements that are NOT present in both sets.
-
-- `symmetric_difference()`: return a new set, that contains only the elements that are NOT present in both sets.
-
-- `-`: same as `symmetric_difference()`
-
-- Note: The values True and 1 are considered the same value in sets, and are treated as duplicates:
-
-```py
-print("\n---------Keep All, But NOT the Duplicates--------\n")
-# symmetric_difference_update()
-x = {"apple", "banana", "cherry"}
-y = {"google", "microsoft", "apple"}
-x.symmetric_difference_update(y)    # update x
-
-print(x)        # {'microsoft', 'google', 'banana', 'cherry'}
-
-
-# symmetric_difference()
-x = {"apple", "banana", "cherry"}
-y = {"google", "microsoft", "apple"}
-z = x.symmetric_difference(y)       # return a new set
-
-print(z)        # {'microsoft', 'google', 'banana', 'cherry'}
-
-
-x = {"apple", "banana", "cherry", True}
-y = {"google", 1, "apple", 2}
-z = x.symmetric_difference(y)       # {2, 'banana', 'google', 'cherry'}
-
-print(z)
-
-
-# -
-xSet = {"apple", "banana", "cherry"}
-ySet = {"google", "microsoft", "apple"}
-unionsection = xSet - ySet
-
-print(xSet)     # {'banana', 'apple', 'cherry'}
-print(ySet)     # {'microsoft', 'google', 'apple'}
-print(unionsection)     # {'cherry', 'banana'}
-```
-
----
-
-## Check Subset
-
-```py
-print("\n---------Check Subset--------\n")
-
-xSet = {"apple", "banana", "cherry"}
-ySet = {"apple", "banana"}
-print(xSet > ySet)      # True
-print(ySet > xSet)      # False
-
-print(xSet < ySet)      # False
-print(ySet < xSet)      # True
 ```
 
 ---
