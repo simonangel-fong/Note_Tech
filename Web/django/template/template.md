@@ -176,19 +176,19 @@
 
   - provide arbitrary **logic** in the rendering process.
 
-- Tags are surrounded by `{%` and `%}` like this
+- Tags are surrounded by {% and %} like this
 
 - Examples:
 
 ```django
-{% csrf_token %}
+__ csrf_token __
 
-{% cycle 'odd' 'even' %}    <!-- accept arguments -->
+__ cycle 'odd' 'even' __    <!-- accept arguments -->
 
 <!-- if -->
-{% if user.is_authenticated %}
+__ if user.is_authenticated __
   Hello, {{ user.username }}.
-{% endif %}
+__ endif __
 ```
 
 ---
@@ -213,7 +213,7 @@
 ### Comments
 
 - `Comments`
-- A `{% comment %}` tag provides multi-line comments.
+- A `__ comment __` tag provides multi-line comments.
 
 - Examples:
 
