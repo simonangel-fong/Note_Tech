@@ -176,7 +176,7 @@
 
   - provide arbitrary **logic** in the rendering process.
 
-- Tags are surrounded by {% %} like this
+- Tags are surrounded by { % % } like this
 
 - Examples:
 
