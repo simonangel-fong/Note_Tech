@@ -85,15 +85,9 @@
 ### Templates
 
 - In templates, use the **static template tag** to build the URL for the given relative path.
-
-```django
-<!-- add at the top of html codes -->
-{% load static %}
-
-<!-- using static tag to referencing static files -->
-<img src="{% static 'my_app/example.jpg' %}" alt="My image">
-<link rel="stylesheet" type="text/css" href="static '/Workout/carousel.css' " />
-```
+  - `{% load static %}`
+  - `<img src="{% static 'my_app/example.jpg' %}" alt="My image">`
+  - `<link rel="stylesheet" type="text/css" href="static '/Workout/carousel.css' " />`
 
 ---
 
