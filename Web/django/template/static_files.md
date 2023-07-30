@@ -91,7 +91,7 @@
 <!-- load static -->
 
 <!-- using static tag to referencing static files -->
-<img src="static 'my_app/example.jpg'" alt="My image"> <!-- should be in the middle of {% %} --->
+<img src="static 'my_app/example.jpg'" alt="My image"> <!-- without {} % signs due to github deploy --->
 <link rel="stylesheet" type="text/css" href="static '/Workout/carousel.css' " />
 ```
 
