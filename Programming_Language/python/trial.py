@@ -1,13 +1,16 @@
-print("\n--------- setattr(object, attribute, value) --------\n")
+from pathlib import Path
 
+f_path = Path(__file__)
+print(f_path.root)          # \
+print(f_path.anchor)        # c:\
 
-class Person:
-    name = "John"
-    age = 36
-    country = "Norway"
-
-
-print(getattr(Person, 'age'))   # 36
-
-setattr(Person, 'age', 40)
-print(getattr(Person, 'age'))   # 40
+print(f_path.parents)       # <WindowsPath.parents>
+[print(p) for p in f_path.parents]
+# c:\Users\simon\Documents\IIS\Tech_Notes\Programming_Language\python
+# c:\Users\simon\Documents\IIS\Tech_Notes\Programming_Language
+# c:\Users\simon\Documents\IIS\Tech_Notes
+# c:\Users\simon\Documents\IIS
+# c:\Users\simon\Documents
+# c:\Users\simon
+# c:\Users
+# c:\

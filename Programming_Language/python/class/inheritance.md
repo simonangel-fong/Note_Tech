@@ -13,9 +13,9 @@
 
 - `Inheritance` allows us to define a class that inherits all **the methods and properties** from another class.
 
-  - `Parent class`: the class being inherited from, also called `base class`.
+  - `Parent class` / `Base Class`: the class being inherited from, also called `base class`.
 
-  - `Child class`: the class that inherits from another class, also called `derived class`.
+  - `Child class` / `Derived Class`: the class that inherits from another class, also called `derived class`.
 
 ---
 

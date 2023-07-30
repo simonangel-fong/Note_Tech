@@ -3,26 +3,36 @@
 [Back](../index.md)
 
 - [Python - RegEx Library](#python---regex-library)
-  - [RegEx Module](#regex-module)
+  - [`RegEx`](#regex)
   - [RegEx Functions](#regex-functions)
+  - [Raw String Notation: `r"row_string"` Prefix](#raw-string-notation-rrow_string-prefix)
   - [Metacharacters](#metacharacters)
   - [Special Sequences](#special-sequences)
   - [Sets](#sets)
-  - [The `findall()` Function](#the-findall-function)
-  - [The search() Function](#the-search-function)
-  - [The split() Function](#the-split-function)
-  - [The sub() Function](#the-sub-function)
+  - [Flags](#flags)
   - [Match Object](#match-object)
 
 ---
 
-## RegEx Module
+## `RegEx`
 
-- A `RegEx`, or `Regular Expression`, is a sequence of characters that forms a search pattern.
+- `RegEx` / `Regular Expression`:
 
-  - `RegEx` can be used to check if a string contains the specified search pattern.
+  - a set of characters with highly specialized syntax used to find or match other characters or groups of characters.
 
-- `import re`
+- `re` Module
+
+  - Import
+    - `import re`
+  - Raise exception
+    - `re.error`
+
+- `metacharacters`
+
+  - characters with a special meaning when utilized in a regular expression
+
+- `Greedy repetitions`:
+  - cause the matching algorithm to attempt to replicate the `RE` **as many times as** feasible. If later elements of the sequence fail to match, the matching algorithm will retry with lesser repetitions.
 
 ---
 
@@ -37,42 +47,58 @@
 
 ---
 
+## Raw String Notation: `r"row_string"` Prefix
+
+- How to match a literal backslash and special escape sequences in **Python string literals** is a problem
+
+- The solution is to use Python’s **raw string notation** for regular expressions, in which backslashes are not handled in any special way in a string literal prefixed with `r`.
+
+- Example:
+
+  | Regular String  | Raw string     |
+  | --------------- | -------------- |
+  | `"ab\*"`        | `r"ab\*"`      |
+  | `"\\\\section"` | `r"\\section"` |
+  | `"\\w+\\s+\\1"` | `r"\w+\s+\1"`  |
+
+- The `r` prefix, **making the literal a raw string literal**.
+
+---
+
 ## Metacharacters
 
 - `Metacharacters` are characters with a special meaning.
 
-| Character | Description                                                                |                   |
-| --------- | -------------------------------------------------------------------------- | ----------------- | ------- |
-| `[]`      | A set of characters                                                        | `"[a-m]"`         |
-| `\`       | Signals a special sequence (can also be used to escape special characters) | `"\d"`            |
-| `.`       | Any character (except newline character)                                   | `"he..o"`         |
-| `^`       | Starts with                                                                | `"^hello"`        |
-| `$`       | Ends with                                                                  | `"planet$"`       |
-| `*`       | Zero or more occurrences                                                   | `"he.*o"`         |
-| `+`       | One or more occurrences                                                    | `"he.+o"`         |
-| `?`       | Zero or one occurrences                                                    | `"he.?o"`         |
-| `{}`      | Exactly the specified number of occurrences                                | `"he.{2}o"`       |
-| `         | `                                                                          | Either or `"falls | stays"` |
+| Character | Description                                                                |                              |
+| --------- | -------------------------------------------------------------------------- | ---------------------------- | ------- |
+| `^`       | **Caret** - Starts with                                                    | `"^hello"`                   |
+| `$`       | **Dolla** - Ends with                                                      | `"planet$"`                  |
+| `.`       | **Dot** - Any character (except newline character)                         | `"he..o"`                    |
+| `[]`      | **Bracket** - the set of characters                                        | `"[a-m]"`                    |
+| `?`       | **Question mark** - Zero or one occurrences                                | `"he.?o"`                    |
+| `+`       | **Plus** - One or more occurrences                                         | `"he.+o"`                    |
+| `*`       | **Asterisk** - Zero or more occurrences                                    | `"he.*o"`                    |
+| `{}`      | **Curly Braces** - Exactly the specified number of occurrences             | `"he.{2}o"`                  |
+| `\`       | Signals a special sequence (can also be used to escape special characters) | `"\d"`                       |
+| `         | `                                                                          | **Pipe** - Either or `"falls | stays"` |
 | `()`      | Capture and group                                                          |
 
 ---
 
 ## Special Sequences
 
-| Character | Description                                                                                                                              |                          |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| `\A`      | Returns a match if the specified characters are at the beginning of the string                                                           | `"\AThe"`                |
-| `\b`      | Returns a match where the specified characters are at the beginning or at the end of a word<br>                                          | `r"\bain"`<br>`r"ain\b"` |
-|           | (the "r" in the beginning is making sure that the string is being treated as a "raw string")                                             |                          |
-| `\B`      | Returns a match where the specified characters are present, but NOT at the beginning (or at the end) of a word<br>                       | `r"\Bain"`<br>`r"ain\B"` |
-|           | (the "r" in the beginning is making sure that the string is being treated as a "raw string")                                             |
-| `\d`      | Returns a match where the string contains digits (numbers from 0-9)                                                                      | `"\d"`                   |
-| `\D`      | Returns a match where the string DOES NOT contain digits                                                                                 | `"\D"`                   |
-| `\s`      | Returns a match where the string contains a white space character                                                                        | `"\s"`                   |
-| `\S`      | Returns a match where the string DOES NOT contain a white space character                                                                | `"\S"`                   |
-| `\w`      | Returns a match where the string contains any word characters (characters from a to Z, digits from 0-9, and the underscore \_ character) | `"\w"`                   |
-| `\W`      | Returns a match where the string DOES NOT contain any word characters                                                                    | `"\W"`                   |
-| `\Z`      | Returns a match if the specified characters are at the end of the string                                                                 | `"Spain\Z"`              |
+| Character | Matches                                                            |                          |
+| --------- | ------------------------------------------------------------------ | ------------------------ |
+| `\d`      | any digit character == `[0-9]`                                     | `"\d"`                   |
+| `\D`      | non-digit character == `[^0-9]`                                    | `"\D"`                   |
+| `\s`      | any white space character                                          | `"\s"`                   |
+| `\S`      | any character except the white space character                     | `"\S"`                   |
+| `\w`      | any alphanumeric character == `[a-zA-Z0-9]`                        | `"\w"`                   |
+| `\W`      | any characters except the alphanumeric character == `[^a-zA-Z0-9]` | `"\W"`                   |
+| `\A`      | the defined pattern at the start of the string                     | `"\AThe"`                |
+| `\b`      | the pattern at the beginning or at the end of a word               | `r"\bain"` / `r"ain\b"`  |
+| `\B`      | the opposite of \b.                                                | `r"\Bain"`<br>`r"ain\B"` |
+| `\Z`      | the pattern is at the end of the string                            | `"Spain\Z"`              |
 
 ---
 
@@ -80,115 +106,26 @@
 
 - A `set` is a set of characters inside a pair of square brackets `[]` with a special meaning
 
-| Set          | Description                                                                                                             |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `[arn]`      | Returns a match where one of the specified characters (a, r, or n) is present                                           |
-| `[a-n]`      | Returns a match for any lower case character, alphabetically between a and n                                            |
-| `[^arn]`     | Returns a match for any character EXCEPT a, r, and n                                                                    |
-| `[0123]`     | Returns a match where any of the specified digits (0, 1, 2, or 3) are present                                           |
-| `[0-9]`      | Returns a match for any digit between 0 and 9                                                                           |
-| `[0-5][0-9]` | Returns a match for any two-digit numbers from 00 and 59                                                                |
-| `[a-zA-Z]`   | Returns a match for any character alphabetically between a and z, lower case OR upper case                              |
-| `[+]`        | In sets, +, \*, ., \| , (), $,{} has no special meaning, so [+] means: return a match for any + character in the string |
+| Set          | Match                                                                  |
+| ------------ | ---------------------------------------------------------------------- |
+| `[arn]`      | any of the specified characters (a, r, or n)                           |
+| `[a-n]`      | alphabetically between a and n                                         |
+| `[^arn]`     | any character EXCEPT a, r, and n                                       |
+| `[0123]`     | any of the specified digits (0, 1, 2, or 3) are present                |
+| `[0-9]`      | any digit between 0 and 9                                              |
+| `[0-5][0-9]` | any two-digit numbers from 00 and 59                                   |
+| `[a-zA-Z]`   | any character alphabetically between a and z, lower case OR upper case |
+| `[+]`        | any `+` character in the string                                        |
 
 ---
 
-## The `findall()` Function
+## Flags
 
-- The list contains the matches **in the order** they are found.
-
-- If no matches are found, an **empty list** is returned
-
-```py
-print("\n--------findall()--------\n")
-
-import re
-
-txt = "The rain in Spain"
-xregex = re.findall("ai", txt)
-print(xregex)       # ['ai', 'ai']
-
-
-yregex = re.findall("Portugal", txt)
-print(yregex)       # []
-
-```
-
----
-
-## The search() Function
-
-- The `search()` function searches the string for a match, and **returns a Match object** if there is a match.
-  - If there is more than one match, only the **first occurrence** of the match will be returned.
-  - If no matches are found, the value `None` is returned.
-
-```py
-import re
-print("\n--------search()--------\n")
-
-txt = "The rain in Spain"
-
-xMatch = re.search("\s", txt)
-print("start:\t", xMatch.start())       # 3
-print("end:\t", xMatch.end())           # 4
-
-yMatch = re.search("PP", txt)
-# print(yMatch.start())       # AttributeError: 'NoneType' object has no attribute 'start'
-print("No match:\t", yMatch)            # None
-
-zMatch = re.search("ai", txt)
-if zMatch != None:
-    print("Matched:\t", zMatch.start())
-else:
-    print("Not matched:\t", zMatch)
-```
-
----
-
-## The split() Function
-
-- `split()`: returns a list where the string has been split at each match.
-- parameter
-  - `maxsplit`: control the number of occurrences
-
-```py
-import re
-print("\n--------split()--------\n")
-
-txt = "The rain in Spain"
-xspilt = re.split("\s", txt)
-print(xspilt)           # ['The', 'rain', 'in', 'Spain']
-
-yspilt = re.split("\s", txt, 1)
-print(yspilt)           # ['The', 'rain in Spain']
-
-```
-
----
-
-## The sub() Function
-
-- `sub()`: replaces the matches with the given text
-
-- parameter
-  - `count`: control the number of replacements
-
-```py
-import re
-print("\n--------sub()--------\n")
-
-txt = "The rain in Spain"
-xSub = re.sub("\s", "--", txt)
-print(xSub)         # The--rain--in--Spain
-
-txt = "The rain in Spain"
-ySub = re.sub("\s", "--", txt, 2)
-print(ySub)         # The--rain--in Spain
-
-txt = "The rain in Spain"
-zSub = re.sub("-", "--", txt, 2)
-print(zSub)         # The rain in Spain
-```
+| Set                     | Match                     |
+| ----------------------- | ------------------------- |
+| `re.A`/ `re.ASCII`      | ASCII-only matching       |
+| `re.I`/ `re.IGNORECASE` | case-insensitive matching |
+| `re.M`/ `re.MULTILINE`  | each newline matching     |
 
 ---
 

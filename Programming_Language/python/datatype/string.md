@@ -15,6 +15,7 @@
     - [str.format() Method](#strformat-method)
     - [F-string Method](#f-string-method)
   - [Escape Character](#escape-character)
+  - [Prefix: `b""`, `r""`](#prefix-b-r)
   - [String Methods](#string-methods)
 
 ---
@@ -361,6 +362,27 @@ An escape character is a backslash `\` followed by the character you want to ins
 txt = "We are the so-called \"Vikings\" from the north."
 print(txt)  # We are the so-called "Vikings" from the north.
 ```
+
+---
+
+## Prefix: `b""`, `r""`
+
+- `b` prefix: the given string is in bytes’ format.
+
+  ```py
+  print(("abcdefg"))          # b'abcdefg'
+  print(type("abcdefg"))      # <class 'str'>
+
+  bprint((b"abcdefg"))         # b'abcdefg'
+  print(type(b"abcdefg"))     # <class 'bytes'>
+  ```
+
+- `r` prefix: the string is to be treated as a raw string, which means all escape codes will be ignored.
+
+  ```py
+  print(r'\s') # \s
+  print(type(r'\s')) # <class 'str'>
+  ```
 
 ---
 

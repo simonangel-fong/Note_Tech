@@ -38,12 +38,12 @@
     return x+1
 
   def sub(x):
-  return x-1
+    return x-1
 
   def operator(func, x):
-  '''high order function'''
-  temp = func(x)
-  return temp
+    '''high order function'''
+    temp = func(x)
+    return temp
 
   print(operator(sub, 10)) # 9
   print(operator(add, 20)) # 21
@@ -62,12 +62,13 @@
 
 
   new = hello()
-  new()
+  new() # Hello
   # 以上
-  # 1. 将hello()函数传递给变量(pass to a variable)new
-  # 2. hi() 和hello()是嵌套函数
+  # 1. 将hello()函数的return传递给变量(pass to a variable)new
+  # 2. hi() 和hello()是嵌套函数, hi()无法被函数外直接引用
   # 3. hello函数返回的是hi函数
-  # 4. 调用时,使用变量和括号.
+  # 4. 调用时,使用变量和括号; 引用时, 只使用变量名.
+  # 5. 效果: 相当于使用new() 调用嵌套函数hi()
   ```
 
 ---

@@ -457,6 +457,32 @@ print(ylist)    # ['apple', 'orange', 'cherry'] 一般使用三目算式
 
 ```
 
+- Nested Loop
+
+```py
+x_arr = [1, 2, 3, 4]
+y_arr = ['a', 'b', 'c', 'd']
+
+[print(x, y) for x in x_arr for y in y_arr]
+# 1 a
+# 1 b
+# 1 c
+# 1 d
+# 2 a
+# 2 b
+# 2 c
+# 2 d
+# 3 a
+# 3 b
+# 3 c
+# 3 d
+# 4 a
+# 4 b
+# 4 c
+# 4 d
+
+```
+
 ---
 
 ## Sort List

@@ -6,6 +6,7 @@
   - [Classes/Objects](#classesobjects)
   - [Object Methods](#object-methods)
   - [Operators Overloading](#operators-overloading)
+  - [Class variable](#class-variable)
 
 ---
 
@@ -285,6 +286,31 @@ print(": ", object_3 == object_4)
 | `*`      | **NEG**(SELF, OTHER)    |
 | `-`      | **POS**(SELF, OTHER)    |
 | `~`      | **INVERT**(SELF, OTHER) |
+
+---
+
+## Class variable
+
+- `Class variable`
+  - All instances of a class exchange class variables.
+
+```py
+print("\n-------- Class variable  --------\n")
+
+
+class Person:
+    count = 0   # a class variable
+
+    def __init__(self, name, age):
+        self.name = name  # an instance variable
+        self.age = age
+        Person.count += 1   # Call the class variable using the name of the class
+
+
+person1 = Person("Ayan", 25)
+person2 = Person("Bobby", 30)
+print(Person.count)  # 2
+```
 
 ---
 

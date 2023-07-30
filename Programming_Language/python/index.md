@@ -16,8 +16,7 @@
   - [Point](./fundamental/pointer.md)
   - [Scope](./fundamental/scope.md)
   - [Operator](./fundamental/operator.md)
-  - [Module](./fundamental/module.md)
-  - [Package](./fundamental/package.md)
+  - [Module & Package](./fundamental/module.md)
   - [CLI](./fundamental/command_line_interface.md)
 
 - [Data Type](./datatype/data_type.md)
@@ -40,7 +39,7 @@
   - [Tuple Function](./function/tuple_func.md)
   - [Set Function](./function/set_func.md)
   - [Dict Function](./function/dict_func.md)
-  - [Magic Method](./function/magic_method.md)
+  - [Regex Function](./function/re_func.md)
   - [Recursion](./function/recursion.md)
 
 - Control Statement
@@ -53,6 +52,7 @@
   - [Inheritance](./class/inheritance.md)
   - [Iterator](./class/iterator.md)
   - [Enum](./class/enum.md)
+  - [Magic Method](./class/magic_method.md)
 
 - Built-in Library
 
@@ -60,6 +60,7 @@
   - [math](./library/math.md)
   - [json](./library/json.md)
   - [regex](./library/regex.md)
+  - [pathlib](./library/pathlib.md)
 
 - [Exception](./exception/exception.md)
 
@@ -76,8 +77,12 @@
   - Python is an **interpreted** programming language, this means that as a developer you write Python (`.py`) files in a text editor and then put those files into the python interpreter to be executed.
 
 - Tutorial:
-  - w3schools: https://www.w3schools.com/python/default.asp
-  - freecodecamp: https://www.youtube.com/watch?v=eWRfhZUzrAc&list=PLl9oEwQSSN-HqbWyM0jqvkoVWAhRV41NN&index=4&t=16083s
+  - w3schools:
+    - https://www.w3schools.com/python/default.asp
+  - freecodecamp:
+    - https://www.youtube.com/watch?v=eWRfhZUzrAc&list=PLl9oEwQSSN-HqbWyM0jqvkoVWAhRV41NN&index=4&t=16083s
+  - Udemy:
+    - https://www.udemy.com/course/python-and-django-full-stack-web-developer-bootcamp
 
 ---
 

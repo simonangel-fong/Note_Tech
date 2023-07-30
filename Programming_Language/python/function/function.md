@@ -430,6 +430,15 @@ print(zlambda(3))       # 12
 
 ```
 
+- Anonymous Function
+
+```py
+nums = range(11)
+# using lambda function as an anonymous
+print(list(filter(lambda num: num % 2 == 0, nums)))
+# [0, 2, 4, 6, 8, 10]
+```
+
 ---
 
 ## Nested Function
