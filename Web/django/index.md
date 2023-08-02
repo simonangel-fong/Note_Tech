@@ -24,9 +24,20 @@
   - [Response Objects](./req_resp/response.md)
   - [`shortcuts` Package](./view/shortcuts.md)
 
+- [Model](./model/model.md)
+
+  - [Meta](./model/meta.md)
+  - [Field](./model/field.md)
+  - [Relationship](./model/relationship.md)
+  - [QuerySet](./model/queryset.md)
+
 - [Template](./template/template.md)
 
   - [Static Files](./template/static_files.md)
+
+- References
+
+  - [`manage.py`](./ref/manage.md)
 
 - [Django - 部署到 IIS](./app/django_iis.md)
 - [Django - 视图：增加数据](./app/django_view_add.md)
