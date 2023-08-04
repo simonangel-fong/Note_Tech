@@ -93,8 +93,8 @@
 ```html
 __ for field in form __
 <div class="fieldWrapper">
-  {{ field.errors }} {{ field.label_tag }} {{ field }} __ if field.help_text __
-  <p class="help">{{ field.help_text|safe }}</p>
+  __ field.errors __ __ field.label_tag __ __ field __ __ if field.help_text __
+  <p class="help">__ field.help_text|safe __</p>
   __ endif __
 </div>
 __ endfor __
@@ -104,8 +104,8 @@ __ endfor __
 
 ### Rendering fields manually
 
-- Form fields can be unpacked manually by using `{{ form.field_name }}`.
-- Error message for each field is available by using `{{form.field_name.errors}}`
+- Form fields can be unpacked manually by using `__ form.field_name __`.
+- Error message for each field is available by using `__form.field_name.errors__`
 
 - `forms.py`:
 
@@ -121,27 +121,27 @@ class ContactForm(forms.Form):
 ```
 
 ```html
-{{ form.non_field_errors }}
+__ form.non_field_errors __
 <!--  the template lookup for errors on each field. -->
 <div class="fieldWrapper">
-  {{ form.subject.errors }}
-  <label for="{{ form.subject.id_for_label }}">Email subject:</label>
-  {{ form.subject }}
+  __ form.subject.errors __
+  <label for="__ form.subject.id_for_label __">Email subject:</label>
+  __ form.subject __
 </div>
 <div class="fieldWrapper">
-  {{ form.message.errors }}
-  <label for="{{ form.message.id_for_label }}">Your message:</label>
-  {{ form.message }}
+  __ form.message.errors __
+  <label for="__ form.message.id_for_label __">Your message:</label>
+  __ form.message __
 </div>
 <div class="fieldWrapper">
-  {{ form.sender.errors }}
-  <label for="{{ form.sender.id_for_label }}">Your email address:</label>
-  {{ form.sender }}
+  __ form.sender.errors __
+  <label for="__ form.sender.id_for_label __">Your email address:</label>
+  __ form.sender __
 </div>
 <div class="fieldWrapper">
-  {{ form.cc_myself.errors }}
-  <label for="{{ form.cc_myself.id_for_label }}">CC yourself?</label>
-  {{ form.cc_myself }}
+  __ form.cc_myself.errors __
+  <label for="__ form.cc_myself.id_for_label __">CC yourself?</label>
+  __ form.cc_myself __
 </div>
 ```
 

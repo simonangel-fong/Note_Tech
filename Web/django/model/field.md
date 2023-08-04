@@ -103,31 +103,31 @@
 
 - **Constraint**
 
-| Option             | Description            |
-| ------------------ | ---------------------- |
-| `primary_key`      | primary key            |
-| `null`             | empty values           |
-| `blank`            | allowed to be blank    |
-| `choices`          | A choice sequence      |
-| `default`          | default value          |
-| `unique`           | unique values          |
-| `unique_for_date`  | unique for date value  |
-| `unique_for_month` | unique for month value |
-| `unique_for_year`  | unique for year value  |
+| Option             | Description            | Default |
+| ------------------ | ---------------------- | ------- |
+| `primary_key`      | primary key            | NA      |
+| `null`             | empty values           | `False` |
+| `blank`            | allowed to be blank    | `False` |
+| `choices`          | A choice sequence      | NA      |
+| `default`          | default value          | NA      |
+| `unique`           | unique values          | NA      |
+| `unique_for_date`  | unique for date value  | NA      |
+| `unique_for_month` | unique for month value | NA      |
+| `unique_for_year`  | unique for year value  | NA      |
 
 - **Meta**
 
-| Option           | Description                 |
-| ---------------- | --------------------------- |
-| `db_column`      | column name                 |
-| `verbose_name`   | A human-readable field name |
-| `db_comment`     | comment on column           |
-| `db_index`       | a database index            |
-| `db_tablespace`  | tablespace name             |
-| `editable`       | editability                 |
-| `error_messages` | error messages              |
-| `help_text`      | “help” text for widget      |
-| `validators`     | A list of validators to run |
+| Option           | Description                 | Default |
+| ---------------- | --------------------------- | ------- |
+| `db_column`      | column name                 |         |
+| `verbose_name`   | A human-readable field name |         |
+| `db_comment`     | comment on column           |         |
+| `db_index`       | a database index            |         |
+| `db_tablespace`  | tablespace name             |         |
+| `editable`       | editability                 | `True`  |
+| `error_messages` | error messages              |         |
+| `help_text`      | “help” text for widget      |         |
+| `validators`     | A list of validators to run |         |
 
 ---
 

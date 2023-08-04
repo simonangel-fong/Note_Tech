@@ -55,6 +55,7 @@
 | `DateTimeField` | `DateTimeInput` |
 | `DurationField` | `TextInput`     |
 | `TimeField`     | `TimeInput`     |
+
 -  Number
 
 | Class          | Widget        |
@@ -62,6 +63,7 @@
 | `IntegerField` | `NumberInput` |
 | `DecimalField` | `NumberInput` |
 | `FloatField`   | `NumberInput` |
+
 - Selector
 
 | Class                      | Widget              |
