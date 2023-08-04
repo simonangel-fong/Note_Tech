@@ -5,6 +5,7 @@
 - [Django - Model Fields](#django---model-fields)
   - [Model Fields](#model-fields)
   - [Field options](#field-options)
+  - [Example: Upload MP3 Files Using FileField](#example-upload-mp3-files-using-filefield)
 
 ---
 
@@ -127,6 +128,96 @@
 | `error_messages` | error messages              |
 | `help_text`      | “help” text for widget      |
 | `validators`     | A list of validators to run |
+
+---
+
+## Example: Upload MP3 Files Using FileField
+
+- `HTML`:
+
+```html
+<!-- 
+sets the value of enctype attribute: 
+  assigns the uploaded file to request.FILE. Otherwise, the file will not be uploaded.
+-->
+<form
+  id="form"
+  action="__'music_test_upload'__"
+  method="post"
+  enctype="multipart/form-data"
+>
+  __csrf_token__
+
+  <input id="music_name" name="music_name" class="form-control col-md-6 my-2" />
+
+  <!-- 
+sets name attribute as 'upload_file':
+  the uploaded file can be achieved by the request.FILE["upload_file"]`
+ -->
+  <input
+    id="file"
+    type="file"
+    class="form-control col-md-6 my-2"
+    name="upload_file"
+  />
+  <button id="btn" class="btn btn-primary" type="submit">submit</button>
+</form>
+```
+
+- `model_py`
+
+```python
+# the musice class represents the uploaded file in database.
+# the FileField is actually the path storing the uploaded file.
+# the 'upload_to' attribute:
+#   the directory storing files.
+#   default: ""
+#   actual value is settings.MEDIA_ROOT.
+#   example:  `upload_to='music/'` means the directory is `settings.MEDIA_ROOT/music/`。
+
+class Music(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, blank=True)
+    file = models.FileField(upload_to='music/')
+```
+
+- `view.py`
+
+```python
+def music_test_upload(request):
+    ''' the view handles upload file page and stores the uploaded file '''
+    context = {}
+    html = "AppMusic/test.html"
+    data = {}
+
+    #when the submit method is post and a file has been submited.
+    if request.method == 'POST' and request.FILES['upload_file']:
+        music_name = request.POST["music_name"]
+        upload_file = request.FILES['upload_file']    # get the uploaed file
+        upload_file.name = music_name + ".mp3"        # modify the file name
+
+        # kwag dict for Music model
+        submit_data ={}
+        submit_data["name"] = music_name
+        submit_data["file"] = upload_file   # assign the uploaded file to the file field, whose type is FileField.
+
+        try:
+            new_music = Music(**submit_data)
+            new_music.save()    # the uploaded file will be save into the target directory.
+            print(new_music.file.url)
+            data["success"] = "Successfully create a new record !"                 # response msg: success
+        except Exception as error:                      # error
+            data["error"] = str(error)                  # response msg: error
+
+        context['data'] = data
+
+    return render(request,html,context)
+
+# Note:
+# `new_music.file.url`：`FileField`类型的`url`属性是访问上存文件的url。该属性值是：`settings.MEDIA_URL` + `FileField`的`upload_to`属性 + `upload_file.name`。
+# 当在前段需要引用上存文件时，可以直接使用`{{file.url}}`
+# 注意：上存的文件与已存在的文件重名，django会自动修改新上存文件的文件名并自动记录在`FileField`字段中。
+```
 
 ---
 

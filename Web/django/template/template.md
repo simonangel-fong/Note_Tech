@@ -13,6 +13,8 @@
     - [Tags](#tags)
     - [Filters](#filters)
     - [Comments](#comments)
+  - [Automatic HTML escaping](#automatic-html-escaping)
+  - [Accessing method calls](#accessing-method-calls)
 
 ---
 
@@ -220,6 +222,54 @@ __ endif __
 ```django
 {# this won't be rendered #}
 ```
+
+---
+
+## Automatic HTML escaping
+
+- `HTML escaping`:
+
+  - represent special characters in HTML code.
+
+- For example, `<` less than symbol `>` has a special meaning in HTML markup language. HTML escaping will convert a string to HTML entities or convert HTML entities to plain text.
+
+- When storing raw HTML in databases or variables, special characters must be escaped so that they are not confused for markup.
+
+- By default in Django, every template **automatically** escapes the output of every variable tag.
+
+- Turn off automatic HTML escaping:
+
+  - For individual variables:
+
+    - using the `safe` filter.
+
+    ```html
+    This will not be escaped: {{ data|safe }}
+    ```
+
+  - For template blocks:
+
+    - wraping template in the `autoescape off` tag.
+
+    ```html
+    Auto-escaping is on by default. Hello {{ name }} __ autoescape off __ This
+    will not be auto-escaped: {{ data }}. Nor this: {{ other_data }} __
+    autoescape on __ Auto-escaping applies again: {{ name }} __ endautoescape __
+    __ endautoescape __
+    ```
+
+---
+
+## Accessing method calls
+
+- Syntax:
+
+  - `object.all`: calls QuerySet `.all()`method
+  - `object.fk_set.all`: calls `.all()`method on a collection of objects related on a foreign key
+  - `object.all.count`: call `.all().count()` method
+  - `object.func`: call a custom function defined in the models class.
+
+- it is not possible to pass arguments to method calls accessed from within templates
 
 ---
 

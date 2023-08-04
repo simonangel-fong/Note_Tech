@@ -20,8 +20,8 @@
 
 - View
 
-  - [Request Objects](./req_resp/request.md)
-  - [Response Objects](./req_resp/response.md)
+  - [Request Objects](./view/request.md)
+  - [Response Objects](./view/response.md)
   - [`shortcuts` Package](./view/shortcuts.md)
 
 - [Model](./model/model.md)
@@ -33,11 +33,23 @@
 
 - [Template](./template/template.md)
 
+  - [Template inheritance](./template/inheritance.md)
+  - [Template tags and filters](./template/tag_filter.md)
   - [Static Files](./template/static_files.md)
+
+- [Form](./form/form.md)
+  - [Form Field](./form/form_field.md)
+  - [Model Form](./form/modelform.md)
 
 - References
 
   - [`manage.py`](./ref/manage.md)
+
+
+---
+
+- Labs:
+  - [Streaming Video](./labs/streaming.md)
 
 - [Django - 部署到 IIS](./app/django_iis.md)
 - [Django - 视图：增加数据](./app/django_view_add.md)
