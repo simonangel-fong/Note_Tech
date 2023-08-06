@@ -160,7 +160,7 @@
       <p>You don't have permission to do anything in the foo app.</p>
   -/ endif \-
 
-  <!-- look permissions up by {% if in %} statements -->
+  <!-- look permissions up by -/ if in \- statements -->
   -/ if 'foo' in perms \-
       -/ if 'foo.add_vote' in perms \-
           <p>In lookup works, too.</p>
