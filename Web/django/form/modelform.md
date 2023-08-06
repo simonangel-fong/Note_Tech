@@ -3,22 +3,35 @@
 [Back](../index.md)
 
 - [Django - ModelForm](#django---modelform)
-  - [Create Form class from model](#create-form-class-from-model)
+  - [`ModelForm`](#modelform)
+    - [Example: Create Form class from model](#example-create-form-class-from-model)
   - [Field types](#field-types)
   - [`save()` method](#save-method)
   - [Meta Class](#meta-class)
 
 ---
 
-## Create Form class from model
+## `ModelForm`
+
+-  `ModelForm`
+   -  a class which is used to create an HTML form by using the Model.
+   -  an efficient way to create a form without writing HTML code.
+
+- `Meta`
+  - an inner class provides information connecting the model to the form.
 
 - Syntax:
 ```py
 class Model_Form(ModelForm):
+    # some form fields
     class Meta:
         model = model_name
-        pass
+        fiels = []
+        # some info about this form, such as help_texts ro widgets
 ```
+
+
+### Example: Create Form class from model
 
 - Example:
 
@@ -43,7 +56,7 @@ form = ArticleForm(instance=article)
 
 ## Field types
 
-- **Auto**
+- **Auto ID**
 
 | Model field      | Form field                  |
 | ---------------- | --------------------------- |

@@ -41,6 +41,10 @@
   - [Form Field](./form/form_field.md)
   - [Model Form](./form/modelform.md)
 
+- [Authentication](./auth/auth.md)
+  - [User](./auth/user.md)
+  - [Permissions and Groups](./auth/perm.md)
+  - [Authentication Views](./auth/auth_view.md)
 - References
 
   - [`manage.py`](./ref/manage.md)

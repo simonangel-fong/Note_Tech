@@ -8,6 +8,9 @@
   - [What the URLconf searches against](#what-the-urlconf-searches-against)
   - [Sample `URLconf`](#sample-urlconf)
   - [`urls.py`](#urlspy)
+  - [URL namespaces](#url-namespaces)
+    - [Example: Namespace](#example-namespace)
+    - [Example: Admin page](#example-admin-page)
 
 ---
 
@@ -90,6 +93,95 @@ urlpatterns = [
 
 - `urlpatterns` should be a sequence of `path()` and/or `re_path()` instances.
 
+---
+
+## URL namespaces
+
+- `URL namespaces`
+  - allow to uniquely reverse named URL patterns even if **different applications use the same URL names**. 
+  - It’s a good practice for third-party apps to always use namespaced URLs.
+
+- A URL namespace comes in two parts:
+  - `application namespace`
+    - the name of the application that is being deployed.
+    - Every instance of a single application will have the same application namespace.
+
+  - `instance namespace`
+    - identifies a specific instance of an application
+    - should be unique across your entire project.
+    - The instance namespce for the default instance of an application can be the same as the application namespace.
+
+- Namespaced URLs:
+  -  specified using the `:` operator. 
+     -  `'admin:index'`: indicates a namespace of 'admin', and a named URL of 'index'.
+  -  Namespaces can also be nested.
+     -  `'sports:polls:index'`: look for a pattern named 'index' in the namespace 'polls' that is itself defined within the top-level namespace 'sports'.
+
+- 常见错误:
+  - 引号内多余的空格: `' app_name:url'` , `'app_name:url '`, `'app_name :url'`, or `'app_name: url'`都不能匹配`'app_name:url'`
+
+- Application namespaces of included URLconfs can be specified using `app_name = '<app_name>'`
+
+---
+
+### Example: Namespace
+
+- `urls.py` at the project level
+
+```py
+# both url refering to the same urls.py file. 
+# But due to the defferent namespace, urls have different prefix.
+path('employee/', include("EmpApp.urls",namespace="employee")),
+path('department/', include("EmpApp.urls",namespace="department")),
+```
+
+- `urls.py` within EmpApp application
+
+```py
+app_name = "EmpApp"
+
+urlpatterns = [
+    path("", view=views.emp_list, name="index"),
+    path("emp/list/", view=views.emp_list, name="emp_list"),
+    path("emp/update/<int:emp_id>", view=views.emp_update, name="emp_update"),
+
+    path("dept/list/", view=views.dept_list, name="dept_list"),
+    path("dept/update/<int:dept_id>", view=views.dept_update, name="dept_update"),
+]
+```
+
+- Template:
+
+```html
+<!-- 
+  Using `employee:url`, to reverese the url as '/employee/'.
+  Then further into '/employee/emp/list/
+ -->
+<a href="{% url 'employee:emp_list' %}">List</a>
+
+<!-- 
+  Using `department:url`, to reverese the url as '/department/'.
+  Then further into '/department/dept/list/
+ -->
+<a href="{% url 'department:dept_list' %}">List</a>
+
+
+<!-- 
+  EmpApp is an application namespace which defined in the EmpApp's urls.py.
+  Djnago locate this url file to find emp_detail url
+ -->
+<a href="{% url 'EmpApp:emp_detail' emp.id %}">Edit</a>
+```
+
+---
+
+### Example: Admin page
+
+- Admin page can be call by
+  - Using the row url: 
+    - `<a href='/admin/'>Admin</a>`
+  - Using namespace`admin`:
+    -  `<a href='{% url 'admin:index' %}'>Admin</a>`
 
 ---
 
