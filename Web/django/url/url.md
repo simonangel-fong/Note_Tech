@@ -157,20 +157,20 @@ urlpatterns = [
   Using `employee:url`, to reverese the url as '/employee/'.
   Then further into '/employee/emp/list/
  -->
-<a href="{% url 'employee:emp_list' %}">List</a>
+<a href="-/ url 'employee:emp_list' -\">List</a>
 
 <!-- 
   Using `department:url`, to reverese the url as '/department/'.
   Then further into '/department/dept/list/
  -->
-<a href="{% url 'department:dept_list' %}">List</a>
+<a href="-/ url 'department:dept_list' -\">List</a>
 
 
 <!-- 
   EmpApp is an application namespace which defined in the EmpApp's urls.py.
   Djnago locate this url file to find emp_detail url
  -->
-<a href="{% url 'EmpApp:emp_detail' emp.id %}">Edit</a>
+<a href="-/ url 'EmpApp:emp_detail' emp.id -\">Edit</a>
 ```
 
 ---
@@ -181,7 +181,7 @@ urlpatterns = [
   - Using the row url: 
     - `<a href='/admin/'>Admin</a>`
   - Using namespace`admin`:
-    -  `<a href='{% url 'admin:index' %}'>Admin</a>`
+    -  `<a href='-/ url 'admin:index' -\'>Admin</a>`
 
 ---
 
