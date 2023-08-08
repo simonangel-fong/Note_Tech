@@ -92,11 +92,11 @@ urlpatterns = [
     <title>Document</title>
   </head>
   <body>
-    {% if error %}
-    <p>{{error}}</p>
-    {% endif %}
+    -/ if error \-
+    <p>--error--</p>
+    -/ endif \-
     <form method="post" enctype="multipart/form-data">
-      {% csrf_token %} {{form.as_p}}
+      -/ csrf_token \- --form.as_p--
       <button type="submit">Submit</button>
     </form>
   </body>
@@ -146,18 +146,18 @@ if settings.DEBUG == True:
     <title>Document</title>
   </head>
   <body>
-    <a href="{% url 'img_list' %}">Image List</a>
-    <a href="{% url 'img_upload' %}">Image Uploaded</a>
-    {% if data %} {% for img in data %}
+    <a href="-/ url 'img_list' \-">Image List</a>
+    <a href="-/ url 'img_upload' \-">Image Uploaded</a>
+    -/ if data \- -/ for img in data \-
     <ul>
       <li>
-        <a href="{% url 'img_detail' img.img_name %}"> {{img.img_name}} </a>
+        <a href="-/ url 'img_detail' img.img_name \-"> --img.img_name-- </a>
       </li>
     </ul>
 
-    {% endfor %} {% else %}
+    -/ endfor \- -/ else \-
     <p>No data.</p>
-    {% endif %}
+    -/ endif \-
   </body>
 </html>
 ```
