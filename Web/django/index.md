@@ -49,6 +49,8 @@
 
   - [`manage.py`](./ref/manage.md)
 
+- Example:
+  - [Upload](./example/upload_img.md)
 
 ---
 
