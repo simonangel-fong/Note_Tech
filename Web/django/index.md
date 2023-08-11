@@ -16,13 +16,14 @@
 
 - [URL](./url/url.md)
 
-  - [`django.urls` Module](./url/django.urls.md)
+  - [Url Function](./url/url_function.md)
 
 - View
 
   - [Request Objects](./view/request.md)
   - [Response Objects](./view/response.md)
-  - [`shortcuts` Package](./view/shortcuts.md)
+  - [Class-based views](./view/cbv.md)
+  - [Built-in CBV](./view/built_cbv.md)
 
 - [Model](./model/model.md)
 

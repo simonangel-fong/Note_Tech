@@ -1,13 +1,12 @@
-# Django - `django.urls`
+# Django - URLconfs functions
 
 [Back](../index.md)
 
-- [Django - `django.urls`](#django---djangourls)
+- [Django - URLconfs functions](#django---urlconfs-functions)
   - [URLconfs functions](#urlconfs-functions)
     - [`path()`](#path)
     - [`re_path()`](#re_path)
     - [`include()`](#include)
-  - [Utility functions](#utility-functions)
     - [`reverse()`](#reverse)
 
 ---
@@ -107,8 +106,6 @@ urlpatterns = [
   ```
 
 ---
-
-## Utility functions
 
 ### `reverse()`
 
