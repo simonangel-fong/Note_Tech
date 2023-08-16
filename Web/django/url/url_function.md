@@ -3,7 +3,7 @@
 [Back](../index.md)
 
 - [Django - URLconfs functions](#django---urlconfs-functions)
-  - [URLconfs functions](#urlconfs-functions)
+  - [`urls` functions](#urls-functions)
     - [`path()`](#path)
     - [`re_path()`](#re_path)
     - [`include()`](#include)
@@ -11,7 +11,7 @@
 
 ---
 
-## URLconfs functions
+## `urls` functions
 
 ### `path()`
 

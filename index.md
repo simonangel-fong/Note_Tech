@@ -33,7 +33,7 @@
   - [x] [Bootstrap](./Web/bootstrap/index.md)
   - [x] [DOM](./Web/dom/dom.md)
   - [x] [jQuery](./Web/jquery/index.md)
-  - [ ] [Django](./Web/django/index.md)
+  - [x] [Django](./Web/django/index.md)
   - [ ] React
   - Project: [Tic Toc Toe](./Web/web_project/tic_tac_toe/tic_tac_toe.html)
   - Project: [Connect Four](./Web/web_project/connect_four/connect_four.html)

@@ -1,6 +1,6 @@
 # Django - 部署到IIS
 
-[返回Django首页](../django_index.md)
+[Back](../index.md)
 
 ## 目录
 

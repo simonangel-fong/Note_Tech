@@ -10,9 +10,8 @@
 
   - [First Django Project](./install/first_project.md)
 
-- Settings
-
-  - [Settings Variable](./settings/settings_var.md)
+- [Settings Variable](./settings/settings_var.md)
+- [`manage.py` Command](./command/command.md)
 
 - [URL](./url/url.md)
 
@@ -46,23 +45,20 @@
   - [User](./auth/user.md)
   - [Permissions and Groups](./auth/perm.md)
   - [Authentication Views](./auth/auth_view.md)
-- References
 
-  - [`manage.py`](./ref/manage.md)
+- [Admin](./admin/admin.md)
 
-- Example:
-  - [Upload](./example/upload_img.md)
+- Delpoyment
+  - [IIS](./deploy/iis.md)
 
----
+- Library:
+  - [Debug: `django-debug-toolbar`](./lib/toolbar.md)
+  - [Bootstrap 5: `django-bootstrap5`](./lib/bootstrap.md)
+  - [Markdown Parse: `misaka`](./lib/bootstrap.md)
 
 - Labs:
   - [Streaming Video](./labs/streaming.md)
-
-- [Django - 部署到 IIS](./app/django_iis.md)
-- [Django - 视图：增加数据](./app/django_view_add.md)
-- [Django - model:FileField](./app/django_model_filefield.md)
-- [Django - model:\_meta API](./app/django_model_meta.md)
-- [Django - View: StreamingHttpResponse](./app/django_view_streaminghttpresponse.md)
+  - [Upload](./labs/upload_img.md)
 
 ---
 
@@ -117,3 +113,5 @@
 - **django-admin 工具**是 Django 管理命令行工具之一，安装好 Django 包后可以直接调用。
 
 ---
+
+[TOP](#django)

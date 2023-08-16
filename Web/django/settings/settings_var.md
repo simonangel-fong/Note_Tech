@@ -18,6 +18,7 @@
     - [`STATIC_ROOT`](#static_root)
     - [`STATIC_URL`](#static_url)
     - [`STATICFILES_DIRS`](#staticfiles_dirs)
+  - [Authentication](#authentication)
 
 ---
 
@@ -157,6 +158,16 @@ Settings for `django.contrib.staticfiles`.
       ("downloads", "/opt/webfiles/stats"),
     ]
     ```
+
+---
+
+## Authentication
+
+| Variable              | Description                                        |
+| --------------------- | -------------------------------------------------- |
+| `LOGIN_REDIRECT_URL`  | the url where requests are redirected after login  |
+| `LOGIN_URL`           | the url where requests are redirected for login    |
+| `LOGOUT_REDIRECT_URL` | the url where requests are redirected after logout |
 
 ---
 
