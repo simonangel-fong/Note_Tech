@@ -56,11 +56,12 @@
 
 - Built-in Library
 
-  - [datetime](./library/datetime.md)
-  - [math](./library/math.md)
-  - [json](./library/json.md)
-  - [regex](./library/regex.md)
-  - [pathlib](./library/pathlib.md)
+  - [`pip`](./library/pip.md)
+  - [`datetime`](./library/datetime.md)
+  - [`math`](./library/math.md)
+  - [`json`](./library/json.md)
+  - [`regex`](./library/regex.md)
+  - [`pathlib`](./library/pathlib.md)
 
 - [Exception](./exception/exception.md)
 

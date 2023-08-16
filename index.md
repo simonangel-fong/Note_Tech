@@ -13,8 +13,8 @@
   - [ ] Java
 
 - OS
-
-  - [x] [AWS CCP](./Operating_System/ccp/index.md)
+  - [AWS](./Operating_System/aws/index.md)
+    - [x] [AWS CCP](./Operating_System/ccp/index.md)
   - [ ] Linux
     - [ ] Bash
   - [ ] iOS
@@ -31,12 +31,12 @@
   - [x] [HTML](./Web/html/index.md)
   - [x] [CSS](./Web/css/index.md)
   - [x] [Bootstrap](./Web/bootstrap/index.md)
+    - Project: [Tic Toc Toe](./Web/web_project/tic_tac_toe/tic_tac_toe.html)
+    - Project: [Connect Four](./Web/web_project/connect_four/connect_four.html)
   - [x] [DOM](./Web/dom/dom.md)
   - [x] [jQuery](./Web/jquery/index.md)
   - [x] [Django](./Web/django/index.md)
   - [ ] React
-  - Project: [Tic Toc Toe](./Web/web_project/tic_tac_toe/tic_tac_toe.html)
-  - Project: [Connect Four](./Web/web_project/connect_four/connect_four.html)
 
 - Data Analytics
 
