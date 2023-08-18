@@ -51,6 +51,7 @@
 - Delpoyment
   - [IIS](./deploy/iis.md)
   - [AWS Elastic Beanstalk](./deploy/aws_eb.md)
+  - [AWS EC2](./deploy/aws_ec2.md)
 
 - Library:
   - [Debug: `django-debug-toolbar`](./lib/toolbar.md)

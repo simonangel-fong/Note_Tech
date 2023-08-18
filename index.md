@@ -14,8 +14,8 @@
 
 - OS
   - [AWS](./Operating_System/aws/index.md)
-    - [x] [AWS CCP](./Operating_System/ccp/index.md)
-  - [ ] Linux
+    - [x] AWS CCP
+  - [ ] [Linux](./Operating_System/linux/index.md)
     - [ ] Bash
   - [ ] iOS
 
