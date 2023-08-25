@@ -23,6 +23,7 @@
     - [Install](#install-2)
     - [Configuration](#configuration-2)
     - [Troubleshooting](#troubleshooting-2)
+  - [Configuration Bash](#configuration-bash)
 
 ---
 
@@ -206,7 +207,9 @@ sudo nano /etc/systemd/system/gunicorn.service
 
 - `<user_name>`: OS username
 - `<django_proj_path>`: path of django project, not container, starting from home
+  - 是manage.py所在的文件夹, 是否以斜杠结束都可以.
 - `<venv_path>`: path of virtual environment, staring from home
+  - 是虚拟环境的文件夹
 - `<django_proj_name>`: name of django project, not path.
 
 ```
@@ -401,7 +404,7 @@ server {
 
 ```sh
 # create a link of `.conf` file to `/etc/nginx/sites-enabled`
-sudo ln django.conf /etc/nginx/sites-enabled
+sudo ln -sf /etc/nginx/sites-available/django.conf /etc/nginx/sites-enabled
 ```
 
 ---
@@ -424,8 +427,12 @@ sudo systemctl restart nginx
 ### Troubleshooting
 
 ```sh
+# status
+systemctl status nginx
+
 # error log
 nano /var/log/nginx/error.log
+sudo tail -30 /var/log/nginx/error.log
 
 # nginx configuration
 nano /etc/nginx/sites-available/django.conf
@@ -435,6 +442,12 @@ sudo nginx -t
 
 # restart service
 sudo service nginx restart
+
+
+sudo systemctl reload nginx
+
+
+systemctl status nginx
 ```
 
 ---
@@ -513,6 +526,40 @@ sudo nano /var/log/gunicorn/gunicorn.err.log
 
 # edit configuration
 sudo nano /etc/supervisor/conf.d/gunicorn.conf
+```
+
+---
+
+## Configuration Bash
+
+```sh
+#!/bin/bash
+#Program Name: deploy_conf_script.sh
+#Author name: Wenhao Fang
+#Date Created: Aug 23rd 2023
+#Date updated:
+#Description of the script: Configuration for deployment.
+
+github_url=''
+
+# Updates OS
+sudo apt-get update   # update the package on Linux system. 
+sudo apt-get upgrade  # downloads and installs the updates for each outdated package and dependency
+
+# Firewall
+sudo apt-get install ufw          # install firewall
+sudo ufw default allow outgoing   # Allow outgoing traffic
+sudo ufw default deny incoming    # Deny all incoming traffic
+sudo ufw allow ssh                # Allow ssh traffic
+sudo ufw allow 8000               # Allow the port 8000, the port to test django while configuring deployment
+sudo ufw enable                   # Enables firewall
+
+# Download codes from github
+if [ $github_url="" ];then
+        echo 'dsdsdsds'
+fi
+git clone github_rep_url
+
 ```
 
 ---

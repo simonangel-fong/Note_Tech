@@ -52,6 +52,7 @@
   - [IIS](./deploy/iis.md)
   - [AWS Elastic Beanstalk](./deploy/aws_eb.md)
   - [AWS EC2](./deploy/aws_ec2.md)
+  - [Example: EC2+Bash](./deploy/aws_ec2_bash.md)
 
 - Library:
   - [Debug: `django-debug-toolbar`](./lib/toolbar.md)
