@@ -1,6 +1,6 @@
 # Django - User Object
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Django - User Object](#django---user-object)
   - [User objects](#user-objects)

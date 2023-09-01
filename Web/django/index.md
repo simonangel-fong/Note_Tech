@@ -10,7 +10,6 @@
 
   - [First Django Project](./install/first_project.md)
 
-- [Settings Variable](./settings/settings_var.md)
 - [`manage.py` Command](./command/command.md)
 
 - [URL](./url/url.md)
@@ -24,6 +23,9 @@
   - [Class-based views](./view/cbv.md)
   - [Built-in CBV](./view/built_cbv.md)
 
+- [Database Connection](./db/connect.md)
+  - [Example: MySQL](./db/example_mysql.md)
+
 - [Model](./model/model.md)
 
   - [Meta](./model/meta.md)
@@ -31,20 +33,15 @@
   - [Relationship](./model/relationship.md)
   - [QuerySet](./model/queryset.md)
 
+- [Form](./form/form.md)
+  - [Form Field](./form/form_field.md)
+  - [Model Form](./form/modelform.md)
+
 - [Template](./template/template.md)
 
   - [Template inheritance](./template/inheritance.md)
   - [Template tags and filters](./template/tag_filter.md)
   - [Static Files](./template/static_files.md)
-
-- [Form](./form/form.md)
-  - [Form Field](./form/form_field.md)
-  - [Model Form](./form/modelform.md)
-
-- [Authentication](./auth/auth.md)
-  - [User](./auth/user.md)
-  - [Permissions and Groups](./auth/perm.md)
-  - [Authentication Views](./auth/auth_view.md)
 
 - [Admin](./admin/admin.md)
 
@@ -54,10 +51,20 @@
   - [AWS EC2](./deploy/aws_ec2.md)
   - [Example: EC2+Bash](./deploy/aws_ec2_bash.md)
 
+
+- Common Tools:
+  - [Authentication](./tool/auth/auth.md)
+    - [User](./tool/auth/user.md)
+    - [Permissions and Groups](./tool/auth/perm.md)
+    - [Authentication Views](./tool/auth/auth_view.md)
+  - [Messages](./tool/messages.md)
+  - [Email](./tool/email.md)
+  - [Pagination](./tool/pagination.md)
+
 - Library:
-  - [Debug: `django-debug-toolbar`](./lib/toolbar.md)
-  - [Bootstrap 5: `django-bootstrap5`](./lib/bootstrap.md)
-  - [Markdown Parse: `misaka`](./lib/bootstrap.md)
+  - [`django-debug-toolbar`:Debug](./lib/toolbar.md)
+  - [`django-bootstrap5`:Bootstrap 5](./lib/bootstrap.md)
+  - [`misaka`:Markdown Parse](./lib/bootstrap.md)
 
 - Labs:
   - [Streaming Video](./labs/streaming.md)

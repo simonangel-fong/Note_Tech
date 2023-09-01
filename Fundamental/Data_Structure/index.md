@@ -38,6 +38,9 @@
   - [Search](./data_structure/search/search.md)
   - [Sort](./data_structure/sort/sort.md)
 
+
+  - [Graph](./data_structure/graph.md)
+
 - [Mock Interview](./data_structure/mock_interview/mock_interview.md)
 
 ---

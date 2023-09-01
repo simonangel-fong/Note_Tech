@@ -1,6 +1,6 @@
 # Django - Permissions and Groups
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Django - Permissions and Groups](#django---permissions-and-groups)
   - [Permission](#permission)

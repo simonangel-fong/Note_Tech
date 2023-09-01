@@ -1,6 +1,6 @@
 # Django - Authentication
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Django - Authentication](#django---authentication)
   - [Overview](#overview)

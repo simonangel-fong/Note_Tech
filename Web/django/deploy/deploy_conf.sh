@@ -5,12 +5,16 @@
 #Date updated:
 #Description of the script: Configuration for deployment.
 
-# project_name="ArgusWatcher"
-# github_url='https://github.com/simonangel-fong/ArgusWatcher.git'
-# host_ip="54.162.108.69"
-project_name=$1 # refer 1st argument
-github_url=$2 # refer 2nd argument
-host_ip=$3  # refer 3rd argument
+# # shortcut to update deployment script
+# sudo rm -rf ArgusWatcher deploy_conf.sh env # remove existing script
+# sudo nano deploy_conf.sh  # create a new sh file
+
+project_name="ArgusWatcher"
+github_url='https://github.com/simonangel-fong/ArgusWatcher.git'
+host_ip="18.206.179.90"
+# project_name=$1 # refer 1st argument
+# github_url=$2 # refer 2nd argument
+# host_ip=$3  # refer 3rd argument
 
 ###########################################################
 ## Updates OS
@@ -19,43 +23,71 @@ echo -e "\n$(date +'%Y-%m-%d %R') Updating package on Linux..."
 yes | sudo apt-get update  # update the package on Linux system.
 # sudo apt-get upgrade # downloads and installs the updates for each outdated package and dependency
 echo $(date +'%Y-%m-%d %R') Package updated.
+read -p "Press Enter to continue..."
 
 ###########################################################
 ## Firewall
 ###########################################################
-echo -e "\n$(date +'%Y-%m-%d %R') Installing Firwall..."
-sudo apt-get install ufw        # install firewall
-echo $(date +'%Y-%m-%d %R') Firwall installed.
+# echo -e "\n$(date +'%Y-%m-%d %R') Installing Firwall..."
+# sudo apt-get install ufw        # install firewall
+# echo $(date +'%Y-%m-%d %R') Firwall installed.
 
-echo -e "\n$(date +'%Y-%m-%d %R') Configure Firwall"
-sudo ufw default allow outgoing # Allow outgoing traffic
-sudo ufw default deny incoming  # Deny all incoming traffic
-sudo ufw allow ssh              # Allow ssh traffic
-sudo ufw allow 8000             # Allow the port 8000, the port to test django while configuring deployment
-yes | sudo ufw enable           # Enables firewall
+# echo -e "\n$(date +'%Y-%m-%d %R') Configure Firwall"
+# sudo ufw default allow outgoing # Allow outgoing traffic
+# sudo ufw default deny incoming  # Deny all incoming traffic
+# sudo ufw allow ssh              # Allow ssh traffic
+# sudo ufw allow 8000             # Allow the port 8000, the port to test django while configuring deployment
+# yes | sudo ufw enable           # Enables firewall
 
-echo -e "\n$(date +'%Y-%m-%d %R') Firwall status:"
-sudo ufw status # Status of firewall
+# echo -e "\n$(date +'%Y-%m-%d %R') Firwall status:"
+# sudo ufw status # Status of firewall
+# read -p "Press Enter to continue..."
 
 ###########################################################
-## Download codes from github
+## Install MySQL
 ###########################################################
-cd ~
-sudo rm -rf ~/${project_name}
-if [ -z ${github_url} ]; then # if github url is empty
-  echo -e "\n$(date +'%Y-%m-%d %R') Cannot clone code from github because github_url is not given."
-else
-  echo -e "\n$(date +'%Y-%m-%d %R') Downloading codes from github..."
-  git clone $github_url # clone codes from github
-  echo $(date +'%Y-%m-%d %R') Code downloaded.
-fi
+echo -e "\n$(date +'%Y-%m-%d %R') Installing MySQL related packages..."
+sudo apt-get install mysql-server
+sudo systemctl start mysql
+
+sudo apt-get install python3-dev default-libmysqlclient-dev build-essential pkg-config
+echo $(date +'%Y-%m-%d %R') MySQL related packages installed.
+read -p "Press Enter to continue..."
+
+###########################################################
+## Configure MySQL
+###########################################################
+# sudo mysql_secure_installation # may create issue
+
+sudo systemctl start mysql
+echo "Check Mysql status:"
+systemctl status mysql.service
+read -p "Press Enter to continue..."
+
+echo "Input username for MySQL:"
+read user
+echo "Input password for MySQL:"
+read pwd
+
+sudo mysql -u root -e "CREATE USER '${user}'@'localhost' IDENTIFIED BY '${pwd}';"
+
+sudo mysql -u root -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, INDEX, DELETE, SELECT, REFERENCES, RELOAD on *.* TO '${user}'@'localhost' WITH GRANT OPTION;"
+
+sudo mysql -u root -e "FLUSH PRIVILEGES;"
+
+mysql -u$user -p$pwd -e "CREATE DATABASE django_db;"
+
+sudo mysql -u$user -p$pwd -e 'show databases;'
+echo "MySQL configuration completed."
+read -p "Press Enter to continue..."
 
 ###########################################################
 ## Establish virtual environment
 ###########################################################
 cd ~
 echo -e "\n$(date +'%Y-%m-%d %R') Installing venv package..."
-sudo apt-get install python3-venv # Install venv package
+sudo apt-get install python3-venv # Install pip package
+# sudo apt-get install virtualenv # Install pip package
 echo -e "$(date +'%Y-%m-%d %R') Venv package installed."
 
 echo -e "\n$(date +'%Y-%m-%d %R') Creating virtual environment..."
@@ -66,21 +98,65 @@ echo -e "$(date +'%Y-%m-%d %R') Activate virtual environment."
 source env/bin/activate # Activates venv
 
 ###########################################################
+## Download codes from github
+###########################################################
+cd ~
+sudo rm -rf ~/${project_name}
+if [ -z ${github_url} ]; then # if github url is empty
+  echo -e "\n$(date +'%Y-%m-%d %R') Cannot clone code from github because github_url is not given."
+else
+  echo -e "\n$(date +'%Y-%m-%d %R') Downloading codes from github..."
+  sudo git clone $github_url # clone codes from github
+  echo $(date +'%Y-%m-%d %R') Code downloaded.
+fi
+read -p "Press Enter to continue..."
+
+###########################################################
 ## Install packages within venv
 ###########################################################
+cd ~
+cd ${project_name}
 echo -e "\n$(date +'%Y-%m-%d %R') Installing packages within virtual environment..."
 if test -f requirements.txt; then # if requirements file exists
   pip install -r requirements.txt
-else
-  echo $(date +'%Y-%m-%d %R') Install django packages
-  pip install django
-  echo -e "\n$(date +'%Y-%m-%d %R') Install gunicorn packages"
+  pip install mysqlclient # install mysqlclient
   pip install gunicorn # install gunicorn
 fi
+pip install django  # install django if not installed
+pip install gunicorn # install gunicorn
+echo $(date +'%Y-%m-%d %R') Env Package installed.
+pip list
+read -p "Press Enter to continue..."
+
+###########################################################
+## Djnago project configuration
+###########################################################
+cd ~
+
+env_file=~/${project_name}/${project_name}/${project_name}/.env
+sudo bash -c "sudo cat >$env_file <<ENV
+EMAIL_HOST=smtp.gmail.com
+EMAIL_HOST_USER=test.arguswatcher@gmail.com
+EMAIL_HOST_PASSWORD=ojgkondpujxfcxao
+RECIPIENT_ADDRESS=simonangelfong@gmail.com
+
+MYSQL_DATABASE_NAME=django_db
+MYSQL_USERNAME=adam
+MYSQL_PASSWORD=adam123456
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+ENV"
+
+python3 ~/${project_name}/${project_name}/manage.py makemigrations AppTest # need to modify app name
+python3 ~/${project_name}/${project_name}/manage.py migrate
+
+python3 ~/${project_name}/${project_name}/manage.py runserver 0.0.0.0:8000
 
 echo $(date +'%Y-%m-%d %R') Deactivate virtual environment
 deactivate
 cd ~
+echo $(date +'%Y-%m-%d %R') Django migrate complate.
+read -p "Press Enter to continue..."
 
 ###########################################################
 ## Configuration gunicorn
@@ -120,7 +196,7 @@ ExecStart=/home/ubuntu/env/bin/gunicorn \
     --access-logfile - \
     --workers 3 \
     --bind unix:/run/gunicorn.sock \
-${project_name}.wsgi:application
+    ${project_name}.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -239,8 +315,3 @@ sudo ufw app list
 ###########################################################
 echo -e "\n$(date +'%Y-%m-%d %R') Setup completed. \n"
 read -p "Press Enter to continue..."
-
-# # shortcut to update deployment script
-# sudo rm -rf ArgusWatcher deploy_conf.sh # remove existing script
-# sudo nano deploy_conf.sh  # create a new sh file
-# source deploy_conf.sh ArgusWatcher https://github.com/simonangel-fong/ArgusWatcher.git 54.161.164.221 # run bash sccript using arguments

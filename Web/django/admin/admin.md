@@ -3,14 +3,9 @@
 [Back](../index.md)
 
 - [Django - Admin](#django---admin)
-  - [Admin](#admin)
   - [`AdminSite`](#adminsite)
   - [`ModelAdmin`](#modeladmin)
   - [Example](#example)
-
----
-
-## Admin
 
 ---
 
