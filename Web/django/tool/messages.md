@@ -92,19 +92,19 @@ MESSAGE_TAGS = {
 - Even if there is only one message, should still iterate over the messages sequence, because otherwise the message storage will not be cleared for the next request.
 
 ```html
-{% if messages %}
+// if messages \\
 <ul class="messages">
-    {% for message in messages %}
-    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
+    // for message in messages \\
+    <li // if message.tags \\ class="__ message.tags __"// endif \\>__ message __</li>
+    // endfor \\
 </ul>
-{% endif %}
+// endif \\
 ```
 
 - `DEFAULT_MESSAGE_LEVELS` variable: a mapping of the message level names to their numeric value
 
 ```html
-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+// if message.level == DEFAULT_MESSAGE_LEVELS.ERROR \\Important: // endif \\
 ```
 
 ---

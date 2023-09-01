@@ -112,45 +112,45 @@ class ListBlog(ListView):
 ```html
 <!-- display objects on current page -->
 <ul class="list-group">
-  {% for blog in page_obj %}
+  // for blog in page_obj \\
   <li class="list-group-item">
-    <a href="{% url 'Blog:detail' blog.pk %}">{{blog.title|upper}}</a>
+    <a href="// url 'Blog:detail' blog.pk \\">__blog.title|upper__</a>
   </li>
-  {% endfor %}
+  // endfor \\
 </ul>
 <!-- pagination -->
 <nav aria-label="Page navigation d-flex">
   <ul class="pagination">
     <li class="page-item me-auto">
       <a class="nav-link disabled" aria-disabled="true">
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        Page __ page_obj.number __ of __ page_obj.paginator.num_pages __
       </a>
     </li>
-    {% if page_obj.has_previous %}
+    // if page_obj.has_previous \\
     <li class="page-item">
       <a class="page-link" href="?page=1">&laquo; </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+      <a class="page-link" href="?page=__ page_obj.previous_page_number __"
         >Previous</a
       >
     </li>
-    {% endif %}
+    // endif \\
 
     <li class="page-item active" aria-current="page">
-      <span class="page-link">{{ page_obj.number }}</span>
+      <span class="page-link">__ page_obj.number __</span>
     </li>
 
-    {% if page_obj.has_next %}
+    // if page_obj.has_next \\
     <li class="page-item">
-      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="page-link" href="?page=__ page_obj.next_page_number __">Next</a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+      <a class="page-link" href="?page=__ page_obj.paginator.num_pages __">
         &raquo;
       </a>
     </li>
-    {% endif %}
+    // endif \\
   </ul>
 </nav>
 
@@ -178,40 +178,40 @@ def listing(request):
 ```html
 <!-- display objects on current page -->
 <ul class="list-group">
-  {% for blog in page_obj %}
+  // for blog in page_obj \\
   <li class="list-group-item">
-    <a href="{% url 'Blog:detail' blog.pk %}">{{blog.title|upper}}</a>
+    <a href="// url 'Blog:detail' blog.pk \\">__blog.title|upper__</a>
   </li>
-  {% endfor %}
+  // endfor \\
 </ul>
 
 <!-- pagination -->
 <ul class="nav pagination d-flex justify-content-between">
-  {% if page_obj.has_previous %}
+  // if page_obj.has_previous \\
   <li class="page-item">
     <a class="nav-link" aria-current="page" href="?page=1">&laquo; first</a>
   </li>
   <li class="page-item">
-    <a class="nav-link" href="?page={{ page_obj.previous_page_number }}"
+    <a class="nav-link" href="?page=__ page_obj.previous_page_number __"
       >previous</a
     >
   </li>
-  {% endif %}
+  // endif \\
   <li class="nav-item mx-auto">
     <a class="nav-link disabled" aria-disabled="true">
-      {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+      __ page_obj.number __ / __ page_obj.paginator.num_pages __
     </a>
   </li>
-  {% if page_obj.has_next %}
+  // if page_obj.has_next \\
   <li class="nav-item">
-    <a class="nav-link" href="?page={{ page_obj.next_page_number }}"> next </a>
+    <a class="nav-link" href="?page=__ page_obj.next_page_number __"> next </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="?page={{ page_obj.paginator.num_pages }}">
+    <a class="nav-link" href="?page=__ page_obj.paginator.num_pages __">
       last &raquo;
     </a>
   </li>
-  {% endif %}
+  // endif \\
 </ul>
 
 ```
