@@ -312,18 +312,18 @@ class ContactForm(forms.Form):
 - `contact.html`
 
 ```html
-{% extends "layout/base.html" %} {% load bootstrap5 %} {% block main %}
+// extends "layout/base.html" \\ // load bootstrap5 \\ // block main \\
 <div class="mx-auto my-4 text-center">
   <h1>Contact Us</h1>
 </div>
 <div class="container">
   <form action="" method="post">
-    {% csrf_token %} {% bootstrap_form form %} {% buttons %}
+    // csrf_token \\ // bootstrap_form form \\ // buttons \\
     <button type="submit" class="btn btn-primary">Submit</button>
-    {% endbuttons %}
+    // endbuttons \\
   </form>
 </div>
-{% endblock %}
+// endblock \\
 ```
 
 ---
@@ -331,17 +331,17 @@ class ContactForm(forms.Form):
 - `success.html`
 
 ```html
-{% extends 'layout/base.html' %} {% block main %}
+// extends 'layout/base.html' \\ // block main \\
 <div class="mx-auto my-4 text-center">
-  {% for msg in messages %} {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-  <h1 class="fw-bolder text-success">{{msg}}</h1>
-  {% endif %} {% endfor %}
+  // for msg in messages \\ // if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS \\
+  <h1 class="fw-bolder text-success">__msg__</h1>
+  // endif \\ // endfor \\
   <p class="my-5">
     You can send another in the
-    <a href="{% url 'contact:contact' %}">contact page</a>
+    <a href="// url 'contact:contact' \\">contact page</a>
   </p>
 </div>
-{% endblock %}
+// endblock \\
 ```
 
 ---
