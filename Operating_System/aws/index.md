@@ -7,6 +7,7 @@
 ## Product List
 
 - [AWS Elastic Beanstalk](./eb.md)
+- [AWS RDS(Relational Database Service)](./rds.md)
 
 ---
 

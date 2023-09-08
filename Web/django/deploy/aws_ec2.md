@@ -24,6 +24,7 @@
     - [Configuration](#configuration-2)
     - [Troubleshooting](#troubleshooting-2)
   - [Configuration Bash](#configuration-bash)
+  - [Troubleshooting](#troubleshooting-3)
 
 ---
 
@@ -560,6 +561,62 @@ if [ $github_url="" ];then
 fi
 git clone github_rep_url
 
+```
+
+---
+
+## Troubleshooting
+
+```sh
+# ==============gunicorn=====================
+# debug
+sudo systemctl status gunicorn.socket # check status
+# return log 
+sudo journalctl -u gunicorn.socket
+
+# configuration file
+sudo nano /etc/systemd/system/gunicorn.service
+
+
+# edit configuration
+nano /etc/supervisor/conf.d/gunicorn.conf
+
+# restart
+sudo systemctl daemon-reload
+sudo systemctl restart gunicorn
+sudo systemctl status gunicorn.socket
+
+
+
+# ==============gunicorn=====================
+# error log
+nano /var/log/nginx/error.log
+sudo tail -30 /var/log/nginx/error.log
+
+# syntax test
+sudo nginx -t
+
+# status
+systemctl status nginx
+
+# nginx configuration
+nano /etc/nginx/sites-available/django.conf
+
+# restart service
+sudo systemctl daemon-reload
+sudo service nginx restart
+sudo systemctl reload nginx
+systemctl status nginx
+
+
+# ============== supervisor =====================
+# error log
+sudo nano /var/log/gunicorn/gunicorn.err.log
+# edit configuration
+sudo nano /etc/supervisor/conf.d/gunicorn.conf
+
+sudo systemctl daemon-reload
+sudo systemctl reload supervisor
 ```
 
 ---
