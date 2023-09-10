@@ -14,3 +14,4 @@
 ## CCP
 
 - [AWS Certified Cloud Practitioner](./ccp/index.md)
+- [AWS Certified Solutions Architect Associate SAA-C03](./saa/index.md)

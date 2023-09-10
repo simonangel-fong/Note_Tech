@@ -1,6 +1,6 @@
 # AWS - CCP
 
-[All Notes](../../index.md)
+[All Note](../../../index.md)
 
 - [AWS - CCP](#aws---ccp)
   - [Content outline](#content-outline)

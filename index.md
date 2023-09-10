@@ -12,11 +12,13 @@
   - [x] [JavaScript](./Programming_Language/javascript/index.md)
   - [ ] Java
 
+- AWS
+  - [x] [AWS CCP](./Operating_System/aws/ccp/index.md)
+  - [ ] [AWS SAA](./Operating_System/aws/saa/index.md)
+
 - OS
-  - [AWS](./Operating_System/aws/index.md)
-    - [x] AWS CCP
   - [ ] [Linux](./Operating_System/linux/index.md)
-    - [ ] Bash
+  - [ ] Bash
   - [ ] iOS
 
 - Database
