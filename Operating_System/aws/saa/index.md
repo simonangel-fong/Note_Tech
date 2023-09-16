@@ -14,6 +14,7 @@
 - [AWS EC2](./ec2/ec2.md)
   - [EC2 - Storage](./ec2/ec2_storage.md)
   - [EC2 - Network](./ec2/ec2_network.md)
+  - [Load Balancer & Auto Scalling Group](./ec2/availability_scalability.md)
 
 ---
 
