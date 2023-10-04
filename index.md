@@ -13,8 +13,8 @@
   - [ ] Java
 
 - AWS
-  - [x] [AWS CCP](./Operating_System/aws/ccp/index.md)
-  - [ ] [AWS SAA](./Operating_System/aws/saa/index.md)
+  - [x] [AWS CCP](./AWS/ccp/index.md)
+  - [ ] [AWS SAA](./AWS/saa/index.md)
 
 - OS
   - [ ] [Linux](./Operating_System/linux/index.md)
