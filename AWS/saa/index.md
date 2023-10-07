@@ -1,6 +1,6 @@
 # AWS Certified Solutions Architect Associate SAA-C03
 
-[All Note](../../../index.md)
+[All Note](../../index.md)
 
 - Exame:
   - `AWS Certified Solution Architect - Associate (SAA-C03)`
@@ -21,6 +21,8 @@
   - [RDS](./rds/rds.md)
   - [Aurora](./rds_aurora/aurora.md)
   - [ElasticCache](./elasticcache/elasticcache.md)
+
+- [Route 53](./route53/route53.md)
 
 ---
 
