@@ -18,11 +18,15 @@
   - [Load Balancer & Auto Scalling Group](./ec2/availability_scalability.md)
 
 - Relational Database
+
   - [RDS](./rds/rds.md)
   - [Aurora](./rds_aurora/aurora.md)
   - [ElasticCache](./elasticcache/elasticcache.md)
 
 - [Route 53](./route53/route53.md)
+- Solution Architecture
+  - [Classic Solution Architecture](./solution_architecture/classic_solution_architecture.md)
+  - [Elastic Beanstalk](./solution_architecture/beanstalk.md)
 
 ---
 

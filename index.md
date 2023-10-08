@@ -23,7 +23,8 @@
 
 - Database
 
-  - [ ] [SQL](./Database/sql/index.md)
+  - [x] [SQL](./Database/sql/index.md)
+  - [ ] [Oracle DBA](./Database/dba/index.md)
   - [ ] MySQL(PY)
   - [ ] MongoDB(PY)
   - [ ] Hadoop
