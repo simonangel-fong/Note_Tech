@@ -25,8 +25,11 @@
 
 - [Route 53](./route53/route53.md)
 - Solution Architecture
+
   - [Classic Solution Architecture](./solution_architecture/classic_solution_architecture.md)
   - [Elastic Beanstalk](./solution_architecture/beanstalk.md)
+
+- [AWS S3](./s3/s3.md)
 
 ---
 
