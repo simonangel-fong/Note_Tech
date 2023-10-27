@@ -31,6 +31,8 @@
 
 - [AWS S3](./s3/s3.md)
 
+- [AWS CloudFront & Global Accelerator](./cloudfront/cloudfront.md)
+
 ---
 
 [TOP](#aws-certified-solutions-architect-associate-saa-c03)
