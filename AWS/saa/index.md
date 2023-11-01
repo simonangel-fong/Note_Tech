@@ -41,6 +41,12 @@
   - [Route 53](./route53/route53.md)
   - [AWS CloudFront & Global Accelerator](./cloudfront/cloudfront.md)
 
+- [Messaging and Integration](./decouple/messaging.md)
+
+  - [AWS SQS](./decouple/sqs.md)
+  - [AWS SNS](./decouple/sns.md)
+  - [AWS Kinesis](./decouple/kinesis.md)
+
 ---
 
 [TOP](#aws-certified-solutions-architect-associate-saa-c03)
