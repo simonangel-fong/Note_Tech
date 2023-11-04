@@ -74,6 +74,9 @@
   - You are running an application that produces a large amount of real-time data that you want to load into S3 and Redshift. Also, these data need to be transformed before being delivered to their destination. What is the best architecture would you choose?
   - Data Stream + Data Firehose
   - This is a perfect combo of technology for loading data **near real-time data** into `S3` and `Redshift`. Kinesis Data Firehose supports custom data **transformations** using `AWS Lambda`.
+- Sample:
+  - An AWS service allows you to **capture gigabytes of data per second** in **real-time** and deliver these data to multiple **consuming** applications, with a **replay** feature.
+    - Amazon `Kinesis Data Streams (KDS)` is a massively scalable and durable **real-time** data streaming service. It can continuously capture gigabytes of data per second from hundreds of sources such as website clickstreams, database event streams, financial transactions, social media feeds, IT logs, and location-tracking events.
 
 ---
 

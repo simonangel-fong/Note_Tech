@@ -10,14 +10,14 @@
     - [Replica](#replica)
       - [Auto Scaling](#auto-scaling)
       - [Custom Endpoints](#custom-endpoints)
+    - [Backups](#backups)
+    - [Restore options](#restore-options)
     - [Hands-on](#hands-on)
-  - [Aurota Serverless](#aurota-serverless)
-  - [Aurora Multi-Master](#aurora-multi-master)
-  - [Global Aurora (Cross Region)](#global-aurora-cross-region)
-  - [Aurora Machine Learning](#aurora-machine-learning)
-  - [Aurora Backups](#aurora-backups)
-  - [Restore options](#restore-options)
-  - [Aurora Database Cloning](#aurora-database-cloning)
+  - [`Aurota Serverless`](#aurota-serverless)
+  - [`Aurora Multi-Master`](#aurora-multi-master)
+  - [`Global Aurora` (Cross Region)](#global-aurora-cross-region)
+  - [`Aurora Machine Learning`](#aurora-machine-learning)
+  - [`Aurora Database Cloning`](#aurora-database-cloning)
 
 ---
 
@@ -103,13 +103,43 @@
 
 ---
 
+### Backups
+
+- **Automated backups**
+
+  - 1 to 35 days (**cannot be disabled**)
+  - `point-in-time recovery` in that timeframe
+
+- **Manual DB Snapshots**
+  - Manually triggered by the user
+  - **Retention** of backup for **as long as you want**
+
+---
+
+### Restore options
+
+- Restoring a Aurora **backup** or a **snapshot** creates a new database
+
+- Restoring MySQL Aurora cluster from S3
+
+  - Create a **backup** of your on-premises database using **Percona XtraBackup**
+  - **Store** the backup file on Amazon **S3**
+  - **Restore** the backup file onto a new Aurora cluster running MySQ
+
+- Restoring MySQL RDS database from S3
+- Create a backup of your on-premises database
+- Store it on Amazon S3 (object storage)
+- Restore the backup file onto a new RDS instance running MySQL
+
+---
+
 ### Hands-on
 
 ![aurora_hands_on](./pic/aurora_hands_on.png)
 
 ---
 
-## Aurota Serverless
+## `Aurota Serverless`
 
 - **Automated** database instantiation and **auto scaling** based on actual usage
 - Good for **infrequent**, **intermittent** or **unpredictable** workloads
@@ -120,7 +150,7 @@
 
 ---
 
-## Aurora Multi-Master
+## `Aurora Multi-Master`
 
 - In case you want **continuous write** availability for the writer nodes
 
@@ -138,7 +168,7 @@
 
 ---
 
-## Global Aurora (Cross Region)
+## `Global Aurora` (Cross Region)
 
 - Aurora `Cross Region Read Replicas`:
   - Useful for **disaster recovery**
@@ -155,7 +185,7 @@
 
 ---
 
-## Aurora Machine Learning
+## `Aurora Machine Learning`
 
 - Enables you to add ML-based predictions to your applications **via SQL**
 - Simple, optimized, and secure integration between `Aurora` and `AWS ML services`
@@ -173,37 +203,7 @@
 
 ---
 
-## Aurora Backups
-
-- **Automated backups**
-
-  - 1 to 35 days (**cannot be disabled**)
-  - **point-in-time** recovery in that timeframe
-
-- **Manual DB Snapshots**
-  - Manually triggered by the user
-  - **Retention** of backup for **as long as you want**
-
----
-
-## Restore options
-
-- Restoring a Aurora **backup** or a **snapshot** creates a new database
-
-- Restoring MySQL Aurora cluster from S3
-
-  - Create a **backup** of your on-premises database using **Percona XtraBackup**
-  - **Store** the backup file on Amazon **S3**
-  - **Restore** the backup file onto a new Aurora cluster running MySQ
-
-- Restoring MySQL RDS database from S3
-- Create a backup of your on-premises database
-- Store it on Amazon S3 (object storage)
-- Restore the backup file onto a new RDS instance running MySQL
-
----
-
-## Aurora Database Cloning
+## `Aurora Database Cloning`
 
 - Create a new Aurora DB Cluster **from an existing one**
 - **Faster than snapshot & restore**

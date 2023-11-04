@@ -30,11 +30,13 @@
   - [AWS S3](./s3/s3.md)
   - [AWS Storage Extras](./storage/extras.md)
 
-- Relational Database
+- [Database Service](./db_service/db_service.md)
 
-  - [RDS](./rds/rds.md)
-  - [Aurora](./rds_aurora/aurora.md)
-  - [ElasticCache](./elasticcache/elasticcache.md)
+  - Relational Database
+
+    - [RDS](./rds/rds.md)
+    - [Aurora](./rds_aurora/aurora.md)
+    - [ElasticCache](./elasticcache/elasticcache.md)
 
 - Network
 
@@ -48,8 +50,16 @@
   - [AWS Kinesis](./decouple/kinesis.md)
 
 - [Container Service](./container/container.md)
+
   - [AWS ECS and Fargate](./container/ecs.md)
   - [AWS EKS](./container/eks.md)
+
+- [Serverless](./serverless/serverless.md)
+  - [Serverless Architecture](./serverless/architecture.md)
+  - [AWS Lambda](./lambda/lambda.md)
+  - [AWS Dynamo](./dynamo/dynamo.md)
+  - [AWS API Gateway](./gateway/gateway.md)
+  - [AWS Cognito](./cognito/cognito.md)
 
 ---
 
