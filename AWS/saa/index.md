@@ -61,6 +61,17 @@
   - [AWS API Gateway](./gateway/gateway.md)
   - [AWS Cognito](./cognito/cognito.md)
 
+- [Data & Analytics](./data_analytics/data_analytics.md)
+  - [Amazon Athena](./athena/athena.md)
+  - [Amazon Redshift](./redshift/redshift.md)
+  - [Amazon OpenSearch](./opensearch/opensearch.md)
+  - [Amazon EMR](./emr/emr.md)
+  - [Amazon QuickSight](./quicksight/quicksight.md)
+  - [AWS Glue](./glue/glue.md)
+  - [AWS Lake Formation](./lake_formation/lake_formation.md)
+  - [Kinesis Data Analytics](./kinesis_analytics/kinesis_analytics.md)
+  - [Amazon MSK](./msk/msk.md)
+
 ---
 
 [TOP](#aws-certified-solutions-architect-associate-saa-c03)
