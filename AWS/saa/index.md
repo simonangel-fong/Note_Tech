@@ -72,6 +72,9 @@
   - [Kinesis Data Analytics](./kinesis_analytics/kinesis_analytics.md)
   - [Amazon MSK](./msk/msk.md)
 
+- Machine learning
+  - [Amazon Rekognition](./ml/ml.md#Rekognition)
+
 ---
 
 [TOP](#aws-certified-solutions-architect-associate-saa-c03)
