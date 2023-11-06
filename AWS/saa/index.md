@@ -55,6 +55,7 @@
   - [AWS EKS](./container/eks.md)
 
 - [Serverless](./serverless/serverless.md)
+
   - [Serverless Architecture](./serverless/architecture.md)
   - [AWS Lambda](./lambda/lambda.md)
   - [AWS Dynamo](./dynamo/dynamo.md)
@@ -62,6 +63,7 @@
   - [AWS Cognito](./cognito/cognito.md)
 
 - [Data & Analytics](./data_analytics/data_analytics.md)
+
   - [Amazon Athena](./athena/athena.md)
   - [Amazon Redshift](./redshift/redshift.md)
   - [Amazon OpenSearch](./opensearch/opensearch.md)
@@ -72,8 +74,7 @@
   - [Kinesis Data Analytics](./kinesis_analytics/kinesis_analytics.md)
   - [Amazon MSK](./msk/msk.md)
 
-- Machine learning
-  - [Amazon Rekognition](./ml/ml.md#Rekognition)
+- [Machine learning services](./ml/ml.md)
 
 ---
 
