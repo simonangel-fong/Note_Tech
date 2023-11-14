@@ -10,12 +10,19 @@
 ## Catelog
 
 - [AWS Infrastructure](./infrastructure/infrastructure.md)
-- [AWS IAM](./iam/iam.md)
+
+- IAM
+
+  - [`AWS IAM`](./iam/iam.md)
+  - [`AWS Organizations`](./iam/advanced_identity.md)
+  - [`IAM Identity Center`](./iam/identity_center.md)
+  - [`AWS Directory Services`](./iam/directory_services.md)
+  - [`AWS Control Tower`](./iam/control_tower.md)
 
 - Solution Architecture
 
   - [Classic Solution Architecture](./solution_architecture/classic_solution_architecture.md)
-  - [Elastic Beanstalk](./solution_architecture/beanstalk.md)
+  - [`Elastic Beanstalk`](./solution_architecture/beanstalk.md)
 
 - Compute services
 
@@ -82,6 +89,20 @@
   - [`Amazon EventBridge`](./monitor_audit_compliance/eventbridge.md)
   - [`AWS CloudTrail`](./monitor_audit_compliance/cloudtrail.md)
   - [`AWS Config`](./monitor_audit_compliance/config.md)
+
+- [Encryption](./encryption/encryption.md)
+  - [`AWS KMS`](./encryption/kms.md)
+  - [`AWS Systems Manager(SSM)`](./encryption/systems_manager.md)
+  - [`AWS Secrets Manager`](./encryption/secret_manager.md)
+  - [`AWS Certificate Manager(ACM)`](./encryption/acm.md)
+
+- [Security](./security/security.md)
+  - [`AWS Web Application Firewall(WAF)`](./security/waf.md)
+  - [`AWS Shield`](./security/shield.md)
+  - [`AWS Firewall Manager`](./security/firewall_manager.md)
+  - [`Amazon GuardDuty`](./security/guardDuty.md)
+  - [`Amazon Inspector`](./security/inspector.md)
+  - [`AWS Macie`](./security/macie.md)
 
 ---
 
