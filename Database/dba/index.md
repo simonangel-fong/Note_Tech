@@ -22,7 +22,7 @@
 
 - Oracle Database Architecture
 
-
+- [Local Virtual Machine](./local_vm/vm.md)
 
 ---
 

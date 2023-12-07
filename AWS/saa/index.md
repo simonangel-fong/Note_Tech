@@ -91,18 +91,24 @@
   - [`AWS Config`](./monitor_audit_compliance/config.md)
 
 - [Encryption](./encryption/encryption.md)
+
   - [`AWS KMS`](./encryption/kms.md)
   - [`AWS Systems Manager(SSM)`](./encryption/systems_manager.md)
   - [`AWS Secrets Manager`](./encryption/secret_manager.md)
   - [`AWS Certificate Manager(ACM)`](./encryption/acm.md)
 
 - [Security](./security/security.md)
+
   - [`AWS Web Application Firewall(WAF)`](./security/waf.md)
   - [`AWS Shield`](./security/shield.md)
   - [`AWS Firewall Manager`](./security/firewall_manager.md)
   - [`Amazon GuardDuty`](./security/guardDuty.md)
   - [`Amazon Inspector`](./security/inspector.md)
   - [`AWS Macie`](./security/macie.md)
+
+- [Networking](./networking/networking.md)
+  - [`AWS VPC`](./networking/vpc.md)
+  - [`Internet Gateway(IGW)`](./networking/igw.md)
 
 ---
 
