@@ -2,12 +2,18 @@
 
 [All Note](../../index.md)
 
-- Exame:
-  - `AWS Certified Solution Architect - Associate (SAA-C03)`
+- [AWS Certified Solutions Architect Associate SAA-C03](#aws-certified-solutions-architect-associate-saa-c03)
+  - [Admin](#admin)
+  - [Solution Architeture](#solution-architeture)
+  - [Servies](#servies)
+  - [Security](#security)
 
 ---
 
-## Catelog
+- Exame:
+  - `AWS Certified Solution Architect - Associate (SAA-C03)`
+
+## Admin
 
 - [AWS Infrastructure](./infrastructure/infrastructure.md)
 
@@ -18,70 +24,9 @@
   - [`IAM Identity Center`](./iam/identity_center.md)
   - [`AWS Directory Services`](./iam/directory_services.md)
   - [`AWS Control Tower`](./iam/control_tower.md)
+  - [`AWS Cognito`](./iam/cognito.md)
 
-- Solution Architecture
-
-  - [Classic Solution Architecture](./solution_architecture/classic_solution_architecture.md)
-  - [`Elastic Beanstalk`](./solution_architecture/beanstalk.md)
-
-- Compute services
-
-  - [`AWS EC2`](./ec2/ec2.md)
-
-    - [EC2 - Storage](./ec2/ec2_storage.md)
-    - [EC2 - Network](./ec2/ec2_network.md)
-    - [Load Balancer & Auto Scalling Group](./ec2/availability_scalability.md)
-
-- Storage
-
-  - [`AWS S3`](./s3/s3.md)
-  - [AWS Storage Extras](./storage/extras.md)
-
-- [Database Service](./db_service/db_service.md)
-
-  - Relational Database
-
-    - [`RDS`](./rds/rds.md)
-    - [`Aurora`](./rds_aurora/aurora.md)
-    - [`ElasticCache`](./elasticcache/elasticcache.md)
-
-- Network
-
-  - [`Route 53`](./route53/route53.md)
-  - [AWS CloudFront & Global Accelerator](./cloudfront/cloudfront.md)
-
-- [Messaging and Integration](./decouple/messaging.md)
-
-  - [`AWS SQS`](./decouple/sqs.md)
-  - [`AWS SNS`](./decouple/sns.md)
-  - [`AWS Kinesis`](./decouple/kinesis.md)
-
-- [Container Service](./container/container.md)
-
-  - [`AWS ECS` and `Fargate`](./container/ecs.md)
-  - [`AWS EKS`](./container/eks.md)
-
-- [Serverless](./serverless/serverless.md)
-
-  - [Serverless Architecture](./serverless/architecture.md)
-  - [`AWS Lambda`](./lambda/lambda.md)
-  - [`AWS Dynamo`](./dynamo/dynamo.md)
-  - [`AWS API Gateway`](./gateway/gateway.md)
-  - [`AWS Cognito`](./cognito/cognito.md)
-
-- [Data & Analytics](./data_analytics/data_analytics.md)
-
-  - [`Amazon Athena`](./athena/athena.md)
-  - [`Amazon Redshift`](./redshift/redshift.md)
-  - [`Amazon OpenSearch`](./opensearch/opensearch.md)
-  - [`Amazon EMR`](./emr/emr.md)
-  - [`Amazon QuickSight`](./quicksight/quicksight.md)
-  - [`AWS Glue`](./glue/glue.md)
-  - [`AWS Lake Formation`](./lake_formation/lake_formation.md)
-  - [`Kinesis Data Analytics`](./kinesis_analytics/kinesis_analytics.md)
-  - [`Amazon MSK`](./msk/msk.md)
-
-- [Machine learning services](./ml/ml.md)
+- [Budget](./budget/budget.md)
 
 - [Monitor, Audit, Compliance](./monitor_audit_compliance/monitor_audit_compliance.md)
 
@@ -90,14 +35,110 @@
   - [`AWS CloudTrail`](./monitor_audit_compliance/cloudtrail.md)
   - [`AWS Config`](./monitor_audit_compliance/config.md)
 
-- [Encryption](./encryption/encryption.md)
+---
+
+## Solution Architeture
+
+- Solution Architecture
+
+  - [Classic Solution Architecture](./solution_architecture/classic/classic_solution_architecture.md)
+  - [`Beanstalk`](./solution_architecture/beanstalk/beanstalk.md)
+  - [Serverless](./solution_architecture/serverless/serverless.md)
+    - [Serverless Architecture](./solution_architecture/serverless/architecture.md)
+
+---
+
+## Servies
+
+- **Compute services**
+
+  - [`AWS EC2`](./compute/ec2/ec2.md)
+
+    - [EC2 Network](./compute/ec2/ec2_network.md)
+    - Storage
+      - [`Elastic Block Storage`](./compute/ec2/ebs.md)
+      - [`Elastic File System`](./compute/ec2/efs.md)
+    - [Availability & Scalability](./compute/ec2/availability_scalability.md)
+      - [`Auto Scale Group`](./compute/ec2/ec2_asg.md)
+      - [`Elastic Load Balancer`](./compute/ec2/load_balancer.md)
+
+  - [`AWS Lambda`](./compute/lambda/lambda.md)
+
+- [**Container Service**](./container/container.md)
+
+  - [`AWS ECS` and `Fargate`](./container/ecs.md)
+  - [`AWS EKS`](./container/eks.md)
+
+- [**Storage**](./storage/storage.md)
+
+  - [`AWS S3`](./storage/s3.md)
+  - [`AWS Snow Family`](./storage/snow.md)
+  - [`Amazon FSx`](./storage/fsx.md)
+  - [`AWS Storage Gateway`](./storage/storage_gateway.md)
+  - [`AWS Transfer Family`](./storage/transfer_family.md)
+  - [`AWS DataSync`](./storage/datasync.md)
+
+- [**Database Service**](./db_service/db_service.md)
+
+  - [`RDS`](./db_service/rds/rds.md)
+  - [`Aurora`](./db_service/aurora/aurora.md)
+  - [`ElasticCache`](./db_service/elasticcache/elasticcache.md)
+  - [`AWS Dynamo`](./db_service/dynamo/dynamo.md)
+
+- [**Networking(VPC)**](./networking/networking.md)
+
+  - [Pricing](./networking/pricing.md)
+  - [`AWS VPC`](./networking/vpc.md)
+  - [`Bastion Host`](./networking/bastion_host.md)
+  - [`Internet Gateway(IGW)`](./networking/igw.md)
+  - [`Nat Gateway`](./networking/natgw.md)
+  - [`NACL` & Security Group](./networking/nacl.md)
+  - [`Egress-only Internet Gateway`](./networking/egress_IGW.md)
+  - [`VPC Peering`](./networking/peering.md)
+  - [`VPC Endpoints`](./networking/endpoint.md)
+  - [`Site-to-Site VPN` + `Direct Connect (DX)`](./networking/vpn_dx.md)
+  - [`Transit Gateway`](./networking/transit.md)
+  - [`VPC Flow Logs`](./networking/flow_log.md)
+  - [`Traffic Mirroring`](./networking/traffic_mirroring.md)
+
+- **Networking Service**
+
+  - [`Route 53`](./networking/route53/route53.md)
+  - [`AWS CloudFront` & `Global Accelerator`](./networking/cloudfront/cloudfront.md)
+  - [`AWS API Gateway`](./networking/gateway/gateway.md)
+
+- [**Messaging and Integration**](./decouple/messaging.md)
+
+  - [`AWS SQS`](./decouple/sqs.md)
+  - [`AWS SNS`](./decouple/sns.md)
+  - [`AWS Kinesis`](./decouple/kinesis.md)
+
+- [**Data & Analytics**](./data_analytics/data_analytics/data_analytics.md)
+
+  - [`Amazon Athena`](./data_analytics/athena/athena.md)
+  - [`Amazon Redshift`](./data_analytics/redshift/redshift.md)
+  - [`Amazon OpenSearch`](./data_analytics/opensearch/opensearch.md)
+  - [`Amazon EMR`](./data_analytics/emr/emr.md)
+  - [`Amazon QuickSight`](./data_analytics/quicksight/quicksight.md)
+  - [`AWS Glue`](./data_analytics/glue/glue.md)
+  - [`AWS Lake Formation`](./data_analytics/lake_formation/lake_formation.md)
+  - [`Kinesis Data Analytics`](./data_analytics/kinesis_analytics/kinesis_analytics.md)
+  - [`Amazon MSK`](./data_analytics/msk/msk.md)
+
+- [**Machine learning services**](./ml/ml.md)
+
+---
+
+## Security
+
+- [**Encryption**](./encryption/encryption.md)
 
   - [`AWS KMS`](./encryption/kms.md)
   - [`AWS Systems Manager(SSM)`](./encryption/systems_manager.md)
   - [`AWS Secrets Manager`](./encryption/secret_manager.md)
   - [`AWS Certificate Manager(ACM)`](./encryption/acm.md)
 
-- [Security](./security/security.md)
+- [**Security**](./security/security.md)
 
   - [`AWS Web Application Firewall(WAF)`](./security/waf.md)
   - [`AWS Shield`](./security/shield.md)
@@ -105,10 +146,7 @@
   - [`Amazon GuardDuty`](./security/guardDuty.md)
   - [`Amazon Inspector`](./security/inspector.md)
   - [`AWS Macie`](./security/macie.md)
-
-- [Networking](./networking/networking.md)
-  - [`AWS VPC`](./networking/vpc.md)
-  - [`Internet Gateway(IGW)`](./networking/igw.md)
+  - [`AWS Network Firewall`](./security/network_firewall.md)
 
 ---
 

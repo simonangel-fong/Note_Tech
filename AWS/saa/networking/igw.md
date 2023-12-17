@@ -10,6 +10,7 @@
 
 ## Internet Gateway (IGW)
 
+- no charge
 - Allows resources (e.g., `EC2 instances`) in a `VPC` connect to the Internet
 - It scales **horizontally** and is highly **available** and **redundant**
 - Must be **created separately from** a `VPC`

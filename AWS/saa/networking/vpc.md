@@ -9,9 +9,6 @@
     - [Hands-on](#hands-on-1)
   - [Subnet](#subnet)
     - [Hands-on](#hands-on-2)
-  - [Bastion Hosts](#bastion-hosts)
-    - [Hands-on](#hands-on-3)
-  - [`NAT` Instance (outdated, but still at the exam)](#nat-instance-outdated-but-still-at-the-exam)
 
 ---
 
@@ -41,6 +38,11 @@
 - `/16` - `/28` / CIDR
 
 ![vpc_diagram](./pic/vpc_diagram.png)
+
+- Sample:
+  - You have a corporate network of size 10.0.0.0/8 and a satellite office of size 192.168.0.0/16. Which CIDR is acceptable for your AWS VPC if you plan on connecting your networks later on?
+    - 172.16.0.0/16
+    - CIDR not should overlap(排除其他选项), and the **max CIDR size in AWS is /16**.
 
 ---
 
@@ -113,6 +115,13 @@
 
 ![subnet_diagram](./pic/subnet_diagram.png)
 
+- Sample:
+  - You plan on creating a subnet and want it to have at least capacity for 28 EC2 instances. What's the minimum size you need to have for your subnet?
+    - /26
+    - 2^(32-26) -5 > 28
+  - AWS reserves 5 IP addresses each time you create a new subnet in a VPC. When you create a subnet with CIDR 10.0.0.0/24, the following IP addresses are reserved, EXCEPT ....................
+    - 0,1,2,3,255
+
 ---
 
 ### Hands-on
@@ -152,83 +161,6 @@
   - if want to auto-assign IP within a subnet, need enable manually.
 
 ![subnet_auto_assign_ip](./pic/subnet_auto_assign_ip.png)
-
----
-
-## Bastion Hosts
-
-- `Bastion Host`
-  - used to SSH into our private EC2 instances, which are in the private subnets and have not direct access to public internet.
-- The `bastion` is in the `public subnet` which is then **connected to all other private subnets**
-
-- `Bastion Host` **security group** must allow **inbound** from the internet on **port 22** from **restricted CIDR**, for example the public CIDR of your corporation
-
-- `Security Group` of the EC2 Instances must allow
-
-  - the `Security Group` of the `Bastion Host`
-  - the `private IP` of the `Bastion host`
-
-- 一台在公网=Bastion: 限定入流 CIDR,可以 SSH 到 internet 和私网
-- 私网服务器: 允许 Basion/允许私有 IP
-
-![bastion_host](./pic/bastion_host.png)
-
----
-
-### Hands-on
-
-- Note: SG's VPC must match with the EC2's VPC, otherwise instance cannot launch.
-
-- Create SG in VPC allowing SSH
-
-![bastion_host_handson04](./pic/bastion_host_handson04.png)
-
-![bastion_host_handson04](./pic/bastion_host_handson05.png)
-
-- Create `Bastion Host` EC2 instance in **public subnet** in the same VPC
-  - using Key pair to enable SSH
-  - attach sg allowing SSH
-
-![bastion_host_handson01](./pic/bastion_host_handson01.png)
-
-![bastion_host_handson01](./pic/bastion_host_handson06.png)
-
-- Create an EC2 instacne in **private subnet** within the same VPC
-  - using key pair
-  - define a SG
-    - define inbound rules: SSH + sg attached to Bastion Host
-
-![bastion_host_handson01](./pic/bastion_host_handson08.png)
-
-- Connect to Bastion Host to configure key pair `.pem` file
-
-![bastion_host_handson01](./pic/bastion_host_handson09.png)
-
-- change mode: `chmode 0400 <pem_file>`
-- Connect to private EC2 instance with SSH: `ssh -i "pem_file" username@private_ip`
-
-![bastion_host_handson01](./pic/bastion_host_handson10.png)
-
-- Test connection: `ping google.com`
-  - in private EC2, cannot ping
-  - in Bastion Host, can ping
-
-![bastion_host_handson01](./pic/bastion_host_handson11.png)
-
----
-
-## `NAT` Instance (outdated, but still at the exam)
-
-- `NAT` / `Network Address Translation`
-
-  - Allows EC2 instances in private subnets to connect to the Internet
-
-- Features
-  - Must be **launched** in a `public subnet`
-  - Must **disable** EC2 setting:
-    - **Source / destination Check**
-  - Must have `Elastic IP` attached to it
-  - `Route Tables` must be configured to route traffic from private subnets to the `NAT` Instance
 
 ---
 
