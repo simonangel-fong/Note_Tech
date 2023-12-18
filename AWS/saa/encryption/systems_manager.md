@@ -9,6 +9,12 @@
     - [Parameters Policies](#parameters-policies)
   - [Hands-on](#hands-on)
   - [Hands-on: integrate with lambda](#hands-on-integrate-with-lambda)
+  - [SSM - Session Manager](#ssm---session-manager)
+    - [Hands-on](#hands-on-1)
+  - [Run Command](#run-command)
+  - [Patch Manager](#patch-manager)
+  - [Maintenance Windows](#maintenance-windows)
+    - [Automation](#automation)
 
 ---
 
@@ -183,3 +189,140 @@ def lambda_handler(event, context):
 ![ssm_parameter_store_handson10](./pic/ssm_parameter_store_handson22.png)
 
 ---
+
+## SSM - Session Manager
+
+- `Session Manager`
+
+  - Allows you to **start a secure shell** on your `EC2` and **on-premises servers**
+
+- Features
+  - **No** SSH access, bastion hosts, or SSH keys needed
+  - **No port** 22 needed (**better** security)
+  - Supports Linux, macOS, and Windows
+  - **Send session lo**g data to `S3` or `CloudWatch Logs`
+
+![ssm_session_manager_diagram](./pic/ssm_session_manager_diagram.png)
+
+---
+
+### Hands-on
+
+- Create role for ssm to access to ec2
+
+![hands-on](./pic/ssm_session_manager_handson04.png)
+
+![hands-on](./pic/ssm_session_manager_handson05.png)
+
+![hands-on](./pic/ssm_session_manager_handson06.png)
+
+![hands-on](./pic/ssm_session_manager_handson07.png)
+
+---
+
+- Create an instance with no ssh
+  - No key pair
+  - disable ssh
+  - assign role for ssm
+
+![hands-on](./pic/ssm_session_manager_handson01.png)
+
+![hands-on](./pic/ssm_session_manager_handson02.png)
+
+![hands-on](./pic/ssm_session_manager_handson03.png)
+
+![hands-on](./pic/ssm_session_manager_handson08.png)
+
+- outcome
+
+![hands-on](./pic/ssm_session_manager_handson09.png)
+
+![hands-on](./pic/ssm_session_manager_handson10.png)
+
+---
+
+- Start session
+
+![hands-on](./pic/ssm_session_manager_handson11.png)
+
+![hands-on](./pic/ssm_session_manager_handson12.png)
+
+---
+
+## Run Command
+
+- `Run Command`
+
+  - Execute a document (= **script**) or just run a **command**
+
+- **Features**:
+
+  - Run command across **multiple** instances (using **resource groups**)
+  - **No** need for `SSH`
+
+- **Integration**
+  - Command **Output** can be shown in the `AWS Console`, **sent** to `S3` bucket or `CloudWatch Logs`
+  - **Send notifications** to `SNS` about command **status** (In progress, Success, Failed, …)
+  - **Integrated** with `IAM` & `CloudTrail`
+  - **Can be invoked** using `EventBridge`
+
+![ssm_run_command_diagram.png](./pic/ssm_run_command_diagram.png)
+
+---
+
+## Patch Manager
+
+- `Patch Manager`
+
+  - **Automates the process of patching** managed instances
+
+- Features:
+  - **OS** updates, **applications** updates, **security** updates
+  - **Supports** `EC2` instances and **on-premises servers**
+  - Supports Linux, macOS, and Windows
+  - Patch **on-demand** or on a **schedule** using `Maintenance Windows`
+  - **Scan** instances and **generate** patch compliance **report** (missing patches)
+
+![ssm_patch_manager_diagram.png](./pic/ssm_patch_manager_diagram.png)
+
+---
+
+## Maintenance Windows
+
+- `Maintenance Windows`
+
+  - Defines a **schedule** for when **to perform actions** on your instances
+  - Example: OS patching, updating drivers, installing software, …
+
+- Maintenance Window contains
+  - **Schedule**
+  - **Duration**
+  - Set of registered **instances**
+  - Set of registered **tasks**
+
+![ssm_maintenance_windows_diagram.png](./pic/ssm_maintenance_windows_diagram.png)
+
+---
+
+### Automation
+
+- `Automation`
+
+  - **Simplifies** common **maintenance and deployment tasks** of EC2 instances and other AWS resources
+  - Examples: **restart** instances, **create** an `AMI`, `EBS` **snapshot**
+
+- Automation Runbook
+
+  - **SSM Documents to define actions** preformed on your EC2 instances or AWS resources (pre-defined or custom)
+
+- Can be triggered using:
+  - **Manually** using AWS `Console`, AWS `CLI` or `SDK`
+  - Amazon `EventBridge`
+  - On a **schedule** using `Maintenance Windows`
+  - By AWS `Config` for rules **remediations**
+
+![ssm_automation_diagram.png](./pic/ssm_automation_diagram.png)
+
+---
+
+[TOP](#aws---systems-managerssm)

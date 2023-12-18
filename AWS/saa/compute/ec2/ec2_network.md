@@ -11,6 +11,7 @@
   - [Connect with Instance](#connect-with-instance)
     - [SSH](#ssh)
     - [EC2 Instance Connect](#ec2-instance-connect)
+    - [Summary: 3 ways to access EC2 instance](#summary-3-ways-to-access-ec2-instance)
   - [Elastic Network Interfaces (ENI)](#elastic-network-interfaces-eni)
     - [Hands-on: ENI](#hands-on-eni)
 
@@ -19,6 +20,7 @@
 ## IPv4 vs IPv6
 
 - Networking has two sorts of IPs. `IPv4 `and `IPv6`:
+
   - IPv4: 1.160.10.240
   - IPv6: 3ffe:1900:4545:3:200:f8ff:fe21:67cf
 
@@ -34,13 +36,14 @@
 
 ### Public IP vs Private IP
 
-
 - `Public IP`:
+
   - Public IP means the machine **can be identified on the internet (WWW)**
   - Must be **unique** across the whole web (not two machines can have the same public IP).
   - Can be **geo-located** easily
 
 - `Private IP`:
+
   - Private IP means the machine can only be **identified on a private network only**
   - The IP must be **unique across the private network**
   - BUT two different private networks (two companies) can have the same IPs.
@@ -63,11 +66,10 @@
 - When you stop and then start an EC2 instance, it can **change its public IP**.
 - If you need to have **a fixed public IP for your instance,** you need an `Elastic IP`
 - An Elastic IP is a public IPv4 IP you own as long as you don’t delete it
-- You can attach it to one instance at a time 
+- You can attach it to one instance at a time
 
 - With an `Elastic IP address`, you can mask the failure of an instance or software by rapidly remapping the address to another instance in your account.
 - You can only have **5** Elastic IP in your account (you can ask AWS to increase that).
-
 
 - Overall, try to avoid using Elastic IP:
   - They often reflect **poor** architectural decisions
@@ -87,16 +89,18 @@
 ## Security Groups
 
 - `Security Groups`
+
   - acts as a “firewall” on EC2 instances that control how traffic is allowed into or out of an EC2 Instances.
   - only contain rules
   - can reference by IP or by security group
   - Does live “outside” the EC2 – if traffic is blocked the EC2 instance won’t see it
   - It’s good to maintain one separate security group for SSH access
 
-- They regulate: 
-  - Access to Ports 
-  - Authorised IP ranges - IPv4 and IPv6 
-  - Control of **inbound network** (from other to the instance) 
+- They regulate:
+
+  - Access to Ports
+  - Authorised IP ranges - IPv4 and IPv6
+  - Control of **inbound network** (from other to the instance)
     - All **inbound** traffic is **blocked by default**
   - Control of **outbound network** (from the instance to other)
     - All **outbound** traffic is **authorised by default**
@@ -104,9 +108,11 @@
 - SG can be attached to multiple instances; An instance can have multiple SG.
 
 - SG Locked down to a region / VPC combination
+
   - SG is not effect in different region or VPC
 
 - Troubleshooting:
+
   - If your application is not accessible (`time out`), then it’s a security group issue
   - If your application gives a “`connection refused`“ error, then it’s an application error or it’s not launched
 
@@ -133,6 +139,7 @@
 ### SSH
 
 - `SSH`: `Secure Shell` or `Secure Socket Shell`
+
   - a network **protocol** that gives users, particularly system administrators, **a secure way to access** a computer over an unsecured network.
 
 - `ssh -i pem_file hostname@public_ip`
@@ -146,6 +153,21 @@
 - The “magic” is that a temporary key is uploaded onto EC2 by AWS
 - Works only out-of-the-box with Amazon Linux 2
 - **Need to make sure the port 22** is still opened!
+
+---
+
+### Summary: 3 ways to access EC2 instance
+
+- SSH
+
+  - port 22 + SSH key
+
+- EC2 instance Connect
+
+  - temporarily + SG(port 22)
+
+- SSM Session manager
+  - assign IAM role for ssm, no port or key
 
 ---
 
@@ -184,6 +206,5 @@
 ![ENI_EC2](./pic/eni_ec2.png)
 
 ---
-
 
 [TOP](#aws-ec2---network)

@@ -27,14 +27,16 @@
   - [`AWS Control Tower`](./iam/control_tower.md)
   - [`AWS Cognito`](./iam/cognito.md)
 
-- [Budget](./budget/budget.md)
-
 - [Monitor, Audit, Compliance](./monitor_audit_compliance/monitor_audit_compliance.md)
 
   - [`Amazon CloudWatch`](./monitor_audit_compliance/cloudwatch.md)
   - [`Amazon EventBridge`](./monitor_audit_compliance/eventbridge.md)
   - [`AWS CloudTrail`](./monitor_audit_compliance/cloudtrail.md)
   - [`AWS Config`](./monitor_audit_compliance/config.md)
+
+- Billing
+  - [Budget](./billing/budget/budget.md)
+  - [Cost Explorer](./billing/cost_explorer/cost_explorer.md)
 
 ---
 
@@ -45,6 +47,7 @@
   - [Classic Solution Architecture](./solution_architecture/classic/classic.md)
   - [Advanced Solution Architecture](./solution_architecture/advanced/advanced.md)
   - [`Beanstalk`](./solution_architecture/beanstalk/beanstalk.md)
+  - [`Amplify`](./solution_architecture/amplify/amplify.md)
   - [Serverless](./solution_architecture/serverless/serverless.md)
     - [Serverless Architecture](./solution_architecture/serverless/architecture.md)
 
@@ -128,6 +131,14 @@
   - [`Amazon MSK`](./data_analytics/msk/msk.md)
 
 - [**Machine learning services**](./ml/ml.md)
+
+- Other Services
+  - [`CloudFormation`](./service/cloudformation/cloudformation.md)
+  - [`Simple Email Service`](./service/ses/ses.md)
+  - [`Pinpoint`](./service/pinpoint/pinpoint.md)
+  - [`Elastic Transcoder`](./service/transcoder/transcoder.md)
+  - [`AWS Batch`](./service/batch/batch.md)
+  - [`AppFlow`](./service/appflow/appflow.md)
 
 ---
 
