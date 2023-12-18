@@ -42,7 +42,8 @@
 
 - Solution Architecture
 
-  - [Classic Solution Architecture](./solution_architecture/classic/classic_solution_architecture.md)
+  - [Classic Solution Architecture](./solution_architecture/classic/classic.md)
+  - [Advanced Solution Architecture](./solution_architecture/advanced/advanced.md)
   - [`Beanstalk`](./solution_architecture/beanstalk/beanstalk.md)
   - [Serverless](./solution_architecture/serverless/serverless.md)
     - [Serverless Architecture](./solution_architecture/serverless/architecture.md)
