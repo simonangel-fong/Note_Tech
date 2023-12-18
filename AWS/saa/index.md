@@ -7,6 +7,7 @@
   - [Solution Architeture](#solution-architeture)
   - [Servies](#servies)
   - [Security](#security)
+  - [Disaster Recovery \& Migration](#disaster-recovery--migration)
 
 ---
 
@@ -17,7 +18,7 @@
 
 - [AWS Infrastructure](./infrastructure/infrastructure.md)
 
-- IAM
+- Identity
 
   - [`AWS IAM`](./iam/iam.md)
   - [`AWS Organizations`](./iam/advanced_identity.md)
@@ -147,6 +148,20 @@
   - [`Amazon Inspector`](./security/inspector.md)
   - [`AWS Macie`](./security/macie.md)
   - [`AWS Network Firewall`](./security/network_firewall.md)
+
+---
+
+## Disaster Recovery & Migration
+
+- Disaster Recovery
+
+  - [Disaster Recovery](./disaster_recovery/dr.md)
+
+- [Migration](./migration/migration/migration.md)
+  - [`Database Migration Service`](./migration/dms/dms.md)
+  - [`AWS Backup`](./migration/backup/backup.md)
+  - [`Application Discovery Service`](./migration/app_disc/app_disc.md)
+  - [`Application Migration Service(MGN)`](./migration/mgn/mgn.md)
 
 ---
 

@@ -36,9 +36,14 @@
 > Exame: permission and metadata can be kept between different AWS services.
 
 - Sample:
+
   - A Solutions Architect is working on planning the **migration** of a startup company from on-premises to AWS. Currently, their infrastructure consists of many servers and 30 TB of data hosted on a shared **NFS** storage. He has decided to use Amazon S3 to host the data. Which AWS service can efficiently migrate the data from on-premises to S3?
   - Which AWS service is best suited to migrate a large amount of data from an `S3` bucket to an `EFS` file system?
   - You have on-premises sensitive files and documents that you want to **regularly synchronize** to AWS to keep another copy. Which AWS service can help you with that?
+
+  - AWS DataSync supports the following locations
+    - EBS
+    - Support S3, EFS, FSx
 
 ---
 
