@@ -8,6 +8,7 @@
       - [Programming languages](#programming-languages)
       - [Integration with AWS services](#integration-with-aws-services)
     - [Pricing](#pricing)
+  - [Lambda SnapStart](#lambda-snapstart)
     - [Lambda Limits to Know - per region (常考)](#lambda-limits-to-know---per-region-常考)
     - [Use Case Example](#use-case-example)
   - [Customization At The Edge](#customization-at-the-edge)
@@ -110,6 +111,12 @@
   - After that $1.00 for 600,000 GB-seconds
 
 - It is usually very **cheap** to run AWS Lambda so it’s very popular
+
+---
+
+## Lambda SnapStart
+
+![lambda_snapstart](./pic/lambda_snapstart.png)
 
 ---
 

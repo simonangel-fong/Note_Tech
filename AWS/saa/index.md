@@ -12,7 +12,12 @@
 ---
 
 - Exame:
+
   - `AWS Certified Solution Architect - Associate (SAA-C03)`
+
+- [Certification Path](./cert_path/cert_path.md)
+
+---
 
 ## Admin
 
@@ -26,6 +31,7 @@
   - [`AWS Directory Services`](./iam/directory_services.md)
   - [`AWS Control Tower`](./iam/control_tower.md)
   - [`AWS Cognito`](./iam/cognito.md)
+  - [`Trusted Advisor`](./solution_architecture/trusted_advisor/trusted_advisor.md)
 
 - [Monitor, Audit, Compliance](./monitor_audit_compliance/monitor_audit_compliance.md)
 
@@ -36,7 +42,7 @@
 
 - Billing
   - [Budget](./billing/budget/budget.md)
-  - [Cost Explorer](./billing/cost_explorer/cost_explorer.md)
+  - [`Cost Explorer`](./billing/cost_explorer/cost_explorer.md)
 
 ---
 
@@ -50,6 +56,8 @@
   - [`Amplify`](./solution_architecture/amplify/amplify.md)
   - [Serverless](./solution_architecture/serverless/serverless.md)
     - [Serverless Architecture](./solution_architecture/serverless/architecture.md)
+  - Well Architected
+    - [Well Architected Framework & Tool](./solution_architecture/framework/framework.md)
 
 ---
 

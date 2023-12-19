@@ -26,6 +26,7 @@
     - [Standby EC2 instance](#standby-ec2-instance)
     - [With an Auto Scaling Group](#with-an-auto-scaling-group)
     - [With ASG + EBS](#with-asg--ebs)
+  - [More Architecture Examples](#more-architecture-examples)
 
 ---
 
@@ -364,6 +365,14 @@
   - When the new instance launch, use lifecycle hook to craete EBS volume out of EBS Snapshot in a new AZ.
 
 ![ha_ec202](./pic/ha_ec203.png)
+
+---
+
+## More Architecture Examples
+
+- If you want to see more AWS architectures:
+  - https://aws.amazon.com/architecture/
+  - https://aws.amazon.com/solutions/
 
 ---
 
