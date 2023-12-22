@@ -24,7 +24,7 @@
 
   - **Regional** resource, can work **cross-region**
   - You can **peer** `Transit Gateways` **across regions**
-  - Share **cross-account** using `Resource Access Manager (RAM)`
+  - Share (`VPC sharing`) **cross-account** using `Resource Access Manager (RAM)`
   - Works with `Direct Connect Gateway`, `VPN` connections
   - the **only** AWS service supports `IP Multicast`
     - not supported by any other AWS service

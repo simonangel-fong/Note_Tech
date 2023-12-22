@@ -172,6 +172,12 @@
 
 ![sqs_ordering_data_scale_consumer_diagram.png](./pic/sqs_ordering_data_scale_consumer_diagram.png)
 
+- Delete the existing standard queue and recreate it as a FIFO (First-In-First-Out) queue
+
+- Make sure that the name of the FIFO (First-In-First-Out) queue ends with the .fifo suffix
+
+- Make sure that the throughput for the target FIFO (First-In-First-Out) queue does not exceed 3,000 messages per second
+
 ---
 
 ### Hands-on

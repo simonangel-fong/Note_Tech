@@ -205,7 +205,7 @@
   - [`AWS Web Application Firewall(WAF)`(http/Layer 7, ACL, no NLB, fixed IP: Globle acc+WAF+ALB)](./security/waf.md)
   - [`AWS Shield`(DDoS attack, Advanced:24/7+bill)](./security/shield.md)
   - [`AWS Firewall Manager`(Organization, Central:Security policy)](./security/firewall_manager.md)
-  - [`Amazon GuardDuty`(Account thread, ml, no CW log)](./security/guardDuty.md)
+  - [`Amazon GuardDuty`(Account thread, ml, no CW log, VPC Flow+DNS+CloudTrail Event)](./security/guardDuty.md)
   - [`Amazon Inspector`(Security Assessments:ec2, ecs, lambda)](./security/inspector.md)
   - [`AWS Macie`(S3 sensitive data)](./security/macie.md)
   - [`AWS Network Firewall`(VPC, traffic filtering)](./security/network_firewall.md)
