@@ -25,7 +25,7 @@
   - **First rule match** will drive the decision. 首现决定.
     - Example: if you define #100 ALLOW 10.0.0.10/32 and #200 DENY 10.0.0.10/32, the IP address will be allowed because 100 has a higher precedence over 200
     - Precedence of 100 > Precedence of 200
-  - The last rule is an asterisk (`\*`) and **denies** a request in case of no rule match
+  - The last rule is an asterisk (`*`) and **denies** a request in case of no rule match
   - AWS recommends adding rules by increment of 100
 - Newly created NACLs will deny everything
 - NACL are a great way of **blocking** a specific **IP** address **at the subnet level**
@@ -48,7 +48,7 @@
 | State  | Stateless | Statefull |
 | Subnet | Outside   | Inside    |
 
-- Statefule:
+- Stateful:
 
   - whatever is accepted in can also goes out.(no rules being evaluated)
 
@@ -83,7 +83,7 @@
   - A web application hosted on a fleet of EC2 instances managed by an Auto Scaling Group. You are exposing this application through an Application Load Balancer. Both the EC2 instances and the ALB are deployed on a VPC with the following CIDR 192.168.0.0/18. How do you configure the **EC2 instances' security group** to ensure **only the ALB** can access them on port 80?
     - Add an Inbound Rule with port 80 and ALB's SG as the source.
     - Referencing by security groups in rules is an extremely powerful rule
-    - ALB 一定在pubic子网, 所以不能引用CIDR
+    - ALB 一定在 pubic 子网, 所以不能引用 CIDR
 
 ---
 

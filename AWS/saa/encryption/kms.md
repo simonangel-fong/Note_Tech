@@ -51,7 +51,7 @@
   - **Public (Encrypt)** and **Private Key (Decrypt)** pair
   - Used for `Encrypt/Decrypt`, or `Sign/Verify` operations
   - The **public** key is **downloadable**, but you **can’t** access the `Private Key` **unencrypted**
-  - **Use case: **
+  - **Use case:**
     - encryption outside of AWS by users who can’t call the KMS API(外人用 public key 加密, 自己用 private key 解密)
 
 ---

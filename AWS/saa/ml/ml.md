@@ -3,26 +3,26 @@
 [Back](../index.md)
 
 - [AWS - Machine Learning](#aws---machine-learning)
-  - [`Amazon Rekognition`](#amazon-rekognition)
+  - [`Amazon Rekognition`: Image + video](#amazon-rekognition-image--video)
     - [Content Moderation](#content-moderation)
-  - [`Amazon Transcribe`](#amazon-transcribe)
-  - [`Amazon Polly`](#amazon-polly)
+  - [`Amazon Transcribe`: speech to text](#amazon-transcribe-speech-to-text)
+  - [`Amazon Polly`: Text-\> speech](#amazon-polly-text--speech)
     - [Lexicon \& SSML](#lexicon--ssml)
   - [`Amazon Translate`](#amazon-translate)
-  - [`Amazon Lex`](#amazon-lex)
-  - [`Amazon Connect`](#amazon-connect)
-  - [`Amazon Comprehend`](#amazon-comprehend)
-  - [`Amazon Comprehend Medical`](#amazon-comprehend-medical)
-  - [`Amazon SageMaker`](#amazon-sagemaker)
-  - [`Amazon Forecast`](#amazon-forecast)
-  - [`Amazon Kendra`](#amazon-kendra)
-  - [`Amazon Personalize`](#amazon-personalize)
-  - [`Amazon Textract`](#amazon-textract)
+  - [`Amazon Lex`: chatbots](#amazon-lex-chatbots)
+  - [`Amazon Connect`: contact center](#amazon-connect-contact-center)
+  - [`Amazon Comprehend`: Natural Language](#amazon-comprehend-natural-language)
+  - [`Amazon Comprehend Medical`: Health Information](#amazon-comprehend-medical-health-information)
+  - [`Amazon SageMaker`: ML model](#amazon-sagemaker-ml-model)
+  - [`Amazon Forecast`: predict the future](#amazon-forecast-predict-the-future)
+  - [`Amazon Kendra`: document search](#amazon-kendra-document-search)
+  - [`Amazon Personalize`: personalized recommendations](#amazon-personalize-personalized-recommendations)
+  - [`Amazon Textract`: extracts text](#amazon-textract-extracts-text)
   - [Summary](#summary)
 
 ---
 
-## `Amazon Rekognition`
+## `Amazon Rekognition`: Image + video
 
 - Usage:
 
@@ -53,7 +53,7 @@
 
 ---
 
-## `Amazon Transcribe`
+## `Amazon Transcribe`: speech to text
 
 - Usage:
 
@@ -72,7 +72,7 @@
 
 ---
 
-## `Amazon Polly`
+## `Amazon Polly`: Text-> speech
 
 - Turn **text** into **lifelike speech** using deep learning
 - Allowing you to create applications that **talk**
@@ -106,7 +106,7 @@
 
 ---
 
-## `Amazon Lex`
+## `Amazon Lex`: chatbots
 
 - same technology that powers `Alexa`
 - `Automatic Speech Recognition (ASR)` to **convert speech to text**
@@ -115,7 +115,7 @@
 
 ---
 
-## `Amazon Connect`
+## `Amazon Connect`: contact center
 
 - Receive calls, create contact flows, cloud-based **virtual contact center**
 - Can integrate with other `CRM` systems or AWS
@@ -125,7 +125,7 @@
 
 ---
 
-## `Amazon Comprehend`
+## `Amazon Comprehend`: Natural Language
 
 - For `Natural Language Processing` – `NLP`
 - Fully managed and **serverless** service
@@ -143,7 +143,7 @@
 
 ---
 
-## `Amazon Comprehend Medical`
+## `Amazon Comprehend Medical`: Health Information
 
 - `Amazon Comprehend Medical` detects and returns useful information in **unstructured clinical text**:
 
@@ -163,7 +163,7 @@
 
 ---
 
-## `Amazon SageMaker`
+## `Amazon SageMaker`: ML model
 
 - Fully managed service for developers / data scientists to **build ML models**
   - Typically, difficult to **do all the processes in one place + provision servers**
@@ -174,7 +174,7 @@
 
 ---
 
-## `Amazon Forecast`
+## `Amazon Forecast`: predict the future
 
 - Usage:
 
@@ -195,7 +195,7 @@
 
 ---
 
-## `Amazon Kendra`
+## `Amazon Kendra`: document search
 
 - Fully managed **document search service** powered by Machine Learning
 - **Extract answers** from within a **document** (text, pdf, HTML, PowerPoint, MS Word, FAQs…)
@@ -207,7 +207,7 @@
 
 ---
 
-## `Amazon Personalize`
+## `Amazon Personalize`: personalized recommendations
 
 - Usage:
 
@@ -229,7 +229,7 @@
 
 ---
 
-## `Amazon Textract`
+## `Amazon Textract`: extracts text
 
 - Automatically **extracts** text, handwriting, and data **from any scanned documents** using AI and ML
 - **Extract data** from forms and tables

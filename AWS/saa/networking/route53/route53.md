@@ -4,7 +4,7 @@
 
 - [AWS - Route53](#aws---route53)
   - [DNS](#dns)
-  - [Amazon Route 53](#amazon-route-53)
+  - [`Amazon Route 53`](#amazon-route-53)
     - [DNS Records](#dns-records)
     - [Record Types](#record-types)
     - [Hosted Zones](#hosted-zones)
@@ -34,7 +34,8 @@
 
 ## DNS
 
-- Domain Name System which translates the human friendly hostnames into the machine IP addresses
+- `Domain Name System`
+  - translates the human friendly hostnames into the machine IP addresses
   - i.e.: www.google.com => 172.217.18.36
 - DNS is the backbone of the Internet
 - DNS uses hierarchical naming structure
@@ -62,7 +63,7 @@
 
 ---
 
-## Amazon Route 53
+## `Amazon Route 53`
 
 - A highly available, scalable, fully managed and **Authoritative** DNS
   - **Authoritative** = the customer (you) **can update the DNS records**

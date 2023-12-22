@@ -3,7 +3,7 @@
 [Back](../index.md)
 
 - [AWS Networking - Flow Logs](#aws-networking---flow-logs)
-  - [VPC Flow Logs](#vpc-flow-logs)
+  - [`VPC Flow Logs`](#vpc-flow-logs)
     - [Syntax](#syntax)
     - [Troubleshoot SG \& NACL issues](#troubleshoot-sg--nacl-issues)
     - [Architectures](#architectures)
@@ -11,7 +11,7 @@
 
 ---
 
-## VPC Flow Logs
+## `VPC Flow Logs`
 
 ![flow_log_diagram](./pic/flow_log_diagram.png)
 

@@ -140,6 +140,7 @@
   - [`AWS Backup`(Centrally manage and automate backups)](./migration/backup/backup.md)
   - [`Application Discovery Service` & `Migration Hub`(plan, gather info)](./migration/app_disc/app_disc.md)
   - [`Application Migration Service(MGN)`(simplify migrating applications)](./migration/mgn/mgn.md)
+  - [`AppFlow`(transfer data between Software-as-a-Service (SaaS) app and AWS)](./service/appflow/appflow.md)
 
 - [Data & Analytics](./data_analytics/data_analytics/data_analytics.md)
 
@@ -159,56 +160,55 @@
 
 - [Networking(VPC)](./networking/networking.md)
 
-  - [Pricing](./networking/pricing.md)
-  - [`AWS VPC`](./networking/vpc.md)
-  - [`Bastion Host`](./networking/bastion_host.md)
-  - [`Internet Gateway(IGW)`](./networking/igw.md)
-  - [`Nat Gateway`](./networking/natgw.md)
-  - [`NACL` & Security Group](./networking/nacl.md)
-  - [`Egress-only Internet Gateway`](./networking/egress_IGW.md)
-  - [`VPC Peering`](./networking/peering.md)
-  - [`VPC Endpoints`](./networking/endpoint.md)
-  - [`Site-to-Site VPN` + `Direct Connect (DX)`](./networking/vpn_dx.md)
-  - [`Transit Gateway`](./networking/transit.md)
-  - [`VPC Flow Logs`](./networking/flow_log.md)
-  - [`Traffic Mirroring`](./networking/traffic_mirroring.md)
+  - [Pricing(public > private)](./networking/pricing.md)
+  - [`AWS VPC`(5 \* 5, /16-28, default, reserves)](./networking/vpc.md)
+  - [`Bastion Host`(SSH)](./networking/bastion_host.md)
+  - [`Internet Gateway(IGW)`(connect to the Internet, 1/vpc, route tb)](./networking/igw.md)
+  - [`Nat Gateway`(Elastic IP, no sg, lock to AZ, route tb)](./networking/natgw.md)
+  - [`NACL` (1/subnet,precedence, allow+deny, Stateless, Default, update) & `Security Group`(allow only, Stateful, refference)](./networking/nacl.md)
+  - [`Egress-only Internet Gateway`( NATGW for IPv6, route tb)](./networking/egress_IGW.md)
+  - [`VPC Peering`(Privately connect two VPCs, NOT transitive, accounts/regions, route tb)](./networking/peering.md)
+  - [`VPC Endpoints`(connect to AWS services by PrivateLink,Interface(ENI$),Gateway(r tb: s3+dyn))](./networking/endpoint.md)
+  - [`Site-to-Site VPN`(public, VPGW(Route Propagation,ICMP)+CGW(public IP)), `VPN CloudHub`(diff sites), `Direct Connect (DX)`(Dedicated private, 1M, Hybrid,Dedicated/Host, not encrypted,Gateway: cross regions)](./networking/vpn_dx.md)
+  - [`Transit Gateway`(transitive peering, Xregion/account, VPN ECMP:bandwidth)](./networking/transit.md)
+  - [`VPC Flow Logs`(monitor, Troubleshoot SG & NACL)](./networking/flow_log.md)
+  - [`Traffic Mirroring`(capture ENIs)](./networking/traffic_mirroring.md)
 
 - **Networking Service**
 
-  - [`Route 53`](./networking/route53/route53.md)
-  - [`AWS CloudFront` & `Global Accelerator`](./networking/cloudfront/cloudfront.md)
-  - [`AWS API Gateway`](./networking/gateway/gateway.md)
+  - [`Route 53`(Hosted Zones, TTL(cache locally), Alias Records:AWS resource, Health Checks, Routing Policies)](./networking/route53/route53.md)
+  - [`AWS CloudFront`(cached, Origin Access Control+s3 policy, TTL, Geo, Price Classes, Cache Invalidation) & `Global Accelerator`(route app by internal, lowest latency, non-HTTP + Static IP)](./networking/cloudfront/cloudfront.md)
+  - [`AWS API Gateway`(versioning, Cache API responses, Edge-Optimized:default, IAM+Cognito)](./networking/gateway/gateway.md)
 
 - [Machine learning services](./ml/ml.md)
 
 - Other Services
-  - [`CloudFormation`](./service/cloudformation/cloudformation.md)
+  - [`CloudFormation`(infrastructure as code, template)](./service/cloudformation/cloudformation.md)
   - [`Simple Email Service`](./service/ses/ses.md)
-  - [`Pinpoint`](./service/pinpoint/pinpoint.md)
-  - [`Elastic Transcoder`](./service/transcoder/transcoder.md)
-  - [`AWS Batch`](./service/batch/batch.md)
-  - [`AppFlow`](./service/appflow/appflow.md)
+  - [`Pinpoint`(marketing communications, sms)](./service/pinpoint/pinpoint.md)
+  - [`Elastic Transcoder`(convert media files, s3)](./service/transcoder/transcoder.md)
+  - [`AWS Batch`(batch processing, using ECS(Docker))](./service/batch/batch.md)
 
 ---
 
 ## Security
 
-- [**Encryption**](./encryption/encryption.md)
+- [Encryption](./encryption/encryption.md)
 
-  - [`AWS KMS`](./encryption/kms.md)
-  - [`AWS Systems Manager(SSM)`](./encryption/systems_manager.md)
-  - [`AWS Secrets Manager`](./encryption/secret_manager.md)
-  - [`AWS Certificate Manager(ACM)`](./encryption/acm.md)
+  - [`AWS KMS`(manages encryption keys, only customer keys need creation, C/M automatic rotation:1Y Import:mannual, lock to region, AC:policy(xAccount), Client-side+multi-region key, S3 Replication:de+en, Xacc: share KMS CMK)](./encryption/kms.md)
+  - [`AWS Systems Manager(SSM)`(View operational data, Parameter Store:(secrets+version, environment variables, Policies+TTL:force delete), Session Manager(shell+no SSH), Run Command(script), Patch Manager, Maintenance Windows(Automation) )](./encryption/systems_manager.md)
+  - [`AWS Secrets Manager`(storing secrets, Multi-Region Secrets(replica))](./encryption/secret_manager.md)
+  - [`AWS Certificate Manager(ACM)`(in-flight encryption, import cert notify expired:EventBridge+SNS,CloudFront :us-east-1)](./encryption/acm.md)
 
-- [**Security**](./security/security.md)
+- [Security](./security/security.md)
 
-  - [`AWS Web Application Firewall(WAF)`](./security/waf.md)
-  - [`AWS Shield`](./security/shield.md)
-  - [`AWS Firewall Manager`](./security/firewall_manager.md)
-  - [`Amazon GuardDuty`](./security/guardDuty.md)
-  - [`Amazon Inspector`](./security/inspector.md)
-  - [`AWS Macie`](./security/macie.md)
-  - [`AWS Network Firewall`](./security/network_firewall.md)
+  - [`AWS Web Application Firewall(WAF)`(http/Layer 7, ACL, no NLB, fixed IP: Globle acc+WAF+ALB)](./security/waf.md)
+  - [`AWS Shield`(DDoS attack, Advanced:24/7+bill)](./security/shield.md)
+  - [`AWS Firewall Manager`(Organization, Central:Security policy)](./security/firewall_manager.md)
+  - [`Amazon GuardDuty`(Account thread, ml, no CW log)](./security/guardDuty.md)
+  - [`Amazon Inspector`(Security Assessments:ec2, ecs, lambda)](./security/inspector.md)
+  - [`AWS Macie`(S3 sensitive data)](./security/macie.md)
+  - [`AWS Network Firewall`(VPC, traffic filtering)](./security/network_firewall.md)
 
 ---
 

@@ -3,12 +3,12 @@
 [Back](../index.md)
 
 - [AWS - Internet Gateway (IGW)](#aws---internet-gateway-igw)
-  - [Internet Gateway (IGW)](#internet-gateway-igw)
+  - [`Internet Gateway (IGW)`](#internet-gateway-igw)
     - [Hands-on](#hands-on)
 
 ---
 
-## Internet Gateway (IGW)
+## `Internet Gateway (IGW)`
 
 - no charge
 - Allows resources (e.g., `EC2 instances`) in a `VPC` connect to the Internet

@@ -3,13 +3,13 @@
 [Back](../index.md)
 
 - [AWS Networking - Egress-only Internet Gateway](#aws-networking---egress-only-internet-gateway)
-  - [Egress-only Internet Gateway](#egress-only-internet-gateway)
+  - [`Egress-only Internet Gateway`](#egress-only-internet-gateway)
   - [Routing](#routing)
     - [Hands-on](#hands-on)
 
 ---
 
-## Egress-only Internet Gateway
+## `Egress-only Internet Gateway`
 
 - `Egress-only Internet Gateway`
 

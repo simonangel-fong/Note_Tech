@@ -290,7 +290,7 @@
   - helps identifying attacks, analyze using `Athena` or `CloudWatch` Logs Insights
 
 - `Traffic Mirroring`: copy
-  - **copy** network traffic from ENIs for further **analysis**
+  - **copy** network traffic from `ENIs` for further **analysis**
 
 ---
 
