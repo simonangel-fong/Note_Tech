@@ -1,8 +1,8 @@
-# AWS - ElasticCach
+# AWS - ElastiCache
 
 [Back](../../index.md)
 
-- [AWS - ElasticCach](#aws---elasticcach)
+- [AWS - ElastiCache](#aws---elasticache)
   - [Amazon ElastiCache](#amazon-elasticache)
     - [Solution Architecture](#solution-architecture)
     - [Redis vs Memcached](#redis-vs-memcached)
@@ -103,4 +103,4 @@
 
 ---
 
-[Top](#aws---elasticcach)
+[Top](#aws---elastiCache)

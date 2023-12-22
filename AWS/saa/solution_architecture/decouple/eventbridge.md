@@ -1,6 +1,6 @@
 # AWS - EventBridge
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [AWS - EventBridge](#aws---eventbridge)
   - [`Amazon EventBridge`](#amazon-eventbridge)
@@ -34,8 +34,8 @@
 
 - `event bus`
 
-  - a mediator that transfers a message from a sender to a receiver.
-  - it provides a loosely coupled communication way between objects, services and applications.
+  - a mediator that **transfers a message** from a sender to a receiver.
+  - it provides a **loosely coupled communication** way between objects, services and applications.
   - The main idea is delivering and processing events **asynchronously**.
 
 - Types of event bus:

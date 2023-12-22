@@ -7,8 +7,8 @@
     - [Redshift Cluster](#redshift-cluster)
     - [Snapshots \& Disaster Recovery](#snapshots--disaster-recovery)
     - [Loading data into Redshift](#loading-data-into-redshift)
-    - [Redshift Spectrum](#redshift-spectrum)
-    - [Enhanced VPC routing](#enhanced-vpc-routing)
+    - [`Redshift Spectrum`](#redshift-spectrum)
+    - [`Enhanced VPC routing`](#enhanced-vpc-routing)
 
 ---
 
@@ -80,15 +80,15 @@
 - Large inserts are MUCH better
 
 - 3 Ways to load data
-  - Kinesis firehose collect data to S3, S3 copy command
-  - S3 copy command
+  - `Kinesis firehose` collect data to S3, S3 copy command
+  - `S3` copy command
   - JDBC diver
 
 ![redshift_loading_data_diagram](./pic/redshift_loading_data_diagram.png)
 
 ---
 
-### Redshift Spectrum
+### `Redshift Spectrum`
 
 - `Redshift Spectrum`
 
@@ -103,7 +103,7 @@
 
 ---
 
-### Enhanced VPC routing
+### `Enhanced VPC routing`
 
 - When you use Amazon Redshift `enhanced VPC routing`, Amazon Redshift **forces** all `COPY` and `UNLOAD` **traffic** between your _cluster_ and your _data repositories_ through your `virtual private cloud (VPC)` based on the Amazon VPC service.
 

@@ -7,13 +7,13 @@
     - [Features](#features)
     - [High Availability and Read Scaling](#high-availability-and-read-scaling)
     - [Cluster](#cluster)
-    - [Replica](#replica)
+    - [`Aurora Replica`](#aurora-replica)
       - [Auto Scaling](#auto-scaling)
       - [Custom Endpoints](#custom-endpoints)
     - [Backups](#backups)
     - [Restore options](#restore-options)
     - [Hands-on](#hands-on)
-  - [`Aurota Serverless`](#aurota-serverless)
+  - [`Aurora Serverless`](#aurora-serverless)
   - [`Aurora Multi-Master`](#aurora-multi-master)
   - [`Global Aurora` (Cross Region)](#global-aurora-cross-region)
   - [`Aurora Machine Learning`](#aurora-machine-learning)
@@ -79,7 +79,7 @@
 
 ---
 
-### Replica
+### `Aurora Replica`
 
 #### Auto Scaling
 
@@ -139,7 +139,7 @@
 
 ---
 
-## `Aurota Serverless`
+## `Aurora Serverless`
 
 - **Automated** database instantiation and **auto scaling** based on actual usage
 - Good for **infrequent**, **intermittent** or **unpredictable** workloads

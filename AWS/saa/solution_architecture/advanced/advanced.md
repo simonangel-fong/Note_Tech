@@ -7,9 +7,9 @@
     - [Lambda, SNS \& SQS](#lambda-sns--sqs)
     - [Fan Out Pattern: deliver to multiple SQS](#fan-out-pattern-deliver-to-multiple-sqs)
     - [`S3` Event Notifications](#s3-event-notifications)
-    - [`S3` Event Notifications with `Amazon EventBridge`](#s3-event-notifications-with-amazon-eventbridge)
-    - [Intercept API Calls: `Amazon EventBridge`](#intercept-api-calls-amazon-eventbridge)
-    - [Sent External events to AWS: API Gateway](#sent-external-events-to-aws-api-gateway)
+    - [`S3` Event Notifications: `S3` + `EventBridge`](#s3-event-notifications-s3--eventbridge)
+    - [Intercept API Calls: `CloudTrail` + `EventBridge`](#intercept-api-calls-cloudtrail--eventbridge)
+    - [Sent External events to AWS: `API Gateway` + `Kinesis`](#sent-external-events-to-aws-api-gateway--kinesis)
   - [Caching Strategies](#caching-strategies)
   - [Blocking an IP address](#blocking-an-ip-address)
     - [Basic](#basic)
@@ -41,7 +41,7 @@
 ![event_processing_sqs_lambda](./pic/event_processing_sqs_lambda.png)
 
 - **SQS FIFO + Lambda**
-  - message processed in order.
+  - message processed **in order**.
   - lambda try and retry to poll SQS queue.
   - Due to processing in order, failure of processing one message creates a blocking.
   - `DLQ(dead letter queue)` set up on the `SQS` side to send the failure message off the SQS queue.
@@ -95,7 +95,7 @@
 
 ---
 
-### `S3` Event Notifications with `Amazon EventBridge`
+### `S3` Event Notifications: `S3` + `EventBridge`
 
 - Advanced **filtering** options with **JSON** rules (metadata, object size, name...)
 - **Multiple Destinations**
@@ -107,7 +107,7 @@
 
 ---
 
-### Intercept API Calls: `Amazon EventBridge`
+### Intercept API Calls: `CloudTrail` + `EventBridge`
 
 - Use EventBridge to intercept API Calls
 
@@ -115,7 +115,7 @@
 
 ---
 
-### Sent External events to AWS: API Gateway
+### Sent External events to AWS: `API Gateway` + `Kinesis`
 
 - use API gateway
 
@@ -223,6 +223,9 @@
 
   - not helpful
   - allow all traffice from CloudFront
+
+![block_IP01](./pic/block_IP05.png)
+
 
 - Sample:
   - As a Solutions Architect, you have created an architecture for a company that includes the following AWS services: **CloudFront**, Web Application Firewall (**AWS WAF**), AWS Shield, **Application Load Balancer**, and **EC2** instances managed by an Auto Scaling Group. Sometimes the company receives malicious requests and wants to **block these IP addresses**. According to your architecture, Where should you do it?

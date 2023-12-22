@@ -96,7 +96,7 @@
   - `2001:db8:3333:4444:cccc:dddd:eeee:ffff`
   - `::`: all 8 segments are zero
   - `2001:db8::`: the last 6 segments are zero
-  - ``::1234:5678`: the first 6 segments are zero
+  - `::1234:5678`: the first 6 segments are zero
   - `2001:db8::1234:5678`: the middle 4 segments are zero
 
 ---
@@ -211,7 +211,7 @@
 - `VPC Endpoints`: for AWS service within VPC
 
   - provide **private access** to AWS Services (S3, DynamoDB, CloudFormation, SSM) within a VPC
-  - gateway endpoint: S3 + DynamoDB
+  - gateway endpoint: `S3` + `DynamoDB`
   - Interface endpoint: the rest
 
 - `AWS PrivateLink` / `VPC Endpoint Services`: for AWS service within VPC
@@ -225,7 +225,9 @@
 
 - `Site-to-Site VPN`: with on-premises via public
 
-  - setup a `Customer Gateway` on DC, a `Virtual Private Gateway` on VPC, and site-to-site VPN **over public Internet**
+  - setup a `Customer Gateway` on **DC**,
+  - a `Virtual Private Gateway` on **VPC**,
+  - and site-to-site VPN **over public Internet**
 
 - `AWS VPN CloudHub`: multiple sites
 

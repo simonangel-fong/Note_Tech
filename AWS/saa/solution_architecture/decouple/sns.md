@@ -1,6 +1,6 @@
 # AWS - SNS
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [AWS - SNS](#aws---sns)
   - [`Amazon SNS`](#amazon-sns)

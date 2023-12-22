@@ -105,15 +105,15 @@
   - Control of **outbound network** (from the instance to other)
     - All **outbound** traffic is **authorised by default**
 
-- SG can be attached to multiple instances; An instance can have multiple SG.
+- SG can be attached to **multiple** instances; An instance can have **multiple** SG.
 
-- SG Locked down to a region / VPC combination
+- SG Locked down to a **region** / VPC combination
 
   - SG is not effect in different region or VPC
 
 - Troubleshooting:
 
-  - If your application is not accessible (`time out`), then it’s a security group issue
+  - If your application is not accessible (**`time out`**), then it’s a security group issue
   - If your application gives a “`connection refused`“ error, then it’s an application error or it’s not launched
 
 - Classic Ports
@@ -128,7 +128,7 @@
 | `3389` | RDP (Remote Desktop Protocol)        | log into a Windows instance    |
 
 - `0.0.0.0/0`: any IPv4
-- `::/0`: any IPv4
+- `::/0`: any IPv6
 
 ![sg_inbound](../ec2/pic/sg_inbound.png)
 
@@ -158,15 +158,15 @@
 
 ### Summary: 3 ways to access EC2 instance
 
-- SSH
+- **SSH**
 
   - port 22 + SSH key
 
-- EC2 instance Connect
+- **EC2 instance Connect**
 
   - temporarily + SG(port 22)
 
-- SSM Session manager
+- **SSM Session manager**
   - assign IAM role for ssm, no port or key
 
 ---

@@ -64,8 +64,7 @@
 
 - **Pricing**:
 
-  - no free tier, $0.003 per **configuration** item recorded per region,
-    $0.001 per config rule **evaluation** per region
+  - **no free** tier, \$0.003 per **configuration** item recorded per region, $0.001 per config rule **evaluation** per region
 
 - Sample:
   - You are running a website on a fleet of EC2 instances with OS that has a known **vulnerability on port 84**. You want to continuously **monitor** your EC2 instances if they have port 84 exposed. How should you do this?
@@ -86,7 +85,7 @@
 ![config_sns_notification.png](./pic/config_sns_notification.png)
 
 - Sample:
-  - You are running a critical website on a set of EC2 instances with a tightened Security Group that has restricted SSH access. You have enabled AWS Config in your AWS Region and you want to be notified via email when someone modified your EC2 instances' Security Group. Which AWS Config feature helps you do this?
+  - You are running a critical website on a set of EC2 instances with a tightened Security Group that has restricted SSH access. You have enabled AWS Config in your AWS Region and you want to be **notified via email when someone modified** your EC2 instances' Security Group. Which AWS Config feature helps you do this?
     - AWX Config Notifications
 
 ---
@@ -102,7 +101,7 @@
 ![config_rules_remediations](./pic/config_rules_remediations.png)
 
 - Sample
-  - You have enabled AWS Config to monitor Security Groups if there's unrestricted SSH access to any of your EC2 instances. Which AWS Config feature can you use to automatically re-configure your Security Groups to their correct state?
+  - You have enabled AWS Config to monitor Security Groups if there's unrestricted SSH access to any of your EC2 instances. Which AWS Config feature can you use to **automatically re-configure** your Security Groups to their correct state?
     - Config Remediations
 
 ---

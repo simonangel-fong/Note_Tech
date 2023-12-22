@@ -101,7 +101,7 @@
 - Pay per **calls** :
 
   - First **1**,000,000 requests are **free**
-  - $**0.20** per 1 million requests thereafter ($0.0000002 per request)
+  - \$**0.20** per 1 million requests thereafter ($0.0000002 per request)
 
 - Pay per **duration**: (in increment of 1 ms )
 
@@ -209,8 +209,8 @@
 - Native feature of `CloudFront` (manage **code entirely within** `CloudFront`)
 
 - Used to **change** `Viewer` requests and responses:
-  - `Viewer Request`: **after** CloudFront **receives a request** from a viewer
-  - `Viewer Response`: **before** CloudFront **forwards** the response to the viewer
+  - `Viewer Request`: **after** `CloudFront` **receives a request** from a viewer
+  - `Viewer Response`: **before** `CloudFront` **forwards** the response to the viewer
 
 ![cloudfront_function_diagram](./pic/cloudfront_function_diagram.png)
 

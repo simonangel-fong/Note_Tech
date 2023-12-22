@@ -3,12 +3,12 @@
 [Back](../../index.md)
 
 - [AWS - Lake Formation](#aws---lake-formation)
-  - [AWS Lake Formation](#aws-lake-formation)
+  - [AWS `Lake Formation`](#aws-lake-formation)
     - [Example: Centralized Permissions](#example-centralized-permissions)
 
 ---
 
-## AWS Lake Formation
+## AWS `Lake Formation`
 
 - `Data lake`
 

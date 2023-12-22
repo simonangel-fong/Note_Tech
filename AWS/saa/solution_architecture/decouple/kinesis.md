@@ -1,6 +1,6 @@
 # AWS - Kinesis
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [AWS - Kinesis](#aws---kinesis)
   - [Kinesis](#kinesis)
@@ -24,7 +24,7 @@
   - ie: Application logs, Metrics, Website clickstreams, IoT telemetry data…
 
 - 4 services:
-  - `Kinesis Data Stream`s:
+  - `Kinesis Data Streams`:
     - capture, process, and store **data streams**
   - `Kinesis Data Firehose`:
     - **load** data streams into AWS data stores
@@ -61,7 +61,7 @@
 
   - Retention between `1` day to `365` days
   - Ability to **reprocess (replay) data**
-  - Once data is inserted in Kinesis, it can’t be deleted (**immutability**)
+  - Once data is inserted in Kinesis, **it can’t be deleted** (**immutability**)
   - Data that shares the **same partition** goes to the **same shard** (**ordering**)
 
 - Sample:
@@ -92,7 +92,7 @@
 - **On-demand mode**:
 
   - No need to provision or manage the capacity
-  - Default capacity provisioned (**4 MB/s in** or** 4000 records per second**)
+  - Default capacity provisioned (**4 MB/s in** or **4000 records per second**)
   - **Scales automatically** based on observed throughput peak during the last 30 days
   - Pay **per stream per hour** & **data in/out per GB**
 

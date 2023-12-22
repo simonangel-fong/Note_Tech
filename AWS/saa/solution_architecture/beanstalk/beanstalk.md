@@ -19,7 +19,7 @@
   - a developer centric view of **deploying** an application on AWS
 
 - It uses all the component’s we’ve seen before: EC2, ASG, ELB, RDS, …
-- Managed service
+- **Managed service**
   - Automatically handles capacity provisioning, load balancing, scaling, application health monitoring, instance configuration, …
   - Just **the application code is the responsibility of the developer**
 - We still have full control over the **configuration**
@@ -30,15 +30,15 @@
 
 ### Components
 
-- Application:
+- **Application**:
 
-  - collection of Elastic Beanstalk components (environments, versions, configurations, …)
+  - collection of Elastic Beanstalk **components** (environments, versions, configurations, …)
 
-- Application Version:
+- Application **Version**:
 
   - an iteration of your application **code**
 
-- Environment
+- **Environment**
 
   - Collection of AWS **resources** running an application version (only one application version at a time)
 
@@ -72,11 +72,11 @@
 
 ### Web Server Tier vs. Worker Tier
 
-- Web Server Tier
+- **Web Server Tier**
 
 ![beanstalk_web_server_tier_diagram](./pic/beanstalk_web_server_tier_diagram.png)
 
-- Worker Tier
+- **Worker Tier**
   - Scale based on the number of SQS messages
   - Can push messages to SQS queue from another Web Server Tier
 

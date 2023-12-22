@@ -3,7 +3,7 @@
 [Back](../../index.md)
 
 - [AWS Compute - Auto Scaling Group](#aws-compute---auto-scaling-group)
-  - [Auto Scaling Group](#auto-scaling-group)
+  - [`Auto Scaling Group`](#auto-scaling-group)
     - [ASG Launch Template](#asg-launch-template)
     - [CloudWatch Alarms \& Scaling](#cloudwatch-alarms--scaling)
     - [Hands-On: ASG](#hands-on-asg)
@@ -16,7 +16,7 @@
 
 ---
 
-## Auto Scaling Group
+## `Auto Scaling Group`
 
 - In real-life, the load on your websites and application can change
 - In the cloud, you can create and get rid of servers very quickly
@@ -26,7 +26,7 @@
   - **Scale out (add** EC2 instances) to match an increased load
   - **Scale in (remove** EC2 instances) to match a decreased load
   - Ensure we have a minimum and a maximum number of EC2 instances running
-  - Automatically register new instances to a load balancer
+  - **Automatically register** new instances to a `load balancer`
   - Re-create an EC2 instance in case a previous one is terminated (ex: if unhealthy)
 
 - The Auto Scaling Group **can't go over the maximum capacity** (you configured) during scale-out events.
@@ -35,8 +35,8 @@
 
 ![diagram](./pic/asg_diagram.png)
 
-- Work with load balancer
-  - You can configure the `Auto Scaling Group` to determine the EC2 instances' health based on **Application Load Balancer Health Checks** instead of EC2 Status Checks (default).
+- **Work with load balancer**
+  - You can configure the `Auto Scaling Group` to determine the EC2 instances' health based on **`Application Load Balancer` Health Checks** instead of EC2 Status Checks (default).
   - When an EC2 instance fails the ALB Health Checks, it is marked unhealthy and will be **terminated** while the ASG **launches a new** EC2 instance.
 
 ![diagram](./pic/asg_load_balancer_diagram.png)
@@ -116,7 +116,7 @@
 
 #### Scheduled Actions
 
-- Anticipate a scaling based on known usage patterns
+- Anticipate a scaling based on **known usage patterns**
 - Example: increase the min capacity to 10 at 5 pm on Fridays
 
 ---
@@ -174,8 +174,6 @@
 ![hand-on](./pic/asg_scalling_auto_dynamic01.png)
 
 ![hand-on](./pic/asg_scalling_auto_dynamic02.png)
-
----
 
 ---
 

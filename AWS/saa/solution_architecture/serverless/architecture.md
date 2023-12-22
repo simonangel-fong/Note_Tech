@@ -35,7 +35,7 @@
 
 - Requirement:
 
-  - This website should **scale globally** (CloudeFront)
+  - This website should **scale globally** (`CloudeFront`)
   - Blogs are rarely written, but **often read**
   - Some of the website is purely **static files**, the rest is a **dynamic REST API** (S3 static web host, API gateway)
   - Caching must be implement where possible (API Gateway cached response)
@@ -138,7 +138,7 @@
 
 - Sample:
   - You are running a photo-sharing website where your images are downloaded from all over the world. **Every month** you publish a master pack of beautiful mountain images that are **over 15 GB** in size. The content is currently hosted on an Elastic File System (EFS) file system and distributed by an Application Load Balancer and a set of EC2 instances. Each month, you are **experiencing very high traffic which increases the load** on your EC2 instances and **increases network costs.** What do you recommend to reduce EC2 load and network costs **without refactoring your website**?
-  - `Amazon CloudFront` is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds. **Amazon CloudFront can be used in front of an Application Load Balancer.**
+    - `Amazon CloudFront` is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds. **Amazon CloudFront can be used in front of an Application Load Balancer.**
 
 ---
 

@@ -13,7 +13,7 @@
       - [`Network Load Balancer` (v2)](#network-load-balancer-v2)
       - [Hands-On: NLB](#hands-on-nlb)
       - [`Gateway Load Balancer`](#gateway-load-balancer)
-    - [Sticky Sessions (Session Affinity)](#sticky-sessions-session-affinity)
+    - [Sticky Sessions/Session Affinity(Session Data)](#sticky-sessionssession-affinitysession-data)
         - [Cookie Types and Names](#cookie-types-and-names)
       - [Hands-On: Stickness Cookie](#hands-on-stickness-cookie)
     - [Cross-Zone Load Balancing](#cross-zone-load-balancing)
@@ -36,7 +36,7 @@
   - Do regular **health checks** to your instances
     - When you enable ELB Health Checks, your **ELB won't send traffic** to unhealthy (crashed) EC2 instances.
   - Provide **SSL termination (HTTPS)** for your websites
-  - Enforce stickiness with **cookies**
+  - Enforce **stickiness** with **cookies**
   - High **availability** across zones
   - **Separate** public traffic from private traffic
 
@@ -67,7 +67,7 @@
 
 ![load_balancer_sg](./pic/load_balancer_sg_lb.png)
 
-- EC2 sg accept traffic only from load balancer.
+- EC2 sg accept traffic **only from load balancer**.
 
 ![load_balancer_sg](./pic/load_balancer_sg_ec2.png)
 
@@ -135,7 +135,7 @@
     - example.com/users?id=123&order=false
   - **HTTP Headers**
 
-- ALB are a great fit for **micro services** & **container-based application **(example: Docker & Amazon ECS)
+- ALB are a great fit for **micro services** & **container-based application** (example: Docker & Amazon ECS)
 - Has a **port mapping** feature to redirect to a dynamic port in ECS
 - In comparison, we’d need multiple Classic Load Balancer per application
 
@@ -153,7 +153,7 @@
   - The application servers **don’t see the IP of the client** directly
   - Method to get:
     - **IP of the client**: `X-Forwarded-For` in the header
-    - **Port**: `X-Forwarded-For` in the header
+    - **Port**: `X-Forwarded-Port` in the header
     - **Protocal**: `X-Forwarded-Proto` in the header
 
   ![diagram](./pic/load_balancer_alb_diagram_good_to_know.png)
@@ -324,7 +324,7 @@
 
 - Uses the **GENEVE protocol** on port **6081**
 
-- Traffic will hit target group before reach the application.
+- Traffic will hit target group **before reach the application**.
 
 ![sg](./pic/load_balancer_gwlb_diagram.png)
 
@@ -339,14 +339,14 @@
 
 ---
 
-### Sticky Sessions (Session Affinity)
+### Sticky Sessions/Session Affinity(Session Data)
 
 - It is possible to implement stickiness so that the **same client** is always **redirected** to the **same instance** behind a load balancer
 - This works for `Classic Load Balancer`, `Application Load Balancer`, and `Network Load Balancer`
 - For both CLB & ALB, the “cookie” used for stickiness has an expiration date you control
-- Use case:
+- **Use case**:
   - make sure the user **doesn’t lose his session data**
-- Enabling stickiness may bring imbalance to the load over the backend EC2 instances
+- Enabling stickiness may bring **imbalance** to the load over the backend EC2 instances
 
 ![stickiness](./pic/load_balancer_stickiness_diagram.png)
 
@@ -399,7 +399,7 @@
 ![cross_zone](./pic/load_balancer_cross_zone_diagram_without.png)
 
 - With Cross Zone Load Balancing:
-  - each load balancer instance **distributes evenly** across all registered instances in all AZ
+  - each load balancer instance **distributes evenly** across all registered instances **in all AZ**
 
 ![cross_zone](./pic/load_balancer_cross_zone_diagram_with.png)
 
@@ -471,11 +471,11 @@
 - **Application Load Balancer (v2)**
 
   - Supports **multiple** listeners with **multiple** SSL certificates
-  - Uses Server Name Indication (SNI) to make it work
+  - Uses `Server Name Indication (SNI)` to make it work
 
 - **Network Load Balancer (v2)**
   - Supports **multiple** listeners with **multiple** SSL certificates
-  - Uses Server Name Indication (SNI) to make it work
+  - Uses `Server Name Indication (SNI)` to make it work
 
 ---
 

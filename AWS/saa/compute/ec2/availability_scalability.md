@@ -15,8 +15,8 @@
 
 - There are two kinds of scalability:
 
-  - Vertical Scalability
-  - Horizontal Scalability (= elasticity)
+  - **Vertical** Scalability
+  - **Horizontal** Scalability (= elasticity)
 
 - **Vertical Scalability**
 
@@ -70,7 +70,9 @@
 
 - **High Availability**:
   - Run instances for the same application across **multi AZ**
-  - Auto Scaling Group **multi AZ**
-  - Load Balancer **multi AZ**
+    - `Auto Scaling Group` **multi AZ**
+    - `Load Balancer` **multi AZ**
 
 ---
+
+[TOP](#aws---high-availability--scalability)

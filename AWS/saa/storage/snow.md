@@ -5,13 +5,13 @@
 - [AWS Storage - Snow Family](#aws-storage---snow-family)
   - [`AWS Snow Family`](#aws-snow-family)
     - [Data Migrations with AWS Snow Family](#data-migrations-with-aws-snow-family)
-    - [`Snowball Edge` (for data transfers)](#snowball-edge-for-data-transfers)
-    - [`Snowcone` \& `Snowcone SSD`](#snowcone--snowcone-ssd)
-    - [`Snowmobile`](#snowmobile)
-    - [Snow Family for Data Migrations](#snow-family-for-data-migrations)
-    - [Usage Process](#usage-process)
+      - [`Snowball Edge` (for data transfers)](#snowball-edge-for-data-transfers)
+      - [`Snowcone` \& `Snowcone SSD`](#snowcone--snowcone-ssd)
+      - [`Snowmobile`](#snowmobile)
+      - [Snow Family for Data Migrations](#snow-family-for-data-migrations)
+      - [Usage Process](#usage-process)
     - [Edge Computing](#edge-computing)
-    - [OpsHub](#opshub)
+  - [`OpsHub`](#opshub)
     - [Solution Architecture: Snowball into Glacier](#solution-architecture-snowball-into-glacier)
     - [Hands-on](#hands-on)
 
@@ -49,7 +49,7 @@
 
 ---
 
-### `Snowball Edge` (for data transfers)
+#### `Snowball Edge` (for data transfers)
 
 - `Snowball Edge`
 
@@ -77,7 +77,7 @@
 
 ---
 
-### `Snowcone` & `Snowcone SSD`
+#### `Snowcone` & `Snowcone SSD`
 
 - Small, **portable** computing, anywhere, rugged & secure, withstands harsh environments
 - Light (4.5 pounds, 2.1 kg)
@@ -100,7 +100,7 @@
 
 ---
 
-### `Snowmobile`
+#### `Snowmobile`
 
 - Transfer **exabytes** of data (1 EB = 1,000 PB = 1,000,000 TBs)
 - Each `Snowmobile` has 100 PB of capacity (use multiple in parallel)
@@ -110,7 +110,7 @@
 
 ---
 
-### Snow Family for Data Migrations
+#### Snow Family for Data Migrations
 
 |                  | Snowcone & Snowcone SSD           | Snowball Edge Storage Optimized | Snowmobile                  |
 | ---------------- | --------------------------------- | ------------------------------- | --------------------------- |
@@ -124,7 +124,7 @@
 
 ---
 
-### Usage Process
+#### Usage Process
 
 1. **Request** Snowball devices from the AWS **console** for delivery
 2. **Install** the snowball **client** / `AWS OpsHub` on your servers
@@ -183,7 +183,7 @@
 
 ---
 
-### OpsHub
+## `OpsHub`
 
 - Historically, to use Snow Family devices, you needed a CLI (Command Line Interface tool)
 - Today, you can use `AWS OpsHub` (a **GUI software** you install on your computer / laptop) to manage your Snow Family Device

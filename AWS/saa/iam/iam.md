@@ -1,8 +1,8 @@
-# AWS - Identity and Access Management (AWS IAM)
+# AWS - `Identity and Access Management (AWS IAM)`
 
 [Back](../index.md)
 
-- [AWS - Identity and Access Management (AWS IAM)](#aws---identity-and-access-management-aws-iam)
+- [AWS - `Identity and Access Management (AWS IAM)`](#aws---identity-and-access-management-aws-iam)
   - [IAM](#iam)
   - [`User` \& `Group`](#user--group)
   - [Security](#security)
@@ -270,6 +270,8 @@ aws iam list-users  # list users in iam
 }
 ```
 
+---
+
 ### IAM Policy Evaluation Logic
 
 ![iam_policy_evaluation](./pic/iam_policy_evaluation.png)
@@ -508,8 +510,6 @@ aws iam list-users  # list users in iam
 
 ---
 
----
-
 ### Use Case
 
 - Can be used in combinations of AWS `Organizations SCP`
@@ -575,8 +575,8 @@ aws iam list-users  # list users in iam
 - `Access Keys`:
   - access AWS using the CLI or SDK
 - **Audit**:
-  - `IAM Credential Reports`
-  - `IAM Access Advisor`
+  - `IAM Credential Reports`: users + credential status
+  - `IAM Access Advisor`: permission of a user + last access
 
 ---
 

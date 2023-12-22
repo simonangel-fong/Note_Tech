@@ -5,7 +5,7 @@
 - [AWS - CloudWatch](#aws---cloudwatch)
   - [`Amazon CloudWatch`](#amazon-cloudwatch)
   - [`CloudWatch` - Metrics](#cloudwatch---metrics)
-    - [Streams](#streams)
+    - [Metric Streams](#metric-streams)
   - [`CloudWatch` - Logs](#cloudwatch---logs)
     - [Sources](#sources)
     - [Logs Insights](#logs-insights)
@@ -13,9 +13,9 @@
     - [Logs Subscriptions](#logs-subscriptions)
       - [Logs Aggregation](#logs-aggregation)
     - [Hands-on](#hands-on)
-  - [`CloudWatch` Agent](#cloudwatch-agent)
-    - [Types of CloudWatch Agent](#types-of-cloudwatch-agent)
-    - [CloudWatch Unified Agent – Metrics](#cloudwatch-unified-agent--metrics)
+    - [`CloudWatch` Agent](#cloudwatch-agent)
+      - [Types of CloudWatch Agent](#types-of-cloudwatch-agent)
+      - [CloudWatch Unified Agent – Metrics](#cloudwatch-unified-agent--metrics)
   - [`CloudWatch` - Alarms](#cloudwatch---alarms)
     - [Alarm Targets](#alarm-targets)
     - [Composite Alarms](#composite-alarms)
@@ -32,7 +32,7 @@
 
 ## `Amazon CloudWatch`
 
-- Sample: You have made a configuration change and would like to evaluate the impact of it on the performance of your application. Which AWS service should you use?
+- Sample: You have made a configuration change and would like to evaluate the impact of it on the **performance of your application**. Which AWS service should you use?
   - Amazon `CloudWatch` is a **monitoring** service that allows you to monitor your applications, respond to system-wide **performance** changes, optimize resource utilization, and get a unified view of operational health. It is used to monitor your applications' performance and metrics.
 
 ---
@@ -57,18 +57,24 @@
 
 ---
 
-### Streams
+### Metric Streams
 
-- **Continually stream** CloudWatch metrics to a destination of your choice, with **near-real-time** delivery and **low latency**.
+- `Metric Streams`
+
+  - **Continually stream** CloudWatch metrics to a destination of your choice, with **near-real-time** delivery and **low latency**.
+
+- Target:
+
   - `Amazon Kinesis Data Firehose` (and then its destinations)
   - **3rd party** service provider:
-    - Datadog, Dynatrace, New Relic, Splunk, Sumo Logic…
+  - Datadog, Dynatrace, New Relic, Splunk, Sumo Logic…
+
 - **Option** to **filter** metrics to only stream a subset of them
 
 ![cloudwatch_metric_streams_diagram](./pic/cloudwatch_metric_streams_diagram.png)
 
 - Sample:
-  - …. is a CloudWatch feature that allows you to send CloudWatch metrics in near real-time to S3 bucket (through Kinesis Data Firehose) and 3rd party destinations (e.g., Splunk, Datadog, …).
+  - …. is a CloudWatch feature that allows you to send CloudWatch metrics in **near real-time** to S3 bucket (through Kinesis Data Firehose) and 3rd party destinations (e.g., Splunk, Datadog, …).
     - Metric Streams
 
 ---
@@ -77,7 +83,7 @@
 
 - Usage:
 
-  - used to store application log in AWS.
+  - used to **store** application log in AWS.
 
 - **Log groups**:
 
@@ -136,7 +142,7 @@
   - Can save queries and **add** them to `CloudWatch Dashboards`
 
 - Can query **multiple** `Log Groups` in **different AWS accounts**
-- It’s a query engine, **not a real-time engine**, only query historical data.
+- It’s a query engine, **not a real-time engine**, only query **historical** data.
 
 ![cloudwatch_logs_insights](./pic/cloudwatch_logs_insights.png)
 
@@ -150,7 +156,7 @@
 
   - the API call used to initiate export
 
-- a batch export
+- a **batch** export
   - **Not** near-real time or real-time…
 
 ![cloudwatch_logs_s3_export](./pic/cloudwatch_logs_s3_export.png)
@@ -170,7 +176,7 @@
 
 #### Logs Aggregation
 
-- Multi-Account & Multi Region
+- **Multi-Account & Multi Region**
 
 ![cloudwatch_logs_aggregation_multi_diagram](./pic/cloudwatch_logs_aggregation_multi_diagram.png)
 
@@ -245,11 +251,11 @@
 
 ---
 
-## `CloudWatch` Agent
+### `CloudWatch` Agent
 
 - `CloudWatch Agent`
 
-  - A small program to send log to `CloudWatch`
+  - A small program to **send log** to `CloudWatch`
 
 - By **default**, **no logs** from your `EC2` machine will go to `CloudWatch`
 - You need to run a `CloudWatch agent` on EC2 to push the log files you want
@@ -260,7 +266,7 @@
 
 ---
 
-### Types of CloudWatch Agent
+#### Types of CloudWatch Agent
 
 - Both for virtual servers (EC2 instances, on-premises servers…)
 
@@ -282,9 +288,9 @@
 
 ---
 
-### CloudWatch Unified Agent – Metrics
+#### CloudWatch Unified Agent – Metrics
 
-- Unified Agent
+- `Unified Agent`
 
   - **out-of-the box metrics** for EC2 – disk, CPU, network (high level)
   - Collected **directly on** your `Linux` server / `EC2` instance
@@ -480,7 +486,7 @@ aws cloudwatch set-alarm-state --alarm-name "myalarm" --state-value ALARM --stat
 ![cloudwatch_contributor_insights_diagram.png](./pic/cloudwatch_contributor_insights_diagram.png)
 
 - Sample:
-  - A DevOps engineer is working for a company and managing its infrastructure and resources on AWS. There was a sudden spike in traffic for the main application for the company which was not normal in this period of the year. The application is hosted on a couple of EC2 instances in private subnets and is fronted by an Application Load Balancer in a public subnet. To detect if this is normal traffic or an attack, the DevOps engineer enabled the VPC Flow Logs for the subnets and stored those logs in CloudWatch Log Group. The DevOps wants to analyze those logs and find out the top IP addresses making requests against the website to check if there is an attack. Which of the following can help the DevOps engineer to analyze those logs?
+  - A DevOps engineer is working for a company and managing its infrastructure and resources on AWS. There was a sudden spike in traffic for the main application for the company which was not normal in this period of the year. The application is hosted on a couple of EC2 instances in private subnets and is fronted by an Application Load Balancer in a public subnet. To detect if this is normal traffic or an attack, the DevOps engineer enabled the VPC Flow Logs for the subnets and stored those logs in CloudWatch Log Group. The DevOps wants to analyze those logs and **find out the top IP addresses** making requests against the website to check if there is an attack. Which of the following can help the DevOps engineer to analyze those logs?
     - Cw Contributor Insights
 
 ---

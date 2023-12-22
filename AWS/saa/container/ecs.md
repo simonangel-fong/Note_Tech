@@ -10,7 +10,7 @@
   - [IAM Roles for ECS](#iam-roles-for-ecs)
   - [Load Balancer Integrations](#load-balancer-integrations)
   - [Data Volumes/Data Persistence (EFS)](#data-volumesdata-persistence-efs)
-  - [Service Auto Scaling](#service-auto-scaling)
+  - [Service Auto Scaling: # of tasks](#service-auto-scaling--of-tasks)
     - [EC2 Launch Type – Auto Scaling EC2 Instances](#ec2-launch-type--auto-scaling-ec2-instances)
   - [Hands-on](#hands-on)
   - [Sulotion Architecture](#sulotion-architecture)
@@ -70,7 +70,7 @@
   - Pull Docker **image** from `ECR`
   - Reference **sensitive data** in `Secrets Manager` or `SSM Parameter` Store
 
-- ECS Task **Role**: (Both for EC2 type and Fargate type)
+- ECS **Task Role**: (Both for EC2 type and Fargate type)
 
   - Allows each **task** to have a **specific role**
   - Use different roles for the different ECS Services you run
@@ -121,7 +121,7 @@
 
 ---
 
-## Service Auto Scaling
+## Service Auto Scaling: # of tasks
 
 - Automatically **increase/decrease** the desired number of ECS **tasks**
 

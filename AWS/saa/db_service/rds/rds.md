@@ -6,7 +6,7 @@
   - [RDS Overview](#rds-overview)
     - [Ports](#ports)
     - [Storage Auto Scaling](#storage-auto-scaling)
-    - [Read Replicas for read scalability](#read-replicas-for-read-scalability)
+    - [`Read Replicas` for read scalability](#read-replicas-for-read-scalability)
     - [Multi AZ (Disaster Recovery)](#multi-az-disaster-recovery)
     - [Hands-On: Create](#hands-on-create)
   - [RDS Custom](#rds-custom)
@@ -97,14 +97,13 @@
 
 ---
 
-### Read Replicas for read scalability
+### `Read Replicas` for read scalability
 
 - Up to **15** Read Replicas
 - Within **AZ**, **Cross AZ** or **Cross Region**
 - Replication is **ASYNC**, so reads are eventually consistent
 - Replicas can be promoted to their own DB 可以提升为数据库之一.
-- Applications must **update the connection string** to leverage read
-  replicas 必须升级连接字符串.
+  - Applications must **update the connection string** to leverage read. replicas 必须升级连接字符串.
 
 ![rds_read_replicas](./pic/rds_read_replicas.png)
 
@@ -242,7 +241,7 @@
 - **Authentication**:
 
   - can enable `IAM Authentication` (Not default): **IAM roles** to connect to your database (instead of username/pw)
-  - **Oracle** NOT support IAM Database Authentication
+  - **Oracle NOT support** IAM Database Authentication
 
 - **Network access**:
 

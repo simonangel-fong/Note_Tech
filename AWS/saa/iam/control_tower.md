@@ -11,7 +11,7 @@
 ## `AWS Control Tower`
 
 - Easy way to set up and govern a secure and compliant **multi-account AWS environment** based on best practices
-- AWS Control Tower uses `AWS Organizations` to **create accounts**
+- AWS `Control Tower` uses `AWS Organizations` to **create accounts**
 
 - **Benefits**:
   - **Automate** the set up of your **environment** in a few clicks

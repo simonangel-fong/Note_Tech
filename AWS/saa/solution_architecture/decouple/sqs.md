@@ -1,6 +1,6 @@
 # AWS - SQS
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [AWS - SQS](#aws---sqs)
   - [`Amazon SQS`](#amazon-sqs)
@@ -29,7 +29,7 @@
 
   - a web service that enables web service applications to quickly and reliably queue messages that one component in the application generates to be consumed by another component where a queue is a temporary repository for messages that are awaiting processing.
 
-- SQS scales automatically.
+- SQS **scales automatically**.
 
 ---
 
@@ -237,7 +237,7 @@
   - 解决方法, 延长 Visibility Timeout.
 
 - 考题解析:
-  - `SQS Visibility Timeout` is a period of time during which Amazon SQS **prevents other consumers from receiving and processing** the message again. In Visibility Timeout, a message is hidden only after it is consumed from the queue. **Increasing** the Visibility Timeout **gives more time to the consumer to process** the message and** prevent duplicate reading of the message**. (default: 30 sec., min.: 0 sec., max.: 12 hours)
+  - `SQS Visibility Timeout` is a period of time during which Amazon SQS **prevents other consumers from receiving and processing** the message again. In Visibility Timeout, a message is hidden only after it is consumed from the queue. **Increasing** the Visibility Timeout **gives more time to the consumer to process** the message and **prevent duplicate reading of the message**. (default: 30 sec., min.: 0 sec., max.: 12 hours)
 
 ---
 

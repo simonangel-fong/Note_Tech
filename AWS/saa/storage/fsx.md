@@ -73,7 +73,7 @@
   - Machine Learning, `High Performance Computing (HPC)`
   - Video Processing, Financial Modeling, Electronic Design Automation
 
-- Scales up to 100s GB/s, millions of IOPS, sub-ms latencies
+- Scales up to **100s GB/s, millions of IOPS, sub-ms latencies**
 
 - **Storage Options**:
 
@@ -199,8 +199,6 @@
 ![fsx_handson07](./pic/fsx_handson07.png)
 
 ![fsx_handson08](./pic/fsx_handson08.png)
-
----
 
 ---
 

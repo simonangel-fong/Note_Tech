@@ -16,7 +16,7 @@
     - [Multi-Attach – io1/io2 family](#multi-attach--io1io2-family)
     - [EBS Encryption](#ebs-encryption)
       - [Hands-on: Encryption](#hands-on-encryption)
-  - [EC2 Instance Store](#ec2-instance-store)
+  - [EC2 `Instance Store`](#ec2-instance-store)
 
 ---
 
@@ -161,7 +161,7 @@
 
 - EBS Volumes are characterized in **Size** | **Throughput** | **IOPS (I/O Ops Per Sec)**
 - When in doubt always consult the AWS documentation – it’s good!
-- Only gp2/gp3 and io1/io2 can be used as **boot volumes**
+- **Only** `gp2/gp3` and `io1/io2` can be used as **boot volumes**
 
 ![ebs_volume_type](./pic/ebs_types_summary.png)
 
@@ -274,7 +274,7 @@
 
 ---
 
-## EC2 Instance Store
+## EC2 `Instance Store`
 
 - EBS volumes are **network drives** with good but “limited” performance
 - If you need a **high-performance hardware disk**, use `EC2 Instance Store`
@@ -296,4 +296,4 @@
 
 ---
 
-[TOP](#aws-ec2---storage)
+[TOP](#aws-storage---elastic-block-storage)

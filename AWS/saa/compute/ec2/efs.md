@@ -4,21 +4,21 @@
 
 - [AWS Storage - Elastic File System](#aws-storage---elastic-file-system)
   - [`Elastic File System`](#elastic-file-system)
-    - [Elastic File System](#elastic-file-system-1)
     - [Performance](#performance)
     - [Storage Classes](#storage-classes)
     - [Hands-on: EFS](#hands-on-efs)
   - [`EBS` vs `EFS`](#ebs-vs-efs)
     - [Elastic Block Storage](#elastic-block-storage)
-    - [Elastic File System](#elastic-file-system-2)
+    - [Elastic File System](#elastic-file-system-1)
 
 ---
 
 ## `Elastic File System`
 
-### Elastic File System
+- `Elastic File System`
 
-- Managed `NFS (network file system)` that **can be mounted** on many EC2
+  - Managed `NFS (network file system)` that **can be mounted** on many EC2
+
 - EFS works with EC2 instances in **multi-AZ**
 - Highly available, scalable, expensive (3x gp2), **pay per use**
 

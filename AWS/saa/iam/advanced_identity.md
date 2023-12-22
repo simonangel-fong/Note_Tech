@@ -102,7 +102,7 @@
 
 - 注意:
 
-1. 以上对 Management Account 的 DenyAthena 无效, 因为 full admin power.
+1. 以上**对 Management Account 的 DenyAthena 无效**, 因为 full admin power.
 2. AccountA 有授权 Redshift, 但不能与上位法 OU SCP 冲突, 所以无效.
 
 ---

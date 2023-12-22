@@ -3,7 +3,7 @@
 [Back](../../index.md)
 
 - [AWS - Glue](#aws---glue)
-  - [AWS Glue](#aws-glue)
+  - [`AWS Glue`](#aws-glue)
     - [Features](#features)
     - [`Glue Data Catalog`](#glue-data-catalog)
   - [Use Case:](#use-case)
@@ -12,7 +12,7 @@
 
 ---
 
-## AWS Glue
+## `AWS Glue`
 
 - `AWS Glue`
 

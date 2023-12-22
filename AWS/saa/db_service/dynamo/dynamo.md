@@ -12,7 +12,7 @@
     - [Integration with Amazon S3](#integration-with-amazon-s3)
   - [`DynamoDB Accelerator (DAX)`](#dynamodb-accelerator-dax)
     - [`DynamoDB Accelerator (DAX)` vs. `ElastiCache`](#dynamodb-accelerator-dax-vs-elasticache)
-  - [`DynamoDB Global Tables`](#dynamodb-global-tables)
+  - [`DynamoDB Global Tables`(multiple-regions)](#dynamodb-global-tablesmultiple-regions)
   - [Hands-on](#hands-on)
 
 ---
@@ -211,7 +211,7 @@
 
 ---
 
-## `DynamoDB Global Tables`
+## `DynamoDB Global Tables`(multiple-regions)
 
 - Make a DynamoDB table accessible with **low latency** in **multiple-regions**
 - `Active-Active` replication
@@ -250,4 +250,4 @@
 
 ---
 
-[TOP](#aws---dynamo)
+[TOP](#aws---amazon-dynamodb)

@@ -5,7 +5,6 @@
 - [AWS - Serverless](#aws---serverless)
   - [Serverless](#serverless)
   - [Serverless in AWS](#serverless-in-aws)
-  - [`AWS Step Functions`](#aws-step-functions)
 
 ---
 
@@ -69,23 +68,6 @@
     - API-cache response, Dynamo-dax
   - You have a lot of static files stored in an S3 bucket that you want to **distribute globally** to your users. Which AWS service should you use?
     - Amazon `CloudFront` is a fast content delivery network `(CDN)` service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds. This is a perfect use case for Amazon CloudFront.
-
----
-
-## `AWS Step Functions`
-
-- Build **serverless visual workflow** to orchestrate your `Lambda functions`
-- Features: sequence, parallel, conditions, timeouts, error handling, …
-- Can **integrate** with `EC2`, `ECS`, On-premises servers, `API Gateway`, `SQS queues`, etc …
-- Possibility of implementing **human approval feature**
-- Use cases:
-  - order fulfillment, data processing, web applications, any workflow
-
-![step_functions_example](./pic/step_functions_example.png)
-
-- Sample:
-  - Which AWS service allows you to build Serverless **workflows** using AWS services (e.g., Lambda) and **supports human approval**?
-    - AWS Step Functions
 
 ---
 

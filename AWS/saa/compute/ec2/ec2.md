@@ -3,7 +3,7 @@
 [Back](../../index.md)
 
 - [AWS - EC2](#aws---ec2)
-  - [Amazon EC2](#amazon-ec2)
+  - [`Amazon EC2`](#amazon-ec2)
   - [EC2 sizing \& configuration options](#ec2-sizing--configuration-options)
   - [EC2 Instance Types](#ec2-instance-types)
   - [Purchasing Options](#purchasing-options)
@@ -38,9 +38,10 @@
 
 ---
 
-## Amazon EC2
+## `Amazon EC2`
 
 - `Amazon EC2`:
+
   - `Elastic Compute Cloud`
   - Infrastructure as a Service
 
@@ -54,7 +55,6 @@
 
 ## EC2 sizing & configuration options
 
-
 - **Operating System (OS)**: Linux, Windows or Mac OS
 - How much **compute power & cores (CPU)**
 - How much **random-access memory (RAM)**
@@ -63,17 +63,16 @@
   - hardware (EC2 Instance Store)
 - **Network card**: speed of the card, Public IP address
 - **Firewall rules**: security group
-- **Bootstrap script** (configure at first launch): EC2 User Data 
+- **Bootstrap script** (configure at first launch): EC2 User Data
 
 ---
-
-
 
 ## EC2 Instance Types
 
 - Naming convention: `[instance_class][generation].[size]`
+
   - eg: `m5.2xlarge`, `t2.micro`
- 
+
 - different types of EC2 instances that are optimised for different use cases
   - ref: https://aws.amazon.com/ec2/instance-types/
 
@@ -85,10 +84,6 @@
 | Storage Optimized | for intensive access to large data sets on local storage | OLTP                | `I3`    |
 
 ---
-
-
-
-
 
 ## Purchasing Options
 
@@ -112,7 +107,7 @@
   - All other operating systems - billing per hour
 - Has the **highest cost** but **no upfront payment**
 - No long-term commitment
-- Recommended for** short-term** and **un-interrupted workloads**, where you can't predict how the application will behave 
+- Recommended for **short-term** and **un-interrupted workloads**, where you can't predict how the application will behave
 
 ---
 
@@ -120,20 +115,24 @@
 
 - Up to 72% **discount** compared to On-demand
 - You reserve a specific **instance attributes** (Instance Type, Region, Tenancy, OS)
-- Reservation **Period** 
+- Reservation **Period**
+
   - 1 year (+discount)
   - 3 years (+++discount)
 
-- **Payment** Options 
-  - No Upfront (+), 
-  - Partial Upfront (++), 
+- **Payment** Options
+
+  - No Upfront (+),
+  - Partial Upfront (++),
   - All Upfront (+++)
 
-- Reserved Instance’s **Scope** 
+- Reserved Instance’s **Scope**
+
   - Regional
   - Zonal (reserve capacity in an AZ)
 
-- **Recommended** 
+- **Recommended**
+
   - for **steady-state usage applications** (think database)
 
 - You can buy and sell in the **Reserved Instance Marketplace**
@@ -155,7 +154,7 @@
 - Get a discount based on **long-term usage** (up to 72% - same as RIs)
 - Commit to a **certain type of usage** ($10/hour for 1 or 3 years)
 - Usage beyond EC2 Savings Plans is billed at the **On-Demand price**
-- **Locked** to a specific instance family & AWS region (e.g., M5 in us-east-1)
+- **Locked** to a specific **instance family & AWS region** (e.g., M5 in us-east-1)
 - **Flexible** across:
   - Instance Size (e.g., m5.xlarge, m5.2xlarge)
   - OS (e.g., Linux, Windows)
@@ -179,6 +178,7 @@
 - Instances that you **can “lose”** at any point of time if your max price is less than the current spot price
 - The **MOST cost-efficient instances** in AWS
 - Useful for workloads that are **resilient to failure**
+
   - Batch jobs
   - Data analysis
   - Image processing
@@ -196,6 +196,7 @@
   - The hourly spot price varies based on offer and capacity
   - If the current spot price > your max price you can choose to **stop or terminate** your instance with a 2 minutes grace period.
 - Other strategy: **Spot Block**
+
   - “block” spot instance during a specified time frame (1 to 6 hours) without interruptions
   - In rare situations, the instance may be reclaimed
 
@@ -226,10 +227,10 @@
 - `Spot Fleets`
   - set of **Spot Instances** + (optional) **On-Demand Instances**
 - The Spot Fleet will try to meet the target capacity with **price constraints**
+
   - Define possible **launch pools**: instance type (m5.large), OS, Availability Zone
   - Can have multiple launch pools, so that the fleet can choose
   - Spot Fleet stops launching instances when reaching capacity or max cost
-
 
 - **Strategies** to allocate Spot Instances:
   - **lowestPrice**: from the pool with the **lowest price** (cost optimization, short workload)
@@ -256,12 +257,14 @@
 - A **physical server** with EC2 instance capacity **fully dedicated** to your use
 - Allows you **address compliance requirements** and use your existing server-bound software **licenses** (per-socket, per-core, pe—VM software licenses)
 - Purchasing Options:
+
   - On-demand – pay per second for active Dedicated Host
   - Reserved - 1 or 3 years (No Upfront, Partial Upfront, All Upfront)
 
 - The **most expensive** option
 
 - Useful
+
   - for software that have complicated **licensing** model (BYOL – Bring Your Own License)
   - for companies that have strong regulatory or **compliance** needs
 
@@ -311,7 +314,7 @@
 
 ![role](./pic/role.png)
 
-- Result: 
+- Result:
   - Security: instance can access aws services without keep access key in the instance.
 
 ![role](./pic/apply_role.png)
@@ -322,9 +325,9 @@
 
 - It is possible to **bootstrap** our instances using an EC2 User data script.
 - `bootstrapping`:
+
   - **launching commands** when a machine starts
   - That script is only run once **at the instance first start**
-
 
 - EC2 user data is used to automate boot tasks such as:
   - Installing updates
@@ -355,6 +358,7 @@ echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 ### Placement Groups
 
 - `placement groups`
+
   - used to define EC2 Instance **placement strategy**
 
 - Strategies for the group:
@@ -372,9 +376,9 @@ echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 ![cluster](./pic/cluster.png)
 
 - **Same Rack, Same AZ**
-- **Pros**: 
+- **Pros**:
   - Great network (10 Gbps bandwidth between instances with Enhanced Networking enabled - recommended)
-- **Cons**: 
+- **Cons**:
   - If the rack fails, all instances fails at the same time
 - **Use case**:
   - Big Data job that **needs to complete fast**
@@ -410,7 +414,7 @@ echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 - The instances in a partition do not share racks with the instances in the other partitions
 - A partition failure can affect many EC2 but won’t affect other partitions
 - EC2 instances get access to the partition information as metadata
-- **Use cases**: 
+- **Use cases**:
   - HDFS, HBase, Cassandra, Kafka
 
 ---
@@ -426,21 +430,25 @@ echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 ### Hibernate
 
 - We know we can stop, terminate instances
+
   - **Stop** – the data on disk (`EBS`) is **kept** intact in the next start
   - **Terminate** – any EBS volumes (root) also set-up to be **destroyed** is lost.
 
 - On start, the following happens:
+
   - First start: the OS boots & the EC2 User Data script is run
   - Following starts: the OS boots up
-  - Then your application starts, caches get warmed up, and that can take time! 
+  - Then your application starts, caches get warmed up, and that can take time!
 
 - Introducing **EC2 Hibernate**:
+
   - The **in-memory (RAM) state** is preserved
   - The instance boot is much **faster**! (the OS is not stopped / restarted)
   - Under the hood: the RAM state is **written to a file in the root EBS volume**
   - The root EBS volume must be encrypted
 
 - Use cases:
+
   - Long-running processing
   - Saving the RAM state
   - Services that take time to initialize
@@ -460,7 +468,7 @@ echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 
 - Enable Hibernate when creating EC2
   - instance memory < EBS
-  - EBS Encrypted  
+  - EBS Encrypted
   - Advanced > Stop - Hibernate behavior: Enable
 
 ![hiberante_storage](./pic/hibernate_storage.png)
@@ -476,6 +484,7 @@ echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 ### AMI
 
 - `AMI`: `Amazon Machine Image`
+
   - a customization of an EC2 instance
   - You add your own software, configuration, operating system, monitoring…
 
@@ -483,11 +492,11 @@ echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
 - AMI are built for **a specific region** (and can be copied across regions)
 
 - You can launch EC2 instances from:
-  - **A Public AMI**: 
+  - **A Public AMI**:
     - AWS provided
-  - **Your own AMI**: 
+  - **Your own AMI**:
     - you make and maintain them yourself
-  - **An AWS Marketplace AMI**: 
+  - **An AWS Marketplace AMI**:
     - an AMI someone else made (and potentially sells)
 
 ---

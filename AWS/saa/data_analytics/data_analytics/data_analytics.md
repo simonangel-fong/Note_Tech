@@ -31,7 +31,7 @@
     - OpenSearch
   - An AWS service allows you to create, run, and monitor ETL (extract, transform, and load) jobs in a few clicks.
     - Glue
-  - A company is using AWS to host its public websites and internal applications. Those different websites and applications generate a lot of logs and traces. There is a requirement to **centrally store those logs** and **efficiently search** and analyze those logs in real-time for detection of any errors and if there is a threat. Which AWS service can help them efficiently store and analyze logs?
+  - A company is using AWS to host its public websites and internal applications. Those different websites and applications generate a lot of logs and traces. There is a requirement to **centrally store those logs** and **efficiently search** and analyze those logs in **real-time** for detection of any errors and if there is a threat. Which AWS service can help them efficiently store and analyze logs?
     - OpenSearch
   - ……………………….. makes it easy and cost-effective for data engineers and analysts to **run applications built** using open source **big data frameworks** such as Apache Spark, Hive, or Presto without having to operate or manage clusters.
     - EMR
@@ -41,7 +41,7 @@
     - Job bookmark
   - You are a DevOps engineer in a machine learning company which 3 TB of JSON files stored in an S3 bucket. There’s a requirement to do some analytics on those files using Amazon Athena and you have been tasked to find a way to **convert** those files’ format from **JSON** to Apache **Parquet**. Which AWS service is best suited?
     - Glue
-  - You have an on-premises application that is used together with an on-premises Apache Kafka to receive a stream of clickstream events from multiple websites. You have been tasked to migrate this application as soon as possible without any code changes. You decided to host the application on an EC2 instance. What is the best option you recommend to migrate Apache Kafka?
+  - You have an on-premises application that is used together with an on-premises **Apache Kafka** to receive a stream of clickstream events from multiple websites. You have been tasked to migrate this application as soon as possible without any code changes. You decided to host the application on an EC2 instance. What is the best option you recommend to migrate Apache Kafka?
     - MSK
   - You have data stored in RDS, S3 buckets and you are using AWS Lake Formation as a data lake to collect, move and catalog data so you can do some analytics. You have a lot of big data and ML engineers in the company and you want to control access to part of the data as it might contain sensitive information. What can you use?
     - Access control
