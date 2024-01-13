@@ -31,13 +31,12 @@
   - Non linear data structures
 
     - [Tree (Binary Tree)](./tree/dsa_tree.md)
-    - [Heap](./data_structure/tree/dsa_heap.md)
+    - [Heap](./tree/heap/heap.md)
     - [Binary Search Tree](./tree/dsa_bst.md)
-    - [Graph](./data_structure/graph/dsa_graph.md)
+    - [Graph](./graph/dsa_graph.md)
 
   - [Search](./data_structure/search/search.md)
   - [Sort](./data_structure/sort/sort.md)
-
 
   - [Graph](./data_structure/graph.md)
 

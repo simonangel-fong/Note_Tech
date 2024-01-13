@@ -1,6 +1,6 @@
 # DSA - Graph
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [DSA - Graph](#dsa---graph)
   - [Graph](#graph)

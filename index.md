@@ -13,10 +13,12 @@
   - [ ] Java
 
 - AWS
+
   - [x] [AWS CCP](./AWS/ccp/index.md)
-  - [ ] [AWS SAA](./AWS/saa/index.md)
+  - [x] [AWS SAA](./AWS/saa/index.md)
 
 - OS
+
   - [ ] [Linux](./Operating_System/linux/index.md)
   - [ ] Bash
   - [ ] iOS
