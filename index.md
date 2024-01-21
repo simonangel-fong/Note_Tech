@@ -11,11 +11,14 @@
   - [x] [Python](./Programming_Language/python/index.md)
   - [x] [JavaScript](./Programming_Language/javascript/index.md)
   - [ ] Java
+  - [ ] [R](./Programming_Language/r/index.md)
 
 - AWS
 
   - [x] [AWS CCP](./AWS/ccp/index.md)
   - [x] [AWS SAA](./AWS/saa/index.md)
+  - [ ] [AWS CDA](./AWS/cda/index.md)
+    - [ ] Project: [GitHub:Web hosting - S3](https://github.com/simonangel-fong/AWS_POC_Web_Hosting)
 
 - OS
 
@@ -27,9 +30,7 @@
 
   - [x] [SQL](./Database/sql/index.md)
   - [ ] [Oracle DBA](./Database/dba/index.md)
-  - [ ] MySQL(PY)
-  - [ ] MongoDB(PY)
-  - [ ] Hadoop
+  - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
 
 - Web
 
@@ -53,9 +54,10 @@
 
 - Machine Learning
 
-  - [ ] Yolo
-  - [ ] Tensorflow
+  - [ ] [Deep Learning](./Deep_learning/index.md)
+  - [x] [Yolo Project: VehiclePlateDetector](https://github.com/simonangel-fong/VehiclePlateDetector)
   - [ ] Pytorch
+  - [ ] Tensorflow
 
 -
 

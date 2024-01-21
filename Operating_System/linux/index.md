@@ -11,6 +11,10 @@
 
 ---
 
+- [Enable SSH](./ssh.md)
+
+---
+
 Catelog
 
 - [System](./sys.md)

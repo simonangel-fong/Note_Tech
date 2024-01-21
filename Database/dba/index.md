@@ -11,18 +11,23 @@
 - Online Course:
   - Udemy: [Oracle Database Administration Workshop ( 12c and Higher)](https://www.udemy.com/course/oracle-database-administration-certified-associate-1z0-072/)
 
-
-
-
 ---
 
 ## Catelog
 
 - [Intro](./intro/itro.md)
+- [Local Virtual Machine](./local_vm/vm.md)
 
 - Oracle Database Architecture
 
-- [Local Virtual Machine](./local_vm/vm.md)
+- [Database Instance](./instance/instance/instance.md)
+  - [Startup](./instance/startup/startup.md)
+  - [Shutdown](./instance/shutdown/shutdown.md)
+
+- Memory
+  - [System Global Area (SGA)](./memory/sga/sga.md)
+  - 
+
 
 ---
 
