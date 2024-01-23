@@ -31,4 +31,16 @@
 
 ---
 
+```sql
+SELECT name FROM v$controlfile;
+SELECT is_recovery_dest_file FROM v$controlfile;
+SELECT block_size FROM v$controlfile;
+SELECT file_size_blks FROM v$controlfile;
+SELECT con_id FROM v$controlfile;
+SELECT name, block_size, file_size_blks FROM v$controlfile;
+```
+
+
+---
+
 [TOP](#oracle-database-administration-workshop)
