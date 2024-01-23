@@ -10,7 +10,8 @@
 ## Catalog
 
 - Firebase
-  - [Start App](./firebase/startapp/startapp.md)
+  - [Initialize the Firebase SDK](./firebase/initialize/initialize.md)
+  - [Authentication](./firebase/auth/auth.md)
 
 
 ---

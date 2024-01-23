@@ -1,8 +1,8 @@
-# iOS - Firebase: Start App
+# iOS - Firebase: Initialize the Firebase SDK
 
 [Back](../../index.md)
 
-- [iOS - Firebase: Start App](#ios---firebase-start-app)
+- [iOS - Firebase: Initialize the Firebase SDK](#ios---firebase-initialize-the-firebase-sdk)
   - [Create a project on Firebase](#create-a-project-on-firebase)
   - [Connect iOS app with Firebase project](#connect-ios-app-with-firebase-project)
 
@@ -38,4 +38,4 @@
 
 ---
 
-[TOP](#ios---firebase-start-app)
+[TOP](#ios---firebase-initialize-the-firebase-sdk)
