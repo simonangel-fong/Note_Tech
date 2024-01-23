@@ -1,12 +1,13 @@
-# Python
+# R
 
 [All Notes](../../index.md)
 
-- [Python](#python)
+- [R](#r)
 
 ---
 
-- Fundamental
+- [Fun](./fundamental/fundamental.md)
+- [Function](./function/function.md)
 
 
 - Data Structures
