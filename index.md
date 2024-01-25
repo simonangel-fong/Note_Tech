@@ -27,7 +27,7 @@
 
 - Mobile
 
-  - [ ] [iOS](./mobile/ios/index.md)
+  - [ ] [iOS](./Mobile/ios/index.md)
 
 - Database
 

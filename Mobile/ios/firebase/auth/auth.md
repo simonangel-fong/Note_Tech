@@ -4,6 +4,7 @@
 
 - [iOS - Firebase: Authentication](#ios---firebase-authentication)
   - [Configure](#configure)
+  - [Firebase Authentication](#firebase-authentication)
   - [Requirements](#requirements)
   - [View Design](#view-design)
   - [View Controller](#view-controller)
@@ -37,9 +38,33 @@ FirebaseApp.configure()
 
 ---
 
+## Firebase Authentication
+
+- `import FirebaseAuth`
+
+| Code                                                                  | Description |
+| --------------------------------------------------------------------- | ----------- |
+| `Auth.auth().createUser(withEmail: emailAddress, password: password)` | Sign Up     |
+| `Auth.auth().signIn(withEmail: emailAddress, password: password)`     | Sign In     |
+| `try? Auth.auth().signOut()`                                          | Sign Out    |
+
+- Listens to the user’s authentication state
+
+```swift
+Auth.auth().addStateDidChangeListener { [weak self] _, user in
+  guard let self = self else {
+    return
+  }
+  self.user = user
+}
+```
+
+---
+
 ## Requirements
 
 - Documentation:
+
   - https://firebase.google.com/docs/auth/ios/start
 
 - User signs up within loginVC
@@ -201,15 +226,15 @@ import UIKit
 import FirebaseAuth
 
 class ProfileViewController: UIViewController {
-    
+
     @IBOutlet var lblEmail: UILabel!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         //MARK: - Get a user's profile
         ///Check to see if a user is logged in
         Auth.auth().addStateDidChangeListener { auth, user in
-            
+
             //MARK: - If user auth, display
             if let currentUser = user {
                 self.lblEmail.text = currentUser.email
@@ -218,7 +243,7 @@ class ProfileViewController: UIViewController {
             }
         }
     }
-    
+
     //MARK: - IBAction to sign out
     @IBAction func signoutDidTouch(_ sender: AnyObject){
         do {
@@ -250,11 +275,9 @@ class ProfileViewController: UIViewController {
 
 ![signin](./pic/signin02.png)
 
-
 - Login to profile
 
 ![profile](./pic/profile.png)
-
 
 ---
 
