@@ -12,7 +12,7 @@
 - Firebase
   - [Initialize the Firebase SDK](./firebase/initialize/initialize.md)
   - [Authentication](./firebase/auth/auth.md)
-  - [Realtime Database](./firebase/realtime_db/realtime_dbs.md)
+  - [Realtime Database](./firebase/realtime_db/realtime_db.md)
   - [Storage](./firebase/storage/storage.md)
 
 ---
