@@ -4,7 +4,8 @@
 
 - [Oracle DBA - Intro](#oracle-dba---intro)
   - [Terminology](#terminology)
-  - [editions](#editions)
+  - [Editions](#editions)
+    - [Lab: Check the version of Oracle Database](#lab-check-the-version-of-oracle-database)
   - [Database VS Database Instance](#database-vs-database-instance)
     - [Database](#database)
     - [Database Instance](#database-instance)
@@ -85,7 +86,7 @@
 
 ---
 
-## editions
+## Editions
 
 - **Oracle Database _Personal_ Edition (PE)**
 
@@ -104,6 +105,25 @@
 
 - **Oracle Database _Express_ Edition ( XE)**
   - **Free** but limited , use 1 CPU, 1 GB memory
+
+---
+
+### Lab: Check the version of Oracle Database
+
+```sql
+SELECT * FROM v$version;
+# BANNER
+# BANNER_FULL
+# BANNER_LEGACY
+# CON_ID
+# ----------------------------------------------------------------------
+# Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+# Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+# Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+# 0
+# Version 19.3.0.0.
+# 0
+```
 
 ---
 

@@ -21,15 +21,18 @@
 - Oracle Database Architecture
 
 - [Database Instance](./instance/instance/instance.md)
+
   - [Startup](./instance/startup/startup.md)
     - [Lab: Startup](./instance/startup/lab.md)
   - [Shutdown](./instance/shutdown/shutdown.md)
     - [Lab: Shutdown mode](./instance/shutdown/lab.md)
 
 - Memory
+
   - [System Global Area (SGA)](./memory/sga/sga.md)
 
-
+- [Net Services](./net/net/net.md)
+  - [Listener](./net/listener/listener.md)
 
 ---
 
@@ -43,7 +46,6 @@ SELECT file_size_blks FROM v$controlfile;
 SELECT con_id FROM v$controlfile;
 SELECT name, block_size, file_size_blks FROM v$controlfile;
 ```
-
 
 ---
 
