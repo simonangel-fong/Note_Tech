@@ -22,14 +22,18 @@
 
 - [Database Instance](./instance/instance/instance.md)
   - [Startup](./instance/startup/startup.md)
+    - [Lab: Startup](./instance/startup/lab.md)
   - [Shutdown](./instance/shutdown/shutdown.md)
+    - [Lab: Shutdown mode](./instance/shutdown/lab.md)
 
 - Memory
   - [System Global Area (SGA)](./memory/sga/sga.md)
-  - 
+
 
 
 ---
+
+- control file
 
 ```sql
 SELECT name FROM v$controlfile;
