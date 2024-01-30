@@ -8,7 +8,7 @@
 
 - [Fun](./fundamental/fundamental.md)
 - [Function](./function/function.md)
-
+- [Data Visualization](./visualization/visualization.md)
 
 - Data Structures
   - [Vector](./ds/vector/vector.md)

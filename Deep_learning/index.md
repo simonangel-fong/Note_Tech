@@ -2,12 +2,9 @@
 
 [Back](../index.md)
 
-- [Deep Learning](#deep-learning)
-
 ---
 
-
-
+- [Environment Configuration](./env_config/env_config.md)
 
 ---
 
