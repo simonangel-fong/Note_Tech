@@ -56,13 +56,13 @@
   - [ ] Scikit-learn
   - [ ] OpenCV
 
-- Machine Learning
+- AI
 
-  - [ ] [Deep Learning](./Deep_learning/index.md)
-  - [x] [Yolo Project: VehiclePlateDetector](https://github.com/simonangel-fong/VehiclePlateDetector)
-  - [ ] Pytorch
-  - [ ] Tensorflow
+  - [ ] [Deep Learning](./AI/Deep_learning/index.md)
+  - [ ] [Machine Learning](./AI/Machine_learning/index.md)
+    - [x] [Yolo Project: VehiclePlateDetector](https://github.com/simonangel-fong/VehiclePlateDetector)
+  - [ ] [Pytorch](./AI/PyTorch/index.md)
 
--
+---
 
 [Notes @ Humber College - ITS](https://simonangel-fong.github.io/Humber_ITS_Note/)
