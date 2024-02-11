@@ -1,5 +1,11 @@
 # 技术笔记
 
+- Database
+
+  - [x] [SQL](./Database/sql/index.md)
+  - [ ] [Oracle DBA](./Database/dba/index.md)
+  - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
+
 - Fundamental
 
   - [ ] Statictics
@@ -29,12 +35,6 @@
 
   - [ ] [iOS](./Mobile/ios/index.md)
   - [ ] [Flutter](./Mobile/flutter/index.md)
-
-- Database
-
-  - [x] [SQL](./Database/sql/index.md)
-  - [ ] [Oracle DBA](./Database/dba/index.md)
-  - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
 
 - Web
 

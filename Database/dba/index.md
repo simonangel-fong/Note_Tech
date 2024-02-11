@@ -43,9 +43,14 @@
   - [Program Global Area (PGA)](./memory/pga/pga.md)
   - [User Global Area (UGA)](./memory/uga/uga.md)
 
-- Process Architecture
+- [Process Architecture](./process/process/process.md)
 
-- Physical Storage Structures
+  - [Client Processes](./process/client_processes/client_processes.md)
+  - [Server Processes](./process/server_processes/server_processes.md)
+  - [Background Processes](./process/bg_processes/bg_processes.md)
+  - [Slave Processes](./process/slave_processes/slave_processes.md)
+
+- [Physical Storage Structures](./phy_storage/phy_storage/phy_storage.md)
 
   - control file
 

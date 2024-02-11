@@ -7,6 +7,7 @@
   - [Administering the Listener](#administering-the-listener)
   - [STATUS](#status)
   - [Monitoring](#monitoring)
+  - [Lab](#lab)
 
 ---
 
@@ -100,6 +101,25 @@ lsnrctl SERVICES [listener_name]
 ```
 
 ![listener01](./pic/listener02.png)
+
+---
+
+## Lab
+
+- Command to return database name
+  - Method 01:
+    - check the tnsname.ora
+  - Method 02:
+    - Return the processes name to which Oracle listens.
+
+```sh
+# check for the presence of Oracle System Monitor (SMON) processes.
+# ps -ef: Lists information about all currently running processes in a detailed format.
+# grep smon: Searches for lines containing the string "smon" in the output
+# grep -v grep:  ensures that the grep process used for searching is not included in the results.
+ps -ef | grep smon
+ps -ef | grep smon | grep -v grep
+```
 
 ---
 
