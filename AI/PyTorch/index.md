@@ -18,7 +18,8 @@
 - [Linear Regression](./linear_regression/linear_regression.md)
 - Classification
   - [Perceptron - Binary Classifier](./perceptron/perceptron.md)
-  - [Convolutional Neural Network](./cnn/cnn.md)
+  - [Convolutional Neural Network (CNN)](./cnn/cnn.md)
+  - [Recurrent Neural Network (RNN)](./rnn/rnn.md)
 
 ---
 
