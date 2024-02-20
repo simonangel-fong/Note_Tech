@@ -50,11 +50,17 @@
   - [Background Processes](./process/bg_processes/bg_processes.md)
   - [Slave Processes](./process/slave_processes/slave_processes.md)
 
-- [Physical Storage Structures](./phy_storage/phy_storage/phy_storage.md)
+- Storage Structures
+  - [Physical Storage Structures](./phy_storage/phy_storage/phy_storage.md)
 
   - control file
 
 - Logical Storage Structure
+
+---
+
+- DBA2
+  - [Backup](./backup/backup/backup.md)
 
 ---
 

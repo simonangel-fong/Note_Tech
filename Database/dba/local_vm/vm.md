@@ -13,7 +13,7 @@
     - [install package for 19c](#install-package-for-19c)
     - [Additional Configurations](#additional-configurations)
   - [Configure Environment Variables](#configure-environment-variables)
-  - [](#)
+  - [Install](#install)
 
 ---
 
@@ -279,13 +279,7 @@ chmod u+x /home/oracle/scripts/*.sh
 ```sh
 # verify
 echo $ORACLE_HOME   # /u01/app/oracle/product/19.0.0/dbhome_1
-```
 
----
-
-## 
-
-```sh
 vi /home/oracle/.bash_profile
 
 
@@ -303,7 +297,15 @@ export CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
 
 ```
 
-- Install
+---
+
+## Install
+
+- Download Oracle Database 19c zip file.
+  - Move zip file to $ORACLE_HOME path
+  - Unzip file: `unzip <zip_file>`
+  - At the $ORACLE_HOME directory, launch Oracle Universal Installer (OUI) to start setup: `./runInstaller`
+
 
 ```sh
 # configuration

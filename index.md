@@ -6,6 +6,15 @@
   - [ ] [Oracle DBA](./Database/dba/index.md)
   - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
 
+- AI
+
+  - [ ] [Pytorch](./AI/PyTorch/index.md)
+  - [ ] [Deep Learning](./AI/Deep_learning/index.md)
+  - [ ] [Machine Learning](./AI/Machine_learning/index.md)
+    - [x] [Yolo Project: VehiclePlateDetector](https://github.com/simonangel-fong/VehiclePlateDetector)
+
+---
+
 - Fundamental
 
   - [ ] Statictics
@@ -55,13 +64,6 @@
   - [ ] Panda
   - [ ] Scikit-learn
   - [ ] OpenCV
-
-- AI
-
-  - [ ] [Deep Learning](./AI/Deep_learning/index.md)
-  - [ ] [Machine Learning](./AI/Machine_learning/index.md)
-    - [x] [Yolo Project: VehiclePlateDetector](https://github.com/simonangel-fong/VehiclePlateDetector)
-  - [ ] [Pytorch](./AI/PyTorch/index.md)
 
 ---
 
