@@ -5,6 +5,7 @@
   - [x] [SQL](./Database/sql/index.md)
   - [ ] [Oracle DBA](./Database/dba/index.md)
   - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
+  - [ ] [Warehouse Humber](./Database/warehouse/index.md)
 
 - AI
 
