@@ -4,7 +4,7 @@
 
 - [DBA - Physical Storage Structures](#dba---physical-storage-structures)
   - [Physical Storage Structures](#physical-storage-structures)
-    - [Mechanisms for Storing Database Files](#mechanisms-for-storing-database-files)
+    - [Most Common Mechanisms for Storing Database Files](#most-common-mechanisms-for-storing-database-files)
 
 ---
 
@@ -56,10 +56,36 @@
 
 ---
 
-### Mechanisms for Storing Database Files
+### Most Common Mechanisms for Storing Database Files
 
-- Mechanisms 
+- `Oracle Automatic Storage Management (Oracle ASM)`
 
+  - a file system designed exclusively for use by Oracle Database. 专有
+
+- `Operating system file system`
+
+  - Operating systems have `file managers` to **allocate and deallocate disk space** into files within a file system.
+    - File
+      - **has a name**
+      - is made to appear as **a contiguous address space** to applications such as Oracle Database.
+      - can be created, read, written, resized, and deleted by database.
+    - logical volume manager (LVM)
+
+- `Cluster file system`
+
+  - a **cluster of servers** that collaborate to provide high performance service to their clients.
+  - The cluster file system of `Oracle RAC` **makes shared storage appear as a file system shared by many computers** in a clustered environment.
+    - the failure of a computer in the cluster does not make the file system unavailable.
+    - In an operating system file system, however, if a computer sharing files through NFS or other means fails, then the file system is unavailable.
+
+- A database employs a combination of the preceding storage mechanisms.可以有多个存储机制
+
+---
+
+- `logical volume manager (LVM)`
+  - a software package to constructe a `logical volume` for a file system.
+  - enables pieces of multiple physical disks to **combine into a single contiguous address space** that appears as one disk to higher layers of software.
+  - 作用是将分散多个的物理磁盘聚合成一个连续的空间
 
 ---
 

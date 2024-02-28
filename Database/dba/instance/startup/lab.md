@@ -5,6 +5,7 @@
 - [DBA Lab: Startup](#dba-lab-startup)
   - [Lab: Default Startup](#lab-default-startup)
   - [Lab: Explore Startup Phases](#lab-explore-startup-phases)
+  - [Lab: `FORCE`](#lab-force)
 
 ---
 
@@ -123,6 +124,33 @@ SELECT count(1) FROM dba_tables;
 ```
 
 ![lab](./pic/lab05.png)
+
+---
+
+## Lab: `FORCE`
+
+- `STARUP FORCE`:
+  - If the database is open, then `FORCE` **shuts down** the database with a `SHUTDOWN ABORT` statement before re-opening it.
+  - If the database is closed, then FORCE opens the database.
+
+```sql
+startup
+-- ORA-01081: cannot start already-running ORACLE - shut it down first
+
+startup force
+--ORACLE instance started.
+--
+--Total System Global Area 2432695832 bytes
+--Fixed Size		    9137688 bytes
+--Variable Size		  536870912 bytes
+--Database Buffers	 1879048192 bytes
+--Redo Buffers		    7639040 bytes
+--Database mounted.
+--Database opened.
+
+```
+
+![lab](./pic/lab06.png)
 
 ---
 

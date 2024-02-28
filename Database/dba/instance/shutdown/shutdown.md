@@ -13,7 +13,7 @@
       - [Save Shutdown - `IMMEDIATE`, `TRANSACTIONAL`, `NORMAL`,](#save-shutdown---immediate-transactional-normal)
       - [Abnormal Shutdown - `ABORT` + `STARTUP FORCE`](#abnormal-shutdown---abort--startup-force)
     - [`SHUTDOWN IMMEDIATE`: force a checkpoint](#shutdown-immediate-force-a-checkpoint)
-    - [`SHUTDOWN TRANSACTIONAL`: wait for current tran](#shutdown-transactional-wait-for-current-tran)
+    - [`SHUTDOWN TRANSACTIONAL`: wait for current transaction](#shutdown-transactional-wait-for-current-transaction)
     - [`SHUTDOWN NORMAL` / `SHUTDOWN`: wait for current session](#shutdown-normal--shutdown-wait-for-current-session)
   - [Unusual circumstances of shutdown](#unusual-circumstances-of-shutdown)
 
@@ -168,7 +168,7 @@
 
 ---
 
-### `SHUTDOWN TRANSACTIONAL`: wait for current tran
+### `SHUTDOWN TRANSACTIONAL`: wait for current transaction
 
 - take a significant amount of **time** depending on the nature of the current transactions.
 - **prevents** users from **starting new transactions**,
@@ -178,7 +178,7 @@
 
 ### `SHUTDOWN NORMAL` / `SHUTDOWN`: wait for current session
 
-- default mode of shutdown.
+- **default** mode of shutdown.
 - The database **waits for all connected users to disconnect** before shutting down.
 
 ---

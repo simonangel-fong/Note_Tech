@@ -128,6 +128,26 @@ commit;
 
 ---
 
+- Terminal B insert a new row
+- Terminal A shutdown transactional
+  - shutdown will not be executed.
+- Terminal B close session
+
+  - shutdown will be executed.
+
+- => close session == transaction automaticall commit;
+
+  - new value is available when re-open the database.
+
+- Different from the `SHUTDOWN IMMEDIATE`
+  - `SHUTDOWN IMMEDIATE`: uncommitted transaction will roll back.
+
+![lab](./pic/lab0204.png)
+
+![lab](./pic/lab0205.png)
+
+- ***
+
 ## Lab: `SHUTDOWN IMMEDIATE`
 
 - Terminal A:
@@ -186,8 +206,6 @@ SELECT * FROM test;
     - In IMMEDIATE mode, all uncommited transaction will roll back.
 
 ![lab03](./pic/lab0303.png)
-
----
 
 ---
 

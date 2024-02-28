@@ -21,6 +21,8 @@
 - [Net Services Architecture](./net/net/net.md)
 
   - [Listener](./net/listener/listener.md)
+  - [TNS Name](./net/tnsname/tnsname.md)
+  - [Login `SQLP\*LUS`](./net/EZCONNECT/EZCONNECT.md)
 
 - Oracle Database Architecture
 
@@ -51,11 +53,23 @@
   - [Slave Processes](./process/slave_processes/slave_processes.md)
 
 - Storage Structures
+
   - [Physical Storage Structures](./phy_storage/phy_storage/phy_storage.md)
+    - [Data File](./phy_storage/data_file/data_file.md)
+    - [Control File](./phy_storage/control_file/control_file.md)
+    - [Online Redo Log](./phy_storage/online_redo_log/online_redo_log.md)
+  - [Logical Storage Structures](./log_storage/log_storage/log_storage.md)
+    - Data Blocks
+    - Extents
+    - Segments
+    - Tablespaces
 
-  - control file
+- [Pluggable Database](./pluggable_db/pluggable_db/pluggable_db.md)
+- User Management
 
-- Logical Storage Structure
+  - [Alter user](./user/user/user.md)
+
+- [Miscellaneous](./misc/misc.md)
 
 ---
 
@@ -71,6 +85,25 @@ SELECT block_size FROM v$controlfile;
 SELECT file_size_blks FROM v$controlfile;
 SELECT con_id FROM v$controlfile;
 SELECT name, block_size, file_size_blks FROM v$controlfile;
+```
+
+---
+
+## Lab: get the database name
+
+- Command to return database name
+  - Method 01:
+    - check the tnsname.ora
+  - Method 02:
+    - Return the processes name to which Oracle listens.
+
+```sh
+# check for the presence of Oracle System Monitor (SMON) processes.
+# ps -ef: Lists information about all currently running processes in a detailed format.
+# grep smon: Searches for lines containing the string "smon" in the output
+# grep -v grep:  ensures that the grep process used for searching is not included in the results.
+ps -ef | grep smon
+ps -ef | grep smon | grep -v grep
 ```
 
 ---

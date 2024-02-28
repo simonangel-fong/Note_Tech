@@ -8,6 +8,7 @@
     - [Instance Name](#instance-name)
     - [Services Name](#services-name)
     - [Instance Name vs Service Name](#instance-name-vs-service-name)
+    - [Service Name \& Net service](#service-name--net-service)
   - [Connecting to a Database Service](#connecting-to-a-database-service)
     - [Connect descriptor](#connect-descriptor)
     - [Naming Methods](#naming-methods)
@@ -16,7 +17,6 @@
       - [Configuration Steps](#configuration-steps)
       - [Connection process](#connection-process)
       - [Local Naming: `tnsnames.ora`](#local-naming-tnsnamesora)
-    - [Connect using a Connection String](#connect-using-a-connection-string)
   - [Localized Management](#localized-management)
 
 ---
@@ -24,8 +24,13 @@
 ## Oracle Net
 
 - `Oracle Net`
+
   - a software layer that resides **on the client** and **on the Oracle Database server**.
   - used to **establish and maintain the connection** between the client application and server, as well as exchanging messages between them, using industry-standard protocols.
+
+- Oracle uses 2 main files for network confguration:
+  - `listener.ora`: which defines listeners.
+  - `tnsname.ora`: which defines the Net service names.
 
 ---
 
@@ -48,7 +53,7 @@
 > - e.g.: **sales** and **finance**. (`us.example.com` is the hostname)
 
 - A running database has at least one `instance`.
-  - has at least on `instance name`.
+  - has at least one `instance name`.
   - can have multiple `instance name`.
   - The combination of `DB_NAME` and `INSTANCE_NAME` forms a **unique identifier** for an instance within a database.
 
@@ -129,8 +134,8 @@ SELECT * FROM GLOBAL_NAME;
 ![diagram_service_name02](./pic/diagram_service_name02.png)
 
 > - Three Web browsers connecting to the same database server.
->   - two Web browsers are connecting to the `book.us.example.com` service.
->   - the other Web browser is connecting to the `soft.us.example.com` service.
+>   - two Web browsers are connecting to the `book.us.example.com` service.Here service name of the database is book, host name is us.example.
+>   - the other Web browser is connecting to the `soft.us.example.com` service. Here service name of the database is soft, host name is us.example.
 >   - Both services are associated with the same database.
 
 ---
@@ -144,6 +149,20 @@ SELECT * FROM GLOBAL_NAME;
 - 结果: 服务名与实例名没有必然联系. 关键的是 DB. 而关键是连接到对应的 DB, 即使用服务名即可.
   - the listener acts as a **mediator** between the client and instances and **routes** the connection request to the **appropriate instance**. 监听器是用于路由请求到适当的实例.
   - Clients connecting to a service **need not specify which instance they require**. 用户的连接请求无需包括实例.
+
+---
+
+### Service Name & Net service
+
+- The service name is used to register itself with a listener.
+  - Listener can map a request to the specific database.
+
+![service_name_net](./pic/service_name_net.png)
+
+> - `tnsname.ora`: define a Net service named "orcl" using a descriptor, to map this "**orcl**" to a database with a service name "**orcl\.com**".
+> - When client establish a connection using a connection string that contains this "orcl" net service, listener will map this request to the database with a service name "**orcl\.com**".
+
+- The `listener registration process (LREG)` **registers** information about the database instance and `dispatcher processes` with the `Oracle Net Listener`.
 
 ---
 
@@ -180,13 +199,19 @@ SELECT * FROM GLOBAL_NAME;
 
 ---
 
-- Example: `sales-server/sales.us.example.com`
+- Example of **Easy Connect descriptor**:
 
-  - **database service name**: `sales.us.example.com`
-  - **host**: `sales-server`
-  - **default port**: `1521`
+```conf
+sales-server/sales.us.example.com
+```
+
+- **database service name**: `sales.us.example.com`
+- **host**: `sales-server`
+- **default port**: `1521`
 
 - the entry in the `tnsnames.ora` file for the preceding `Easy Connect connect descriptor` and `database service`
+
+- The entry in the tnsnames.ora
 
 ```conf
 (DESCRIPTION=
@@ -295,76 +320,8 @@ CONNECT hr@sales
 
   - to store names in `tnsnames.ora` file on the clients.
 
-- `tnsnames.ora`
-
-  - a **configuration file** in Oracle Database that **stores** `net service names` **mapped** to `connect descriptors` for establishing connections to Oracle databases.
-
-- Example:
-
-```conf
-sales=
-    (DESCRIPTION=
-        (ADDRESS=(PROTOCOL=tcp)(HOST=sales-server)(PORT=1521))
-    (CONNECT_DATA=
-        (SID=sales)
-        (SERVICE_NAME=sales.us.example.com)
-        (INSTANCE_NAME=sales)))
-
-
-#################################################
-# ADDRESS section
-#   PROTOCOL parameter: identifies the listener protocol address
-#   HOST parameter:     identifies the host name.
-#   PORT parameter:     identifies the port. Default = 1521
-#   HTTPS_PROXY and HTTPS_PROXY_PORT parameters:
-#           Optional, allow the database client connection to traverse through the organization’s forward web proxy.
-#           applicable only to the connect descriptors where PROTOCOL=TCPS.
-#################################################
-# CONNECT_DATA section:
-#   SID parameter:          identifies the system identifier (SID) of the Oracle database.
-#   SERVICE_NAME parameter  identifies the service. SERVICE_NAMES initialization parameter, typically the global database name
-#   INSTANCE_NAME parameter optional, identifies the database instance. useful for an Oracle RAC configuration
-#   SERVER parameter        identifies the service handler type.
-#        DEDICATED, default value. a dedicated server process is assigned to each user session, providing isolation and dedicated resources for that connection.
-#       SHARED, multiple client connections share a common server process.
-#       POOLED, typically associated with Oracle Connection Manager. The pool contains shared server processes that are dynamically allocated to client connections as needed.
-```
-
 ---
 
-### Connect using a Connection String
-
-- format of connection string
-
-```sql
-CONNECT username@connect_identifier
-```
-
-- Default `Connect Identifier`
-
-  - Linux and UNIX:
-    - `TWO_TASK` environment variable
-  - Microsoft Windows:
-    - `LOCAL` environment variable
-  - Usage:
-    - if `TWO_TASK = sales`
-    - then `CONNECT username` = `CONNECT username@sales`
-
-- `Connect identifiers` used in a connect string **cannot contain spaces** unless enclosed within single quotation marks (') or double quotation marks (").
-  - Single quotation marks are required if double quotation marks are used in a connect identifier.
-  - Double quotation marks are required if single quotation marks are used in a connect identifier.
-
-```sh
-CONNECT scott@'(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=sales-server)
-(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sales.us.example.com)))'
-
-CONNECT scott@'cn=sales, cn=OracleContext, dc=us, dc=example, dc=com'
-
-CONNECT scott@'sales@"good"example.com'
-CONNECT scott@"cn=sales, cn=OracleContext, ou=Mary's Dept, o=example"
-```
-
----
 
 ## Localized Management
 
