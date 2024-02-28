@@ -7,6 +7,7 @@
   - [Use of Control Files](#use-of-control-files)
   - [Multiple Control Files](#multiple-control-files)
   - [Control File Structure](#control-file-structure)
+  - [Lab: Query Control File](#lab-query-control-file)
 
 ---
 
@@ -90,6 +91,22 @@
 - Views:`V$DATABASE`
 
   - to view the information stored in the control file
+
+---
+
+## Lab: Query Control File
+
+- Control files
+- Stores metadata about the datafiles and online redo log files ( like names ,locations and statuses ) and this info is required by the database instance to open the database.
+- very imprtant note: Control files **exists in the whole instance**, **not for particular container**
+
+```sql
+select * from V$CONTROLFILE;
+```
+
+![lab01](./pic/lab0101.png)
+
+![lab01](./pic/lab0102.png)
 
 ---
 

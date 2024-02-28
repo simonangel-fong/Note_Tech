@@ -8,6 +8,8 @@
   - [Permanent and Temporary Data Files](#permanent-and-temporary-data-files)
   - [Online and Offline Data Files](#online-and-offline-data-files)
   - [Data File Structure](#data-file-structure)
+  - [Lab: Query Data file using Dictionary](#lab-query-data-file-using-dictionary)
+  - [Lab: Query temp file](#lab-query-temp-file)
 
 ---
 
@@ -151,6 +153,198 @@
     - Over time, updates and deletions of objects within a tablespace can create `fragmented free space`.
 
 ![space_in_df](./pic/space_in_df.png)
+
+---
+
+## Lab: Query Data file using Dictionary
+
+- Connect to root
+- open pdb
+
+```sql
+
+-- query the data files
+/*
+contains the actual users data, applications data, metadata.
+( Tables, Rows, indexes ,procedures, views�)
+If you lose Datafiles, you lose your database.
+*/
+
+show con_name;
+
+select name,open_mode,con_id from v$pdbs;
+
+--make sure pluggable is open
+alter pluggable database orclpdb open;
+```
+
+- Query all data files using dictionary
+
+```sql
+select file_name,file_id,tablespace_name,con_id
+from cdb_data_files;
+```
+
+![lab0101](./pic/lab0101.png)
+
+![lab0101](./pic/lab0104.png)
+
+---
+
+- Query all data files using v$view
+  - return includes the data files of seed pdb.
+
+```sql
+select file#,name, ts#,con_id
+from V$DATAFILE
+order by con_id;
+```
+
+![lab0101](./pic/lab0105.png)
+
+---
+
+- close pdb
+- query using `cdb_`
+  - return only the root data files, because `cdb_` only return openned database.
+
+```sql
+alter pluggable database orclpdb close;
+select file_name,file_id,tablespace_name,con_id
+from cdb_data_files
+```
+
+![lab0101](./pic/lab0106.png)
+
+- Query using v$datafile.
+  - return all data files, even if the database is closed.
+
+```sql
+select file#, name, ts#, con_id
+from V$DATAFILE
+order by con_id;
+```
+
+![lab0101](./pic/lab0107.png)
+
+---
+
+- Query using dba, only return the data file in the current container, which is cdb.
+
+```sql
+--same query but using dba , but here we dont have  con_id
+
+select file_name,file_id,tablespace_name
+from dba_data_files
+```
+
+![lab0101](./pic/lab0102.png)
+
+---
+
+- Change session to a pdb
+- Query using dba, only return the data file in the current container, which is pdb.
+
+```sql
+--now let do
+alter session set container=orclpdb
+
+show con_name
+
+select file_name,file_id,tablespace_name
+from dba_data_files
+
+```
+
+![lab0101](./pic/lab0103.png)
+
+---
+
+- Close the pdb
+- Query using `dba_`
+  - return error, because `dba_` only return the opened pdb.
+
+```sql
+select file_name,file_id,tablespace_name
+from dba_data_files;
+```
+
+![lab0101](./pic/lab0108.png)
+
+- Query using v$ view
+  - can return even the pdb is closed.
+  - only return the pdb data files.
+
+```sql
+select file#,name, ts#,con_id
+from V$DATAFILE
+order by con_id;
+```
+
+![lab0101](./pic/lab0109.png)
+
+---
+
+---
+
+## Lab: Query temp file
+
+- A tempfile is a file that is part of an Oracle database.
+  Tempfiles are used with TEMPORARY TABLESPACES
+
+- Temporary tablespaces are used for special operations, particularly for sorting data results on disk and for hash joins in SQL. For SQL with millions of rows returned, the sort operation is too large for the RAM area and must occur on disk. The temporary tablespace is where this takes place
+
+---
+
+- Connect with root container
+- open pdb
+
+```sql
+show con_name;
+select name,open_mode,con_id from v$pdbs;
+
+--make sure pluggable is open
+alter pluggable database orclpdb open
+
+```
+
+- Query temp file both in root and pdbs using `cdb_`
+
+```sql
+select file_name,file_id,tablespace_name,con_id
+from cdb_temp_files;
+```
+
+![lab0201](./pic/lab0201.png)
+
+![lab02](./pic/lab0204.png)
+
+---
+
+- Query temp file only in root, using `dba_`
+
+```sql
+select file_name,file_id,tablespace_name
+from dba_temp_files
+```
+
+![lab02](./pic/lab0202.png)
+
+---
+
+- Change session to a pdb
+- Query the temp file only in pdb using `dba_`
+
+```sql
+alter session set container=orclpdb
+
+show con_name
+
+select file_name,file_id,tablespace_name
+from dba_temp_files
+```
+
+![lab02](./pic/lab0203.png)
 
 ---
 

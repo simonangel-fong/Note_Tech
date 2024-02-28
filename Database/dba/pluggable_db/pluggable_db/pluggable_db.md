@@ -5,6 +5,7 @@
 - [DBA - Pluggable Database](#dba---pluggable-database)
   - [Lab: Open and close PDB](#lab-open-and-close-pdb)
   - [Lab: Set the current session to PDB](#lab-set-the-current-session-to-pdb)
+  - [Save state](#save-state)
 
 ---
 
@@ -86,6 +87,21 @@ show con_name;
 ```
 
 ![lab](./pic/lab0203.png)
+
+---
+
+## Save state
+
+- By default, the status of pdb is mounted, which means pdb is closed. It requires to be opened mannually each time the instance starts.
+- To autimaticlly open a pdb, using save state
+
+```sql
+ALTER PLUGGABLE DATABASE orclpdb OPEN;
+ALTER PLUGGABLE DATABASE orclpdb SAVE STATE;
+```
+
+![save_state](./pic/save_state.png)
+![save_state](./pic/save_state02.png)
 
 ---
 

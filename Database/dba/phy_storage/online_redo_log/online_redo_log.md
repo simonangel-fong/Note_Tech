@@ -10,6 +10,7 @@
   - [Multiple Copies of Online Redo Log Files](#multiple-copies-of-online-redo-log-files)
   - [Archived Redo Log Files](#archived-redo-log-files)
   - [Structure of the Online Redo Log](#structure-of-the-online-redo-log)
+  - [Lab: Query redo log file](#lab-query-redo-log-file)
 
 ---
 
@@ -168,6 +169,44 @@
   - `SCN` and **time stamp** when the transaction **committed** (if it committed)
   - **Type of operation** that made the change
   - **Name** and **type** of the modified **data segment**
+
+---
+
+## Lab: Query redo log file
+
+- redo log files store all changes made to the database as they occur.
+- The database maintains online redo log files to protect against data loss. Specifically,after an instance failure.
+
+- the online redo log files enable Oracle Database to recover committed data that it has not yet written to the data files.
+  - we need minimum 2 redo log files
+  - one is always available for wrtiting , while the other is being archived
+- very imprtant note: redo log files exists **in the whole instance, not for particular container**
+
+---
+
+- connect to root
+- open all pdb
+- query all containers.
+
+```sql
+SHOW con_name
+
+alter pluggable database all open;
+
+select con_id,name,open_mode from v$containers;
+#1	CDB$ROOT	READ WRITE
+#2	PDB$SEED	READ ONLY
+#3	ORCLPDB	READ WRITE
+```
+
+- Query redo log file
+
+```sql
+select * from v$logfile;
+```
+
+![lab0101](./pic/lab0101.png)
+![lab0101](./pic/lab0102.png)
 
 ---
 

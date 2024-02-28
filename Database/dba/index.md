@@ -62,7 +62,7 @@
     - Data Blocks
     - Extents
     - Segments
-    - Tablespaces
+    - [Tablespaces](./log_storage/tbsp/tbsp.md)
 
 - [Pluggable Database](./pluggable_db/pluggable_db/pluggable_db.md)
 - User Management
