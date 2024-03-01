@@ -15,6 +15,12 @@
 
 ---
 
+- Tools
+
+  - [VI](./vim/vim.md)
+
+---
+
 Catelog
 
 - [System](./sys.md)

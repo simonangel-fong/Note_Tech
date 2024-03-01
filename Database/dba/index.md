@@ -32,6 +32,8 @@
     - [Lab: Startup](./instance/startup/lab.md)
   - [Shutdown](./instance/shutdown/shutdown.md)
     - [Lab: Shutdown mode](./instance/shutdown/lab.md)
+  - [Parameter File](./instance/parameter_file/parameter_file.md)
+  - [Parameters](./instance/parameter/parameter.md)
 
 - [Memory Structures](./memory/memory/memory.md)
 
@@ -70,6 +72,10 @@
   - [Alter user](./user/user/user.md)
 
 - [Miscellaneous](./misc/misc.md)
+
+- [Automatic Diagnostic Repository (ADR)](./adr/adr.md)
+
+---
 
 ---
 
