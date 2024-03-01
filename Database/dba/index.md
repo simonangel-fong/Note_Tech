@@ -18,14 +18,6 @@
 - [Intro](./intro/itro.md)
 - [Local Virtual Machine](./local_vm/vm.md)
 
-- [Net Services Architecture](./net/net/net.md)
-
-  - [Listener](./net/listener/listener.md)
-  - [TNS Name](./net/tnsname/tnsname.md)
-  - [Login `SQLP\*LUS`](./net/EZCONNECT/EZCONNECT.md)
-
-- Oracle Database Architecture
-
 - [Database Instance](./instance/instance/instance.md)
 
   - [Startup](./instance/startup/startup.md)
@@ -34,6 +26,18 @@
     - [Lab: Shutdown mode](./instance/shutdown/lab.md)
   - [Parameter File](./instance/parameter_file/parameter_file.md)
   - [Parameters](./instance/parameter/parameter.md)
+
+- [Pluggable Database](./pluggable_db/pluggable_db/pluggable_db.md)
+
+  - [Create and Clone Pluggable Database](./pluggable_db/pdb_create/pdb_create.md)
+  - [Drop Pluggable Database](./pluggable_db/pdb_drop/pdb_drop.md)
+  - [Plugging and Unplugging Pluggable Database](./pluggable_db/pdb_unplug/pdb_unplug.md)
+
+- [Net Services Architecture](./net/net/net.md)
+
+  - [Listener](./net/listener/listener.md)
+  - [TNS Name](./net/tnsname/tnsname.md)
+  - [Login `SQLP\*LUS`](./net/EZCONNECT/EZCONNECT.md)
 
 - [Memory Structures](./memory/memory/memory.md)
 
@@ -66,7 +70,6 @@
     - Segments
     - [Tablespaces](./log_storage/tbsp/tbsp.md)
 
-- [Pluggable Database](./pluggable_db/pluggable_db/pluggable_db.md)
 - User Management
 
   - [Alter user](./user/user/user.md)
