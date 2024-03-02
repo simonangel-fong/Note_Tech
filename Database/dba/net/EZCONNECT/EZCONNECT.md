@@ -96,4 +96,4 @@ CONNECT sys/pwd@orcl AS SYSDBA;
 
 ---
 
-[TOP](#dba---connect-easy-connect)
+[TOP](#dba---connect-login-sqlplus)

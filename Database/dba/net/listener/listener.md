@@ -4,11 +4,18 @@
 
 - [DBA Net Service - Listener](#dba-net-service---listener)
   - [Oracle Net Listener](#oracle-net-listener)
-  - [`Listener.ora` File](#listenerora-file)
-  - [Lab01: Show Listener's status](#lab01-show-listeners-status)
-  - [Lab02: Start and stop the Listener](#lab02-start-and-stop-the-listener)
-  - [Lab03: Connect with SQL Developer](#lab03-connect-with-sql-developer)
-  - [Lab: Monitoring Listener](#lab-monitoring-listener)
+  - [Tools to configure listeners](#tools-to-configure-listeners)
+  - [Service Registration](#service-registration)
+  - [Dynamic Service Registration](#dynamic-service-registration)
+    - [Lab: `local_listener` Parameter](#lab-local_listener-parameter)
+    - [`Listener.ora` File](#listenerora-file)
+      - [Lab: Connect without `Listener.ora`](#lab-connect-without-listenerora)
+    - [Using non-default port](#using-non-default-port)
+      - [Lab: Using non-default port](#lab-using-non-default-port)
+    - [Create a new listener](#create-a-new-listener)
+      - [Lab: Create a new listener](#lab-create-a-new-listener)
+  - [Static Listener](#static-listener)
+    - [Lab: Create Static Listener](#lab-create-static-listener)
 
 ---
 
@@ -17,14 +24,14 @@
 - `Oracle Net Listener`
 
   - a **separate process** that runs on the database **server** computer.
-  - used to establish the initial connection with Oracle Database server
+  - used to **establish the initial connection** with Oracle Database server
   - **receives** incoming client connection requests and **manages the traffic** of these requests to the database server
   - clients configured with the **same protocol address** can send connection requests to the listener.
   - Act as a gateway to the Oracle Database.
 
 - Multiple `Oracle isntances` running locally on the same server can use the same `Oracle Listener` as gateway for all connecting client.多实例可以使用同一个监听器.
 
-- Client use a combination of `host name`, where the instance and listener are running, and the uniquely identifying `service name` **to establisha connection**.
+- Client use a combination of **`host name`**, where the instance and listener are running, and the uniquely identifying **`service name`** **to establisha connection**.
 
 - When a connection is **established**, the client and Oracle server communicate **directly** with one another. 建立联系后, 将直接对话.
 
@@ -37,14 +44,109 @@
 
 ---
 
-## `Listener.ora` File
+## Tools to configure listeners
+
+- **Oracle Net Manager (netmgr)**
+- **Oracle Net Configuration Assistant (netca)**
+- Listener Control utility (lsnrctl)
+- Enterprise Manager Cloud Control
+- Database Configuration Assistant (help in creating a listener when creating a CDB)
+
+---
+
+## Service Registration
+
+- Dynamic registration
+
+  - listener.ora
+  - tnsname.ora
+  - local_listener parameter
+
+- Static registration
+  - listener.ora, SID_LIST
+
+---
+
+## Dynamic Service Registration
+
+- `Dynamic Service Registration`
+
+  - a feature through which the **listener** is automaically populated with available **database services**.
+
+- `local listener`:
+
+  - default listener
+  - created during installation.
+  - a listener through which you can access database instance immediately without any configuration.
+  - always listens on TCP/IP protocol and port 1521.
+
+- `LOCAL_LISTENER` parameter:
+
+  - specifies a network name that resolves to an address or address list of Oracle Net local listeners
+  - Default value: `(ADDRESS = (PROTOCOL=TCP)(HOST=hostname)(PORT=1521))`
+    - if cannot resolve the specified listener, it will use this default value.
+  - Query: `show parameter local_listener`
+
+- By default, local listener defined in the tnsname.ora.
+
+  - `listener.ora` is a parameter file for listener. Even without this file, clients can connect to instance using port number and service name.
+
+- local listener in `tnsname.ora`:
+
+```conf
+LISTENER_ORCL =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = test.com)(PORT = 1521))
+```
+
+- When a listener starts, it will return "`The listener supports no services`".
+  - Because it usually takes `60s` to register service automatically.
+  - Or you can use `ALTER SYSTEM REGISTER;` command to force the registration.
+
+---
+
+### Lab: `local_listener` Parameter
+
+- Query local listener
+
+```sql
+SHOW parameter local_listener;
+```
+
+- Local listener is defined in `tnsname.ora`
+
+![lab_local_listener](./pic/lab_local_listener01.png)
+
+---
+
+- Change local_listener
+
+```sql
+ALTER system SET local_listener='';
+```
+
+- Stop and restart lsnr
+  - service still can register
+  - because defualt value is used, listening the tcp/ip and 1521.
+
+![lab_local_listener](./pic/lab_local_listener02.png)
+![lab_local_listener](./pic/lab_local_listener03.png)
+
+---
+
+### `Listener.ora` File
 
 - `Listener.ora`:
 
   - a SQL\*Net configuration file used to configure Oracle Database Listenters
+  - a **listener paramter file**.
   - Path(19c): `$ORACLE_HOME/network/admin`
 
-- example:
+- if using default port and protocol, this file is not important.
+
+  - Even this file is missing, the services still can register.
+  - Client can just use **port** and **service name** to connect.
+
+- Default Listener:
 
 ```conf
 # listener.ora Network Configuration File: /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/listener.ora
@@ -59,135 +161,236 @@ LISTENER =
   )
 ```
 
-> - LISTENER: a default Listener
+> - **LISTENER: a default Listener**
 >   - listening to 2 types of requests, tcp and ipc
 >   - any request to connect with test.com using TCP and port 1521 is a valid connection.
-> - TCP/IP:
+> - **TCP/IP:**
 >   - standard communication protocol for communication between client and server.
 >   - Any TCP request to the host of test.com using port 1521
-> - IPC:
+> - **IPC:**
 >   - used only when the client program and Oracle Database are installed on the same system.
 
 ---
 
-## Lab01: Show Listener's status
-
-- To show the status the listener
+#### Lab: Connect without `Listener.ora`
 
 ```sh
-# using default listener name LISTENER
-lsnrctl STATUS
+# rename listener
+mv listener.ora xyzlistener.ora
+ls -al
+lsnrctl stop
+lsnrctl start
+# show no info about listener file
 
-# listener_name is the name of the listener defined in the listener.ora file.
-lsnrctl STATUS [listener_name]
+# wait for 60s
+lsnrctl status
+# services will still register,
 ```
 
-```conf
-Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=net)))
-STATUS of the LISTENER
-------------------------
-Alias                     LISTENER
-Version                   TNSLSNR for Linux: Version 23.1.0.0.0
-Start Date                15-JULY-2022 20:22:00
-Uptime                    65 days 10 hr. 5 min. 22 sec
-Trace Level               support
-Security                  OFF
-Listener Parameter File   /oracle/admin/listener.ora
-Listener Log File         /oracle/network/log/listener.log
-Listener Trace File       /oracle/network/trace/listener.trc
-Listening Endpoints Summary...
-  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=net)))
-  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=sales-server)(PORT=1521)))
-  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=sales-server)(PORT=2484)))
+![lab_default_lsnr](./pic/lab_default_lsnr01.png)
+![lab_default_lsnr](./pic/lab_default_lsnr02.png)
+![lab_default_lsnr](./pic/lab_default_lsnr03.png)
 
-Services Summary...
-Service "sales.us.example.com" has 1 instance(s).
-  Instance "sales", status READY, has 3 handler(s) for this service...
-Service "hr.us.example.com" has 1 instance(s).
-  Instance "hr", status READY, has 2 handler(s) for this service...
-The command completed successfully
-```
+- Connect using sql developer
+  - port and service name is enough
 
-![lab01](./pic/lab0101.png)
+![lab_default_lsnr](./pic/lab_default_lsnr04.png)
 
 ---
 
-## Lab02: Start and stop the Listener
+### Using non-default port
 
-- Stop Listener
-
-```sh
-# using default listener name LISTENER
-tnsping orcl
-lsnrctl STOP
-# lsnrctl STOP [listener_name]
-# listener_name is the name of the listener defined in the listener.ora file.
-tnsping orcl
-```
-
-![lab02](./pic/lab0201.png)
-
-![lab02](./pic/lab0202.png)
-
-![lab02](./pic/lab0203.png)
+- Steps:
+  - change port number in `listener.ora`
+  - change port number in `tnsname.ora`
+  - redefine `local_listener` in Oracle
+  - restart lsnr
 
 ---
 
-- Start listener:
-  - note: when starting listener, it will prompt that `The listener supports no servers`.
-    - This is because it takes 60 seconds for LREG to register.
-    - After 60 seconds, it will show all the registered services.
+#### Lab: Using non-default port
+
+- Change the port in the `listener.ora`
+- stop and restart listener
+- query services
+  - no support services because not using default port.
+  - even using `alter system register`, no service registers.
+
+![lab_lsnr_port](./pic/lab_lsnr_port01.png)
+![lab_lsnr_port](./pic/lab_lsnr_port02.png)
+![lab_lsnr_port](./pic/lab_lsnr_port03.png)
+
+- change all port numbers in the `tnsname.ora`.
+
+![lab_lsnr_port](./pic/lab_lsnr_port04.png)
+
+- redefine the local_listener parameter.
 
 ```sql
-tnsping orcl
-lsnrctl START
-# lsnrctl START [listener_name]
-tnsping orcl
-
+ALTER system SET local_listener=LISTENER_ORCL;
+SHOW parameter local_listener;
 ```
 
-![lab02](./pic/lab0204.png)
-![lab02](./pic/lab0205.png)
-![lab02](./pic/lab0206.png)
+![lab_lsnr_port](./pic/lab_lsnr_port05.png)
+
+- Stop and start listener
+
+![lab_lsnr_port](./pic/lab_lsnr_port06.png)
+
+![lab_lsnr_port](./pic/lab_lsnr_port07.png)
+
+- Connect with sql developer
+
+![lab_lsnr_port](./pic/lab_lsnr_port08.png)
 
 ---
 
-## Lab03: Connect with SQL Developer
+### Create a new listener
 
-- Stop listener
-- Connect with SQL Deveopler
-  - Error: `Status : Failure -Test failed: IO Error: The Network Adapter could not establish the connection (CONNECTION_ID=wje97B8CSTK2k9fqv37Kjg==)`
-
-![lab03](./pic/lab0301.png)
-
-![lab03](./pic/lab0302.png)
-
-- Start listener
-- Connect with SQL Deveopler: success
-
-![lab03](./pic/lab0303.png)
-
-![lab03](./pic/lab0304.png)
+- Steps:
+  - create new local listener with a custom port in `tnsnames.ora`
+  - create new listner with a custom port in `listener.ora`
+  - update `local_listener` in Oracle
+  - Start listener
 
 ---
 
-## Lab: Monitoring Listener
+#### Lab: Create a new listener
 
-- `SERVICES` command
-  - provides detailed information about the **services** and **instances** registered with a **listener** and the **service handlers** allocated to each instance.
+- Create a new local listener in `tnsname.ora` with new port
+
+```conf
+# new
+LISTENER2 =
+  (ADDRESS = (PROTOCOL = TCP)(HOST = test.com)(PORT = 1527))
+```
+
+- Create a new listner in `listener.ora` with new port
+
+```conf
+LISTENER2 =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = test.com)(PORT = 1527))
+    )
+```
+
+- update `local_listener` in Oracle
+
+```sql
+show parameter local_listener;
+ALTER system SET local_listener="LISTENER_ORCL, LISTENER2";
+```
+
+![lab_lsnr_multiple](./pic/lab_lsnr_multiple01.png)
+
+- start listener2
+
+![lab_lsnr_multiple](./pic/lab_lsnr_multiple02.png)
+
+![lab_lsnr_multiple](./pic/lab_lsnr_multiple03.png)
+
+---
+
+- Connect in sqlplus
+
+```sql
+CONNECT sys/pwd@test.com:1527/orcl.com as sysdba;
+CONNECT sys/pwd@test.com:1521/orcl.com as sysdba;
+```
+
+![lab_lsnr_multiple](./pic/lab_lsnr_multiple04.png)
+
+- Connect in sql developer
+
+![lab_lsnr_multiple](./pic/lab_lsnr_multiple05.png)
+![lab_lsnr_multiple](./pic/lab_lsnr_multiple06.png)
+
+---
+
+## Static Listener
+
+- `Static Listener`
+
+  - services have to be added manually.
+
+- Steps:
+  - insert static listener in `listener.ora`
+  - define sid list, db global + instance name + oracle home
+  - start listener
+  - connect
+
+---
+
+### Lab: Create Static Listener
+
+- Create a new listener for PDB
+- Define a sid list.
+
+```conf
+LISTENER_PDBS =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = test.com)(PORT = 1525))
+    )
+
+# SID_LIST_<listener_name>
+SID_LIST_LISTENER_PDBS =
+    (SID_LIST =
+        (SID_DESC=
+            # pdb service name + domain name
+            # use "select global_name from global_name;"
+            (GLOBAL_DBNAME=orclpdb.com)
+            # instance name
+            # use "show parameter instance_name;"
+            (SID_NAME=orcl)
+            # Oracle home path
+            (ORACLE_HOME=/u01/app/oracle/product/19.0.0/dbhome_1)
+        )
+        (SID_DESC=
+            (GLOBAL_DBNAME=pdb1.com)
+            (SID_NAME=orcl)
+            (ORACLE_HOME=/u01/app/oracle/product/19.0.0/dbhome_1)
+        )
+    )
+```
+
+- start new listener
+  - note: the instance status is `UNKNOWN`
+  - Because when using static listener, listener cannot guarantee 100% it is a valid service.
 
 ```sh
-# using default listener name LISTENER
-lsnrctl SERVICES
-
-# listener_name is the name of the listener defined in the listener.ora file.
-lsnrctl SERVICES [listener_name]
+lsnrctl start LISTENER_PDBS
 ```
 
-![lab04](./pic/lab0401.png)
+![lab_lsnr_static01](./pic/lab_lsnr_static01.png)
 
 ---
 
+- Connect in sqlplus
+
+```sh
+sqlplus system/welcome@test.com:1525/orclpdb.com
+#sqlplus system/welcome@test.com:1525/pdb1.com
+```
+
+![lab_lsnr_static01](./pic/lab_lsnr_static02.png)
+
+---
+
+- note:
+  - when connecting to a pdb with a static listener, make sure the pdb is open.
+  - Otherwise, cannot connect.
+
+![lab_lsnr_static01](./pic/lab_lsnr_static03.png)
+
+---
+
+- Connect in SQL developer
+
+![lab_lsnr_static01](./pic/lab_lsnr_static04.png)
+
+- if connect with the service name not defined in listener, connection fails.
+
+![lab_lsnr_static01](./pic/lab_lsnr_static05.png)
 
 ---
 

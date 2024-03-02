@@ -6,9 +6,9 @@
   - [Client Connection](#client-connection)
   - [`tnsnames.ora` File](#tnsnamesora-file)
   - [Connect using a Connection String](#connect-using-a-connection-string)
-  - [Lab: Connect using Connection String](#lab-connect-using-connection-string)
-  - [Lab: Create TNS name for PDB](#lab-create-tns-name-for-pdb)
-  - [Lab: Connect with SQL Developer using TNS Name](#lab-connect-with-sql-developer-using-tns-name)
+    - [Lab: Connect using Connection String](#lab-connect-using-connection-string)
+    - [Lab: Create TNS name for PDB](#lab-create-tns-name-for-pdb)
+    - [Lab: Connect with SQL Developer using TNS Name](#lab-connect-with-sql-developer-using-tns-name)
 
 ---
 
@@ -138,7 +138,7 @@ CONNECT scott@"cn=sales, cn=OracleContext, ou=Mary's Dept, o=example"
 
 ---
 
-## Lab: Connect using Connection String
+### Lab: Connect using Connection String
 
 - Using net service name defined in the `tnsname.ora` to connect with database.
 
@@ -148,7 +148,7 @@ CONNECT scott@"cn=sales, cn=OracleContext, ou=Mary's Dept, o=example"
 
 ---
 
-## Lab: Create TNS name for PDB
+### Lab: Create TNS name for PDB
 
 - Get the registered pdb service name from listener
 
@@ -183,7 +183,7 @@ show con_name   # confirm it is in the pdb
 
 ---
 
-## Lab: Connect with SQL Developer using TNS Name
+### Lab: Connect with SQL Developer using TNS Name
 
 - remember: even though the tns names are defined in the server, it is client style(act like a client).
 - Actually, tns name can be used in the client side.

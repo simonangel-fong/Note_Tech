@@ -4,6 +4,7 @@
 
 - [DBA - Net Service](#dba---net-service)
   - [Oracle Net](#oracle-net)
+  - [Establishing a Connection and Session](#establishing-a-connection-and-session)
   - [Database Identification](#database-identification)
     - [Instance Name](#instance-name)
     - [Services Name](#services-name)
@@ -31,6 +32,19 @@
 - Oracle uses 2 main files for network confguration:
   - `listener.ora`: which defines listeners.
   - `tnsname.ora`: which defines the Net service names.
+
+---
+
+## Establishing a Connection and Session
+
+![connection_session_diagram](./pic/connection_session_diagram01.png)
+
+- 1. the listener receives connect packet.
+- 2. if the `service name` is valid then the Listener create `Dedicated SP`, else it will be Error. 监控只会检查服务名.
+- 3. the listener connect to the SP and pass the `initialization info` to it.
+  - `initialization info` includes user name and pwd for authentication.
+- 4. the **SP check the authentication** , if ok Then it create session. 是 sp 认证
+- 5. now the SP is acting like **Agent**.
 
 ---
 
@@ -321,7 +335,6 @@ CONNECT hr@sales
   - to store names in `tnsnames.ora` file on the clients.
 
 ---
-
 
 ## Localized Management
 

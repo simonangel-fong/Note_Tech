@@ -38,6 +38,10 @@
   - [Listener](./net/listener/listener.md)
   - [TNS Name](./net/tnsname/tnsname.md)
   - [Login `SQLP\*LUS`](./net/EZCONNECT/EZCONNECT.md)
+  - [`Listener Control Utility (lsnrctl)`](./net/lsnr/lsnr.md)
+  - [`Oracle Net Configuration Assistant (netca)`](./net/netca/netca.md)
+  - [`Oracle Net Manager (netmgr)`](./net/netmgr/netmgr.md)
+  - [Database Link](./net/db_link/db_link.md)
 
 - [Memory Structures](./memory/memory/memory.md)
 
