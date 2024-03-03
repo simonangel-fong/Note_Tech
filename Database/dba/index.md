@@ -74,9 +74,9 @@
     - Segments
     - [Tablespaces](./log_storage/tbsp/tbsp.md)
 
-- User Management
+- [User Security](./user/user/user.md)
 
-  - [Alter user](./user/user/user.md)
+  - [Common Users vs Local Users](./user/common_local_user/common_local_user.md)
 
 - [Miscellaneous](./misc/misc.md)
 
