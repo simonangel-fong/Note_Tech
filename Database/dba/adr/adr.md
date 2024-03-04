@@ -4,15 +4,15 @@
 
 - [DBA - Instance: Automatic Diagnostic Repository (ADR)](#dba---instance-automatic-diagnostic-repository-adr)
   - [Automatic Diagnostic Repository (ADR)](#automatic-diagnostic-repository-adr)
-  - [Lab: Query diagnostics directories](#lab-query-diagnostics-directories)
+    - [Lab: Query diagnostics directories](#lab-query-diagnostics-directories)
   - [Alert log](#alert-log)
     - [Lab: View Alert Log File in XML and text](#lab-view-alert-log-file-in-xml-and-text)
     - [Lab: View Alert Log using ADRCI](#lab-view-alert-log-using-adrci)
   - [Trace files](#trace-files)
     - [Purgin Mechanism](#purgin-mechanism)
     - [Lab: Configure ADR Policy](#lab-configure-adr-policy)
-  - [Lab: Purg files manually in ADRCI](#lab-purg-files-manually-in-adrci)
-  - [Lab: Enable DDL Logging](#lab-enable-ddl-logging)
+    - [Lab: Purg files manually in ADRCI](#lab-purg-files-manually-in-adrci)
+    - [Lab: Enable DDL Logging](#lab-enable-ddl-logging)
 
 ---
 
@@ -44,7 +44,7 @@
 
 ---
 
-## Lab: Query diagnostics directories
+### Lab: Query diagnostics directories
 
 ```sql
 SELECT name, value FROM v$diag_info;
@@ -241,7 +241,7 @@ select sizep_policy from adr_control_aux;
 
 ---
 
-## Lab: Purg files manually in ADRCI
+### Lab: Purg files manually in ADRCI
 
 ```sh
 cd  /u01/app/oracle/diag/rdbms/orcl/orcl
@@ -266,7 +266,7 @@ purge -size 5000000     # purge until 5M
 
 ---
 
-## Lab: Enable DDL Logging
+### Lab: Enable DDL Logging
 
 - `DDL log`
 
@@ -308,3 +308,7 @@ DROP TABLE test1;
 ![labadrci](./pic/labadrci15.png)
 
 ![labadrci](./pic/labadrci16.png)
+
+---
+
+[TOP](#dba---instance-automatic-diagnostic-repository-adr)

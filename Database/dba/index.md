@@ -37,7 +37,7 @@
 
   - [Listener](./net/listener/listener.md)
   - [TNS Name](./net/tnsname/tnsname.md)
-  - [Login `SQLP\*LUS`](./net/EZCONNECT/EZCONNECT.md)
+  - [Login `SQLP*LUS`](./net/EZCONNECT/EZCONNECT.md)
   - [`Listener Control Utility (lsnrctl)`](./net/lsnr/lsnr.md)
   - [`Oracle Net Configuration Assistant (netca)`](./net/netca/netca.md)
   - [`Oracle Net Manager (netmgr)`](./net/netmgr/netmgr.md)
@@ -74,15 +74,16 @@
     - Segments
     - [Tablespaces](./log_storage/tbsp/tbsp.md)
 
-- [User Security](./user/user/user.md)
+- Users, Roles and Privileges
 
-  - [Common Users vs Local Users](./user/common_local_user/common_local_user.md)
+  - [User Account](./user/user/user.md)
+  - [Privileges and Roles](./user/privilege_role/privilege_role.md)
+
+  - [Common Users & Local Users](./user/common_local_user/common_local_user.md)
 
 - [Miscellaneous](./misc/misc.md)
 
 - [Automatic Diagnostic Repository (ADR)](./adr/adr.md)
-
----
 
 ---
 
