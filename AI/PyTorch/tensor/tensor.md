@@ -21,7 +21,7 @@
 - `tensor`
 
   - represents a (possibly multi-dimensional) **array of numerical values**. 数组
-  - = `ndaaray` in NumPy library
+  - = `ndarray` in NumPy library
 
 - `scalar`:
 
@@ -74,9 +74,10 @@ print(pytensor)
 # -------- Create Tensor with all one
 # ones(size): Returns a tensor filled with the scalar value 1,
 #     size: shape of the output tensor
-ones_t = torch.ones((2, 2))
+ones_t = torch.ones((3, 2))
 print(ones_t)
 # tensor([[1., 1.],
+#         [1., 1.],
 #         [1., 1.]])
 
 # -------- Create Tensor with the random number
@@ -85,8 +86,9 @@ torch.manual_seed(0)        # Set the seed for generating random numbers
 #     size: shape of the output tensor
 rand_t = torch.rand(size=(2, 2))
 print(rand_t)
-# tensor([[0.8085, 0.2602],
-#         [0.7068, 0.0452]])
+# tensor([[0.8823, 0.9150],
+#         [0.3829, 0.9593],
+#         [0.3904, 0.6009]])
 
 
 # -------- Create a Tensor from numpy array

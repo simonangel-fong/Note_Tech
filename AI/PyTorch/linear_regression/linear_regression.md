@@ -59,7 +59,7 @@
   - `optim.SGD(params)`: Implements stochastic gradient descent
   - `optim.Adam(params)`: Implements Adam algorithm.
 
-- `.step()`: implemented by all optimizer, which updates the parameters.每个算法都有.
+- `.step()`: implemented by all optimizer, which **updates** the parameters.每个算法都有.
   - two ways to use:
     - `Optimizer.step()`
     - `Optimizer.step(closure)`
@@ -271,3 +271,7 @@ plotfit('Trained Model')
 ```
 
 ![lr_plot](./pic/lr_plot.png)
+
+---
+
+[TOP](#pytorch---linear-regression)

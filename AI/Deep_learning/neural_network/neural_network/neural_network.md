@@ -37,11 +37,11 @@
 
 - Common Function:
   - **Linear**: `f(x) = x`
-  - **Sigmoidal**
-  - **Rectified Linear Unit (ReLU)**
+  - **Sigmoidal**(0,1)
+  - **Rectified Linear Unit (ReLU)**(0,x)
     - `ReLU(x)=max(0,x)`
     - Commonly used in hidden layers due to its simplicity and effectiveness.
-  - **Softmax**
+  - **Softmax**%
     - Used in the output layer for **multi-class classification** problems.
     - Converts a vector of real numbers into a **probability distribution**.
 
@@ -101,4 +101,4 @@
 
 ---
 
-[TOP](#neural-network)
+[TOP](#deep-learning-neural-network)

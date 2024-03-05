@@ -28,7 +28,7 @@
 
 - `Convolutional Neural Network`
 
-  - usually used to do image classification and image recognition in neural networks.
+  - usually used to do **image classification** and **image recognition** in neural networks.
   - a class of neural networks that specializes in processing data that has a grid-like topology, such as an image.
   - a special type of **feed-forward artificial neural network**
 
@@ -77,9 +77,8 @@
 
   - a **matrix of weights** that are trainable during the model's training process, allowing the model to automatically learn and extract meaningful features from the input data.
   - spatially smaller than an image but is **more indepth**.
-    - if the image is composed of three (`RGB`) channels, the kernel height and
-      width will be spatially small, but the depth extends up to all three channels.
-  - smaller size but more depth
+    - if the image is composed of three (`RGB`) channels, the kernel height and width will be spatially small, but the depth extends up to all three channels.
+  - **smaller size but more depth**
 
 - used to **collect neightbore region info**
 
