@@ -15,6 +15,10 @@
   - [Realtime Database](./firebase/realtime_db/realtime_db.md)
   - [Storage](./firebase/storage/storage.md)
 
+- Example
+  - [Bar Chart - Scratch](./plot/barchart_scratch.md)
+  - [Bar Chart - Chart](./plot/barchart_chart.md)
+
 ---
 
 [TOP](#ios)
