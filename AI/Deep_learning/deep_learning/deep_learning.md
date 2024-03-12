@@ -99,8 +99,6 @@
     - Checkers Game.
     - Time Series Forecasting.
 
-
-
 ---
 
 ## KEY COMPONENTS OF TRAINING PROCESS
@@ -142,8 +140,7 @@
 
 - **minimize error rate**
   - the most common objective for classification
-  - the fraction of examples on which our predictions disagree with the ground
-    truth
+  - the fraction of examples on which our predictions disagree with the ground truth
 
 ---
 

@@ -20,6 +20,7 @@
   - [Perceptron - Binary Classifier](./perceptron/perceptron.md)
   - [Convolutional Neural Network (CNN)](./cnn/cnn.md)
   - [Recurrent Neural Network (RNN)](./rnn/rnn.md)
+  - [Long Short-Term Memory (LSTM)](./lstm/lstm.md)
 
 ---
 
