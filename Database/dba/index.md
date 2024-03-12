@@ -78,8 +78,9 @@
 
   - [User Account](./user/user/user.md)
   - [Privileges and Roles](./user/privilege_role/privilege_role.md)
-
   - [Common Users & Local Users](./user/common_local_user/common_local_user.md)
+    - [Grant Admin Privileges](./user/grant_admin_privilege/grant_admin_privilege.md)
+  - [User Profile](./user/profile/profile.md)
 
 - [Miscellaneous](./misc/misc.md)
 

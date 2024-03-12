@@ -26,6 +26,7 @@
       - [List `Object Privileges` for Roles](#list-object-privileges-for-roles)
       - [Test](#test)
       - [`Object Grant` by Owner](#object-grant-by-owner)
+    - [Lab: Grant a Role to another Role](#lab-grant-a-role-to-another-role)
 
 ---
 
@@ -614,6 +615,78 @@ FROM USER_TAB_PRIVS_MADE;
 -- PUBLIC	STUDNET	STAFFADAM	SELECT	NO	NO	NO	TABLE	NO
 -- PUBLIC	STAFFADAM	STAFFADAM	INHERIT PRIVILEGES	NO	NO	NO	USER	NO
 ```
+
+---
+
+### Lab: Grant a Role to another Role
+
+- Connect with sys
+
+```sql
+show con_name;
+--CON_NAME
+----------------------------
+--ORCLPDB
+show user;
+
+alter session set container=orclpdb;
+show con_name
+--CON_NAME
+----------------------------
+--ORCLPDB
+
+-- Create a role
+create role master_role;
+grant create session to master_role;
+grant create table to master_role;
+
+-- Confirm sys privis on role
+SELECT * FROM ROLE_SYS_PRIVS
+where role= upper('master_role');
+--MASTER_ROLE	CREATE TABLE	NO	NO	NO
+--MASTER_ROLE	CREATE SESSION	NO	NO	NO
+
+-- create a subrole
+create role sub_master_role;
+grant create view to sub_master_role;
+
+-- gran a role to another role
+grant sub_master_role to master_role;
+
+-- Confirm sys privis of the master role
+-- here shows only the privis granted directly
+SELECT * FROM ROLE_SYS_PRIVS
+where role= upper('master_role');
+--MASTER_ROLE	CREATE TABLE	NO	NO	NO
+--MASTER_ROLE	CREATE SESSION	NO	NO	NO
+
+-- query the role of the master role
+select * from DBA_role_PRIVS
+where GRANTEE=upper('master_role');
+--MASTER_ROLE	SUB_MASTER_ROLE	NO	NO	YES	NO	NO
+
+SELECT * FROM ROLE_SYS_PRIVS
+where role= upper('SUB_MASTER_ROLE');
+--SUB_MASTER_ROLE	CREATE VIEW	NO	NO	NO
+
+-- create user and grant
+create user kh111 identified by kh111;
+grant master_role to kh111;
+```
+
+---
+
+- Connect using the new user
+
+```sql
+connect kh111/kh111@orclpdb;
+show con_name;
+show user;
+
+SELECT * FROM session_privs;
+```
+
+![role_role](./pic/role_role.png)
 
 ---
 
