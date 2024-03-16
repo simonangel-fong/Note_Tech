@@ -8,8 +8,16 @@
   - [Permanent and Temporary Data Files](#permanent-and-temporary-data-files)
   - [Online and Offline Data Files](#online-and-offline-data-files)
   - [Data File Structure](#data-file-structure)
-  - [Lab: Query Data file using Dictionary](#lab-query-data-file-using-dictionary)
-  - [Lab: Query temp file](#lab-query-temp-file)
+  - [Views: Data File](#views-data-file)
+    - [Lab: Query Data File](#lab-query-data-file)
+      - [`CDB_DATAFILES`: Include all open PDB](#cdb_datafiles-include-all-open-pdb)
+      - [`DBA_DATA_FILES`: Current Container](#dba_data_files-current-container)
+      - [`v$datafile`: including closed PDB](#vdatafile-including-closed-pdb)
+  - [Views: Temp File](#views-temp-file)
+    - [Lab: Query Temp File](#lab-query-temp-file)
+      - [`CDB_TEMP_FILES`: Include all open PDB](#cdb_temp_files-include-all-open-pdb)
+      - [`DBA_TEMP_FILES`: Current Container](#dba_temp_files-current-container)
+      - [`V$TEMPFILE`](#vtempfile)
 
 ---
 
@@ -156,138 +164,175 @@
 
 ---
 
-## Lab: Query Data file using Dictionary
+## Views: Data File
 
-- Connect to root
-- open pdb
+- Data File
 
-```sql
+| Views            | Description                                          |
+| ---------------- | ---------------------------------------------------- |
+| `CDB_DATA_FILES` | describes all database files in open database.       |
+| `DBA_DATA_FILES` | describes database files.                            |
+| `V$DATAFILE`     | displays datafile information from the control file. |
 
--- query the data files
-/*
-contains the actual users data, applications data, metadata.
-( Tables, Rows, indexes ,procedures, views�)
-If you lose Datafiles, you lose your database.
-*/
+- Columns:
 
-show con_name;
-
-select name,open_mode,con_id from v$pdbs;
-
---make sure pluggable is open
-alter pluggable database orclpdb open;
-```
-
-- Query all data files using dictionary
-
-```sql
-select file_name,file_id,tablespace_name,con_id
-from cdb_data_files;
-```
-
-![lab0101](./pic/lab0101.png)
-
-![lab0101](./pic/lab0104.png)
+  - `BYTES`:
+    - Size of the file in bytes
+    - data + meta Data
+  - `USER_BYTES`:
+    - The size of the file available for user data.
+    - the size without meta data
+  - `MAXBYTES`:
+    - Maximum file size in bytes
+  - `BLOCKS`:
+    - Size of the file in Oracle **blocks**
+  - `MAXBLOCKS`:
+    - Maximum file size in **blocks**
+  - `USER_BLOCKS`:
+    - Number of blocks which can be used by the data
+  - `INCREMENT_BY`:
+    - Number of tablespace blocks used as autoextension increment
 
 ---
+
+### Lab: Query Data File
+
+#### `CDB_DATAFILES`: Include all open PDB
+
+- Connect to root
+
+```sql
+show con_name;
+--CDB$ROOT
+ALTER PLUGGABLE DATABASE ALL OPEN;
+SELECT
+    CON_ID
+    ,TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,ONLINE_STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM cdb_data_files
+ORDER BY 1, 2;
+```
+
+![lab_df_query](./pic/lab_df_query01.png)
+
+---
+
+```sql
+ALTER session SET container=orclpdb;
+show con_name;
+--ORCLPDB
+SELECT
+    CON_ID
+    ,TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,ONLINE_STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM cdb_data_files
+ORDER BY 1, 2;
+```
+
+![lab_df_query](./pic/lab_df_query02.png)
+
+---
+
+#### `DBA_DATA_FILES`: Current Container
+
+```sql
+show con_name;
+--CDB$ROOT
+ALTER PLUGGABLE DATABASE ALL OPEN;
+SELECT
+    TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,ONLINE_STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM DBA_DATA_FILES
+ORDER BY 1, 2;
+```
+
+![lab_df_query](./pic/lab_df_query03.png)
+
+```sql
+ALTER session SET container=orclpdb;
+show con_name;
+--ORCLPDB
+SELECT
+    TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,ONLINE_STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM DBA_DATA_FILES
+ORDER BY 1, 2;
+```
+
+![lab_df_query](./pic/lab_df_query04.png)
+
+---
+
+#### `v$datafile`: including closed PDB
 
 - Query all data files using v$view
   - return includes the data files of seed pdb.
 
 ```sql
-select file#,name, ts#,con_id
-from V$DATAFILE
-order by con_id;
+show con_name;
+--CDB$ROOT
+ALTER PLUGGABLE DATABASE ALL OPEN;
+SELECT
+    CON_ID
+    ,TS#
+    ,STATUS
+    ,ENABLED
+    ,NAME
+    ,BYTES/(1024*1024) "BYTES"
+FROM V$DATAFILE
+ORDER BY 1, 2;
 ```
 
-![lab0101](./pic/lab0105.png)
+![lab_df_query](./pic/lab_df_query05.png)
 
 ---
 
-- close pdb
-- query using `cdb_`
-  - return only the root data files, because `cdb_` only return openned database.
-
 ```sql
-alter pluggable database orclpdb close;
-select file_name,file_id,tablespace_name,con_id
-from cdb_data_files
+ALTER session SET container=orclpdb;
+show con_name;
+--ORCLPDB
+SELECT
+    CON_ID
+    ,TS#
+    ,STATUS
+    ,ENABLED
+    ,NAME
+    ,BYTES/(1024*1024) "BYTES"
+FROM V$DATAFILE
+ORDER BY 1, 2;
 ```
 
-![lab0101](./pic/lab0106.png)
-
-- Query using v$datafile.
-  - return all data files, even if the database is closed.
-
-```sql
-select file#, name, ts#, con_id
-from V$DATAFILE
-order by con_id;
-```
-
-![lab0101](./pic/lab0107.png)
+![lab_df_query](./pic/lab_df_query06.png)
 
 ---
 
-- Query using dba, only return the data file in the current container, which is cdb.
+## Views: Temp File
 
-```sql
---same query but using dba , but here we dont have  con_id
-
-select file_name,file_id,tablespace_name
-from dba_data_files
-```
-
-![lab0101](./pic/lab0102.png)
+| Views            | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| `CDB_TEMP_FILES` | describes all temporary files (tempfiles) in open database.    |
+| `DBA_TEMP_FILES` | describes all temporary files (tempfiles) in current database. |
+| `V$TEMPFILE`     | displays temp file information.                                |
 
 ---
 
-- Change session to a pdb
-- Query using dba, only return the data file in the current container, which is pdb.
-
-```sql
---now let do
-alter session set container=orclpdb
-
-show con_name
-
-select file_name,file_id,tablespace_name
-from dba_data_files
-
-```
-
-![lab0101](./pic/lab0103.png)
-
----
-
-- Close the pdb
-- Query using `dba_`
-  - return error, because `dba_` only return the opened pdb.
-
-```sql
-select file_name,file_id,tablespace_name
-from dba_data_files;
-```
-
-![lab0101](./pic/lab0108.png)
-
-- Query using v$ view
-  - can return even the pdb is closed.
-  - only return the pdb data files.
-
-```sql
-select file#,name, ts#,con_id
-from V$DATAFILE
-order by con_id;
-```
-
-![lab0101](./pic/lab0109.png)
-
----
-
----
-
-## Lab: Query temp file
+### Lab: Query Temp File
 
 - A tempfile is a file that is part of an Oracle database.
   Tempfiles are used with TEMPORARY TABLESPACES
@@ -296,55 +341,123 @@ order by con_id;
 
 ---
 
+#### `CDB_TEMP_FILES`: Include all open PDB
+
 - Connect with root container
-- open pdb
 
 ```sql
 show con_name;
-select name,open_mode,con_id from v$pdbs;
-
---make sure pluggable is open
-alter pluggable database orclpdb open
+--CDB$ROOT
+ALTER PLUGGABLE DATABASE ALL OPEN;
+SELECT
+    CON_ID
+    ,TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM cdb_temp_files
+ORDER BY 1, 2;
 
 ```
 
-- Query temp file both in root and pdbs using `cdb_`
-
-```sql
-select file_name,file_id,tablespace_name,con_id
-from cdb_temp_files;
-```
-
-![lab0201](./pic/lab0201.png)
-
-![lab02](./pic/lab0204.png)
+![temp_file](./pic/lab_tempfile_query01.png)
 
 ---
 
-- Query temp file only in root, using `dba_`
-
 ```sql
-select file_name,file_id,tablespace_name
-from dba_temp_files
+ALTER session SET container=orclpdb;
+show con_name;
+--ORCLPDB
+SELECT
+    CON_ID
+    ,TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM cdb_temp_files
+ORDER BY 1, 2;
 ```
 
-![lab02](./pic/lab0202.png)
+![temp_file](./pic/lab_tempfile_query02.png)
 
 ---
 
-- Change session to a pdb
-- Query the temp file only in pdb using `dba_`
+#### `DBA_TEMP_FILES`: Current Container
 
 ```sql
-alter session set container=orclpdb
-
-show con_name
-
-select file_name,file_id,tablespace_name
-from dba_temp_files
+ALTER session SET container=cdb$root;
+show con_name;
+--CDB$ROOT
+ALTER PLUGGABLE DATABASE ALL OPEN;
+SELECT
+    TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM DBA_TEMP_FILES
+ORDER BY 1, 2;
 ```
 
-![lab02](./pic/lab0203.png)
+![temp_file](./pic/lab_tempfile_query03.png)
+
+---
+
+```sql
+ALTER session SET container=orclpdb;
+show con_name;
+--ORCLPDB
+SELECT
+    TABLESPACE_NAME
+    ,FILE_NAME
+    ,STATUS
+    ,BYTES/(1024*1024) "BYTES"
+    ,AUTOEXTENSIBLE
+FROM DBA_TEMP_FILES
+ORDER BY 1, 2;
+```
+
+![temp_file](./pic/lab_tempfile_query04.png)
+
+---
+
+#### `V$TEMPFILE`
+
+```sql
+show con_name;
+--CDB$ROOT
+ALTER PLUGGABLE DATABASE ALL OPEN;
+SELECT
+    CON_ID
+    ,NAME
+    ,STATUS
+    ,ENABLED
+    ,BYTES/(1024*1024) "BYTES"
+FROM V$TEMPFILE
+ORDER BY 1, 2;
+```
+
+![temp_file](./pic/lab_tempfile_query05.png)
+
+---
+
+```sql
+ALTER session SET container=orclpdb;
+show con_name;
+--ORCLPDB
+SELECT
+    CON_ID
+    ,NAME
+    ,STATUS
+    ,ENABLED
+    ,BYTES/(1024*1024) "BYTES"
+FROM V$TEMPFILE
+ORDER BY 1, 2;
+```
+
+![temp_file](./pic/lab_tempfile_query06.png)
 
 ---
 

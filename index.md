@@ -6,6 +6,7 @@
   - [ ] [Oracle DBA](./Database/dba/index.md)
   - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
   - [ ] [Warehouse Humber](./Database/warehouse/index.md)
+  - [ ] [Neo4j](./Database/neo4j/index.md)
 
 - AI
 

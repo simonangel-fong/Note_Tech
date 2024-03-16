@@ -68,7 +68,7 @@
       - determine % of a `Potential memory`
     - And `tanh function` gives weightage to the values which are passed, **deciding their level of importance** ranging from -1 to 1 and multiplied with an output of sigmoid.
       - create a `Potential Short-Term memory`
-    - determines the present hidden state that will be passed to the next LSTM unit.
+    - determines the **present hidden state** that will be passed to the next LSTM unit.
 
 ---
 
