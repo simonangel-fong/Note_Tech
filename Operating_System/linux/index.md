@@ -11,7 +11,7 @@
 
 ---
 
-- [Enable SSH](./ssh.md)
+- [Establish `SSH`](./ssh/ssh.md)
 
 ---
 

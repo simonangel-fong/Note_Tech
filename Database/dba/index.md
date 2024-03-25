@@ -91,6 +91,8 @@
 - DBA2
   - [Backup](./backup/backup/backup.md)
 
+  - [Back Up Control File](./backup/backup_controlfile/backup_controlfile.md)
+
 ---
 
 ```sql
