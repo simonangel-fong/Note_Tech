@@ -311,4 +311,17 @@ DROP TABLE test1;
 
 ---
 
+```sql
+show alert -p "message_text like '%terminating the instance%'"
+show alert -p "message_text like '%Beginning crash recovery%'"
+show alert -p "message_text like '%Started redo scan%'"
+show alert -p "message_text like '%Completed crash recovery%'"
+show alert -p "message_text like '%db_recovery_file_dest_size%'"
+
+terminating the instance
+```
+
+
+---
+
 [TOP](#dba---instance-automatic-diagnostic-repository-adr)

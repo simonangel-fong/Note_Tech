@@ -89,9 +89,15 @@
 ---
 
 - DBA2
+
   - [Backup](./backup/backup/backup.md)
 
-  - [Back Up Control File](./backup/backup_controlfile/backup_controlfile.md)
+    - [Back Up Control File](./backup/backup_controlfile/backup_controlfile.md)
+
+  - [Recovery](./recovery/recovery/recovery.md)
+
+- Lab
+  - [Lab 14-1](./lab/14-1.md)
 
 ---
 
