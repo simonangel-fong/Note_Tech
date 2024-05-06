@@ -3,7 +3,8 @@
 - Database
 
   - [x] [SQL](./Database/sql/index.md)
-  - [ ] [Oracle DBA](./Database/dba/index.md)
+  - [ ] [Oracle DBA - Fundamental](./Database/dba/index.md)
+  - [ ] [Oracle DBA - Backup and Recovery](./Database/dba_backup_recovery/index.md)
   - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
   - [ ] [Warehouse Humber](./Database/warehouse/index.md)
   - [ ] [Neo4j](./Database/neo4j/index.md)
@@ -15,13 +16,16 @@
   - [ ] [Machine Learning](./AI/Machine_learning/index.md)
     - [x] [Yolo Project: VehiclePlateDetector](https://github.com/simonangel-fong/VehiclePlateDetector)
 
+- GitHub
+  - [ ] [Git](./Fundamental/git/git_index.md)
+  - [ ] [GitHub](./GitHub/index.md)
+
 ---
 
 - Fundamental
 
   - [ ] Statictics
   - [ ] [Data Structure & Algorithm](./Fundamental/Data_Structure/index.md)
-  - [ ] [Git](./Fundamental/git/git_index.md)
 
 - Programming Language
 
