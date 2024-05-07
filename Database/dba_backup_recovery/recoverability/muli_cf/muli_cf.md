@@ -1,6 +1,6 @@
 # DBA2 - Multiplexing `Control Files`
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [DBA2 - Multiplexing `Control Files`](#dba2---multiplexing-control-files)
   - [Multiplexing `Control Files`](#multiplexing-control-files)
@@ -13,6 +13,7 @@
 
 ## Multiplexing `Control Files`
 
+Ensure redundancy of control files. If a control file is damaged or lost, recovery is easier if you have another copy.
 To protect against database failure, your database should have **multiple copies** of the `control file`.
 
 ![multiplexing_cf01](./pic/multiplexing_cf01.png)
@@ -168,7 +169,7 @@ STARTUP
 
 SHOW PARAMETER control_files;
 
-SELECT name FROM v$controlfiles
+SELECT name FROM v$controlfile;
 ```
 
 ![lab_mult](./pic/lab_mult_cf05.png)
@@ -182,14 +183,31 @@ SELECT name FROM v$controlfiles
 - Clean up
 
 ```sh
+# refer to the backup pfile
+PFILE_PATH=$ORACLE_HOME/dbs/backup_initorcl.ora
+
 sqlplus -s / as sysdba <<EOF
--- Starting the Oracle instance
-STARTUP;
--- Querying the Oracle instance version
-SELECT 'Oracle Database Version: ' || banner FROM v\$version WHERE banner LIKE 'Oracle%';
--- Exiting SQL*Plus
-EXIT;
+-- Starting the Oracle instance with the specified pfile
+STARTUP PFILE='$PFILE_PATH';
+
+-- Recreating the spfile from the current pfile
+CREATE SPFILE FROM PFILE;
+
+SHUTDOWN IMMEDIATE
+
+-- startup normally with recreated spfile
+STARTUP
+
+SHOW PARAMETER control_files;
+
+SELECT name FROM v\$controlfile;
+
+EXIT
+
 EOF
+
+# remove the additional control file
+rm -rf /u01/app/oracle/controlfiles_dir/ORCL
 ```
 
 ---

@@ -1,6 +1,6 @@
 # DBA2 - `Fast Recovery Area`
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [DBA2 - `Fast Recovery Area`](#dba2---fast-recovery-area)
   - [`Fast Recovery Area`](#fast-recovery-area)
@@ -70,7 +70,35 @@ ALTER SYSTEM SET db_recovery_file_destsize = integer [K | M | G]
 
 ## Lab: Configuring the Size of the Fast Recovery Area
 
-- View the values of the `DB_RECOVERY_FILE_DEST` and `DB_RECOVERY_FILE_DEST_SIZE` **initialization parameters**.
+- If the `DB_RECOVERY_FILE_DEST` and `DB_RECOVERY_FILE_DEST_SIZE` parameters values are **not null**, the `fast recovery area` is enabled.
+
+- DBA can change the **location** and **size** of the fast recovery area.
+
+  - The change of the `fast recovery area`'s size do not require to restart the database because the `DB_RECOVERY_FILE_DEST_SIZE` parameter is **dynamic**.
+
+---
+
+- Query the values of the `DB_RECOVERY_FILE_DEST` and `DB_RECOVERY_FILE_DEST_SIZE` **initialization parameters**.
+
+```sql
+SHOW PARAMETER db_recovery_file_dest
+```
+
+![fra01](./pic/fra01.png)
+
+- Location of FRA
+
+![fra01](./pic/fra02.png)
+
+---
+
+- Change the **size** of the fast recovery area to 10G8 and set the scope to `BOTH`.
+
+```sql
+ALTER SYSTEM SET db_recovery_file_dest_size = 10G SCOPE=both;
+```
+
+![fra03](./pic/fra03.png)
 
 ---
 

@@ -7,10 +7,20 @@
     - [`Archiver (ARCn)` Process](#archiver-arcn-process)
     - [Archived Redo Log Files: Naming and Destinations](#archived-redo-log-files-naming-and-destinations)
   - [Configuring `ARCHIVELOG` Mode](#configuring-archivelog-mode)
+  - [Lab: `ArchivedLog` mode](#lab-archivedlog-mode)
+    - [Query whether in `ARCHIVELOG` mode](#query-whether-in-archivelog-mode)
+    - [Enable `ARCHIVELOG` mode](#enable-archivelog-mode)
 
 ---
 
 ## Creating `Archived Redo Log Files`
+
+- Place your database in `ARCHIVELOG` mode.
+
+  - In all cases, you will **be able to recover** the database either completely or incompletely depending on which database files have been damaged or lost.
+
+- Configure **redundant** `archive log` **destinations**.
+  - In cases where you lost archive log files and you need them to recover the database, you will be **able to perform an incomplete recovery**, unless you have a duplicate version of the archive log in another destination.
 
 ![archived_redo_rog_files](./pic/archived_redo_rog_files.png)
 
@@ -124,6 +134,34 @@ alter database open;
   - **Default** mode
   - **recovery** is possible **only** until the time of the **last backup**.
     - All transactions made **after** that backup are **lost**.
+
+---
+
+## Lab: `ArchivedLog` mode
+
+### Query whether in `ARCHIVELOG` mode
+
+```sql
+archive log list
+```
+
+![lab_archivedlog01](./pic/lab_archivedlog01.png)
+
+---
+
+### Enable `ARCHIVELOG` mode
+
+- must put the database in `MOUNT` mode to enable archiving.
+
+```sql
+shutdown immediate
+startup mount
+alter database archivelog;
+archive log list
+alter database open;
+```
+
+![lab_archivedlog01](./pic/lab_archivedlog02.png)
 
 ---
 
