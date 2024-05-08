@@ -1,6 +1,6 @@
 # DBA2 - Creating `Archived Redo Log Files`
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [DBA2 - Creating `Archived Redo Log Files`](#dba2---creating-archived-redo-log-files)
   - [Creating `Archived Redo Log Files`](#creating-archived-redo-log-files)
@@ -10,6 +10,7 @@
   - [Lab: `ArchivedLog` mode](#lab-archivedlog-mode)
     - [Query whether in `ARCHIVELOG` mode](#query-whether-in-archivelog-mode)
     - [Enable `ARCHIVELOG` mode](#enable-archivelog-mode)
+    - [Stop and Disable ArchiveLog mode](#stop-and-disable-archivelog-mode)
 
 ---
 
@@ -84,7 +85,7 @@
     - can be `31` **different destinations**.
     - may be **local** (a directory) or **remote** (an Oracle Net alias for a standby database).
   - If using `file system storage`, it is recommended that you add multiple locations **across different disks**. 分散分布
-  - If the `fast recovery area` is enabled, by default the `USE_DB_RECOVERY_FILE_DEST` is specified as an archived redo log file destination.
+  - If the `fast recovery area` is enabled, by default `DB_RECOVERY_FILE_DEST` is specified as an archived redo log file destination.
 
 - Naming:
 
@@ -162,6 +163,27 @@ alter database open;
 ```
 
 ![lab_archivedlog01](./pic/lab_archivedlog02.png)
+
+---
+
+### Stop and Disable ArchiveLog mode
+
+```sql
+-- when the db is up and running
+alter system archive log stop;
+shutdown immediate
+
+-- Startup in exclusive mount mode.
+startup mount restrict
+-- if flashback database is enabled, it cannot disable
+alter database noarchivelog;
+alter database open;
+archive log list
+
+--Shutdown Oracle and startup normally
+shutdown immediate
+startup
+```
 
 ---
 
