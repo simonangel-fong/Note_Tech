@@ -12,7 +12,14 @@
   - [Multiplexing `Redo Log Files`](./recoverability/muli_redolog/muli_redolog.md)
   - [Creating `Archived Redo Log Files`](./recoverability/archive_redolog/archive_redolog.md)
 
+
+
 - [`Recovery Manager (RMAN)`](./rman/rman/rman.md)
+
+- [Backup](./backup/backup/backup.md)
+  - [Backup Strategies](./backup/backup_strategy/backup_strategy.md)
+
+
 
 ---
 
