@@ -8,6 +8,7 @@
   - [Lab: Muliplexing Control File](#lab-muliplexing-control-file)
     - [Query control file](#query-control-file)
     - [Multiplexing Control File](#multiplexing-control-file)
+  - [Lab: Multiplex Control File to FRA](#lab-multiplex-control-file-to-fra)
 
 ---
 
@@ -209,6 +210,62 @@ EOF
 # remove the additional control file
 rm -rf /u01/app/oracle/controlfiles_dir/ORCL
 ```
+
+---
+
+## Lab: Multiplex Control File to FRA
+
+- Currently, control file is in the same path
+
+```sql
+-- View current cf
+show parameter control_files;
+-- NAME          TYPE   VALUE
+-- ------------- ------ --------------------------------------------------------------------------------------
+-- control_files string /u01/app/oracle/oradata/ORCL/control01.ctl, /u01/app/oracle/oradata/ORCL/control02.ctl
+
+SELECT name FROM v$controlfile;
+-- /u01/app/oracle/oradata/ORCL/control01.ctl
+-- /u01/app/oracle/oradata/ORCL/control02.ctl
+```
+
+- Before further step, create a pfile from spfile to backup the current parameters
+
+```sql
+CREATE PFILE FROM SPFILE;
+-- create initorcl.ora in $ORACLE_HOME/dbs
+```
+
+- Update the control file for spfile
+  - The `SCOPE` set as `spfile` to prevent the database from attempting to look for the new file at this time
+
+```sql
+ALTER SYSTEM SET CONTROL_FILES='/u01/app/oracle/oradata/ORCL/control01.ctl','/u01/app/oracle/fast_recovery_area/ORCL/control02.ctl' SCOPE=spfile;
+```
+
+- Shutdown Database
+
+```sql
+SHUTDOWN IMMEDIATE
+```
+
+- Copy the control file to FRA
+
+```sh
+mv /u01/app/oracle/oradata/ORCL/control02.ctl /u01/app/oracle/fast_recovery_area/ORCL/control02.ctl
+```
+
+- Start Database and confirm
+  - When starting up the instance, the instance will read the parameter from the spfile.
+
+```sql
+STARTUP
+
+SELECT name FROM v$controlfile;
+show parameter control_files
+```
+
+![lab_mult_cf08](./pic/lab_mult_cf08.png)
 
 ---
 

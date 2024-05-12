@@ -4,6 +4,50 @@
 
 ---
 
+## Oracle-Suggested Backup
+
+- Integrated **disk-to-disk backup and recovery**:
+  - Low-cost disks used for `fast recovery area`
+- `Fast incremental backups`:
+  - Back up **only changed blocks**
+- Nightly `incremental backup` **rolls forward** recovery area backup:
+  - No need to do full backups
+
+---
+
+![diagram_suggested_backup_strategy](./pic/diagram_suggested_backup_strategy.png)
+
+- `tiered storage configuration`:(as shown in the slide)
+
+  - used by RMAN to fully automates **disk-based backup and recovery**
+  - You can use **different types of storage** for the `database files` and the `fast recovery area (FRA)`.
+
+- `Oracle-suggested backup strategy`:
+  - perform a `full backup` of your database (an `image copy` of each data file).
+  - set up automated **nightly** `incremental backups`, **stored** in the `FRA`.
+    - **Only changed data blocks** are backed up, which save considerable storage space.
+    - You can implement `block change tracking` to track the changed blocks more efficiently.
+    - The nightly `incremental backups` can be used to **roll forward** the database backup (by applying an incremental `level 1 backup`) and automatically **create a `full backup`**.
+      - This procedure **enables** `faster backups` by propagating changes to the `FRA`.
+      - In addition, **restores are faster** because backup files are copied from the `FRA` or a copy of the file in the FRA. (If recovery is needed, then **only the daily** `archived redo logs` need to be applied to yesterday's full backup.) 可以提高恢复效率,因为只适用前一日的 redo log
+
+---
+
+![diagram_suggested_backup_strategy](./pic/diagram_suggested_backup_strategy01.png)
+
+- `Oracle-suggested backup strategy` with `Enterprise Manager`
+
+  - By default, there is a **24-hour** `recovery window` from **disk**.
+  - uses the `incremental backup` and `incrementally updated backup` features, providing faster recoverability than is possible when applying database changes from the `archived log files`. 比使用 archive log 的恢复快.
+
+- `Enterprise Manager`'s Schedule Backup function:
+  - The Oracle-suggested strategy takes a `full database copy` as the first backup.第一次备份=full&whole
+    - Because it is a `whole database backup`, you might want to consider taking this at a period of least activity.
+  - An `incremental backup` **to disk** is taken **every day**.
+  - Optionally, a **weekly** `tape backup` can be made, which backs up all recovery-related files.
+
+---
+
 ## Backup Strategies
 
 ![backup_strategies](./pic/backup_strategies.png)

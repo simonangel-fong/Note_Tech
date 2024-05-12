@@ -1,8 +1,8 @@
-# DBA2 - Creating `Archived Redo Log Files`
+# DBA2 - Enable `Archived Redo Log`
 
 [Back](../../index.md)
 
-- [DBA2 - Creating `Archived Redo Log Files`](#dba2---creating-archived-redo-log-files)
+- [DBA2 - Enable `Archived Redo Log`](#dba2---enable-archived-redo-log)
   - [Creating `Archived Redo Log Files`](#creating-archived-redo-log-files)
     - [`Archiver (ARCn)` Process](#archiver-arcn-process)
     - [Archived Redo Log Files: Naming and Destinations](#archived-redo-log-files-naming-and-destinations)
@@ -187,4 +187,4 @@ startup
 
 ---
 
-[TOP](#dba2---creating-archived-redo-log-files)
+[TOP](#dba2---enable-archived-redo-log)

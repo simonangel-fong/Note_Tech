@@ -6,7 +6,8 @@
   - [`Fast Recovery Area`](#fast-recovery-area)
     - [Configuring the `Fast Recovery Area`](#configuring-the-fast-recovery-area)
     - [Monitoring the Fast Recovery Area](#monitoring-the-fast-recovery-area)
-  - [Lab: Configuring the Size of the Fast Recovery Area](#lab-configuring-the-size-of-the-fast-recovery-area)
+  - [Lab: Query current info of FRA](#lab-query-current-info-of-fra)
+  - [Lab: Alter the destination and size of fra](#lab-alter-the-destination-and-size-of-fra)
 
 ---
 
@@ -64,24 +65,31 @@ ALTER SYSTEM SET db_recovery_file_destsize = integer [K | M | G]
   - The Oracle Database server **automatically manages this storage**, **deleting** files that are no longer needed.自动管理, 自动删除
 
 - You **can back up** the `recovery area` so that `Oracle Recovery Manager (RMAN)` can **fail over** to other archived redo log destinations if the archived redo log in the fast recovery area is inaccessible or corrupted.可以备份该区域
+
   - **Periodically copying** backups to tape **frees space** in the `fast recovery area` for other files, but retrieving files from tape causes **longer** database restoration and recovery times.
 
----
+- Parameters:
 
-## Lab: Configuring the Size of the Fast Recovery Area
-
-- If the `DB_RECOVERY_FILE_DEST` and `DB_RECOVERY_FILE_DEST_SIZE` parameters values are **not null**, the `fast recovery area` is enabled.
-
-- DBA can change the **location** and **size** of the fast recovery area.
-
+  - If the `DB_RECOVERY_FILE_DEST` and `DB_RECOVERY_FILE_DEST_SIZE` parameters values are **not null**, the `fast recovery area` is enabled.
+  - Specifying `DB_RECOVERY_FILE_DEST` parameter without also specifying the `DB_RECOVERY_FILE_DEST_SIZE` initialization parameter is not allowed. 必须两个同时设置
   - The change of the `fast recovery area`'s size do not require to restart the database because the `DB_RECOVERY_FILE_DEST_SIZE` parameter is **dynamic**.
 
+| Parameters                   | Description                                        |
+| ---------------------------- | -------------------------------------------------- |
+| `DB_RECOVERY_FILE_DEST`      | null,Default location for the flash recovery area. |
+| `DB_RECOVERY_FILE_DEST_SIZE` | null, size of flash recovery area.                 |
+
 ---
 
-- Query the values of the `DB_RECOVERY_FILE_DEST` and `DB_RECOVERY_FILE_DEST_SIZE` **initialization parameters**.
+## Lab: Query current info of FRA
 
 ```sql
-SHOW PARAMETER db_recovery_file_dest
+-- View the current FRA
+show parameter db_recovery_file_dest;
+-- NAME                       TYPE        VALUE
+-- -------------------------- ----------- ---------------------------
+-- db_recovery_file_dest      string      /u01/app/oracle/oradata/fra
+-- db_recovery_file_dest_size big integer 10G
 ```
 
 ![fra01](./pic/fra01.png)
@@ -92,13 +100,26 @@ SHOW PARAMETER db_recovery_file_dest
 
 ---
 
-- Change the **size** of the fast recovery area to 10G8 and set the scope to `BOTH`.
+## Lab: Alter the destination and size of fra
 
 ```sql
-ALTER SYSTEM SET db_recovery_file_dest_size = 10G SCOPE=both;
+-- View the current FRA
+show parameter db_recovery_file_dest;
+
+-- alter system to change the path of fra
+ALTER SYSTEM SET db_recovery_file_dest='/u01/app/oracle/fast_recovery_area' SCOPE=both;
+ALTER SYSTEM SET db_recovery_file_dest_size=10G SCOPE=both;
+
+-- Confirm the current FRA
+show parameter db_recovery_file_dest;
 ```
 
-![fra03](./pic/fra03.png)
+![fra01](./pic/fra04.png)
+
+```sh
+# copy all files and dir from old fra to the new fra
+cp -Rf /u01/app/oracle/oradata/fra/ORCL/. /u01/app/oracle/fast_recovery_area/ORCL/
+```
 
 ---
 

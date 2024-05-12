@@ -4,7 +4,6 @@
 
 - [DBA - Backup](#dba---backup)
   - [Backup Terminology](#backup-terminology)
-  - [Types of Backups 备份的大小分类](#types-of-backups-备份的大小分类)
   - [RMAN Backup Types](#rman-backup-types)
   - [Backup Solutions 工具](#backup-solutions-工具)
   - [Balancing Backup and Restore Requirements 性能](#balancing-backup-and-restore-requirements-性能)
@@ -75,46 +74,7 @@
 
 ---
 
-## Types of Backups 备份的大小分类
 
-- `Image copies`:
-
-  - bit-by-bit copy
-  - duplicates of `data` or `archived log files` (similar to simply **copying the files** by using operating system commands)
-  - must be **backed up to the disk**.
-  - advantage:
-    - improved **granularity of the restore operation**. With an image copy, only the file or files need to be **retrieved** from your backup location. 可以精准取回需要的文件.
-  - disadvantage:
-    - Space usage, Image copies back up every data block, even if the data block is empty.
-
-- `Backup sets`:
-
-  - Are collections of one or more **binary files** that contain **one or more** `data files`, `control files`, `server parameter file`s, or `archived log files`.
-  - **empty data blocks** are not stored, thereby causing backup sets to **use less space** on the disk or tape.
-  - can be **compressed** to further reduce the space requirements of the backup.
-  - can be sent to the **disk** or directly to the **tape**.
-  - disadvantage:
-    - With backup sets, the **entire** backup set **must be retrieved** from your backup location **before** you **extract** the file or files that are needed.
-  - advantage:
-
-    - better space usage, significantly reduce the space required by the backup.
-
-- In most systems, the advantages of backup sets outweigh the advantages of image copies.
-
-- `Proxy copies`:
-  - a feature that enables a `media manager` to manage completely the **transfer of data** between **disk** and **backup media**.
-  - The media manager then determines how and when to move the data.
-
----
-
-- Backups may be stored as:
-  - `Image copies`
-  - `Backup sets`
-  - Proxy copies
-
-![diagram_imagecopy_copyset](./pic/diagram_imagecopy_copyset.png)
-
----
 
 ## RMAN Backup Types
 
