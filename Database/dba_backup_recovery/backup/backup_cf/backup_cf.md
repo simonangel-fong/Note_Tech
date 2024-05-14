@@ -3,12 +3,19 @@
 [Back](../../index.md)
 
 - [Backup - Control File](#backup---control-file)
+  - [Backup Control File](#backup-control-file)
   - [Lab: Verifying Automatic Backups of the Control File and SPFILE](#lab-verifying-automatic-backups-of-the-control-file-and-spfile)
   - [Backing Up the Control File to a Trace File](#backing-up-the-control-file-to-a-trace-file)
     - [Lab: Back up the control file to a trace file](#lab-back-up-the-control-file-to-a-trace-file)
     - [Lab: Creates a SQL script to re-create a control file.](#lab-creates-a-sql-script-to-re-create-a-control-file)
 
 ---
+
+## Backup Control File
+
+- Configure autobackup
+- Backup to trace file
+- Even if no autobackup, when backup includes the cdb$root's system tablespace, the control file will be backed up. 只针对 CDB 的 system, pdb 的 system 不会自动备份.
 
 ## Lab: Verifying Automatic Backups of the Control File and SPFILE
 

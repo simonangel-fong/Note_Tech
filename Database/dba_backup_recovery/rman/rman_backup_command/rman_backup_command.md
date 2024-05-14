@@ -180,6 +180,8 @@ BACKUP DATABASE;
 BACKUP AS BACKUPSET DATAFILE <file#>;
 -- Create datafile backup as a backup set with a specific tag:
 BACKUP AS BACKUPSET DATAFILE <file#> TAG <tag_name>;
+-- Create datafile backup as a backup set by path
+BACKUP AS BACKUPSET DATAFILE 'path';
 
 -- Create image copies of datafile and control file
 BACKUP AS COPY DATABASE;
@@ -187,6 +189,8 @@ BACKUP AS COPY DATABASE;
 BACKUP AS COPY DATAFILE <file#>;
 -- Create datafile backup as an image copy with a specific tag:
 BACKUP AS COPY DATAFILE <file#> TAG <tag_name>;
+-- Create datafile backup as an image copy by path
+BACKUP AS BACKUPSET DATAFILE 'path';
 ```
 
 - List
@@ -270,6 +274,7 @@ BACKUP ARCHIVELOG ALL NOT BACKED UP 1 TIMES;
 -- Create backup sets of archivelog and delete backed up archivelog
 BACKUP ARCHIVELOG ALL DELETE INPUT;
 
+BACKUP AS COPY ARCHIVELOG LIKE '%arc%';
 ```
 
 - List

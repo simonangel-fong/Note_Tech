@@ -35,4 +35,4 @@ CONFIGURE DEVICE TYPE DISK BACKUP TYPE TO COPY;
 
 ---
 
-[TOP](#dba---rman-configuration)
+[TOP](#rman---configuration)

@@ -115,7 +115,7 @@ GROUP BY file#;
 -- view the parameter before configuration
 show parameter DB_CREATE_FILE_DEST
 
--- Setthe DB_CREATE_FILE_DEST initialization parameter
+-- Set the DB_CREATE_FILE_DEST initialization parameter
 ALTER SYSTEM SET DB_CREATE_FILE_DEST =
 '/u01/app/oracle/oradata/ORCL';
 
