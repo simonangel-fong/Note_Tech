@@ -37,8 +37,11 @@
     - [Proxy Copies](./backup/backup_proxy_copy/backup_proxy_copy.md)
 
   - Backing Up Backup File
+
     - [Backing Up `Backupset` and `Image Copy`](./backup/backup_backup/backup_backup.md)
     - [Backing up Recovery Data](./backup/backup_recovery_data/backup_recovery_data.md)
+
+  - [Tuning Backup Performance](./backup/backup_tuning/backup_tuning.md)
 
 ---
 
