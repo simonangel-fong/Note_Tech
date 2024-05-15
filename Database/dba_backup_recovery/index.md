@@ -45,6 +45,10 @@
 
 ---
 
+- [Recovery Catalog](./recovery/recovery_catalog/recovery_catalog.md)
+
+---
+
 - [`Recovery Manager (RMAN)`](./rman/rman/rman.md)
 
   - [Connect](./rman/rman_connect/rman_connect.md)
