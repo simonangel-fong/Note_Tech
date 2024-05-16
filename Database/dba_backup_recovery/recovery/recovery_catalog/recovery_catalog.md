@@ -10,7 +10,14 @@
     - [Configuring the Recovery Catalog Database](#configuring-the-recovery-catalog-database)
     - [Creating the Recovery Catalog Owner](#creating-the-recovery-catalog-owner)
     - [Creating the Recovery Catalog](#creating-the-recovery-catalog)
-  - [Lab: Create a Recovery Catalog](#lab-create-a-recovery-catalog)
+    - [Lab: Create a Recovery Catalog](#lab-create-a-recovery-catalog)
+    - [Lab: Configuring the Recovery Catalog](#lab-configuring-the-recovery-catalog)
+  - [Registering a Target Database](#registering-a-target-database)
+    - [Lab: Registering a Database](#lab-registering-a-database)
+  - [Unregistering a Target Database](#unregistering-a-target-database)
+  - [Recovery Catalog Resynchronization](#recovery-catalog-resynchronization)
+    - [Manually Resynchronizing](#manually-resynchronizing)
+    - [Lab: Manually Resynchronizing](#lab-manually-resynchronizing)
 
 ---
 
@@ -171,7 +178,7 @@ CREATE CATALOG;
 
 ---
 
-## Lab: Create a Recovery Catalog
+### Lab: Create a Recovery Catalog
 
 - In this lab, it should use a differenct database instance that has a different ORACLE_SID, as the recovery catalog.
   - to make it simple, this lab uses only one database instance but different pdb.
@@ -224,6 +231,173 @@ CREATE CATALOG;
 ```
 
 ![lab_recovery_catalog](./pic/lab_recovery_catalog01.png)
+
+- Tables created in catalog:
+
+![lab_recovery_catalog](./pic/lab_recovery_catalog02.png)
+
+---
+
+### Lab: Configuring the Recovery Catalog
+
+- 该 lab 使用 rman 设置 catalog 的备份, 即备份 catelog; 也涉及启用 archivelog mode(略);
+- configure the `retention policy`
+
+```sql
+-- Note: login using the rcat sid, not the target db sid
+rman target sys
+
+-- show current policy
+show retention policy;
+
+-- update policy
+configure retention policy to redundancy 2;
+```
+
+- configure the `fast recovery area` for `Recovery Catalog`, enable archive log mode, and back up.
+
+```sql
+-- Note: login using the rcat sid, not the target db sid
+sqlplus / as sysdba
+
+ALTER SYSTEM SET db_recovery_file_dest_size=12G SCOPE=BOTH;
+```
+
+---
+
+## Registering a Target Database
+
+- When a database is registered:
+
+  - **Creates rows** in the `recovery catalog tables` for the target database
+  - **Copies data** from the target database `control file` to the recovery catalog tables
+  - **Full Synchronizes** the recovery catalog with the control file
+
+- Steps to register database in the Recovery Catalog:
+  - 1. Ensure that the target database is mounted or open.
+  - 2. Connect to the `recovery catalog database` and to the `target database`:
+
+```sql
+-- connect
+rman TARGET / CATALOG rman/rman@reccatdb
+
+-- register
+REGISTER DATABASE;
+```
+
+- Register a database with `Enterprise Manager`:
+
+  - even if you have previously executed the RMAN `REGISTER DATABASE` command, you must
+
+    - first add the `recovery catalog` to the `Enterprise Manager configuration`.
+    - select that `recovery catalog` to be the recovery catalog for the `target database`.
+
+---
+
+### Lab: Registering a Database
+
+```sql
+-- Connect
+rman target "'/ as sysbackup'" catalog rcat_owner@rcat_service
+
+-- register target database
+register database;
+
+-- list all of the data files associated with the target database that have registered in the recovery catalog.
+REPORT SCHEMA;
+```
+
+![lab_recovery_catalog](./pic/lab_recovery_catalog03.png)
+
+- The target database updates to catalog
+
+![lab_recovery_catalog](./pic/lab_recovery_catalog04.png)
+
+---
+
+## Unregistering a Target Database
+
+- Typically, you would **unregister** a `target database` **only if** you **no longer** want to use the recovery catalog for that database or the database **no longer** exists.
+
+- When you **unregister** a database from the recovery catalog, **all RMAN repository records** in the recovery catalog are **lost**.
+- You can **re-register** the database.
+
+  - The **recovery catalog records** for that database are then based on the contents of the `control file` **at the time of re-registration**.
+
+- Note: If you have used `Enterprise Manager Cloud Control` to register your database, you must use it again to unregister your database.
+
+```sql
+rman TARGET / CATALOG username/password@rcat_service
+UNREGISTER DATABASE;
+```
+
+---
+
+## Recovery Catalog Resynchronization
+
+![diagram_recovery_catalog03](./pic/diagram_recovery_catalog03.png)
+
+- `resynchronization`
+
+  - RMAN **updates** the `recovery catalog` by comparing to
+    - either the **current** `control file` of the `target database`
+    - or a **backup/standby** `control file`
+
+- Two types of resynchronization: `partial` and `full`.
+
+- `partial resynchronization`
+
+  - RMAN **compares** the `control file` to the `recovery catalog` and **updates** the `recovery catalog` with any **metadata** concerning `backups`, `archived redo logs`, `data file copies`, and so on.
+  - 只着重于三种文件, 不产生 snapshot
+
+- `full synchronization`,
+
+  - RMAN first **creates** a `control file` **snapshot**, which is simply a **temporary copy** of the `control file`.
+  - It uses the **snapshot** to make the comparison to the `recovery catalog`.
+  - It compares and updates the **same data** as a `partial resynchronization`, but it also **includes** any **database structure changes**.
+    - e.g., **database schema changes** or new **tablespaces** are included in a full resynchronization.
+  - snapshot + 3 文件 + structure change
+
+---
+
+- `SNAPSHOT CONTROLFILE NAME` configuration setting
+
+  - specify the **location** for the snapshot control file
+  - default value: Oracle home of each target database
+  - In an `Oracle RAC` configuration, the snapshot control file needs to be **globally available** to all instances in the RAC configuration.
+
+- `CONTROL_FILE_RECORD_KEEP_TIME` initialization parameter
+  - determines the **minimum number of days** that **records are retained** in the `control file` before they are candidates for being **overwritten**.
+  - Ensure its value is **longer than** the interval between `resynchronizations`.
+    - If less than this interval, control file records could be **reused** before they are propagated to the recovery catalog.
+
+---
+
+### Manually Resynchronizing
+
+- Situations for manual resynchronization:
+  - If the `recovery catalog` was **unavailable** when you issued RMAN commands that cause a `partial resynchronization`
+  - If you perform **infrequent backups** of your target database because the recovery catalog is **not updated automatically** when a `redo log` **switch** occurs or when a `redo log` is **archived**
+  - After making any **change** to the **physical structure** of the `target database`
+
+```sql
+RESYNC CATALOG;
+```
+
+---
+
+### Lab: Manually Resynchronizing
+
+```sql
+-- connect
+rman TARGET / CATALOG username/password@rcat_service
+
+-- resync
+RESYNC CATALOG;
+-- automatically full resync
+```
+
+![lab](./pic/lab_recovery_catalog05.png)
 
 ---
 

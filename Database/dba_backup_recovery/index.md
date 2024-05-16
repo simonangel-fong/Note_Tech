@@ -60,13 +60,6 @@
 
 ---
 
-Create multisection backups of very large files
-Create proxy copies
-
-Create duplexed backup sets
-
-Create archival backups
-
 DBA1
 
 - [oraenv](./oraenv/oraenv.md)
