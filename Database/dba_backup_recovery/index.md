@@ -12,6 +12,8 @@
   - [Multiplexing `Redo Log Files`](./recoverability/muli_redolog/muli_redolog.md)
   - [Enable `Archived Redo Log Files`](./recoverability/archive_redolog/archive_redolog.md)
 
+---
+
 - [Backup](./backup/backup/backup.md)
 
   - [Backup Strategy](./backup/backup_strategy/backup_strategy.md)
@@ -45,7 +47,11 @@
 
 ---
 
-- [Recovery Catalog](./recovery/recovery_catalog/recovery_catalog.md)
+- [Restore and Recovery](./recovery/recovery/recovery.md)
+  - [Recovery Catalog](./recovery/recovery_catalog/recovery_catalog.md)
+  - [File Loss](./recovery/recovery_file_loss/recovery_file_loss.md)
+  - [Instance Recovery](./recovery/recovery_instance/recovery_instance.md)
+  - [Media Recovery: `Complete Recovery` vs `Point-in-Time Recovery`](./recovery/recovery_media/recovery_media.md)
 
 ---
 
@@ -57,6 +63,7 @@
   - [Catelog](./rman/rman_catalog/rman_catalog.md)
   - [Reporting](./rman/rman_reporting/rman_reporting.md)
   - [Backups Commands](./rman/rman_backup_command/rman_backup_command.md)
+  - [Stored Scripts](./rman/rman_script/rman_script.md)
 
 ---
 
