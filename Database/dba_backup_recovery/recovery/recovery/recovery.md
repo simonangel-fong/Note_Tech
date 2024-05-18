@@ -12,17 +12,6 @@
 
 ---
 
-failure situation
-recovery technologies
-
-- Describe instance or crash recovery
-
-- Describe complete recovery
-
-- Describe point-in-time recovery
-
-- Describe recovery with RESETLOGS
-
 ## Data Repair Techniques
 
 - To respond to potential **data loss**:
@@ -117,7 +106,6 @@ ALTER TABLESPACE inv_tbs ONLINE;
 
 ---
 
-
 ## Best Practices: to Restore and Recovery Performance
 
 - using `incremental backups` to **Minimize the number** of `archive logs` to be applied:
@@ -125,9 +113,11 @@ ALTER TABLESPACE inv_tbs ONLINE;
   - **`Cumulative incremental backups`**:
 
     - **Only the most recent** `cumulative incremental backup` must be applied. This reduces tape library requests for media backups. 只适用于最近
+    - recommened when the speed of recovery is concerned.
 
   - **`Differential incremental backups`**:
     - **All** `differential incremental level 1 backups` since the restored data file backup must be applied. 所有
+    - recommened when the space of backup is concerned.
 
 - Use `block media recovery` for **isolated** `block corruptions`.
 - Keep an adequate number of `archived logs` **on disk**.

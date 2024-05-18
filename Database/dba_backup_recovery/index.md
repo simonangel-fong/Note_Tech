@@ -49,9 +49,10 @@
 
 - [Restore and Recovery](./recovery/recovery/recovery.md)
   - [Recovery Catalog](./recovery/recovery_catalog/recovery_catalog.md)
+  - Instance Failure
+    - [Instance Recovery](./recovery/recovery_instance/recovery_instance.md)
   - [File Loss](./recovery/recovery_file_loss/recovery_file_loss.md)
-  - [Instance Recovery](./recovery/recovery_instance/recovery_instance.md)
-  - [Media Recovery: `Complete Recovery` vs `Point-in-Time Recovery`](./recovery/recovery_media/recovery_media.md)
+    - [Media Recovery: `Complete Recovery` vs `Point-in-Time Recovery`](./recovery/recovery_media/recovery_media.md)
 
 ---
 
@@ -64,6 +65,10 @@
   - [Reporting](./rman/rman_reporting/rman_reporting.md)
   - [Backups Commands](./rman/rman_backup_command/rman_backup_command.md)
   - [Stored Scripts](./rman/rman_script/rman_script.md)
+
+  - [Diagnosis](./rman/rman_diagnosis/rman_diagnosis.md)
+    - [`Automatic Diagnostic Repository (ADR)`](./rman/rman_diagnosis_adr/rman_diagnosis_adr.md)
+    - [Data Failure & `Data Recovery Advisor`](./rman/rman_diagnosis_dra/rman_diagnosis_dra.md)
 
 ---
 

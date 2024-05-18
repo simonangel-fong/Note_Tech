@@ -118,7 +118,7 @@
   1. **Restore** backups.
   2. **Recover** as far forward as the unbroken series of archive logs allows.
   3. **Open** the database with the `RESETLOGS` option.
-     - A new `database incarnation` is automatically **created** to avoid confusion when two different redo streams have the **same SCN**, but occurred at different times.
+     - A new `database incarnation` (new redo logs generated from this point of time) is automatically **created** to avoid confusion when two different redo streams have the **same SCN**, but occurred at different times.
 
 - Note: Changes **after** the last applied `archive log` are **lost**.
 
