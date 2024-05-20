@@ -18,6 +18,7 @@
 
   - [Backup Strategy](./backup/backup_strategy/backup_strategy.md)
 
+    - [`Cold Backup` and `Hot Backup`](./backup/backup_cold_hot/backup_cold_hot.md)
     - [`Whole Database Backup` and `Partial Database Backup`](./backup/backup_whole_partial/backup_whole_partial.md)
     - [`Full Backup` and `Incremental Backup`](./backup/backup_full_incremental/backup_full_incremental.md)
       - [Block Change Tracking](./backup/backup_bct/backup_bct.md)
@@ -53,6 +54,11 @@
     - [Instance Recovery](./recovery/recovery_instance/recovery_instance.md)
   - [File Loss](./recovery/recovery_file_loss/recovery_file_loss.md)
     - [Media Recovery: `Complete Recovery` vs `Point-in-Time Recovery`](./recovery/recovery_media/recovery_media.md)
+    - [`Complete Recovery`](./recovery/recovery_complete/recovery_complete.md)
+      - [`NOARCHIVELOG` Mode](./recovery/recovery_complete_noarchivelog/recovery_complete_noarchivelog.md)
+      - [`ARCHIVELOG` Mode - CDB](./recovery/recovery_complete_cdb/recovery_complete_cdb.md)
+      - [`ARCHIVELOG` Mode - PDB](./recovery/recovery_complete_pdb/recovery_complete_pdb.md)
+      - [Using Image Copy](./recovery/recovery_complete_copy/recovery_complete_copy.md)
 
 ---
 

@@ -27,3 +27,14 @@
 | IBM AIX               | /etc/oratab            |
 
 ![oratab01](./pic/oratab01.png)
+
+---
+
+Linux command to return process of Oracle
+
+| Command          | Description                                                       |
+| ---------------- | ----------------------------------------------------------------- |
+| `pgrep -lf smon` | search for process like smon to verify the database is started    |
+| `pgrep -lf tns`  | search for tns process like tns to verify the listener is started |
+
+![alt text](image.png)
