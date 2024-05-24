@@ -38,3 +38,13 @@ Linux command to return process of Oracle
 | `pgrep -lf tns`  | search for tns process like tns to verify the listener is started |
 
 ![alt text](image.png)
+
+
+--- 
+
+archive log view:
+
+Also note that the VSARCHIVED LOG view contains historic information of prior database
+incarnations. The NAME column of the active database incarnation contains the path and
+name of the archive log; historic incarnations have a null value. The status A is for archived
+logs, D is for deleted ones.

@@ -59,6 +59,11 @@
       - [`ARCHIVELOG` Mode - CDB](./recovery/recovery_complete_cdb/recovery_complete_cdb.md)
       - [`ARCHIVELOG` Mode - PDB](./recovery/recovery_complete_pdb/recovery_complete_pdb.md)
       - [Using Image Copy](./recovery/recovery_complete_copy/recovery_complete_copy.md)
+    - [`Point-in-Time Recovery`](./recovery/recovery_pitr/recovery_pitr.md)
+      - [`Incomplete Recovery`(`DBPITR`)](./recovery/recovery_dbpitr/recovery_dbpitr.md)
+      - [`PITR` in PDB](./recovery/recovery_pdbpitr/recovery_pdbpitr.md)
+      - [`Tablespace point-in-time recovery`(`TSPITR`)](./recovery/recovery_tspitr/recovery_tspitr.md)
+      - [`Table point-in-time recovery` (`TPITR`)](./recovery/recovery_tpitr/recovery_tpitr.md)
 
 ---
 

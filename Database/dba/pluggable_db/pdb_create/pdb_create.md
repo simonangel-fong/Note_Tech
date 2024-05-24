@@ -57,16 +57,16 @@
 
 ```sql
 CREATE PLUGGABLE DATABASE pdb1
-  ADMIN USER pdb1admin IDENTIFIED BY welcome  # Create a new user
-  ROLES = (dba)     # privilege: give dba role to the new user
-  DEFAULT TABLESPACE users  # create a new tbsp,
-    # create a df for users tbsp,
+  ADMIN USER pdb1admin IDENTIFIED BY welcome  -- Create a new user
+  ROLES = (dba)     -- privilege: give dba role to the new user
+  DEFAULT TABLESPACE users  -- create a new tbsp,
+    -- create a df for users tbsp,
     DATAFILE '/u01/app/oracle/oradata/ORCL/pdb1/users01.dbf'
-    # assign size
+    -- assign size
     SIZE 250M
-    # auto extend size
+    -- auto extend size
     AUTOEXTEND ON
-  # convert the file name from the seed dir to the new pdb dir
+  -- convert the file name from the seed dir to the new pdb dir
   FILE_NAME_CONVERT = ('/u01/app/oracle/oradata/ORCL/pdbseed/',
                        '/u01/app/oracle/oradata/ORCL/pdb1/');
 
@@ -78,30 +78,30 @@ CREATE PLUGGABLE DATABASE pdb1
 
 ```sql
 show con_name;
-# confirm pdb mode
+-- confirm pdb mode
 select con_id,name,open_mode
 from v$containers;
 
-# move to PDB
+-- move to PDB
 alter session set container=PDB$SEED;
-# confirm current container
+-- confirm current container
 show con_name
-# CON_NAME
-# ------------------------------
-# PDB$SEED
+-- CON_NAME
+-- ------------------------------
+-- PDB$SEED
 
-# query all user in seddm using cdb
+-- query all user in seddm using cdb
 select con_id, username,DEFAULT_TABLESPACE,common
 from cdb_users;
 
-# query all user in seddm using dba
+-- query all user in seddm using dba
 select  username,DEFAULT_TABLESPACE,common
 from dba_users;
 
-# query for df
+-- query for df
 select con_id,file#, name from V$DATAFILE;
 
-# query tbsp
+-- query tbsp
 select *
 from V$TABLESPACE;
 
@@ -124,48 +124,48 @@ cd $ORACLE_BASE/oradata/ORCL
 mkdir pdb1
 ls
 pwd
-# /u01/app/oracle/oradata/ORCL/pdb1
+-- /u01/app/oracle/oradata/ORCL/pdb1
 ```
 
 ![lab_pdb_from_seed](./pic/lab_pdb_from_seed01.png)
 
 ```sql
-# confirm in the root
+-- confirm in the root
 show con_name
-# CON_NAME
-# ------------------------------
-# CDB$ROOT
+-- CON_NAME
+-- ------------------------------
+-- CDB$ROOT
 
-# confirm the root is open
+-- confirm the root is open
 select con_id,name,open_mode
 from v$containers;
-# 1	CDB$ROOT	READ WRITE
-# 2	PDB$SEED	READ ONLY
-# 3	ORCLPDB   READ WRITE
+-- 1	CDB$ROOT	READ WRITE
+-- 2	PDB$SEED	READ ONLY
+-- 3	ORCLPDB   READ WRITE
 
-# create pdb
+-- create pdb
 CREATE PLUGGABLE DATABASE pdb1
-  ADMIN USER pdb1admin IDENTIFIED BY welcome  # Create a new user
-  ROLES = (dba)     # privilege: give dba role to the new user
-  DEFAULT TABLESPACE users  # create a new tbsp,
-    # create a df for users tbsp,
+  ADMIN USER pdb1admin IDENTIFIED BY welcome  -- Create a new user
+  ROLES = (dba)     -- privilege: give dba role to the new user
+  DEFAULT TABLESPACE users  -- create a new tbsp,
+    -- create a df for users tbsp,
     DATAFILE '/u01/app/oracle/oradata/ORCL/pdb1/users01.dbf'
-    # assign size
+    -- assign size
     SIZE 250M
-    # auto extend size
+    -- auto extend size
     AUTOEXTEND ON
-  # convert the file name from the seed dir to the new pdb dir
+  -- convert the file name from the seed dir to the new pdb dir
   FILE_NAME_CONVERT = ('/u01/app/oracle/oradata/ORCL/pdbseed/',
                        '/u01/app/oracle/oradata/ORCL/pdb1/');
-# Pluggable database PDB1 created.
+-- Pluggable database PDB1 created.
 
-# list all containers
+-- list all containers
 select con_id,name,open_mode
 from v$containers;
-# 1	CDB$ROOT	READ WRITE
-# 2	PDB$SEED	READ ONLY
-# 3	ORCLPDB	READ WRITE
-# 4	PDB1	MOUNTED
+-- 1	CDB$ROOT	READ WRITE
+-- 2	PDB$SEED	READ ONLY
+-- 3	ORCLPDB	READ WRITE
+-- 4	PDB1	MOUNTED
 ```
 
 - explore in the pdb dir
@@ -174,16 +174,16 @@ from v$containers;
 ![lab_pdb_from_seed](./pic/lab_pdb_from_seed02.png)
 
 ```sql
-# move to PDB
+-- move to PDB
 alter session set container=pdb1;
 show con_name;
-# CON_NAME
-# ------------------------------
-# PDB1
+-- CON_NAME
+-- ------------------------------
+-- PDB1
 
-# open pdb1
+-- open pdb1
 alter pluggable database open;
-#Pluggable database OPEN altered.
+-- Pluggable database OPEN altered.
 ```
 
 - explore in the pdb dir
@@ -192,17 +192,17 @@ alter pluggable database open;
 ![lab_pdb_from_seed](./pic/lab_pdb_from_seed03.png)
 
 ```sql
-# Query user in new pdb, note the new user has been created.
+-- Query user in new pdb, note the new user has been created.
 select con_id, username,DEFAULT_TABLESPACE,common
 from cdb_users;
 
 select  username,DEFAULT_TABLESPACE,common
 from dba_users;
 
-# query df, 4 df, including user
+-- query df, 4 df, including user
 select con_id,file#, name from V$DATAFILE;
 
-# query tbsp, 5 tbsp.
+-- query tbsp, 5 tbsp.
 select  * from V$TABLESPACE
 ```
 
@@ -277,9 +277,9 @@ CREATE PLUGGABLE DATABASE pdb5 from orclpdb
 FILE_NAME_CONVERT = ('/u01/app/oracle/oradata/ORCL/orclpdb/',
                        '/u01/app/oracle/oradata/ORCL/pdb5/')
 
-# Optional: if you need oracle managed files to names the files
-# CREATE PLUGGABLE DATABASE pdb5 from orclpdb
-# create_file_dest '/u01/app/oracle/oradata/ORCL/pdb5';
+-- Optional: if you need oracle managed files to names the files
+-- CREATE PLUGGABLE DATABASE pdb5 from orclpdb
+-- create_file_dest '/u01/app/oracle/oradata/ORCL/pdb5';
 ```
 
 - if the source pdb has active transaction, it will have this error.
@@ -295,7 +295,7 @@ ORA-65023: active transaction exists in container ORCLPDB
            statement that will attempt to create a new transaction in another
            container. */
 
-# solution
+-- solution
 ALTER session SET container=ORCLPDB;
 show con_name;
 rollback;
@@ -326,18 +326,18 @@ pwd
 - make some change in the source pdb but not commit
 
 ```sql
-# move to source pdb
+-- move to source pdb
 ALTER session SET container=orclpdb;
 
 show con_name;
 
-# change but not commit
-# create a umcommited transaction
+-- change but not commit
+-- create a umcommited transaction
 update hr.employees set salary=salary +1 where employee_id=100;
 
-# confirm an uncommited transaction has been created.
+-- confirm an uncommited transaction has been created.
 select salary from hr.employees where employee_id=100;
-# 24001
+-- 24001
 ```
 
 ---
@@ -345,28 +345,28 @@ select salary from hr.employees where employee_id=100;
 - Clone an existing PDB.
 
 ```sql
-# move to root
+-- move to root
 alter session set container=cdb$root;
-# confirm in the root
+-- confirm in the root
 show con_name;
 
-# list all pdb
+-- list all pdb
 select con_id,name,open_mode
 from v$pdbs;
 
-# clone a PDB
+-- clone a PDB
 CREATE PLUGGABLE DATABASE pdb5 from orclpdb
 FILE_NAME_CONVERT = ('/u01/app/oracle/oradata/ORCL/orclpdb/',
                        '/u01/app/oracle/oradata/ORCL/pdb5/');
-#Pluggable database PDB5 created.
+-- Pluggable database PDB5 created.
 
-# confirm creation
+-- confirm creation
 select con_id,name,open_mode
 from v$pdbs;
-# 2	PDB$SEED	READ ONLY
-# 3	ORCLPDB	READ WRITE
-# 4	PDB1	READ WRITE
-# 5	PDB5	MOUNTED
+-- 2	PDB$SEED	READ ONLY
+-- 3	ORCLPDB	READ WRITE
+-- 4	PDB1	READ WRITE
+-- 5	PDB5	MOUNTED
 
 ```
 
@@ -377,27 +377,27 @@ from v$pdbs;
 - Explore new pdb
 
 ```sql
-# move to new pdb
+-- move to new pdb
 alter session set container=PDB5;
-# open new pdb
+-- open new pdb
 alter pluggable database open;
-# check the data, uncommitted transaction will be copied.
+-- check the data, uncommitted transaction will be copied.
 select salary from hr.employees where employee_id=100;
 
-# query uses, confirm that all common and local users are copied.
+-- query uses, confirm that all common and local users are copied.
 select  username,DEFAULT_TABLESPACE,common
 from dba_users;
-# HR	SYSAUX	NO
+-- HR	SYSAUX	NO
 
-# query all tables of a user, confirm that all objects are copied.
+-- query all tables of a user, confirm that all objects are copied.
 select  *
 from dba_tables
 where OWNER='HR';
 
-# query datafile
+-- query datafile
 select con_id,file#, name from V$DATAFILE;
 
-# query tbsp
+-- query tbsp
 select * from V$TABLESPACE;
 ```
 

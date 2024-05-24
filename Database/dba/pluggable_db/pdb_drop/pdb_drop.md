@@ -30,20 +30,20 @@ DROP PLUGGABLE DATABASE pdb2 INCLUDING DATAFILES;
 ### Lab: Drop a pluggable database using SQL
 
 ```sql
-# confirm current in root
+-- confirm current in root
 show con_name;
 
-# error if pdb is not closed
+-- error if pdb is not closed
 DROP PLUGGABLE DATABASE pdb2 INCLUDING DATAFILES;
 #ERROR at line 1:
 #ORA-65025: Pluggable database PDB2 is not closed on all instances.
 
-# close target pdb
+-- close target pdb
 ALTER PLUGGABLE DATABASE pdb2 CLOSE;
-# drop pdb
+-- drop pdb
 DROP PLUGGABLE DATABASE pdb2 INCLUDING DATAFILES;
 
-# confirm
+-- confirm
 SELECT name, open_mode FROM v$pdbs;
 ```
 
