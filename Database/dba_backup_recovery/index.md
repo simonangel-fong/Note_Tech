@@ -50,8 +50,7 @@
 
 - [Restore and Recovery](./recovery/recovery/recovery.md)
   - [Recovery Catalog](./recovery/recovery_catalog/recovery_catalog.md)
-  - Instance Failure
-    - [Instance Recovery](./recovery/recovery_instance/recovery_instance.md)
+  - [Instance Failure & `Instance Recovery`](./recovery/recovery_instance/recovery_instance.md)
   - [File Loss](./recovery/recovery_file_loss/recovery_file_loss.md)
     - [Media Recovery: `Complete Recovery` vs `Point-in-Time Recovery`](./recovery/recovery_media/recovery_media.md)
     - [`Complete Recovery`](./recovery/recovery_complete/recovery_complete.md)
@@ -64,6 +63,9 @@
       - [`PITR` in PDB](./recovery/recovery_pdbpitr/recovery_pdbpitr.md)
       - [`Tablespace point-in-time recovery`(`TSPITR`)](./recovery/recovery_tspitr/recovery_tspitr.md)
       - [`Table point-in-time recovery` (`TPITR`)](./recovery/recovery_tpitr/recovery_tpitr.md)
+  - [Block Corruption & `Block Media Recovery`](./recovery/recovery_block/recovery_block.md)
+  - Recovery Additional Database Files
+    - []
 
 ---
 
