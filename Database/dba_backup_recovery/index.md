@@ -65,7 +65,10 @@
       - [`Table point-in-time recovery` (`TPITR`)](./recovery/recovery_tpitr/recovery_tpitr.md)
   - [Block Corruption & `Block Media Recovery`](./recovery/recovery_block/recovery_block.md)
   - Recovery Additional Database Files
-    - []
+    - [`Server Parameter File` & `Control File`](./recovery/recovery_spf_cf/recovery_spf_cf.md)
+    - [`NOLOGGING` Database Objects](./recovery/recovery_nolog/recovery_nolog.md)
+    - [`Redo Log`](./recovery/recovery_redolog/recovery_redolog.md)
+    - [Re-creating Password File](./recovery/recovery_pwd_file/recovery_pwd_file.md)
 
 ---
 
