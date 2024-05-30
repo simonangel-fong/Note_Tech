@@ -80,6 +80,7 @@
   - [`Flashback Transaction Backout`](./flashback/flashback_tran_backout/flashback_tran_backout.md)
   - [`Flashback Drop` & Recycle Bin](./flashback/flashback_drop/flashback_drop.md)
   - [`Flashback Data Archives`](./flashback/flashback_archive/flashback_archive.md)
+  - [`Flashback Database`](./flashback/flashback_database/flashback_database.md)
 
 ---
 
