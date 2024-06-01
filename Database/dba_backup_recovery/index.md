@@ -50,6 +50,7 @@
 
 - [Restore and Recovery](./recovery/recovery/recovery.md)
   - [Recovery Catalog](./recovery/recovery_catalog/recovery_catalog.md)
+    - [Virtual Private Catalog](./recovery/virtual_private_catalog/virtual_private_catalog.md)
   - [Instance Failure & `Instance Recovery`](./recovery/recovery_instance/recovery_instance.md)
   - [File Loss](./recovery/recovery_file_loss/recovery_file_loss.md)
     - [Media Recovery: `Complete Recovery` vs `Point-in-Time Recovery`](./recovery/recovery_media/recovery_media.md)
@@ -81,6 +82,12 @@
   - [`Flashback Drop` & Recycle Bin](./flashback/flashback_drop/flashback_drop.md)
   - [`Flashback Data Archives`](./flashback/flashback_archive/flashback_archive.md)
   - [`Flashback Database`](./flashback/flashback_database/flashback_database.md)
+
+---
+
+- [PDB Snapshots](./pdb_snapshot/pdb_snapshot/pdb_snapshot.md)
+- [Database Duplication](./db_duplication/db_duplication/db_duplication.md)
+  - [Backup-Based Duplicate Database](./db_duplication/backup_duplicate/backup_duplicate.md)
 
 ---
 
