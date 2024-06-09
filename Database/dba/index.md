@@ -69,9 +69,7 @@
     - [Control File](./phy_storage/control_file/control_file.md)
     - [Online Redo Log](./phy_storage/online_redo_log/online_redo_log.md)
   - [Logical Storage Structures](./log_storage/log_storage/log_storage.md)
-    - Data Blocks
-    - Extents
-    - Segments
+    - [Data Blocks, Extents, Segments](./log_storage/block_extent_segment/block_extent_segment.md)
     - [Tablespaces](./log_storage/tbsp/tbsp.md)
 
 - Users, Roles and Privileges
@@ -89,6 +87,7 @@
 ---
 
 - Backup and Recovery
+
   - [Overview]()
 
   - [Backup](./backup/backup/backup.md)
