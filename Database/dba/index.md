@@ -71,6 +71,7 @@
   - [Logical Storage Structures](./log_storage/log_storage/log_storage.md)
     - [Data Blocks, Extents, Segments](./log_storage/block_extent_segment/block_extent_segment.md)
     - [Tablespaces](./log_storage/tbsp/tbsp.md)
+    - [Undo](./log_storage/undo/undo.md)
 
 - Users, Roles and Privileges
 
