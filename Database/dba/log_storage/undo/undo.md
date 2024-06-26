@@ -956,7 +956,10 @@ where id=500000;
 
 > - Oracle adjust the `undo retention` automatically when the undo tbsp is autoextend, and it ignore the paramter.
 >   - In this example, `undo tablespace` is autoextend and `undo_retention` is set to be 1s.
->   - The Oracle ignores the `undo_retention` parameter.
+>   - When the session A committed the data, the committed data became `unexpired undo`, which is used by active query or flashback.
+>     - `unexpired undo` is supposed to be kept for 1s.
+>     - Actually, Oracle automatically adjust the undo retention.
+> - The Oracle ignores the `undo_retention` parameter.
 > - The value in session B is the old version, 500, due to `read consistency`.
 >   - The commit in session A is after the plsql in session B. To keep the read consistency in session B, the old version in undo is used.
 >   - This also proves that the actual retention is automatically managed, ignoring the value in the paramter.

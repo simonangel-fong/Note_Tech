@@ -87,9 +87,17 @@
 
 ---
 
+- Moving Data
+
+  - [SQL\*Loader](./loader/loader.md)
+  - [External Table](./external_tb/external_tb.md)
+  - [Moving Data Between PDBs](./move_data_pdb/move_data_pdb.md)
+
+---
+
 - Backup and Recovery
 
-  - [Overview]()
+  - [Overview](./backup_recovery/backup_recovery/overview.md)
 
   - [Backup](./backup/backup/backup.md)
 
