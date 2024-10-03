@@ -3,11 +3,12 @@
 - Database
 
   - [x] [SQL](./Database/sql/index.md)
-  - [ ] [Oracle DBA - Fundamental](./Database/dba/index.md)
-  - [ ] [Oracle DBA - Backup and Recovery](./Database/dba_backup_recovery/index.md)
+  - [x] [Oracle DBA - Fundamental](./Database/dba/index.md)
+  - [x] [Oracle DBA - Backup and Recovery](./Database/dba_backup_recovery/index.md)
   - [ ] [Oracle DBA Humber](./Database/Database_Administration/index.md)
   - [ ] [Warehouse Humber](./Database/warehouse/index.md)
   - [ ] [Neo4j](./Database/neo4j/index.md)
+  - [ ] [Pandas](./Database/pandas/index.md)
 
 - AI
 
@@ -38,14 +39,16 @@
 
   - [x] [AWS CCP](./AWS/ccp/index.md)
   - [x] [AWS SAA](./AWS/saa/index.md)
+  - [ ] [AWS DEA](./AWS/dea/index.md)
   - [ ] [AWS CDA](./AWS/cda/index.md)
     - [ ] Project: [GitHub:Web hosting - S3](https://github.com/simonangel-fong/AWS_POC_Web_Hosting)
 
 - OS
 
   - [ ] [Linux](./Operating_System/linux/index.md)
+    - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
   - [ ] [Docker](./Operating_System/docker/index.md)
-  - [ ] Bash
+  - [ ] [Airflow](./Operating_System/airflow/index.md)
 
 - Mobile
 
@@ -71,6 +74,8 @@
   - [ ] Panda
   - [ ] Scikit-learn
   - [ ] OpenCV
+  
+- [F](./F/index.md)
 
 ---
 
