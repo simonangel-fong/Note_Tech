@@ -17,8 +17,14 @@
   - [WK04](./securing_servers/wk04.md)
 
 - Securing Edge
+
   - [Wk01](./securing_edge/wk01.md)
   - [Wk02](./securing_edge/wk02.md)
   - [Wk03](./securing_edge/wk03.md)
   - [Wk04](./securing_edge/wk04.md)
-  -
+
+- Securing Network
+  - [Wk01](./securing_network/wk01.md)
+  - [Wk02](./securing_network/wk02.md)
+  - [Wk03](./securing_network/wk03.md)
+  - [Wk04](./securing_network/wk04.md)
