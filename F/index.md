@@ -24,7 +24,15 @@
   - [Wk04](./securing_edge/wk04.md)
 
 - Securing Network
+
   - [Wk01](./securing_network/wk01.md)
   - [Wk02](./securing_network/wk02.md)
   - [Wk03](./securing_network/wk03.md)
   - [Wk04](./securing_network/wk04.md)
+
+- Network Mgnt
+  - [Wk01](./network_mgnt/wk01.md)
+  - [Wk02](./network_mgnt/wk02.md)
+  - [Wk03](./network_mgnt/wk03.md)
+  - [Wk04](./network_mgnt/wk04.md)
+  - [Wk05](./network_mgnt/wk05.md)
