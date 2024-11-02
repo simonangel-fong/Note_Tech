@@ -15,3 +15,9 @@
 
 - [AWS Certified Cloud Practitioner](./ccp/index.md)
 - [AWS Certified Solutions Architect Associate SAA-C03](./saa/index.md)
+
+---
+
+## Project
+
+- [Import VM into AMI](./Projects/vm2ami.md)
