@@ -33,6 +33,7 @@
   - [CP01](./securing_edge/wk05.md)
   - [CP02](./securing_edge/wk06.md)
   - [CP03](./securing_edge/wk07.md)
+  - [CP04](./securing_edge/wk08.md)
 
 - Securing Network
 
