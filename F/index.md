@@ -19,8 +19,8 @@
   - [WK02](./securing_servers/wk02.md)
   - [WK03](./securing_servers/wk03.md)
   - [WK04](./securing_servers/wk04.md)
-  - [WK05](./securing_servers/wk05.md)
-  - [WK06](./securing_servers/wk06.md)
+  - [WK05 - Access Management, BItlocker](./securing_servers/wk05.md)
+  - [WK06 - AD, FIM](./securing_servers/wk06.md)
   - [WK07](./securing_servers/wk07.md)
   - [WK08](./securing_servers/wk08.md)
 
