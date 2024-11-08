@@ -21,7 +21,7 @@
   - [WK04](./securing_servers/wk04.md)
   - [WK05 - Access Management, BItlocker](./securing_servers/wk05.md)
   - [WK06 - AD, FIM](./securing_servers/wk06.md)
-  - [WK07](./securing_servers/wk07.md)
+  - [WK07 - Key Distribution，Kerberos](./securing_servers/wk07.md)
   - [WK08](./securing_servers/wk08.md)
 
 - Securing Edge
