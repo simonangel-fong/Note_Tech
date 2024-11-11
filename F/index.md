@@ -41,6 +41,10 @@
   - [Wk02](./securing_network/wk02.md)
   - [Wk03](./securing_network/wk03.md)
   - [Wk04](./securing_network/wk04.md)
+  - [Wk05-Public Key Cryptography and RSA](./securing_network/wk05.md)
+  - [Wk06-Cryptographic Hash Functions](./securing_network/wk06.md)
+  - [Wk07-key distribution](./securing_network/wk07.md)
+  - [Wk08-User Authentication](./securing_network/wk08.md)
 
 - Network Mgnt
   - [Wk01](./network_mgnt/wk01.md)

@@ -12,7 +12,6 @@
 ---
 
 - [Networking](./networking/networking.md)
-- [Establish `SSH`](./ssh/ssh.md)
 
 ---
 
@@ -25,3 +24,23 @@
 Catelog
 
 - [System](./sys.md)
+
+---
+
+## Learning Linux in 5 days
+
+- rel:
+
+  - https://www.udemy.com/course-dashboard-redirect/?course_id=256758
+
+- [Fundamental](./fundamental/fundamental.md)
+
+- Directory Structure
+  - [Directory](./directory/directory.md)
+  - [File](./directory/file.md)
+  - [Command](./directory/command.md)
+- [Shell](./shell/shell.md)
+
+---
+
+- [configure `SSH`](./ssh/ssh.md)
