@@ -15,12 +15,6 @@
 
 ---
 
-- Tools
-
-  - [VI](./vim/vim.md)
-
----
-
 Catelog
 
 - [System](./sys.md)
@@ -35,10 +29,26 @@ Catelog
 
 - [Fundamental](./fundamental/fundamental.md)
 
-- Directory Structure
+  - [Wildcard](./wildcard/wildcard.md)
+  - [I/O](./io/io.md)
+
+- File Management
+
   - [Directory](./directory/directory.md)
-  - [File](./directory/file.md)
-  - [Command](./directory/command.md)
+  - [File](./file/file.md)
+    - [File Editor](./file/file_editor.md)
+
+- Disk Management
+
+  - [Disk](./disk/disk.md)
+
+- [Account, User, Gourp](./user/user.md)
+
+- Network Management
+  - [Network](./network/network.md)
+
+---
+
 - [Shell](./shell/shell.md)
 
 ---

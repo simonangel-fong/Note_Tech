@@ -15,6 +15,11 @@
     - [`$PATH`](#path)
     - [`which`](#which)
   - [Executing Commands](#executing-commands)
+  - [Execution Permissions](#execution-permissions)
+  - [Shell prompt customization](#shell-prompt-customization)
+    - [Persist PS1 Changes](#persist-ps1-changes)
+  - [Using Aliases](#using-aliases)
+    - [Persisting Aliases](#persisting-aliases)
 
 ---
 
@@ -154,3 +159,85 @@ man -k key_word
     - `/path/to/command_name`
   - Execute command in this dir
     - `./command`
+
+---
+
+## Execution Permissions
+
+| Command | Desc                              |
+| ------- | --------------------------------- |
+| `sudo`  | execute a command as another user |
+
+---
+
+## Shell prompt customization
+
+- Use an environment variable to customize.
+- Bash, ksh, and sh use `$PS1`.
+- Csh, tcsh, and zsh use `$prompt`.
+
+- Customizing the Prompt with `PS1`
+
+| Sysmbol | Desc                                                |
+| ------- | --------------------------------------------------- |
+| `\h`    | Short hostname, up to the first period              |
+| `\H`    | Full hostname                                       |
+| `\n`    | Newline                                             |
+| `\d`    | Date in "Weekday Month Date" format "Tue May 26"    |
+| `\t`    | Current time in **24-hour** `HH:MM:SS` format       |
+| `\A`    | Current time in **24-hour** `HH:MM` format          |
+| `\T`    | Current time in **12-hour** `HH:MM:SS` format       |
+| `\@`    | Current time in **12-hour** `am/pm` format          |
+| `\u`    | Username of the current user                        |
+| `\w`    | Current working directory                           |
+| `\W`    | Basename of the current working directory           |
+| `\$`    | if the effective UID is `0`, a `#`, otherwise a `$` |
+
+- Example
+
+```sh
+PS1="[\A \u@\h \W] \$ "
+```
+
+---
+
+### Persist PS1 Changes
+
+```sh
+echo 'export PS1="[\A \u@\h \W]\$ "' >> ~/.bash_profile
+```
+
+---
+
+## Using Aliases
+
+- `Aliases`
+  - Shortcuts
+  - Use for long commands
+  - Use for commands you type often
+    - Fix Typos
+    - Make Linux behave like another OS
+
+| Command              | Desc               |
+| -------------------- | ------------------ |
+| `alias `             | List all aliases   |
+| `alias name='value'` | Create an alias    |
+| `unalias name`       | Remove an alias    |
+| `unalias -a`         | Remove all aliases |
+
+- Example
+
+```sh
+alias cls='clear'
+```
+
+---
+
+### Persisting Aliases
+
+- Add aliases to your personal initialization files.
+  - `.bash_profile`
+
+```sh
+echo 'alias cls='clear'' >> ~/.bash_profile
+```
