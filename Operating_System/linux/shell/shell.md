@@ -20,6 +20,9 @@
     - [Persist PS1 Changes](#persist-ps1-changes)
   - [Using Aliases](#using-aliases)
     - [Persisting Aliases](#persisting-aliases)
+  - [Shell History](#shell-history)
+  - [History](#history)
+    - [`!`syntax](#syntax)
 
 ---
 
@@ -240,4 +243,71 @@ alias cls='clear'
 
 ```sh
 echo 'alias cls='clear'' >> ~/.bash_profile
+```
+
+---
+
+## Shell History
+
+- `Shell history`
+  - Executed commands are added to the history.
+  - can be displayed and recalled.
+  - stored in memory and on disk
+    - redhat: `~/bash_history`
+    - `~/.history`
+    - `~/.histfile`
+
+---
+
+## History
+
+- `HISTSIZE`: Controls the number of commands to retain in history
+
+  - default: `1000`
+
+- Searching history:
+
+  - `Ctrl-r`: reverse shell history search
+  - `Arrows`: Change the command
+  - `Enter`: execute the command
+  - `Ctrl-g`: cancel shell history search
+
+| CMD       | DESC                       |
+| --------- | -------------------------- |
+| `history` | Displays the shell history |
+
+### `!`syntax
+
+| Syntax    | DESC                                                       |
+| --------- | ---------------------------------------------------------- |
+| `!N`      | Repeat command line number N                               |
+| `!!`      | Repeat the previous command line                           |
+| `!string` | Repeat the most recent command line starting with "string" |
+
+- `!:N <Event> <Separator> <Word>`
+  - `!`: the most recent command line
+  - `!=!!`
+  - `:N`: represens a word on the command line.
+    - `0` = command
+    - `1` = first argument
+- `!^`: the 1st argument
+- `!$`: the last argument
+
+- Example
+
+```sh
+head file1 file2 hamlet.txt
+# output
+
+!!
+# repeat the last command and output
+
+vi !:2
+# vi file2
+# ! is to repeat the most recent command, which is !!, which is head command
+# :N represents the 2nd argument, which is file2.
+# so the this command is to open the file2 in vim editor.
+
+head file1 file2 hamlet.txt
+vi !$
 ```

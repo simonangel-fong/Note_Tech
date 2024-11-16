@@ -31,6 +31,14 @@ Catelog
 
   - [Wildcard](./wildcard/wildcard.md)
   - [I/O](./io/io.md)
+  - [Environment Variable](./env/env.md)
+  - [Shell](./shell/shell.md)
+  - [Process](./process/process.md)
+
+- Program, Command Management
+
+  - [Packages](./package/package.md)
+  - [Automation](./automation/automation.md)
 
 - File Management
 
@@ -42,14 +50,16 @@ Catelog
 
   - [Disk](./disk/disk.md)
 
-- [Account, User, Gourp](./user/user.md)
+- User Management
+
+  - [Account, User, Gourp](./user/user.md)
 
 - Network Management
   - [Network](./network/network.md)
 
 ---
 
-- [Shell](./shell/shell.md)
+- [Project: Isntall Wordpress on Ubuntu](./pro_unbutu_wordpress.md)
 
 ---
 

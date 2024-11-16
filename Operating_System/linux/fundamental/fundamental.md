@@ -7,6 +7,7 @@
 - [Linux - Fundamental](#linux---fundamental)
   - [What is Linux](#what-is-linux)
   - [WSL](#wsl)
+  - [Version](#version)
 
 ---
 
@@ -82,5 +83,19 @@
 - To completely uninstall distro, the uninstallation using `Apps & features` is required.
 
 ---
+
+## Version
+
+- `LTS`
+  - `Long Term Support`
+  - Released every 2 years
+  - Supported for 5 years
+  - releases are even numbered versions with a minor version of .04.
+- Version represents year and month
+
+- `Developer Releases`
+  - non `LTS` version
+  - released every 6 months
+  - Supported for just 9 months.
 
 [TOP](#linux---fundamental)
