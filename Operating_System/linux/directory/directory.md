@@ -86,7 +86,7 @@
 
 - Security
   - `/cgroup`: **Control Groups** hierarchy.
-  - `/lost+found`:| Used by the file system to **store recovered files** after a file system check.
+  - `/lost+found`: Used by the file system to **store recovered files** after a file system check.
   - `/selinux`: Used to display information about **SELinux**.
 
 ---

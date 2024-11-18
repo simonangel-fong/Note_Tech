@@ -85,6 +85,10 @@
 
 ### `dnf`: RHEL 8 / CentOS 8 & Later
 
+- `dnf`:
+  - `Dandified Yum`
+  - a package manager for Linux systems that uses `RPM` packages
+
 | CMD                          | DESC                          |
 | ---------------------------- | ----------------------------- |
 | `dnf upgrade -y`             | update version of all package |

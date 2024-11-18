@@ -98,4 +98,6 @@
   - released every 6 months
   - Supported for just 9 months.
 
+---
+
 [TOP](#linux---fundamental)

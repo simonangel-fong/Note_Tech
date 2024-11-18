@@ -253,7 +253,7 @@ echo 'alias cls='clear'' >> ~/.bash_profile
   - Executed commands are added to the history.
   - can be displayed and recalled.
   - stored in memory and on disk
-    - redhat: `~/bash_history`
+    - redhat: `~/.bash_history`
     - `~/.history`
     - `~/.histfile`
 

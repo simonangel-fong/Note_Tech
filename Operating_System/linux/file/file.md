@@ -461,8 +461,6 @@ ls -ld mydir
 
 ---
 
----
-
 ### `chgrp`: change group ownership
 
 - New files belong to current user's **primary group**.
@@ -848,11 +846,6 @@ ll -h
 | `du dir/file`    | Estimates file usage of a dir/file      |
 | `du -k dir/file` | Display sizes in Kilobytes.             |
 | `du -h dir/file` | Display sizes in human readable format. |
-
----
-
-
-
 
 ---
 

@@ -60,6 +60,8 @@ Catelog
 ---
 
 - [Project: Isntall Wordpress on Ubuntu](./pro_unbutu_wordpress.md)
+- [Project: Isntall Wordpress on Redhat](./pro_redhat_wordpress.md)
+- [Project: Isntall Wordpress(LAMP) on Redhat](./pro_redhat_wordpress_lamp.md)
 
 ---
 
