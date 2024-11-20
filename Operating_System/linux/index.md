@@ -4,65 +4,58 @@
 
 ---
 
-## Linux
+## Catelog
 
-- `linux`
-  - a family of open-source Unix-like operating systems
+- [Fundamental](./fundamental/fundamental/fundamental.md)
 
----
-
-- [Networking](./networking/networking.md)
-
----
-
-Catelog
-
-- [System](./sys.md)
-
----
-
-## Learning Linux in 5 days
-
-- rel:
-
-  - https://www.udemy.com/course-dashboard-redirect/?course_id=256758
-
-- [Fundamental](./fundamental/fundamental.md)
-
-  - [Wildcard](./wildcard/wildcard.md)
-  - [I/O](./io/io.md)
-  - [Environment Variable](./env/env.md)
-  - [Shell](./shell/shell.md)
-  - [Process](./process/process.md)
+  - [Wildcard](./fundamental/wildcard/wildcard.md)
+  - [I/O](./fundamental/io/io.md)
+  - [Environment Variable](./fundamental/env/env.md)
+  - [Shell](./shell/shell/shell.md)
 
 - Program, Command Management
 
-  - [Packages](./package/package.md)
-  - [Automation](./automation/automation.md)
+  - [System](./program/sys.md)
+  - [Process](./program/process/process.md)
+  - [Packages](./program/package/package.md)
+  - [Automation](./program/automation/automation.md)
 
-- File Management
+- File System Management
 
-  - [Directory](./directory/directory.md)
-  - [File](./file/file.md)
-    - [File Editor](./file/file_editor.md)
+  - [File Fundamental](./filesystem/file_fundamental/file_fundamental.md)
+  - [Directory](./filesystem/directory/directory.md)
+  - [File Operation](./filesystem/file_operation/file_operation.md)
+  - [File Content](./filesystem/file_content/file_content.md)
+  - [File Editor](./filesystem/file_editor/file_editor.md)
 
 - Disk Management
 
-  - [Disk](./disk/disk.md)
+  - [Disk](./disk/disk/disk.md)
 
-- User Management
+- User and Group Management
 
-  - [Account, User, Gourp](./user/user.md)
+  - [User](./user_group/user/user.md)
+  - [Group](./user_group/group/group.md)
+  - [`root` and `sudo`](./user_group/root_sudo/root_sudo.md)
 
 - Network Management
-  - [Network](./network/network.md)
+  - [Network](./network/network/network.md)
+  - [Networking](./network/networking/networking.md)
+  - [configure `SSH`](./network/ssh/ssh.md)
 
 ---
 
-- [Project: Isntall Wordpress on Ubuntu](./pro_unbutu_wordpress.md)
-- [Project: Isntall Wordpress on Redhat](./pro_redhat_wordpress.md)
-- [Project: Isntall Wordpress(LAMP) on Redhat](./pro_redhat_wordpress_lamp.md)
+- Project
+  - [Wordpress-Mysql-Nginx-Ubuntu](./project/wordpress_mysql_nginx_ubuntu.md)
+  - [!Wordpress-Mysql-Nginx-Redhat](./project/wordpress_mysql_nginx_redhat.md)
+  - [!Wordpress-Mysql-Appache2-Redhat](./project/wordpress_mysql_appache2_redhat.md)
 
 ---
 
-- [configure `SSH`](./ssh/ssh.md)
+- Tutorial
+  - https://www.udemy.com/course-dashboard-redirect/?course_id=256758
+  - https://www.udemy.com/course/unofficial-linux-redhat-certified-system-administrator-rhcsa-8
+
+---
+
+[TOP](#linux)

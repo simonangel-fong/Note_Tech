@@ -1,5 +1,10 @@
 # 技术笔记
 
+- Ongoing
+  - [ ] [Linux](./Operating_System/linux/index.md)
+
+---
+
 - Database
 
   - [x] [SQL](./Database/sql/index.md)
@@ -47,8 +52,7 @@
 
 - OS
 
-  - [ ] [Linux](./Operating_System/linux/index.md)
-    - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
+  - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
   - [ ] [Docker](./Operating_System/docker/index.md)
   - [ ] [Airflow](./Operating_System/airflow/index.md)
 
@@ -78,7 +82,3 @@
   - [ ] OpenCV
 
 - [F](./F/index.md)
-
----
-
-[Notes @ Humber College - ITS](https://simonangel-fong.github.io/Humber_ITS_Note/)
