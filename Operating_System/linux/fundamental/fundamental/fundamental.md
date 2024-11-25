@@ -8,6 +8,7 @@
   - [What is Linux](#what-is-linux)
   - [WSL](#wsl)
   - [Version](#version)
+  - [Help Commands](#help-commands)
 
 ---
 
@@ -97,6 +98,19 @@
   - non `LTS` version
   - released every 6 months
   - Supported for just 9 months.
+
+---
+
+## Help Commands
+
+- 3 types of help commands
+
+| CMD                        | DESC                                         |
+| -------------------------- | -------------------------------------------- |
+| `help`                     | Provides information on built-in commands    |
+| `whatis command1 command2` | Display one-line manual page descriptions    |
+| `command -help`            | Display all options of a command             |
+| `man command`              | Display a completed manual page of a command |
 
 ---
 

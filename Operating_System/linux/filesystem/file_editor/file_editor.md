@@ -5,6 +5,7 @@
 ---
 
 - [Linux - File System: File Editor](#linux---file-system-file-editor)
+  - [Linux File Editor](#linux-file-editor)
   - [`Nano` Editor](#nano-editor)
   - [`VI` Editor](#vi-editor)
     - [Vi Mode](#vi-mode)
@@ -19,7 +20,25 @@
       - [Repeating Commands](#repeating-commands)
     - [Line Mode](#line-mode)
       - [Find and Replace](#find-and-replace)
-  - [Graphical Editors](#graphical-editors)
+
+---
+
+## Linux File Editor
+
+- `text editor`
+
+  - a program which enables to create and manipulate data(text) in a Linux file.
+
+- Standard text editors:
+
+| CMD     | Editor                                     |
+| ------- | ------------------------------------------ |
+| `vi`    | Visual editor, available in every distro   |
+| `vim`   | Advance version of vi                      |
+| `ed`    | Standard line editor, available in Redhat  |
+| `ex`    | Extended line editor , available in Redhat |
+| `emacs` | A full screen editor                       |
+| `pico`  | Beginner's editor                          |
 
 ---
 
@@ -172,6 +191,7 @@
 | `:q`                 | Quit.                                  |
 | `:q!`                | Quit **without saving** changes.       |
 | `:wq!`               | Write and quit.                        |
+| `shift + zz`         | Save and quit                          |
 | `:x`                 | Same as :wq.                           |
 | `:n`                 | Positions the cursor at line n.        |
 | `:$`                 | Positions the cursor on the last line. |
@@ -190,6 +210,38 @@
 
 - The g option substitutes all occurrences on a line, otherwise just the first occurrence is changed per line.
 
+- example
+
+```conf
+# search and replace all occurrences on a single line
+:s/old_string/new_string/g
+
+# search and replace all occurrences on a single line, ignoring case
+:s/old_string/new_string/gi
+
+# search and replace all occurrences access all the content in the file
+:%s/old_string/new_string/g
+# case-insensitive
+:%s/old_string/new_string/gi
+# with confirmation
+:%s/old_string/new_string/gic
+
+# Within Specific Lines
+:start_line_number, end_line_number s/<search_term>/<replace_term>/g
+# example: for the first line
+:0, 1 s/vim/baeldung/gi
+# or for 2nd line
+:s/article/tutorial/g 2
+# example: for the current line to the last
+:.,$s/article/tutorial/g
+
+# search for whole word
+# example: only replace "cover" but not "covering"
+:s/\<cover\>/go through/gi
+```
+
+```
+
 ---
 
 ## Graphical Editors
@@ -206,3 +258,4 @@
 ---
 
 [TOP](#linux---file-system-file-editor)
+```

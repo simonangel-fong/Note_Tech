@@ -291,6 +291,99 @@ pwd
 
 ---
 
+- Example
+
+```sh
+# run command via sudo
+
+# create user dirowner
+sudo useradd dirowner
+echo "dirowner:dirowner4Test" | sudo chpasswd
+
+# create user otheruser
+sudo useradd otheruser
+echo "otheruser:otheruser4Test" | sudo chpasswd
+
+# switch to dirowner
+su - dirowner
+whoami
+# dirowner
+
+# create dir
+mkdir -p /tmp/dir
+# create file within the dir and change mode
+touch /tmp/dir/file
+chmod o-x /tmp/dir
+
+# create script file and change mode
+cat <<EOF > /tmp/dir/script.sh
+#!/bin/bash
+echo "Hello world"
+EOF
+cat /tmp/dir/script.sh
+# #!/bin/bash
+# echo "Hello world"
+chmod o+x /tmp/dir/script.sh
+
+ls -ld /tmp/dir
+# drwxrwxr--. 2 dirowner dirowner 35 Nov 20 18:38 /tmp/dir
+ls -l /tmp/dir/file
+# -rw-rw-r--. 1 dirowner dirowner 0 Nov 20 18:38 /tmp/dir/file
+ls -l /tmp/dir/script.sh
+# -rw-rw-r-x. 1 dirowner dirowner 31 Nov 20 18:38 /tmp/dir/script.sh
+
+# Test as otheruser
+su - otheruser
+whoami
+# otheruser
+ls /tmp/dir
+# ls: cannot access '/tmp/dir/file': Permission denied
+# ls: cannot access '/tmp/dir/script.sh': Permission denied
+# file  script.sh
+ls -dl /tmp/dir
+# drwxrwxr--. 2 dirowner dirowner 35 Nov 20 18:38 /tmp/dir
+ls -l /tmp/dir
+# ls: cannot access '/tmp/dir/file': Permission denied
+# ls: cannot access '/tmp/dir/script.sh': Permission denied
+# total 0
+# -????????? ? ? ? ?            ? file
+# -????????? ? ? ? ?            ? script.sh
+ls /tmp/dir/file
+# ls: cannot access '/tmp/dir/file': Permission denied
+ls -l /tmp/dir/file
+# ls: cannot access '/tmp/dir/file': Permission denied
+ls -l /tmp/dir/script.sh
+# ls: cannot access '/tmp/dir/script.sh': Permission denied
+bash /tmp/dir/script.sh
+# bash: /tmp/dir/script.sh: Permission denied
+
+# Correct the directory permission
+# switch to dirowner
+su - dirowner
+whoami
+# dirowner
+chmod o+x /tmp/dir
+ls -dl /tmp/dir
+# drwxrwxr-x. 2 dirowner dirowner 35 Nov 20 18:38 /tmp/dir
+ls -l /tmp/dir
+# -rw-rw-r--. 1 dirowner dirowner  0 Nov 20 18:38 file
+# -rw-rw-r-x. 1 dirowner dirowner 31 Nov 20 18:38 script.sh
+
+# Verify
+# switch to otheruser
+su - otheruser
+whoami
+# otheruser
+ls -l /tmp/dir
+# -rw-rw-r--. 1 dirowner dirowner  0 Nov 20 18:38 file
+# -rw-rw-r-x. 1 dirowner dirowner 31 Nov 20 18:38 script.sh
+
+bash /tmp/dir/script.sh
+# Hello world
+```
+
+---
+
 ## File Creation Mask
 
 - `File creation mask`
@@ -583,9 +676,10 @@ ls -ld mydir
 
 - New files belong to current user's **primary group**.
 
-| Command                      | Desc                            |
-| ---------------------------- | ------------------------------- |
-| `chgrp group_name file_name` | change a file's group ownership |
+| Command                         | Desc                                           |
+| ------------------------------- | ---------------------------------------------- |
+| `chgrp group_name file_name`    | change a file's group ownership                |
+| `chgrp -R group_name file_name` | change directory's group ownership recursively |
 
 ---
 

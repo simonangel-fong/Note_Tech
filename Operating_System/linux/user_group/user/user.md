@@ -15,8 +15,6 @@
     - [Change a user account](#change-a-user-account)
     - [Display user information](#display-user-information)
     - [Switch user](#switch-user)
-  - [Password](#password)
-    - [Password Mangement](#password-mangement)
 
 ---
 
@@ -197,15 +195,16 @@ username:encrypted_password:last_change:min:max:warn:inactive:expire:
 
 ### Add a new user
 
-| CMD                           | DESC                                           |
-| ----------------------------- | ---------------------------------------------- |
-| `useradd username`            | Create a new user                              |
-| `useradd username -c comment` | Create a new user with comment                 |
-| `useradd username -d path`    | Create a new user and specify a user directory |
-| `useradd username -g group`   | Create a new user and specify primary group    |
-| `useradd username -G g1,g2`   | Create a new user and specify additional group |
-| `useradd username -s bash`    | Create a new user and specify shell            |
-| `useradd username -u uid`     | Create a new user and specify UID              |
+| CMD                             | DESC                                              |
+| ------------------------------- | ------------------------------------------------- |
+| `useradd username`              | Create a new user                                 |
+| `useradd username -c comment`   | Create a new user with comment                    |
+| `useradd username -d home_path` | Create a new user and specify a user directory    |
+| `useradd username -m`           | Create a new user and home directory if not exits |
+| `useradd username -g group`     | Create a new user and specify primary group       |
+| `useradd username -G g1,g2`     | Create a new user and specify additional group    |
+| `useradd username -s bash`      | Create a new user and specify shell               |
+| `useradd username -u uid`       | Create a new user and specify UID                 |
 
 - If username already exists:
 
@@ -219,6 +218,7 @@ useradd testuser \
   -g rheladmin  \
   -G wheel,root,rheladmin \
   -c "user for testing" \
+  -m \
   -d /home/test_user  \
   -s /usr/bin/sh
 
@@ -327,24 +327,6 @@ tail -1 /etc/passwd
 
 - If an evn var has exported, the env var can be used after switching to another user without loading its env var, `su username`.
   - If the user is changed using `su - username`, then the env var for this user will be loaded and the exported env var in the same session cannot be used.
-
----
-
-## Password
-
-### Password Mangement
-
-| CMD                   | DESC                                |
-| --------------------- | ----------------------------------- |
-| `usermod username -L` | Lock user's pwd                     |
-| `usermod username -U` | Unlock user's pwd                   |
-| `passwd`              | Modify pwd for the current user     |
-| `passwd user`         | Modify pwd for a user               |
-| `passwd user -l`      | Lock a user's pwd                   |
-| `passwd user -u`      | Unlock a user's pwd                 |
-| `passwd user -e`      | Expire a user's pwd                 |
-| `passwd user -d`      | Delete a user's pwd                 |
-| `passwd user -f`      | Force user to change pwd next login |
 
 ---
 

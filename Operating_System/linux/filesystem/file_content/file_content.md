@@ -6,6 +6,7 @@
   - [Displaying File Content](#displaying-file-content)
   - [Searching Content in Files](#searching-content-in-files)
     - [Search a user name in `/etc/passwd`](#search-a-user-name-in-etcpasswd)
+  - [Filtering Text File Data](#filtering-text-file-data)
   - [Sorting Text File Data](#sorting-text-file-data)
   - [Comparing Files](#comparing-files)
 
@@ -73,6 +74,14 @@ cat file1 | grep -i music | cut -d' ' -f1
 ```sh
 grep -i rheladmin /etc/passwd | cut -d: -f1,5 | sort | tr ":" " " | column -t
 ```
+
+---
+
+## Filtering Text File Data
+
+| CMD                       | DESC                         |
+| ------------------------- | ---------------------------- |
+| `grep pattern /path/file` | Print lines matching pattern |
 
 ---
 
