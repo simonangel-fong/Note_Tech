@@ -8,6 +8,7 @@
     - [Configuration File](#configuration-file)
   - [`wheel` Group](#wheel-group)
     - [Configuration File](#configuration-file-1)
+    - [Example: Enable a user to perform any sudo command](#example-enable-a-user-to-perform-any-sudo-command)
 
 ---
 
@@ -69,7 +70,7 @@ id
     - Grants **temporary** root (or specified user) **privileges** to execute administrative tasks.
     - Users need their password, **not the root password**.
   - **Controlled Access**
-    - Access to sudo is configured in the /etc/sudoers file, allowing fine-grained permission control.
+    - Access to sudo is configured in the `/etc/sudoers` file, allowing fine-grained permission control.
   - **Session Timeout**
     - By default, sudo remembers your password for a short period (e.g., `5` minutes). This can be adjusted.
 
@@ -96,14 +97,13 @@ id
     - as what users those commands can be run
   - It is edited using the `visudo` command, which prevents syntax errors that could lock you out.
 
-  - Entry format
+  - Entry format: `user host=(users) [NOPASSWD:]commands`
 
   ```conf
-  user host=(users) [NOPASSWD:]commands
-  root ALL=(ALL) ALL
-  john ALL=(ALL) NOPASSWD: /bin/systemctl restart apache2
   # The root user has unrestricted privileges.
+  root ALL=(ALL) ALL
   # The user john can restart Apache without a password.
+  john ALL=(ALL) NOPASSWD: /bin/systemctl restart apache2
   ```
 
 - `visudo`
@@ -162,7 +162,9 @@ sudo cat /
   - `%wheel  ALL=(ALL)       ALL`
   - Allows people in group wheel to run all commands
 
-- Example: Enable a user to perform any sudo command
+---
+
+### Example: Enable a user to perform any sudo command
 
 ```sh
 # Create the New User

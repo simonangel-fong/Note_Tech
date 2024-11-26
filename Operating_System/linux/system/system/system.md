@@ -1,10 +1,25 @@
-# Linux - System
+# Linux - System Management: Fundamental
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Linux - System](#linux---system)
+- [Linux - System Management: Fundamental](#linux---system-management-fundamental)
+  - [System Fundamental](#system-fundamental)
+  - [System](#system)
   - [`hostnamectl`](#hostnamectl)
-  - [`adduser`](#adduser)
+
+---
+
+## System Fundamental
+
+## System
+
+| CMD         | DECS                                 |
+| ----------- | ------------------------------------ |
+| `uptime`    | how long the system has been running |
+| `uptime -p` | show uptime in pretty format         |
+| `uptime -s` | system up since                      |
+
+|
 
 ---
 
@@ -20,18 +35,4 @@
 | `hostnamectl status` | Show current system hostname and related information. |
 | `set-hostname NAME`  | Set the system hostname to NAME.                      |
 
----
-
-## `adduser`
-
-- `adduser`
-  - add a user to the system
-
-| Command                   | Description                            |
-| ------------------------- | -------------------------------------- |
-| `adduser <username>`      | add a user with username to the system |
-| `adduser <username> sudo` | add a user with username to group sudo |
-
----
-
-[TOP](#linux---system)
+[TOP](#linux---program-fundamental)

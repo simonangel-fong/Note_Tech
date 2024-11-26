@@ -6,9 +6,7 @@
   - [User ID](#user-id)
     - [Types of UIDs](#types-of-uids)
     - [Types of UID for proecess](#types-of-uid-for-proecess)
-  - [Group Configuration Files](#group-configuration-files)
-    - [`/etc/passwd`](#etcpasswd)
-    - [`/etc/shadow`](#etcshadow)
+  - [User Configuration Files: `/etc/passwd`](#user-configuration-files-etcpasswd)
   - [User Management](#user-management)
     - [Add a new user](#add-a-new-user)
     - [Delete a user account](#delete-a-user-account)
@@ -104,9 +102,7 @@
 
 ---
 
-## Group Configuration Files
-
-### `/etc/passwd`
+## User Configuration Files: `/etc/passwd`
 
 - User information, including `UIDs`, is stored in the `/etc/passwd` file.
 
@@ -146,48 +142,6 @@ username:x:UID:GID:comment:home_directory:shell
 
   - The user’s **default login shell** (e.g., `/bin/bash`, `/bin/zsh`).
   - If set to `/sbin/nologin` or `/bin/false`, the user cannot log in interactively.
-
----
-
-### `/etc/shadow`
-
-- Contains user accounts information
-- File permission
-
-```conf
-----------. 1 root root 1426 Nov 19 16:43 /etc/shadow
-```
-
-- Entry format:
-
-```conf
-username:encrypted_password:last_change:min:max:warn:inactive:expire:
-```
-
-- `username`
-  - The name of the user (must match the username in `/etc/passwd`).
-- `encrypted_password`
-  - The **hashed password** for the user.
-  - Commonly hashed using algorithms like MD5, SHA-256, or SHA-512.
-  - Special values:
-    - `*` or `!`: Account is **locked** or **disabled**.
-    - **Empty field** (`::`): **No password** is set.
-- `last_change`
-  - The number of days **since January 1, 1970**, when the password was **last changed**.
-- `min`
-  - Minimum number of days **before** the password can be **changed**.
-- `max`
-  - Maximum number of days the password is **valid before** requiring a change.
-- `warn`
-  - Number of days before password **expiration to warn** the user.
-- `inactive`
-  - Number of days after password expiration before the account is disabled.
-- `expire`
-  - Number of days since January 1, 1970, when the **account** will be **disabled**.
-  - If empty, the account does **not expire**.
-- `reserved`
-
-  - Reserved for **future use** (optional).
 
 ---
 
@@ -319,7 +273,7 @@ tail -1 /etc/passwd
 | Command                       | Desc                                               |
 | ----------------------------- | -------------------------------------------------- |
 | `whoami`                      | Display the effective username                     |
-| `su`                          | Change become superuser                            |
+| `su` / `su -`                 | Change become superuser                            |
 | `su username`                 | Change user ID                                     |
 | `su - username`               | Change user ID and load env                        |
 | `su username -c 'command1'`   | Change user ID without env and execute the command |

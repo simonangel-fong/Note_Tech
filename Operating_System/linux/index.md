@@ -8,42 +8,45 @@
 
 - [Fundamental](./fundamental/fundamental/fundamental.md)
 
-  - [Wildcard](./fundamental/wildcard/wildcard.md)
-  - [I/O](./fundamental/io/io.md)
-  - [Environment Variable](./fundamental/env/env.md)
-  - [Shell](./shell/shell/shell.md)
-
-- Program, Command Management
-
-  - [System](./program/sys.md)
-  - [Process](./program/process/process.md)
-  - [Packages](./program/package/package.md)
-  - [Automation](./program/automation/automation.md)
-
-- File System Management
+- File System
 
   - [File Fundamental](./filesystem/file_fundamental/file_fundamental.md)
-  - [Directory](./filesystem/directory/directory.md)
-    - [Directory Permissions](./filesystem/directory/directory_permission.md)
+  - [File Permission](./filesystem/file_permission/file_permission.md)
+  - [Directory Fundamental](./filesystem/directory/directory.md)
+  - [Directory Permissions](./filesystem/directory/directory_permission.md)
   - [File Operation](./filesystem/file_operation/file_operation.md)
   - [File Content](./filesystem/file_content/file_content.md)
   - [File Editor](./filesystem/file_editor/file_editor.md)
 
-- Disk Management
+- System Configuration and Management
 
-  - [Disk](./disk/disk/disk.md)
+  - [System Mangement](./system/system/system.md)
+  - [Packages Management](./system/package/package.md)
+  - [Process Mangement](./system/process/process.md)
+  - [Automation](./system/automation/automation.md)
+
+- **Kernel & Shell**
+
+  - [Shell Fundamental](./shell/shell_fundamental/shell_fundamental.md)
+  - [Wildcard](./fundamental/wildcard/wildcard.md)
+  - [I/O](./fundamental/io/io.md)
+  - [Environment Variable](./fundamental/env/env.md)
+
+- Hardware Management
+
+  - [Disk](./hardware/disk/disk.md)
+  - [Memory](./hardware/memory/memory.md)
 
 - User and Group Management
 
   - [User](./user_group/user/user.md)
+  - [User Password](./user_group/pwd/pwd.md)
   - [Group](./user_group/group/group.md)
-  - [Password](./user_group/pwd/pwd.md)
-  - [`root` and `sudo`](./user_group/root_sudo/root_sudo.md)
+  - [`root` & `sudo`](./user_group/root_sudo/root_sudo.md)
 
 - Network Management
   - [Network](./network/network/network.md)
   - [Networking](./network/networking/networking.md)
-  - [configure `SSH`](./network/ssh/ssh.md)
 
 ---
 
@@ -55,6 +58,7 @@
   - SMTP Server
     - [Sending Gmail using `Postfix` on `Redhat8`](./project/gmail-postfix-redhat8/gmail-postfix-redhat8.md)
     - [Sending Gmail using `Postfix` on `Ubuntu24`](./project/gmail-postfix-ubuntu24/gmail-postfix-ubuntu24.md)
+    - [configure `SSH`](./network/ssh/ssh.md)
 
 ---
 
