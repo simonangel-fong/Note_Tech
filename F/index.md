@@ -12,6 +12,9 @@
   - [Wk06 - Server-Side Languages](./web_security/wk06.md)
   - [Wk07 - SQL Injection & Prevention](./web_security/wk07.md)
   - [Wk08 - Sessions, Cookies & Authentication](./web_security/wk08.md)
+  - [Wk09 - Web Application Firewalls](./web_security/wk09.md)
+  - [Wk10 - Automation](./web_security/wk10.md)
+  - [Wk11 - Social Media & The Dark Web](./web_security/wk11.md)
 
 - Securing Servers
 

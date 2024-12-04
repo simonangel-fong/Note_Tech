@@ -1,10 +1,10 @@
-# Linux - Network
+# Linux - STFP
 
 [Back](../../index.md)
 
 ---
 
-- [Linux - Network](#linux---network)
+- [Linux - STFP](#linux---stfp)
   - [Network](#network)
   - [Tranfer File over the network](#tranfer-file-over-the-network)
     - [Example: Upload and download file using `STFP`](#example-upload-and-download-file-using-stfp)

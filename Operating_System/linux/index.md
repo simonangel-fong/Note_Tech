@@ -8,7 +8,7 @@
 
 - [Fundamental](./fundamental/fundamental/fundamental.md)
 
-- File System
+- **File System**
 
   - [File Fundamental](./filesystem/file_fundamental/file_fundamental.md)
   - [File Permission](./filesystem/file_permission/file_permission.md)
@@ -20,10 +20,11 @@
 
 - System Configuration and Management
 
-  - [System Mangement](./system/system/system.md)
   - [Packages Management](./system/package/package.md)
+  - [System Mangement](./system/system/system.md)
   - [Process Mangement](./system/process/process.md)
   - [Automation](./system/automation/automation.md)
+  - [Log](./system/log/log.md)
 
 - **Kernel & Shell**
 
@@ -45,8 +46,9 @@
   - [`root` & `sudo`](./user_group/root_sudo/root_sudo.md)
 
 - Network Management
-  - [Network](./network/network/network.md)
+
   - [Networking](./network/networking/networking.md)
+  - [`ssh`](./network/ssh/ssh.md)
 
 ---
 
@@ -58,7 +60,7 @@
   - SMTP Server
     - [Sending Gmail using `Postfix` on `Redhat8`](./project/gmail-postfix-redhat8/gmail-postfix-redhat8.md)
     - [Sending Gmail using `Postfix` on `Ubuntu24`](./project/gmail-postfix-ubuntu24/gmail-postfix-ubuntu24.md)
-    - [configure `SSH`](./network/ssh/ssh.md)
+    - [STFP](./project/stfp/stfp.md)
 
 ---
 

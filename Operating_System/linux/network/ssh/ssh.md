@@ -1,144 +1,145 @@
-# Establish `SSH`
+# Linux - Network: SSH
 
 [Back](../../index.md)
 
-- [Establish `SSH`](#establish-ssh)
-  - [SSH on Ubuntu](#ssh-on-ubuntu)
-    - [Install Openssh](#install-openssh)
-  - [SSH On Oracle Linux](#ssh-on-oracle-linux)
+- [Linux - Network: SSH](#linux---network-ssh)
+  - [SSH](#ssh)
+    - [`ssh` Connection](#ssh-connection)
+    - [`scp` File Transfer](#scp-file-transfer)
+    - [`sftp` File Transfer](#sftp-file-transfer)
+  - [SSH Configurations](#ssh-configurations)
+    - [Common Configuration](#common-configuration)
+    - [Idle Timeout Interval](#idle-timeout-interval)
+    - [Disable root login](#disable-root-login)
+    - [Disable Empty Passwords](#disable-empty-passwords)
+    - [Limit Users' SSH Access](#limit-users-ssh-access)
+    - [Using a Custom Port Number](#using-a-custom-port-number)
+    - [Access without Password (`SSH-Keys`)](#access-without-password-ssh-keys)
+    - [Lab: Access with `ssh-keys`](#lab-access-with-ssh-keys)
+  - [`openssh` Package](#openssh-package)
     - [`openssh-server`](#openssh-server)
-    - [Verify `openssh-server` Installation](#verify-openssh-server-installation)
-    - [Start, Enable `sshd` Deamon](#start-enable-sshd-deamon)
-    - [Configuration Files](#configuration-files)
-    - [`sshd` Deamon](#sshd-deamon)
-    - [Firewall Configuration](#firewall-configuration)
-    - [Lab: Create a SSH using password authentication](#lab-create-a-ssh-using-password-authentication)
-      - [Server side](#server-side)
-      - [Client](#client)
-    - [Lab: Create a SSH using Key-pair Authentication](#lab-create-a-ssh-using-key-pair-authentication)
-    - [Lab: Custom SSH port](#lab-custom-ssh-port)
+    - [Lab: Install `openssh` on Redhat](#lab-install-openssh-on-redhat)
+    - [Lab: Install `openssh` on Ubuntu](#lab-install-openssh-on-ubuntu)
 
 ---
 
-## SSH on Ubuntu
+## SSH
 
-- Default port: 22
+- `SSH (Secure Shell)`
+
+  - a **cryptographic network protocol** that allows secure remote login and other secure network services over an unsecured network.
+  - widely used in Linux to manage servers, transfer files, and perform administrative tasks.
+  - Port number: 22
+
+- `OpenSSH` package
+
+  - a free, open-source suite of tools that implements the `Secure Shell (SSH)` protocol.
+  - provides the functionality for secure **remote login**, **file transfer**, and **encrypted communication** over untrusted networks.
+
+- Components of the `OpenSSH` Package
+  - `SSH Server (sshd)`:
+    - The **server daemon** that **listens** for incoming SSH connections.
+    - Configuration file: `/etc/ssh/sshd_config`.
+  - `SSH Client (ssh)`:
+    - The **command-line client** used to **initiate** SSH connections to remote servers.
+    - Configuration file: `~/.ssh/config`.
+  - **Secure File Transfer Tools**:
+    - `scp`: `Secure Copy Protocol` for transferring files between systems.
+    - `sftp`: `Secure File Transfer Protocol`, an interactive file transfer **client**.
+  - **Key Management Tools**:
+    - `ssh-keygen`: **Generates** SSH **key pairs** for authentication.
+    - `ssh-copy-id`: **Copies** `public keys` to a remote host for `key-based authentication`.
+    - `ssh-agent`: A **key management agent** for managing `private keys` during a session.
+    - `ssh-add`: **Adds** private keys to the `ssh-agent`.
+    - `sshd-keygen`: **Generates** host keys for the SSH **server**.
+    - `ssh-keyscan`: **Gathers** `public keys` from remote hosts.
+
+---
+
+### `ssh` Connection
 
 | Command                  | Description                                           |
 | ------------------------ | ----------------------------------------------------- |
 | `ssh user@ip`            | Connect remote instance using username and ip address |
 | `ssh user@ip -p portNum` | SSH connection using custom port number               |
 
-- Check whether SSH untility is on Ubuntu
+---
 
-![ssh](./pic/ssh01.png)
+### `scp` File Transfer
+
+| Command                                               | Description                                         |
+| ----------------------------------------------------- | --------------------------------------------------- |
+| `scp local_file user@remote_host:/path/`              | Copy a File from Local to Remote                    |
+| `scp -i key_file local_file user@remote_host:/path/`  | Use a specific private key file for authentication. |
+| `scp -P pnum local_file user@remote_host:/path/`      | Specify a Port                                      |
+| `scp -l 500 localfile user@server:/path/`             | Limit Bandwidth                                     |
+| `scp -C gz_file username@remote_host:/path/`          | Enable compression                                  |
+| `scp -r /local/dir user@remote_host:/path/`           | Copy a Directory                                    |
+| `scp user1@server1:/remote/file user2@server2:/path/` | Copy a File Between Two Remote Hosts                |
+| `scp user@remote_host:/remote/file /local/path/`      | Copy a File from Remote to Local                    |
 
 ---
 
-### Install Openssh
+### `sftp` File Transfer
 
-- Intall openssh-server
+- `sftp` provides an interactive session
+- Start an SFTP Session: `sftp username@remote_host`
 
-```sh
-sudo apt-get -y update  # update packages
-# update the local package index. It downloads package details from all set sources to refresh the package cache.
-# sudo: Superuser Do,
-# apt: package manager
-# sudo apt: allows a root user to perform operations in the apt repository.
-# sudo apt update: downloads package details from all set sources which are commonly listed in the /etc/apt/sources.list file and other files found in the /etc/apt/sources.list.d directory. As a result, apt package cache will be updated ensuring your system has the latest package information.
-sudo apt-get -y install openssh-server  # in
-```
+  - If no `user@hostname` is specified, the command defaults to a local session.
 
-- Check and enable ssh
+| Command                                      | Desc                                                   |
+| -------------------------------------------- | ------------------------------------------------------ |
+| `sftp username@remote_host`                  | Start a session                                        |
+| `sftp -P port username@remote_host`          | Specify the SSH port                                   |
+| `sftp -i identity_file username@remote_host` | Specify a private key file for authentication          |
+| `sftp -o option=value username@remote_host`  | Pass SSH options                                       |
+| `sftp -b batchfile username@remote_host`     | Use a batch file for non-interactive file transfers.   |
+| `sftp -C username@remote_host`               | Enable compression for faster transfer of large files. |
 
-```sh
-sudo systemctl status ssh   # check status
-sudo systemctl enable ssh --now   # enable and start the ssh service immediately
-```
+- Local Command
 
-- Test for SSH: Connect the local host using SSH
+| Command          | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `lpwd`           | Show the current working directory on the local machine.  |
+| `lcd /local/dir` | Change the working directory on the local machine.        |
+| `lls /local/dir` | List files in the current directory on the local machine. |
+| `!command`       | Execute a shell command on the local machine (e.g., !ls). |
 
-```sh
-ssh localhost   # build connection to localhost using SSH, pwd is required.
-```
+- Remote Command
 
----
-
-- Get the public url
-
-```sh
-curl ifconfig.me
-```
-
-![ssh](./pic/ssh02.png)
-
-- Connect to remote using Git Bash terminal
-
-```sh
-ssh username@ip
-ssh oracle@142.214.88.41
-```
+| Command                        | Description                                                                       |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| `get /remote/file /local/dir/` | **Download** a file from the remote server to the local machine.                  |
+| `mget /remote/* /local/dir/`   | **Download multiple files** from the remote server (use wildcards, e.g., \*.txt). |
+| `put /local/file /remote/dir/` | **Upload** a file from the local machine to the remote server.                    |
+| `mput /local/* /remote/dir/`   | **Upload multiple** files to the remote server (use wildcards).                   |
+| `pwd`                          | Show the current working directory on the remote server.                          |
+| `cd /remote/dir`               | Change the working directory on the remote server.                                |
+| `ls /remote/dir`               | List files in the current directory on the remote server.                         |
+| `mkdir remote_dir`             | Create a directory on the remote server.                                          |
+| `rmdir remote_dir`             | Remove a directory on the remote server.                                          |
+| `rm remote_file`               | Delete a file on the remote server.                                               |
+| `rename remote_file`           | Rename a file on the remote server.                                               |
 
 ---
 
-## SSH On Oracle Linux
+## SSH Configurations
 
-- When the physical connection with a system is required, the remote access can be enabled using `SSH`, aka `Secure Shell`.
-
-- Server (Oracle Linux 8):
-  - the machine to which the user wants to connect
-- Client (Windows 11):
-  - the machine from which the user is connecting
-
----
-
-### `openssh-server`
-
-- `openssh-server`
-  - a suite of **network connectivity tools** that provides secure communications between systems.
-- The tools include:
-
-  - `scp` - Secure file copying. (Deprecated in Oracle Linux 9)
-  - `sftp` - Secure **File Transfer** Protocol (FTP).
-  - `ssh` - Secure shell to log on to or run a command on a remote system.
-  - `sshd` - **Daemon** that listens for the OpenSSH services.
-  - `ssh-keygen` - Creates RSA authentication **keys**.
-
-- Doc:
-  - https://docs.oracle.com/en/operating-systems/oracle-linux/openssh/openssh-AboutOpenSSH.html#about-openssh
-
----
-
-### Verify `openssh-server` Installation
-
-- By default, openssh-server is installed out of the box.
-
-```sh
-# list packages to verify installation
-dnf list installed | grep ssh
-
-# if needed to install
-sudo dnf install openssh-server
-```
-
----
-
-### Start, Enable `sshd` Deamon
-
-```sh
-sudo systemctl start sshd   # Start the sshd service
-sudo systemctl enable sshd    # configure it to start following a system reboot
-```
-
----
-
-### Configuration Files
+- Configuration Files
 
 - Location:
+
   - server-side settings: `/etc/ssh/sshd_config`
   - client-side settings: `ssh_config`
 
----
+- To configure ssh:
+  - 1. Login as `root`
+  - 2. edit the configuration file in remote server `/etc/ssh/sshd_config`
+  - 3. Restart `sshd` service: `systemctl restart sshd`
+
+![conf01](./pic/conf01.png)
+
+### Common Configuration
 
 - `Port`
 
@@ -167,7 +168,189 @@ sudo systemctl enable sshd    # configure it to start following a system reboot
 
 ---
 
-### `sshd` Deamon
+### Idle Timeout Interval
+
+- To avoid having an unattented SSH session
+  - Once the interval has passed, the idle user will be automatically logged out.
+- Login as `root`
+- configuration file in remote server `/etc/ssh/sshd_config`
+  - Restart `sshd` service: `systemctl restart sshd`
+
+```conf
+# sets the timeout interval for an SSH session
+# 600 secs = 10 min
+ClientAliveInterval 600
+# the number of client alive messages that can be sent before the client disconnects and the session is terminated
+ClientAliveCountMax 0
+```
+
+---
+
+### Disable root login
+
+- It disables any user to login to the system with root account.
+- A secure measure to take for the first time setup.
+
+```conf
+# sets the timeout interval for an SSH session
+PermitRootLogin no
+```
+
+![conf01](./pic/conf02.png)
+
+---
+
+### Disable Empty Passwords
+
+- Prevent remote login from accounts with empty passwords.
+
+```conf
+PermitEmptyPasswords no
+```
+
+---
+
+### Limit Users' SSH Access
+
+- To limit the only users who need remote access
+
+```conf
+# AllowUsers user1 user2
+```
+
+---
+
+### Using a Custom Port Number
+
+- To secure the connection by using a custom port
+
+```conf
+Port 22
+```
+
+- Client access:
+  - `ssh user@ip -p portNum`
+
+---
+
+### Access without Password (`SSH-Keys`)
+
+- Advantage:
+
+  - Avoid repetitive login
+  - Enable automation through script
+
+- Keys are generated at **user** level
+
+  - common user
+  - root
+
+- Steps:
+  - 1. Generate the key at Client side.
+    - By default, the key is saved at the user level
+      - private key: `~/.ssh/key_name`
+      - public key: `~/.ssh/key_name.pub`
+  - 2. Copy the key from Client to Server
+    - The key is copy to the remote server
+    - If the server login as the root, then the key will be placed in the `/root/.ssh/authorized_keys`
+  - 3. Login to server from client.
+
+---
+
+### Lab: Access with `ssh-keys`
+
+- Architecture:
+
+  - Client: Redhat 8
+  - Server: Ubuntu22
+
+```sh
+# Generate the key
+ssh-keygen
+# Generating public/private rsa key pair.
+# Enter file in which to save the key (/home/rheladmin/.ssh/id_rsa):
+# Enter passphrase (empty for no passphrase):
+# Enter same passphrase again:
+# Your identification has been saved in /home/rheladmin/.ssh/id_rsa.
+# Your public key has been saved in /home/rheladmin/.ssh/id_rsa.pub.
+# The key fingerprint is:
+
+# copy the key
+ssh-copy-id root@server_ip
+# /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/rheladmin/.ssh/id_rsa.pub"
+# /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+# /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+# root@server_ip's password:
+
+# Number of key(s) added: 1
+
+# Now try logging into the machine, with:   "ssh 'root@server_ip'"
+# and check to make sure that only the key(s) you wanted were added.
+
+# login without password
+ssh root@server_ip
+ssh root@192.168.204.156
+```
+
+---
+
+## `openssh` Package
+
+- Doc:
+  - https://docs.oracle.com/en/operating-systems/oracle-linux/openssh/openssh-AboutOpenSSH.html#about-openssh
+
+| Command                                 | Description                            |
+| --------------------------------------- | -------------------------------------- |
+| `rpm -qa \| grep openssh`               | Check if the openssh package installed |
+| `rpm -qa \| grep openssh`               | Check if the openssh package installed |
+| `dnf list installed \| grep openssh`    | Check if the openssh package installed |
+| `apt list --installed \| grep openssh`  | Check if the openssh package installed |
+| `dnf install -y openssh`                | Install openssh package                |
+| `apt install -y openssh`                | Install openssh package                |
+| `systemctl list-units \| grep ssh`      | Check the ssh service status           |
+| `systemctl list-unit-files \| grep ssh` | Check the ssh service unit file        |
+
+---
+
+### `openssh-server`
+
+- `openssh-server`
+  - a suite of **network connectivity tools** that provides secure communications between systems.
+- The tools include:
+
+  - `scp` - Secure file copying. (Deprecated in Oracle Linux 9)
+  - `sftp` - Secure **File Transfer** Protocol (FTP).
+  - `ssh` - Secure shell to log on to or run a command on a remote system.
+  - `sshd` - **Daemon** that listens for the OpenSSH services.
+  - `ssh-keygen` - Creates RSA authentication **keys**.
+
+---
+
+### Lab: Install `openssh` on Redhat
+
+- By default, openssh-server is installed out of the box.
+- Install `openssh-server`
+
+```sh
+# list packages to verify installation
+dnf list installed | grep ssh
+
+# if needed to install
+sudo dnf install openssh-server
+```
+
+---
+
+- Start, Enable `sshd` Deamon
+
+```sh
+sudo systemctl start sshd   # Start the sshd service
+sudo systemctl enable sshd    # configure it to start following a system reboot
+```
+
+---
+
+- `sshd` Deamon
 
 ```sh
 # start
@@ -180,7 +363,7 @@ sudo systemctl status sshd
 
 ---
 
-### Firewall Configuration
+- Firewall Configuration
 
 - Configure the firewall to allow ssh connections.
   - allowing the port of SSH
@@ -192,188 +375,52 @@ sudo firewall-cmd --permanent --add-service=ssh
 
 # reload the firewall to enable the new settings
 sudo firewall-cmd --reload
-```
-
----
-
-### Lab: Create a SSH using password authentication
-
-#### Server side
-
-```sh
-# list packages to verify installation
-dnf list installed | grep ssh
-
-sudo systemctl start sshd   # start deamon
-```
-
-![ssh](./pic/ssh01.png)
-
----
-
-- Disable root
-
-```sh
-sudo vi /etc/ssh/sshd_config
-```
-
-```conf
-PermitRootLogin no
-```
-
-![ssh](./pic/ssh02.png)
-
-![ssh](./pic/ssh03.png)
-
-- Update deamon
-
-```sh
-sudo systemctl restart sshd   # restart deamon after new configuration
-sudo systemctl status sshd
-```
-
-![ssh](./pic/ssh04.png)
-
-- Update firewall
-
-```sh
-sudo firewall-cmd --permanent --add-service=ssh
-sudo firewall-cmd --reload
 sudo firewall-cmd --list-all
 ```
 
-![ssh](./pic/ssh05.png)
-
-- Get the IP address
-
-![ssh](./pic/ssh06.png)
-
 ---
 
-#### Client
+### Lab: Install `openssh` on Ubuntu
 
-- OS: Window
-- Terminal: Git bash
-
-- Configure hosts on Client
-
-![ssh](./pic/ssh07.png)
-
-![ssh](./pic/ssh08.png)
-
-![ssh](./pic/ssh09.png)
+- Intall openssh-server
 
 ```sh
-# verify ssh
-ssh -V
-# OpenSSH_9.1p1, OpenSSL 1.1.1s  1 Nov 2022
-
-ssh user_name@ip_address -p 22
+sudo apt-get -y update  # update packages
+# update the local package index. It downloads package details from all set sources to refresh the package cache.
+# sudo: Superuser Do,
+# apt: package manager
+# sudo apt: allows a root user to perform operations in the apt repository.
+# sudo apt update: downloads package details from all set sources which are commonly listed in the /etc/apt/sources.list file and other files found in the /etc/apt/sources.list.d directory. As a result, apt package cache will be updated ensuring your system has the latest package information.
+sudo apt-get -y install openssh-server  # install
 ```
 
-![ssh](./pic/ssh10.png)
-
----
-
-### Lab: Create a SSH using Key-pair Authentication
-
-- Client:
-  - Create private key + public key
-  - Keep the private key
-- Server:
-  - Keep the public key
-  - Verfity the private key of a connection request
-  - path of copied public key:
-    - `~/.ssh.authorized_keys`
-
----
-
-- Client Side
+- Check and enable ssh
 
 ```sh
-ssh-keygen    # generate rsa key pair
-
-ls -al ~/.ssh   # confirm
+sudo systemctl status ssh   # check status
+sudo systemctl enable ssh --now   # enable and start the ssh service immediately
 ```
 
-![ssh](./pic/ssh11.png)
+- Test for SSH: Connect the local host using SSH
 
 ```sh
-ssh-copy-id -i ~/.ssh/key_file.pub user_name@ip_address   # copy pulic key to server side
-
-# Connect to the remove server using key-pair
-ssh user_name@ip_address -i ~/.ssh/key_file
+ssh localhost   # build connection to localhost using SSH, pwd is required.
 ```
-
-![ssh](./pic/ssh12.png)
 
 ---
 
-- Disable password authentication after enabling key-paire authentication
+- Get the public url
 
 ```sh
-sudo vi /etc/ssh/sshd_config
+curl ifconfig.me
 ```
 
-```conf
-PasswordAuthentication no
-PubkeyAuthentication yes
-```
-
-![ssh](./pic/ssh13.png)
-
----
-
-- Restart deamon and exit the current session
-  - Reconnect to the remote server using password
-    - Connect deney
-  - Reconnect to the remote server using key-pair
-    - Connect success
+- Connect to remote
 
 ```sh
-sudo systemctl restart sshd
-exit
-
-ssh user_name@ip_address
-# permission denied
-
-ssh user_name@ip_address -i ~/.ssh/key_file
-# success
-```
-
-![ssh](./pic/ssh14.png)
-
----
-
-### Lab: Custom SSH port
-
-- update ssh configuration file
-
-```conf
-Port 12345
+ssh username@ip
 ```
 
 ---
 
-```sh
-# update deamon
-sudo systemctl restart sshd   # restart deamon after new configuration
-sudo systemctl status sshd    # return status
-
-# update firewall
-sudo firewall-cmd --add-port=12345/tcp --permanent
-# update selinux
-semanage port -a -t ssh_port -p tcp 12345
-```
-
----
-
-- Client
-
-```sh
-ssh user_name@ip_address -p 12345
-```
-
----
-
-[TOP](#establish-ssh)
+[TOP](#linux---network-ssh)

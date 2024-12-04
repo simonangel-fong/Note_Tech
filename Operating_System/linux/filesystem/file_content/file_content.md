@@ -98,6 +98,7 @@ grep -i rheladmin /etc/passwd | cut -d: -f1,5 | sort | tr ":" " " | column -t
 | `sort -kF file`        | sort via a key. F: the field number |
 | `sort -r file`         | sort in reverse order               |
 | `sort -u file`         | sort unique                         |
+| `sort -n file`         | sort by string numerical value      |
 
 - Example
 

@@ -64,13 +64,24 @@ $ ls -l
 
 ## File type
 
-- In Linux, the first character represents whether the file is a directory, file, link file, etc.
-
-  - `d`: directory
-  - `-`: file
-  - `l`: link file / symbolic link
-  - `b`: 则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；
-  - `c` 则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)。
+- `-`: Regular file
+- `d`: Directory
+- `l`: Symbolic link
+- `c`:
+  - `Character special file` / `Character device files`
+  - provide access to devices that transfer data character by character
+  - Character devices example:
+    - audio or graphics cards,
+    - input devices like keyboard and mouse.
+- `b`:
+  - `Block special file`
+    - a special type of file that provides an interface to block devices, such as **hard drives**, **SSDs**, **USB drives**, and optical drives.
+    - `Block devices` handle data in **fixed-size chunks** or "**blocks**" (usually `512` bytes or more), making them suitable for storage operations.
+- `n`: **Network file**
+  - refers to a file or resource **located on a remote system** but **accessed over a network** as though it were local.
+  - commonly **accessed via protocols** like `NFS` (`Network File System`), `SMB` (`Server Message Block`), or similar technologies that enable file sharing over a network.
+- `p`: FIFO
+- `s`: Socket
 
 ---
 
