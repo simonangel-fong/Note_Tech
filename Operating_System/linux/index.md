@@ -45,10 +45,15 @@
   - [Group](./user_group/group/group.md)
   - [`root` & `sudo`](./user_group/root_sudo/root_sudo.md)
 
-- Network Management
+- **Network Management**
 
-  - [Networking](./network/networking/networking.md)
-  - [`ssh`](./network/ssh/ssh.md)
+  - [Network Configuration](./network/network_config/network_config.md)
+    - [Package `NetworkManager`](./network/NetworkManager/NetworkManager.md)
+    - [Package `iproute`](./network/iproute/iproute.md)
+    - [Package `net-tools`(deprecated)](./network/net-tools/net-tools.md)
+  - [Network Tools](./network/network_tool/network_tool.md)
+    - [Package `nmap`](./network/nmap/nmap.md)
+  - [SSh](./network/ssh/ssh.md)
 
 ---
 
