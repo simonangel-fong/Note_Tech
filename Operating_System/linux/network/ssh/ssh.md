@@ -5,7 +5,6 @@
 - [Linux - Network: SSH](#linux---network-ssh)
   - [SSH](#ssh)
     - [`ssh` Connection](#ssh-connection)
-    - [`scp` File Transfer](#scp-file-transfer)
     - [`sftp` File Transfer](#sftp-file-transfer)
   - [SSH Configurations](#ssh-configurations)
     - [Common Configuration](#common-configuration)
@@ -62,21 +61,6 @@
 | ------------------------ | ----------------------------------------------------- |
 | `ssh user@ip`            | Connect remote instance using username and ip address |
 | `ssh user@ip -p portNum` | SSH connection using custom port number               |
-
----
-
-### `scp` File Transfer
-
-| Command                                               | Description                                         |
-| ----------------------------------------------------- | --------------------------------------------------- |
-| `scp local_file user@remote_host:/path/`              | Copy a File from Local to Remote                    |
-| `scp -i key_file local_file user@remote_host:/path/`  | Use a specific private key file for authentication. |
-| `scp -P pnum local_file user@remote_host:/path/`      | Specify a Port                                      |
-| `scp -l 500 localfile user@server:/path/`             | Limit Bandwidth                                     |
-| `scp -C gz_file username@remote_host:/path/`          | Enable compression                                  |
-| `scp -r /local/dir user@remote_host:/path/`           | Copy a Directory                                    |
-| `scp user1@server1:/remote/file user2@server2:/path/` | Copy a File Between Two Remote Hosts                |
-| `scp user@remote_host:/remote/file /local/path/`      | Copy a File from Remote to Local                    |
 
 ---
 

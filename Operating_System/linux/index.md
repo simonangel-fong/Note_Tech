@@ -53,7 +53,10 @@
     - [Package `net-tools`(deprecated)](./network/net-tools/net-tools.md)
   - [Network Tools](./network/network_tool/network_tool.md)
     - [Package `nmap`](./network/nmap/nmap.md)
-  - [SSh](./network/ssh/ssh.md)
+  - [SSH](./network/ssh/ssh.md)
+  - [SCP](./network/scp/scp.md)
+  - [FTP](./network/ftp/ftp.md)
+  - [STFP](./project/stfp/stfp.md)
 
 ---
 
@@ -65,7 +68,6 @@
   - SMTP Server
     - [Sending Gmail using `Postfix` on `Redhat8`](./project/gmail-postfix-redhat8/gmail-postfix-redhat8.md)
     - [Sending Gmail using `Postfix` on `Ubuntu24`](./project/gmail-postfix-ubuntu24/gmail-postfix-ubuntu24.md)
-    - [STFP](./project/stfp/stfp.md)
 
 ---
 

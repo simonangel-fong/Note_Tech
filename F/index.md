@@ -57,3 +57,4 @@
   - [Wk05](./network_mgnt/wk05.md)
   - [Wk08](./network_mgnt/wk08.md)
   - [wk10 - FTP/SFTP/TFTP](./network_mgnt/wk10.md)
+  - [snmp](./network_mgnt/snmp.md)
