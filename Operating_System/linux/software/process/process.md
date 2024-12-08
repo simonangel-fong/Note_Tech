@@ -1,11 +1,10 @@
-# Linux - Process
+# Linux - Software Management: Process
 
 [Back](../../index.md)
 
----
-
-- [Linux - Process](#linux---process)
+- [Linux - Software Management: Process](#linux---software-management-process)
   - [Terminologies](#terminologies)
+    - [`daemon` vs `service`](#daemon-vs-service)
   - [Process](#process)
     - [Process states](#process-states)
   - [`top`: Display processes](#top-display-processes)
@@ -73,9 +72,10 @@
 
   - a **background process** that **runs continuously** to perform specific tasks or services.
   - Daemons usually start at boot time and do not interact directly with users.
-  - e.g.,
-    - `sshd`: Handles SSH connections.
-    - `cron`: Schedules and runs jobs at specified times.
+  - Often have names ending with a `d`. e.g.,
+    - `sshd`: Handles incoming SSH connections.
+    - `httpd`: Manages web server requests.
+    - `crond`: Schedules tasks to run at specified times.
 
 - `Threads`
 
@@ -103,6 +103,22 @@
   - a **systemd utility** that is responsible for controlling the `systemd` system and service manage.
   - Services are controlled by `systemctl`
 
+---
+
+### `daemon` vs `service`
+
+- A `service` can consist of one or more `daemons` or other `processes` working together.
+
+| Aspect     | Daemon                                          | Service                                       |
+| ---------- | ----------------------------------------------- | --------------------------------------------- |
+| Definition | A background process performing specific tasks. | A system-wide functionality or feature.       |
+| Relation   | A daemon often underpins a service.             | A service may consist of one or more daemons. |
+| Management | Managed as processes in the OS.                 | Managed via init systems like `systemctl`.    |
+| Examples   | sshd, httpd, crond                              | "SSH service", "Web Server service"           |
+
+- Think of a `daemon` as a **worker** and a `service` as the **job** they perform. For example:
+  - Daemon: `httpd` (Apache daemon).
+  - Service: The **web server functionality** provided by Apache.
 
 ---
 
@@ -520,3 +536,7 @@ lsof long_running_task.sh
 # COMMAND     PID      USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
 # long_runn 10407 rheladmin  255r   REG  253,0      373 19764850 long_running_task.sh
 ```
+
+---
+
+[TOP](#linux---software-management-process)

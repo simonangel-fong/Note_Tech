@@ -1,8 +1,9 @@
-# Linux - System Management
+# Linux - Software Management: Service
 
 [Back](../../index.md)
 
-- [Linux - System Management](#linux---system-management)
+- [Linux - Software Management: Service](#linux---software-management-service)
+  - [Service](#service)
   - [`systemd`](#systemd)
     - [Unit File](#unit-file)
     - [`systemctl` and `service` Command](#systemctl-and-service-command)
@@ -23,9 +24,39 @@
     - [Enable/Disable `nginx`](#enabledisable-nginx)
     - [Mask/Unmask `nginx`](#maskunmask-nginx)
     - [Clear up](#clear-up)
-  - [System Information](#system-information)
-    - [System Time](#system-time)
-      - [Lab: Configure `chronyd`](#lab-configure-chronyd)
+  - [Service Log](#service-log)
+  - [`chronyd`: System Time Package](#chronyd-system-time-package)
+    - [Lab: Configure `chronyd`](#lab-configure-chronyd)
+
+---
+
+## Service
+
+- `service`
+
+  - a `background process` that performs **specific system tasks** or provides a particular **functionality**.
+  - These services are typically **started automatically** during the system boot process and continue running in the background, waiting for requests or events to respond to.
+
+- Features
+
+  - **Background Process**:
+    - Runs **without user interaction**.
+  - **Managed by System Daemons**:
+    - Handled by init systems like systemd, SysVinit, or Upstart.
+  - **Essential for System Functionality**:
+    - Examples include network management (NetworkManager), file sharing (NFS), and web servers (httpd).
+
+- Common Types of Linux Services
+  - Networking:
+    - `network`, `ssh`, `firewalld`
+  - Web Servers:
+    - `apache2`, `nginx`
+  - Database Servers:
+    - `mysqld`, `postgresql`
+  - File Sharing:
+    - `nfs`, `smb`
+  - System Tools:
+    - `cron`, `syslog`
 
 ---
 
@@ -497,20 +528,15 @@ ll /etc/systemd/system/ | grep nginx*
 
 ---
 
-## System Information
+## Service Log
 
-| Command              | Description                                           |
-| -------------------- | ----------------------------------------------------- |
-| `uptime`             | how long the system has been running                  |
-| `uptime -p`          | show uptime in pretty format                          |
-| `uptime -s`          | system up since                                       |
-| `hostnamectl`        | query the system hostname                             |
-| `hostnamectl status` | Show current system hostname and related information. |
-| `set-hostname NAME`  | Set the system hostname to NAME.                      |
+```sh
+journalctl -u service_name
+```
 
 ---
 
-### System Time
+## `chronyd`: System Time Package
 
 - `chronyd`
 
@@ -557,7 +583,7 @@ ll /etc/systemd/system/ | grep nginx*
 
 ---
 
-#### Lab: Configure `chronyd`
+### Lab: Configure `chronyd`
 
 ```sh
 su -
@@ -600,4 +626,4 @@ systemctl status chronyd
 
 ---
 
-[TOP](#linux---system-management)
+[TOP](#linux---software-management-service)

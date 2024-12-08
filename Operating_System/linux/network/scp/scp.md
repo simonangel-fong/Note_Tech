@@ -3,26 +3,26 @@
 [Back](../../index.md)
 
 - [Linux - Network: SCP](#linux---network-scp)
-  - [SCP](#scp)
-    - [Command](#command)
+  - [SCP Protocol](#scp-protocol)
+  - [Package and Command](#package-and-command)
   - [Lab: Transfer File vis `SCP`](#lab-transfer-file-vis-scp)
 
 ---
 
-## SCP
+## SCP Protocol
 
 - `scp(Secure Copy Protocol)`
 
-  - a protocol used to securely copy files between a local and a remote host or between two remote hosts.
+  - a protocol used to **securely copy files** between a local and a remote host or between two remote hosts.
   - uses `SSH (Secure Shell)` for data transfer and provides encryption to ensure the confidentiality and integrity of the data being transferred.
 
 - Port: `22`
 
-- Package `openssh`
-
 ---
 
-### Command
+## Package and Command
+
+- Package `openssh`
 
 | Command                                               | Description                                         |
 | ----------------------------------------------------- | --------------------------------------------------- |
@@ -61,3 +61,7 @@ scp /home/rheladmin/scp_file scpuser@192.168.204.153:/home/scpuser/
 # scp_file                                      100%   32    10.6KB/s   00:00
 
 ```
+
+---
+
+[]

@@ -3,9 +3,13 @@
 [Back](../../index.md)
 
 - [Linux - Network: SSH](#linux---network-ssh)
-  - [SSH](#ssh)
-    - [`ssh` Connection](#ssh-connection)
-    - [`sftp` File Transfer](#sftp-file-transfer)
+  - [SSH Protocol](#ssh-protocol)
+  - [`openssh` Package](#openssh-package)
+    - [Components](#components)
+    - [Package Commands](#package-commands)
+    - [Service Commands](#service-commands)
+    - [Configuration Files](#configuration-files)
+    - [Common Command](#common-command)
   - [SSH Configurations](#ssh-configurations)
     - [Common Configuration](#common-configuration)
     - [Idle Timeout Interval](#idle-timeout-interval)
@@ -15,14 +19,12 @@
     - [Using a Custom Port Number](#using-a-custom-port-number)
     - [Access without Password (`SSH-Keys`)](#access-without-password-ssh-keys)
     - [Lab: Access with `ssh-keys`](#lab-access-with-ssh-keys)
-  - [`openssh` Package](#openssh-package)
-    - [`openssh-server`](#openssh-server)
-    - [Lab: Install `openssh` on Redhat](#lab-install-openssh-on-redhat)
-    - [Lab: Install `openssh` on Ubuntu](#lab-install-openssh-on-ubuntu)
+  - [Lab: Install `openssh` on Redhat](#lab-install-openssh-on-redhat)
+  - [Lab: Install `openssh` on Ubuntu](#lab-install-openssh-on-ubuntu)
 
 ---
 
-## SSH
+## SSH Protocol
 
 - `SSH (Secure Shell)`
 
@@ -30,80 +32,109 @@
   - widely used in Linux to manage servers, transfer files, and perform administrative tasks.
   - Port number: 22
 
-- `OpenSSH` package
+---
 
-  - a free, open-source suite of tools that implements the `Secure Shell (SSH)` protocol.
-  - provides the functionality for secure **remote login**, **file transfer**, and **encrypted communication** over untrusted networks.
+## `openssh` Package
 
-- Components of the `OpenSSH` Package
-  - `SSH Server (sshd)`:
-    - The **server daemon** that **listens** for incoming SSH connections.
-    - Configuration file: `/etc/ssh/sshd_config`.
-  - `SSH Client (ssh)`:
-    - The **command-line client** used to **initiate** SSH connections to remote servers.
-    - Configuration file: `~/.ssh/config`.
-  - **Secure File Transfer Tools**:
-    - `scp`: `Secure Copy Protocol` for transferring files between systems.
-    - `sftp`: `Secure File Transfer Protocol`, an interactive file transfer **client**.
-  - **Key Management Tools**:
-    - `ssh-keygen`: **Generates** SSH **key pairs** for authentication.
-    - `ssh-copy-id`: **Copies** `public keys` to a remote host for `key-based authentication`.
-    - `ssh-agent`: A **key management agent** for managing `private keys` during a session.
-    - `ssh-add`: **Adds** private keys to the `ssh-agent`.
-    - `sshd-keygen`: **Generates** host keys for the SSH **server**.
-    - `ssh-keyscan`: **Gathers** `public keys` from remote hosts.
+- `openssh`
+
+  - a package that provides tools for secure remote login, remote command execution, and secure file transfer over a network using the `SSH (Secure Shell)` protocol.
+
+- **Key Features**
+
+  - **Encrypted Communication**:
+    - Ensures data **integrity** and **confidentiality** during communication.
+  - **Authentication Methods**:
+    - Supports password-based, key-based, and other authentication mechanisms.
+  - **Port Forwarding**:
+    - Enables secure tunneling of network services.
+  - **File Transfer**:
+    - Includes tools like `scp` and `sftp` for secure file transfers.
+  - **Remote Command Execution**:
+    - Allows running commands on a remote machine without logging in interactively.
+
+- **Document Ref**:
+
+  - https://docs.oracle.com/en/operating-systems/oracle-linux/openssh/openssh-AboutOpenSSH.html#about-openssh
 
 ---
 
-### `ssh` Connection
+### Components
+
+- `SSH Server (sshd)`:
+  - The **server daemon** that **listens** for incoming SSH connections.
+  - Configuration file: `/etc/ssh/sshd_config`.
+- `SSH Client (ssh)`:
+  - The **command-line client** used to **initiate** SSH connections to remote servers.
+  - Configuration file: `~/.ssh/config`.
+- **Secure File Transfer Tools**:
+  - `scp`: `Secure Copy Protocol` for transferring files between systems.
+  - `sftp`: `Secure File Transfer Protocol`, an interactive file transfer **client**.
+- **Key Management Tools**:
+  - `ssh-keygen`: **Generates** SSH **key pairs** for authentication.
+  - `ssh-copy-id`: **Copies** `public keys` to a remote host for `key-based authentication`.
+  - `ssh-agent`: A **key management agent** for managing `private keys` during a session.
+  - `ssh-add`: **Adds** private keys to the `ssh-agent`.
+  - `sshd-keygen`: **Generates** host keys for the SSH **server**.
+  - `ssh-keyscan`: **Gathers** `public keys` from remote hosts.
+
+---
+
+### Package Commands
+
+| Command                                | Description                                   |
+| -------------------------------------- | --------------------------------------------- |
+| `rpm -qa \| grep openssh`              | Check if the openssh package installed        |
+| `dnf list installed openssh`           | Check if the openssh package installed        |
+| `dnf list installed \| grep openssh`   | Check if the openssh package and dependencies |
+| `apt list --installed \| grep openssh` | Check if the openssh package installed        |
+| `dnf install -y openssh`               | Install openssh package                       |
+| `apt install -y openssh`               | Install openssh package                       |
+
+---
+
+### Service Commands
+
+- `openssh-server`
+  - a suite of **network connectivity tools** that provides secure communications between systems.
+- `sshd`:
+  - The `OpenSSH server` component
+  - The SSH daemon that listens for incoming SSH connections.
+
+| Command                                          | Description                       |
+| ------------------------------------------------ | --------------------------------- |
+| `systemctl list-units \| grep sshd.service`      | Check the ssh service status      |
+| `systemctl list-unit-files \| grep sshd.service` | Check the ssh service unit file   |
+| `systemctl list-unit-files \| grep sshd.service` | Check the ssh service unit file   |
+| `sudo systemctl status sshd`                     | Check the sshd status             |
+| `sudo systemctl start sshd`                      | Start the sshd status             |
+| `sudo systemctl enable sshd`                     | Enable the sshd status at startup |
+
+---
+
+### Configuration Files
+
+- Client Configuration: `/etc/ssh/ssh_config`
+- Server Configuration: `/etc/ssh/sshd_config`
+
+---
+
+### Common Command
+
+- The tools include:
+
+  - `scp` - Secure file copying. (Deprecated in Oracle Linux 9)
+  - `sftp` - Secure **File Transfer** Protocol (FTP).
+  - `ssh` - Secure shell to log on to or run a command on a remote system.
+  - `sshd` - **Daemon** that listens for the OpenSSH services.
+  - `ssh-keygen` - Creates RSA authentication **keys**.
+
+- Connection
 
 | Command                  | Description                                           |
 | ------------------------ | ----------------------------------------------------- |
 | `ssh user@ip`            | Connect remote instance using username and ip address |
 | `ssh user@ip -p portNum` | SSH connection using custom port number               |
-
----
-
-### `sftp` File Transfer
-
-- `sftp` provides an interactive session
-- Start an SFTP Session: `sftp username@remote_host`
-
-  - If no `user@hostname` is specified, the command defaults to a local session.
-
-| Command                                      | Desc                                                   |
-| -------------------------------------------- | ------------------------------------------------------ |
-| `sftp username@remote_host`                  | Start a session                                        |
-| `sftp -P port username@remote_host`          | Specify the SSH port                                   |
-| `sftp -i identity_file username@remote_host` | Specify a private key file for authentication          |
-| `sftp -o option=value username@remote_host`  | Pass SSH options                                       |
-| `sftp -b batchfile username@remote_host`     | Use a batch file for non-interactive file transfers.   |
-| `sftp -C username@remote_host`               | Enable compression for faster transfer of large files. |
-
-- Local Command
-
-| Command          | Description                                               |
-| ---------------- | --------------------------------------------------------- |
-| `lpwd`           | Show the current working directory on the local machine.  |
-| `lcd /local/dir` | Change the working directory on the local machine.        |
-| `lls /local/dir` | List files in the current directory on the local machine. |
-| `!command`       | Execute a shell command on the local machine (e.g., !ls). |
-
-- Remote Command
-
-| Command                        | Description                                                                       |
-| ------------------------------ | --------------------------------------------------------------------------------- |
-| `get /remote/file /local/dir/` | **Download** a file from the remote server to the local machine.                  |
-| `mget /remote/* /local/dir/`   | **Download multiple files** from the remote server (use wildcards, e.g., \*.txt). |
-| `put /local/file /remote/dir/` | **Upload** a file from the local machine to the remote server.                    |
-| `mput /local/* /remote/dir/`   | **Upload multiple** files to the remote server (use wildcards).                   |
-| `pwd`                          | Show the current working directory on the remote server.                          |
-| `cd /remote/dir`               | Change the working directory on the remote server.                                |
-| `ls /remote/dir`               | List files in the current directory on the remote server.                         |
-| `mkdir remote_dir`             | Create a directory on the remote server.                                          |
-| `rmdir remote_dir`             | Remove a directory on the remote server.                                          |
-| `rm remote_file`               | Delete a file on the remote server.                                               |
-| `rename remote_file`           | Rename a file on the remote server.                                               |
 
 ---
 
@@ -278,39 +309,7 @@ ssh root@192.168.204.156
 
 ---
 
-## `openssh` Package
-
-- Doc:
-  - https://docs.oracle.com/en/operating-systems/oracle-linux/openssh/openssh-AboutOpenSSH.html#about-openssh
-
-| Command                                 | Description                            |
-| --------------------------------------- | -------------------------------------- |
-| `rpm -qa \| grep openssh`               | Check if the openssh package installed |
-| `rpm -qa \| grep openssh`               | Check if the openssh package installed |
-| `dnf list installed \| grep openssh`    | Check if the openssh package installed |
-| `apt list --installed \| grep openssh`  | Check if the openssh package installed |
-| `dnf install -y openssh`                | Install openssh package                |
-| `apt install -y openssh`                | Install openssh package                |
-| `systemctl list-units \| grep ssh`      | Check the ssh service status           |
-| `systemctl list-unit-files \| grep ssh` | Check the ssh service unit file        |
-
----
-
-### `openssh-server`
-
-- `openssh-server`
-  - a suite of **network connectivity tools** that provides secure communications between systems.
-- The tools include:
-
-  - `scp` - Secure file copying. (Deprecated in Oracle Linux 9)
-  - `sftp` - Secure **File Transfer** Protocol (FTP).
-  - `ssh` - Secure shell to log on to or run a command on a remote system.
-  - `sshd` - **Daemon** that listens for the OpenSSH services.
-  - `ssh-keygen` - Creates RSA authentication **keys**.
-
----
-
-### Lab: Install `openssh` on Redhat
+## Lab: Install `openssh` on Redhat
 
 - By default, openssh-server is installed out of the box.
 - Install `openssh-server`
@@ -364,7 +363,7 @@ sudo firewall-cmd --list-all
 
 ---
 
-### Lab: Install `openssh` on Ubuntu
+## Lab: Install `openssh` on Ubuntu
 
 - Intall openssh-server
 

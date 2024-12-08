@@ -1,13 +1,14 @@
-# Linux - Log
+# Linux - Software Management: Log
 
 [Back](../../index.md)
 
-- [Linux - Log](#linux---log)
+- [Linux - Software Management: Log](#linux---software-management-log)
   - [Log](#log)
   - [Default Logging Daemon](#default-logging-daemon)
     - [`journald daemon`](#journald-daemon)
     - [`rsyslogd daemon`](#rsyslogd-daemon)
   - [Common Log Files](#common-log-files)
+  - [Service Log](#service-log)
 
 ---
 
@@ -125,4 +126,12 @@ grep -i error /var/log/messages
 
 ---
 
-[TOP](#linux---log)
+## Service Log
+
+```sh
+journalctl -u service_name
+```
+
+---
+
+[TOP](#linux---software-management-log)

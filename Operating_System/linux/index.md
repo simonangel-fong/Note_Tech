@@ -2,11 +2,30 @@
 
 [Back](../../index.md)
 
----
-
 ## Catelog
 
 - [Fundamental](./fundamental/fundamental/fundamental.md)
+
+- **Kernel**
+
+  - [System Information](./kernel/systeminfo/systeminfo.md)
+  - [Shell](./kernel/shell/shell.md)
+  - [Wildcard](./kernel/wildcard/wildcard.md)
+  - [I/O](./kernel/io/io.md)
+  - [Environment Variable](./kernel/env/env.md)
+
+- **Hardware Management**
+
+  - [Disk](./hardware/disk/disk.md)
+  - [Memory](./hardware/memory/memory.md)
+
+- **Software Management**
+
+  - [Packages Management](./software/package/package.md)
+  - [Process Mangement](./software/process/process.md)
+  - [Service Mangement](./software/service/service.md)
+  - [Automation](./software/automation/automation.md)
+  - [Log](./software/log/log.md)
 
 - **File System**
 
@@ -18,27 +37,7 @@
   - [File Content](./filesystem/file_content/file_content.md)
   - [File Editor](./filesystem/file_editor/file_editor.md)
 
-- System Configuration and Management
-
-  - [Packages Management](./system/package/package.md)
-  - [System Mangement](./system/system/system.md)
-  - [Process Mangement](./system/process/process.md)
-  - [Automation](./system/automation/automation.md)
-  - [Log](./system/log/log.md)
-
-- **Kernel & Shell**
-
-  - [Shell Fundamental](./shell/shell_fundamental/shell_fundamental.md)
-  - [Wildcard](./fundamental/wildcard/wildcard.md)
-  - [I/O](./fundamental/io/io.md)
-  - [Environment Variable](./fundamental/env/env.md)
-
-- Hardware Management
-
-  - [Disk](./hardware/disk/disk.md)
-  - [Memory](./hardware/memory/memory.md)
-
-- User and Group Management
+- **User and Group Management**
 
   - [User](./user_group/user/user.md)
   - [User Password](./user_group/pwd/pwd.md)
@@ -53,10 +52,11 @@
     - [Package `net-tools`(deprecated)](./network/net-tools/net-tools.md)
   - [Network Tools](./network/network_tool/network_tool.md)
     - [Package `nmap`](./network/nmap/nmap.md)
-  - [SSH](./network/ssh/ssh.md)
-  - [SCP](./network/scp/scp.md)
-  - [FTP](./network/ftp/ftp.md)
-  - [STFP](./project/stfp/stfp.md)
+  - Common Protocol
+    - [SSH](./network/ssh/ssh.md)
+    - [SCP](./network/scp/scp.md)
+    - [FTP](./network/ftp/ftp.md)
+    - [STFP](./project/stfp/stfp.md)
 
 ---
 

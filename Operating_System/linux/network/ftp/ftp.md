@@ -3,10 +3,14 @@
 [Back](../../index.md)
 
 - [Linux - Network: FTP](#linux---network-ftp)
-  - [FTP](#ftp)
+  - [FTP Protocol](#ftp-protocol)
   - [Server side: Package `vsftpd`](#server-side-package-vsftpd)
+    - [Install Package](#install-package)
+    - [Configuration File](#configuration-file)
+    - [Service](#service)
   - [Client Side: Package `ftp`](#client-side-package-ftp)
-    - [Command](#command)
+    - [Install Package](#install-package-1)
+    - [Common Commands](#common-commands)
   - [Lab: Transfer a File](#lab-transfer-a-file)
     - [Install `vsftpd` on a Server](#install-vsftpd-on-a-server)
     - [Configure FTP settings](#configure-ftp-settings)
@@ -17,7 +21,7 @@
 
 ---
 
-## FTP
+## FTP Protocol
 
 - `FTP (File Transfer Protocol)`
   - a standard network protocol used to transfer files between a client and a server.
@@ -34,7 +38,7 @@
 
 ## Server side: Package `vsftpd`
 
-- Install
+### Install Package
 
 ```sh
 # install
@@ -43,11 +47,16 @@ sudo yum install -y vsftpd
 rpm -qa | grep vsftpd
 ```
 
-- Configuration File
+---
 
+### Configuration File
+
+- CF path:
   - `/etc/vsftpd/vsftpd.conf`
 
-- Service
+---
+
+### Service
 
 ```sh
 sudo systemctl list-unit-files | grep vsftpd
@@ -58,7 +67,7 @@ sudo systemctl status vsftpd
 
 ## Client Side: Package `ftp`
 
-- Install
+### Install Package
 
 ```sh
 # install
@@ -66,6 +75,10 @@ sudo yum install -y ftp
 # Check if install
 rpm -qa | grep ftp
 ```
+
+---
+
+### Common Commands
 
 - Create connection
 
@@ -76,8 +89,6 @@ ftp remote_ip
 
 ---
 
-### Command
-
 - Local Client
 
 | CMD          | DESC                                                             |
@@ -85,6 +96,8 @@ ftp remote_ip
 | `!`          | Toggles back the OS. Typing `exit` back to the FTP command line. |
 | `lcd`        | Displays current directory                                       |
 | `lcd /path/` | Change direcotry                                                 |
+
+---
 
 - Remote Server
 
@@ -97,6 +110,8 @@ ftp remote_ip
 | `rmdir dirname`          | Removes a directory.       |
 | `delete file`            | Deletes a file.            |
 | `rename oldname newname` | Renames a file.            |
+
+---
 
 - Connection
 
@@ -111,6 +126,8 @@ ftp remote_ip
 | `verbose` | Sets verbose on or off.           |
 | `open`    | Opens address.                    |
 | `quit`    | Exits from FTP.                   |
+
+---
 
 - Transfer
 
