@@ -71,6 +71,8 @@
 
 ---
 
+- [Practice Infrastructure](./infrastructure/infrastructure.md)
+
 - Tutorial
   - https://www.udemy.com/course-dashboard-redirect/?course_id=256758
   - https://www.udemy.com/course/unofficial-linux-redhat-certified-system-administrator-rhcsa-8

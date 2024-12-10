@@ -48,6 +48,9 @@
   - [Wk06-Cryptographic Hash Functions](./securing_network/wk06.md)
   - [Wk07-key distribution](./securing_network/wk07.md)
   - [Wk08-User Authentication](./securing_network/wk08.md)
+  - [Wk09-Web security](./securing_network/wk09.md)
+  - [Wk10-Electronic Mail Security](./securing_network/wk10.md)
+  - [Wk11-IP Security lecture](./securing_network/wk11.md)
 
 - Network Mgnt
   - [Wk01](./network_mgnt/wk01.md)
