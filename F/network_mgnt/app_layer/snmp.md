@@ -1,6 +1,6 @@
 # Network - SNMP
 
-[Back]
+[Back](../../index.md)
 
 - [Network - SNMP](#network---snmp)
   - [snmp](#snmp)
@@ -9,6 +9,7 @@
   - [SNMP PDU Classes](#snmp-pdu-classes)
   - [Message](#message)
     - [`Syslog` vs `SNMP`](#syslog-vs-snmp)
+  - [Summary](#summary)
 
 ---
 
@@ -161,3 +162,27 @@
   - Can monitor much more than just errors and notifications
   - Because it can **query variables** from the client/agent it can get statistics from the agent
   - Allowing the building of complex databases of historical data which can do things like:
+
+---
+
+## Summary
+
+- SNMP: read & write
+- Default: 161/UDP
+- Can: 161/162/tcp
+- MIB(Management Information Base)
+  - A standardized structure for different devices
+  - Installed on the Management side
+  - containing Object IDentifiers(OID)
+- communication methods
+  - Poll-Driven: 161/UDP(SNMP)
+  - Interrupt-Driven: send info 162/UDP (SNMPTRAP)
+- Vs syslog:
+  - Syslog simpler
+  - Syslog can't get statistical data from a device.
+  - SNMP take time to setup
+  - can query variables
+- protocol data unit (PDU)
+  -VarBind(Variable Binding)
+  - a key-value pair
+  - Can have Object Identifier(s)

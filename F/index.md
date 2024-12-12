@@ -52,12 +52,65 @@
   - [Wk10-Electronic Mail Security](./securing_network/wk10.md)
   - [Wk11-IP Security lecture](./securing_network/wk11.md)
 
-- Network Mgnt
-  - [Wk01](./network_mgnt/wk01.md)
-  - [Wk02](./network_mgnt/wk02.md)
-  - [Wk03](./network_mgnt/wk03.md)
-  - [Wk04](./network_mgnt/wk04.md)
-  - [Wk05](./network_mgnt/wk05.md)
-  - [Wk08](./network_mgnt/wk08.md)
-  - [wk10 - FTP/SFTP/TFTP](./network_mgnt/wk10.md)
-  - [snmp](./network_mgnt/snmp.md)
+- **Network Mgnt**
+  - [Fundamental](./network_mgnt/fun.md)
+  - [OSI](./network_mgnt/osi.md)
+  - Layer 2(Data Link)
+    - [Ethernet & Wifi](./network_mgnt/layer2/ethernet&wifi.md)
+    - [ARP](./network_mgnt/layer2/arp.md)
+  - Layer 3(Network)
+    - [IP](./network_mgnt/layer3/ip.md)
+    - [Routing Protocols](./network_mgnt/layer3/routing.md)
+    - [ICMP](./network_mgnt/layer3/icmp.md)
+  - Layer4(Transport)
+    - [TCP](./network_mgnt/layer4/tcp.md)
+    - [UDP](./network_mgnt/layer4/udp.md)
+  - App Layer
+    - [DHCP](./network_mgnt/app_layer/dhcp.md)
+    - [DNS](./network_mgnt/app_layer/dns.md)
+    - [Telnet](./network_mgnt/app_layer/telnet.md)
+    - [SSh](./network_mgnt/app_layer/ssh.md)
+    - [HTTP/HTTPS](./network_mgnt/app_layer/http&https.md)
+    - [FTP](./network_mgnt/app_layer/ftp.md)
+    - [SFTP](./network_mgnt/app_layer/SFTP.md)
+    - [TFTP](./network_mgnt/app_layer/TFTP.md)
+    - [SYSLOG](./network_mgnt/app_layer/syslog.md)
+    - [snmp](./network_mgnt/app_layer/snmp.md)
+
+---
+
+| Protocol                                | Port #                                                  |
+| --------------------------------------- | ------------------------------------------------------- |
+| **Dynamic Host Configuration Protocol** | 67/UDP(to server) 68/UDP (to client)                    |
+| **Domain Name Server**                  | 53/UDP, 53/TCP(longer)                                  |
+| Telnet                                  | 23/tcp                                                  |
+| SSH                                     | 22/tcp                                                  |
+| http/https                              | 80/tcp, 443/tcp                                         |
+| File Transfer Protocol                  | 21/tcp(control), 20/tcp(data)                           |
+| SFTP: SSH FTP                           | 22/tcp                                                  |
+| SFTP: Simple File Transfer Protocol     | 115/tcp                                                 |
+| **Trivial File Transfer Protocol**      | 69/udp                                                  |
+| **Syslog**                              | 514/udp(default),514/TCP, 6514/TLS TCP                  |
+| **Simple Network Management Protocol**  | 161/UDP (default),161/UDP(SNMP poll),162/UDP (SNMPTRAP) |
+
+---
+
+## TCP vs. UDP
+
+|                          | TCP                                       | UDP                                      |
+| ------------------------ | ----------------------------------------- | ---------------------------------------- |
+| Connection               | connection-oriented protocol              | connectionless protocol                  |
+| Acknowledgement          | Acknowledgement segments                  | No Acknowledgement                       |
+| Handshake                | SYN, SYN-ACK, ACK                         | No handshake                             |
+| Checksum                 | used for integrity                        | used to detect errors                    |
+| Error Checking           | error checking                            | error checking, but no recovery          |
+| Reliability              | absolute guarantee intact and order       | no guarantee would reach                 |
+| Header size              | 20 bytes                                  | 8 bytes                                  |
+| Ordering of data packets | keep inherent order                       | no inherent order                        |
+| Speed                    | slower than UDP                           | faster-no errorchecking for packets      |
+| Usage                    | applications that requirehigh reliability | applications that need fast transmission |
+| protocols                | HTTP, HTTPs, FTP, SMTP, Telnet            | DNS, DHCP, TFTP, SNMP, RIP, VOIP         |
+| Function                 | connection based                          | not connection based                     |
+| Stream of data           | read as a byte stream                     | Packets are sent individually            |
+| Weight                   | heavy-weight, requires three packets      | lightweight                              |
+| Data Flow Control        | Flow Control, congestion control          | not                                      |

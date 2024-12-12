@@ -1,23 +1,29 @@
-# Network Mgnt - WK03 IP protocol and network utilities
+# Network - Layer3: IP
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Network Mgnt - WK03 IP protocol and network utilities](#network-mgnt---wk03-ip-protocol-and-network-utilities)
-  - [Internet Protocol (IP) Global view](#internet-protocol-ip-global-view)
-    - [IPv4 - Datagram](#ipv4---datagram)
-      - [Version - 4 bit](#version---4-bit)
-      - [Internet Head Length (IHL) - 4 bit](#internet-head-length-ihl---4-bit)
-      - [Type Of Service (TOS)](#type-of-service-tos)
-      - [Total Length (TL) - 16bit](#total-length-tl---16bit)
-      - [Identification (ID) - 16 bit](#identification-id---16-bit)
-      - [Flags - 3 bit](#flags---3-bit)
-      - [Fragment Offset - 13 bit](#fragment-offset---13-bit)
-      - [Time-to-Live (TTL) - 8 bit](#time-to-live-ttl---8-bit)
-      - [Protocols - 8 bit](#protocols---8-bit)
-      - [Header Checksum - 16bit](#header-checksum---16bit)
-      - [Source Address - 32 bit](#source-address---32-bit)
-      - [Destination Address](#destination-address)
-      - [Options Field](#options-field)
+- [Network - Layer3: IP](#network---layer3-ip)
+  - [Internet Protocol (IP)](#internet-protocol-ip)
+    - [IPv4 Datagram](#ipv4-datagram)
+    - [IPv6 Datagram](#ipv6-datagram)
+    - [IP Services](#ip-services)
+    - [Address](#address)
+    - [IPv4 Address (4 billion addresses)](#ipv4-address-4-billion-addresses)
+    - [IPv6 Address](#ipv6-address)
+  - [IPv4 - Datagram](#ipv4---datagram)
+    - [Version - 4 bit](#version---4-bit)
+    - [Internet Head Length (IHL) - 4 bit](#internet-head-length-ihl---4-bit)
+    - [Type Of Service (TOS)](#type-of-service-tos)
+    - [Total Length (TL) - 16bit](#total-length-tl---16bit)
+    - [Identification (ID) - 16 bit](#identification-id---16-bit)
+    - [Flags - 3 bit](#flags---3-bit)
+    - [Fragment Offset - 13 bit](#fragment-offset---13-bit)
+    - [Time-to-Live (TTL) - 8 bit](#time-to-live-ttl---8-bit)
+    - [Protocols - 8 bit](#protocols---8-bit)
+    - [Header Checksum - 16bit](#header-checksum---16bit)
+    - [Source Address - 32 bit](#source-address---32-bit)
+    - [Destination Address](#destination-address)
+    - [Options Field](#options-field)
   - [Encapsulation](#encapsulation)
     - [Fragmentation](#fragmentation)
     - [The Reassembly Process for IPv4](#the-reassembly-process-for-ipv4)
@@ -37,42 +43,119 @@
     - [Notation](#notation)
     - [Common](#common)
     - [Extension Headers](#extension-headers)
-  - [Address resolution Protocol](#address-resolution-protocol)
+  - [Summary](#summary)
 
 ---
 
-- Internet Protocol (IP) Global view
-- Internet Protocol v4
-  - History
-  - Datagram
-- IP Encapsulation
-- Fragmentation
-- Limitations
-- Internet Protocol v6
-- History
-- Datagram
-- Addressing
-- Main Header
-- Extension Headers
-- Address Resolution Protocol L2
-- History
-- Purpose
+## Internet Protocol (IP)
 
-## Internet Protocol (IP) Global view
+- `IP`
 
-- Goal of the IP protocol?
-  - Carrying data across different physical networks (fiber, copper, wireless)
-  - Hide the physical networks media from the application layers
-- Operating Mode
-  - Connectionless
-  - Best effort delivery of datagrams (UDP)
-  - No acknowledgement
-- Key Feature
-  - Fragmentation
+  - a layer 3 protocol
+  - IP contains **addressing information** and some control information that enables packets to be **routed**
+
+- IP has 2 main **responsibilities**
+  - Providing **connectionless**, best-effort delivery of `datagrams` through an internetwork **without acknowledgment**
+  - Providing **fragmentation and reassembly** of `datagrams` to support data links with different maximum transmission unit (MTU) sizes
 
 ---
 
-### IPv4 - Datagram
+### IPv4 Datagram
+
+![ip4_datagram](./pic/ip4_datagram.png)
+
+- **Version**:
+  - IP version used (0100)
+- **Type of service:**
+  - how an **upper layer protocol** would like the current datagram to be handle
+- **Datagram length**:
+  - total length of the datagram (**header + payload**)
+- **16-bit Identifier**:
+  - **Identify the current** datagram
+- **Flags**:
+  - used to **control fragmentation**
+- **Fragmentation offset**:
+  - indicates the position of a fragment related to the beginning of the data
+- **Time-to-live**:
+  - counter to **avoid looping**
+- **Protocol**:
+  - indicates which **upper layer** protocol is used
+- **Options**:
+  - allows IP to support options such as **security**
+- **Source IP address**:
+  - **32-bit** address
+- **Destination IP address**:
+  - **32-bit** address
+- **Data**:
+  - payload and data received from upper-layer protocol
+
+---
+
+### IPv6 Datagram
+
+![ip4_datagram](./pic/ip6_datagram.png)
+
+- **Version**:
+  - IP version used (0110)
+- **Fixed length**:
+  - 40 bytes Minimized and simple approach
+- **Traffic Class**:
+  - used for QoS
+- **Flow Label**:
+  - identify a **group of datagram**
+- **Payload Length**:
+  - Only **size** of the payload
+- **Next Header**:
+  - Identify the type of following data (other IP header or L4 protocol)
+- **Hop Limit**:
+  - Same as the **Time to live** field in IPv4
+- **Source IP address**:
+  - **128-bit** address
+- **Destination IP address**:
+  - **128-bit** address
+- **Data**:
+  - **payload** and data received from upper-layer protoc
+
+---
+
+### IP Services
+
+- IP Supports 3 Services
+  - `Unicast`:one to one
+  - `Multicast`: one to many & many to many
+  - `Broadcast`: one to many (**IPv4** only)
+  - `Anycast`: one to the closet one (**IPv6** only)
+
+---
+
+### Address
+
+- Networks with in the class can be **broken down** in to `subnets`, or **built up** into `supernets`.
+  - Two appropriate 24bit subnet can be put together to make a 23bit supernet, where as a 24bit network can be broken down to, up to 64, 30bit networks
+
+### IPv4 Address (4 billion addresses)
+
+![ip4_class](./pic/ip4_class.png)
+
+- **Public** IPv4 Address
+  - IP address that are routable on the **internet**
+  - IP address you **get from the ISP**
+    **Private** IPv4 Address
+  - Addresses used in a `Local Area Network (LAN)`
+  - **Not routable** on the internet
+    - 10.0.0.0 - 10.255.255.255 (10/8 prefix) - Class A
+    - 172.16.0.0 - 172.31.255.255 (172.16/12 prefix) - Class B
+    - 192.168.0.0 - 192.168.255.255 (192.168/16 prefix) - Class C
+
+---
+
+### IPv6 Address
+
+skip
+
+---
+
+## IPv4 - Datagram
 
 - **Headers** fields are aligned on words of **32-bits**
 
@@ -80,26 +163,26 @@
   - Min 20 bytes (5 words)
   - Max 60 bytes (15 words)
 
-#### Version - 4 bit
+### Version - 4 bit
 
 - Identifies the **version of the IP protocol** used
   - “0100” for IPv4
   - Length of this field: 4 bit
 - This field allows us to have multiple versions of the IP protocols (IPv4, IPv6)
 
-#### Internet Head Length (IHL) - 4 bit
+### Internet Head Length (IHL) - 4 bit
 
 - Identifies the **length** of the IP **datagram header** in 32-bit words
   - Ex: length of 20 bytes (5 words) = “0101”
   - Ex: length of 60 bytes (15 words) = “1111”
 - Length of this field: 4 bits
 
-#### Type Of Service (TOS)
+### Type Of Service (TOS)
 
 - Field carrying information to provide q**uality of service features**
 - The original TOS (from RFC 791) has been widely redefined by the RFC 1812 (IP Precedence) and later by RFC 2474 (DiffServ) to better suit modern IP networks
 
-#### Total Length (TL) - 16bit
+### Total Length (TL) - 16bit
 
 - Specifies the **total length of the IPv4 datagram** (size of **header** + size of **payload**)
   - Minimum size: 576 bytes
@@ -107,7 +190,7 @@
 - Size depends on the L2 protocol MTU (Ex: 1500bytes for Ethernet)
 - Length of the field: 16 bits (2 bytes)
 
-#### Identification (ID) - 16 bit
+### Identification (ID) - 16 bit
 
 - 16 bits number **randomly** generated by the source using an algorithm based on the system clock
 - Used to **identify an IP datagram** if **fragmentation** occurs
@@ -116,7 +199,7 @@
 - Length of the field
   - 16 bits (2 bytes)
 
-#### Flags - 3 bit
+### Flags - 3 bit
 
 - 3 Bits
 - Control flags
@@ -130,7 +213,7 @@
   - When set to 0, indicates the **last** fragment
   - When set to 1, indicates that **more** fragments are coming
 
-#### Fragment Offset - 13 bit
+### Fragment Offset - 13 bit
 
 - In case of fragmentation, this field indicates the offset, or **position**, in the overall message where the data in this **fragment** goes
 - It is specifies in units of 8 bytes (64 bits)
@@ -138,7 +221,7 @@
 
 ---
 
-#### Time-to-Live (TTL) - 8 bit
+### Time-to-Live (TTL) - 8 bit
 
 - Specifies **how long** the datagram is **allowed to live** in the network
 - Every time, the datagram is **routed**, this TTL is **decremented**
@@ -151,14 +234,14 @@
 
 ---
 
-#### Protocols - 8 bit
+### Protocols - 8 bit
 
 - This field indicates what type of **higher-layer** protocol is carried in the data field (payload)
 - The values of this field were originally defined by RFC 1700
 - They are now maintained by the IANA
 - Length of the field: 1 byte (8 bits)
 
-#### Header Checksum - 16bit
+### Header Checksum - 16bit
 
 - Checksum computed over the header
   - Calculating by forming the ones’ components of the ones’ components sum of the headers’ words
@@ -168,7 +251,7 @@
 
 ---
 
-#### Source Address - 32 bit
+### Source Address - 32 bit
 
 - IP address of the **originator** of the datagram
 - This field **does not change throughout the transmission** of the datagram from the sender to the receiver
@@ -177,7 +260,7 @@
 - Usually represented by 4 decimal numbers separated by “.”
   - Ex: 192.168.10.2
 
-#### Destination Address
+### Destination Address
 
 - IP address of the **recipient** of the datagram
 - This field **does not change throughout the transmission** of the datagram from the sender to the receiver
@@ -186,7 +269,7 @@
 - Usually represented by 4 decimal numbers separated by “.”
   - Ex: 192.168.10.2
 
-#### Options Field
+### Options Field
 
 - Some options are available in IPv4
 - The **length** of this field is **variable** depending on the number of options
@@ -405,27 +488,45 @@
 
 ---
 
-## Address resolution Protocol
+## Summary
 
-- ARP was made a general protocol capable of **resolving addresses from IP to different link layer technologies**
+- `Ip`:
+  - logical address
+  - route
+- `Datagrams`: larger data sequences
 
-  - Proxy ARP
-  - Improved Caching
+  - Structure
+    - `Flags`:used to **control fragmentation**
+      - Don’t Fragment (DF)
+      - More Fragment
+    - `Fragmentation offset`: **indicates the position**
+    - **TTL/Hop Limit**: routed, this TTL is decremented
+      - win: 128
+      - mac: 64
+    - `IP address`: 32-bit / 128-bit
+    - `Data`: payload
 
-- Purpose
+- Ipv6
 
-  - What we have
-    - The layer 3 address (**IP address**) + IP datagram
-  - What do we want
-    - The layer 2 address (**MAC** address most of the time) to build the layer 2 header
-  - ARP will help us in **getting the layer 2 (MAC)** address so we can build our layer 2 segment and send it onto the physical network.
+  - Notation:8:
+  - loopback address is ::1
+  - Extension Headers: Multiple, Fragment Offset,More Fragment or MF
 
-- For IPv4 and IPv6
-  - ARP for `IPv4` is done through a **broadcast** of all “F”s (**Flooding ARP**) for the unknown destination the system with the correct IP address responds back with it’s ARP address and cashed entries are updated.
-- Arp for `IPv6` is performed by the new process named `Neighbor Discovery (ND)`
-  - Neighbors refers to the devices on the **local network**
-  - The process is very similar to the one used by ARP and IPv4
+- **Encapsulation**
+  - Each datagram must be **small enough to fit into** the Layer 2 **payload**, defined by the `Maximum Transmission Unit (MTU)`
+  - 1500 bytes by default
+- **Fragmentation**
+  - Fragments the IP datagram so the total length falls into the **MTU specification**
+- Service:
 
----
+  - `Unicast`:one to one
+  - `Multicast`: one to many & many to many
+  - `Broadcast`: one to many (**IPv4** only)
+  - `Anycast`: one to the closet one (**IPv6** only)
 
-[TOP](#network-mgnt---wk03-ip-protocol-and-network-utilities)
+- Address
+  - `subnets`
+  - lan class:
+    - A: 10. /8
+    - B 172.16-172.31 /16
+    - C 192.168 - 192.168 /24

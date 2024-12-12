@@ -1,8 +1,8 @@
-# Network Mgnt - WK04 Transport protocol TCP
+# Network - Layer4: TCP
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Network Mgnt - WK04 Transport protocol TCP](#network-mgnt---wk04-transport-protocol-tcp)
+- [Network - Layer4: TCP](#network---layer4-tcp)
   - [TCP– General Presentation](#tcp-general-presentation)
     - [Basic TCP Mechanisms](#basic-tcp-mechanisms)
       - [Transport Connection](#transport-connection)
@@ -24,20 +24,7 @@
     - [Congestion Control](#congestion-control)
   - [TCP SYN and Window Size Numbers](#tcp-syn-and-window-size-numbers)
   - [TCP vs. IP](#tcp-vs-ip)
-
----
-
-- TCP - General Presentation
-  - History
-- Basic TCP Mechanisms
-  - Transport Connection
-  - TCP ports
-  - Connection
-  - Exchange Management
-  - TCP Segment
-- Advanced Mechanisms
-- TCP SYN and Window Size Numbers
-- TCP vs. IP
+  - [Summary](#summary)
 
 ---
 
@@ -180,7 +167,8 @@
   - The source port number (**16 bits**)
 - **Destination Port**
   - The destination port number (**16 bits**)
-- Sequence Number - Initial and random number. The Initial Sequence Number (ISN) is calculated for each systems at the establishment of the connection. The sequence number of the first data octet in this segment. (32 bits)
+- **Sequence Number**
+  - Initial and random number. The Initial Sequence Number (ISN) is calculated for each systems at the establishment of the connection. The sequence number of the first data octet in this segment. (32 bits)
 - **Acknowledgment Number**
   - Indicate the number of the **next expected sequence number** (32 bits)
 - **Header Length**
@@ -298,4 +286,44 @@
 
 ---
 
-[TOP](#network-mgnt---wk04-transport-protocol-tcp)
+## Summary
+
+- `Transmission Control Protocol(TCP)`
+- **transport connection**
+
+  - Virtual link between 2 manchine
+  - Tcp + Ip + port
+
+- Multiplexing
+  - One device handle multiple apps/ connections
+- Port
+
+  - **Registered** ports:services/applications `1,024` to `49,151`
+  - **Dynamic** ports: dynamically source `49,152` to `65,535`
+
+- Establishment
+  - Syn=0-syn=0,ack=1-ack=1
+- Termination
+
+  - Fin=0-ACK=1|Fin=0-ACK=1
+
+- Segment
+  - Port
+  - Sequence Number
+  - Acknowledgment Number
+  - Control Bits
+    - ACK: Acknowledgment
+    - SYN: Synchronize sequence number
+    - FIN: No more data from sender
+- Advanced
+  - Error Control
+    - Maintain Integrity+right destination
+    - adds a pseudo-header + Checksum
+  - Data Retention
+    - waits for the buffer to be full
+    - reduces overhead,more efficient
+  - Flow Control
+    - Usage of dynamic windows
+  - Congestion Control
+    - according to the lower layer
+    - reach the largest window possibly

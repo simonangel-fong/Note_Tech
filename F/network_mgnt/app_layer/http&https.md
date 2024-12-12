@@ -1,8 +1,8 @@
-# Network Mgnt - WK08 HTTP/HTTPS
+# Network - App Layer: HTTP/HTTPS
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Network Mgnt - WK08 HTTP/HTTPS](#network-mgnt---wk08-httphttps)
+- [Network - App Layer: HTTP/HTTPS](#network---app-layer-httphttps)
   - [HTTP Overview](#http-overview)
     - [Operations](#operations)
     - [HTTP vs. HTML](#http-vs-html)
@@ -11,7 +11,7 @@
       - [General Header](#general-header)
       - [Request Header](#request-header)
       - [Response Header](#response-header)
-      - [– Entity](#-entity)
+      - [Entity](#entity)
     - [Request Message](#request-message)
     - [Response Message](#response-message)
     - [Methods](#methods)
@@ -25,6 +25,7 @@
       - [Initiation](#initiation)
       - [Closure](#closure)
     - [Wireshark](#wireshark-1)
+  - [Summary](#summary)
 
 ---
 
@@ -122,7 +123,7 @@
 
 ---
 
-#### – Entity
+#### Entity
 
 - **Request** and **Response** messages MAY transfer an entity if not otherwise **restricted** by the `request method` or `response status code`
 - An entity consists of `entity-header fields` and an `entity-body`, although some responses will only include the `entity-headers`
@@ -174,7 +175,7 @@
 - Communicate quickly if the request was successful or not
 - The `status code` is **present at the beginning** of every HTTP response message
 
-| Status Code | Meaning       |
+| Status Code | Meaning       | Desc                                                                                                            |
 | ----------- | ------------- | --------------------------------------------------------------------------------------------------------------- |
 | `1xx`       | Informational | Provides **general** information; does **not indicate success or failure** of a request.                        |
 | `2xx`       | Success       | The method was received, understood and **accepted by the server**.                                             |
@@ -284,3 +285,42 @@
   - because **encrypted**, but now say `“Application Data”`
 - The TCP **3 step handshake** (the red box)
 - The TLS 1.2 connection being establishment is displayed (the green box)
+
+---
+
+## Summary
+
+- HTTP: 80/tcp
+- Message Type
+  - Request
+  - Response
+- Header:
+  - General
+  - Request/response
+  - entity
+- methods
+  - Get: retrieve
+  - Head: same get but only head
+  - Post: send data to server
+  - Put: send a file
+- Status code:
+
+  - 1--: Info
+  - 2--:succes
+  - 3--:redirect
+  - 4--:Client error
+  - 5--:server error
+
+- HTTPS
+  - Encrypted TLS, 443/tcp
+- TLS
+  - handshake to establish secure connection
+  - Authentication By certificate
+  - Exchange of session key by symmetric encryption
+- Handshake
+  - Syn-syn,ack-ack-**client hello**-**server hello**-**client key exchange**-**change cipher finish**
+- `Pre-Master Secret`: exchange **random** numbers
+- `Master Secret`: create the **pre-shared key**
+- `session key`: **MAC** Secret generate by master secret
+- **Closure**: Exchange of `closure alerts` before closing a connection
+  - close the connection **without waiting for the peer** : can be **reused**

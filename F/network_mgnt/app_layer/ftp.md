@@ -1,8 +1,8 @@
-# Network Mgnt - M10 - FTP/SFTP/TFTP
+# Network App Layer: FTP
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Network Mgnt - M10 - FTP/SFTP/TFTP](#network-mgnt---m10---ftpsftptftp)
+- [Network App Layer: FTP](#network-app-layer-ftp)
   - [FTP](#ftp)
     - [FTP Model](#ftp-model)
       - [Active Mode](#active-mode)
@@ -13,11 +13,7 @@
     - [Commands / Responses](#commands--responses)
       - [Service Commands](#service-commands)
       - [Codes](#codes)
-  - [SFTP](#sftp)
-    - [FTP vs SFTP](#ftp-vs-sftp)
-    - [Operations](#operations)
-  - [`TFTP`](#tftp)
-    - [Operation](#operation)
+  - [Summary](#summary)
 
 ---
 
@@ -252,123 +248,25 @@
 
 ---
 
-## SFTP
+## Summary
 
-- `SFTP`
-
-  - two SFTP acronyms:
-
-    - `Secure File Transfer Protocol`
-      - an **unsecured, lightweight version** of `File Transfer Protocol (FTP)`
-      - Based on `Transmission Control Protocol`
-      - port number: `115`.
-      - SFTP has a set of `11` commands.
-      - **not** as **accepted widely** on the Internet.
-      - **features**
-        - user access control
-        - file transfers
-        - directory listing
-        - directory changing
-        - file renaming
-        - deleting.
-      - vs `Trivial FTP (TFTP)`
-        - an **intermediate complexity level** between `TFTP` and `FTP`.
-      - vs `Secure Shell FTP`
-        - sometimes confused
-    - `Secure File Transfer protocol (SSH FTP)`
-      - aka `SSH File Transfer Protocol`
-      - a secure version of `File Transfer Protocol (FTP)`
-      - facilitates data **access** and data **transfer** over a `Secure Shell (SSH)` data stream.
-        - part of the `SSH Protocol`.
-
-![SFTP_diagram](./pic/SFTP_diagram.png)
-
----
-
-### FTP vs SFTP
-
-- overview is the **same**
-  - used to exchange file over a network/Internet
-  - Based on a `client/server architecture`
-  - over `TCP`
-- the difference:
-
-  - the communications are **sent through an encrypted tunnel** between the `client` and `server`, on TCP Port `22`.
-
-- SFTP was designed by the `Internet Engineering Task Force (IETF)`
-  - An **extended version** of `SSH 2.0`
-    - **File transfer** over SSH and use with `Transport Layer Security (TLS)`(both asymmetric and symmetric encryption) and `VPN` applications
-  - Both the commands and data are encrypted in order to prevent passwords and other sensitive information from being transferred over the network.
-  - SFTP **requires** that the `client` user must be **authenticated** by the `server` and the data transfer must take place over a `secure channel (SSH)`.
-
----
-
-### Operations
-
-- `SSH` uses port `22`, and `TCP` as seen here with the classic `SYN`, `SYN/ACK`, `ACK`
-
-![sftp_op01.png](./pic/sftp_op01.png)
-
-- `Client` and `Server` **select** to use `SSH`
-
-![sftp_op01.png](./pic/sftp_op02.png)
-
-- `Client` and `Server` start to **exchange keys**
-
-![sftp_op01.png](./pic/sftp_op03.png)
-
-- `Client` and `Server` **finish key exchange** and start **building new keys**
-
-![sftp_op01.png](./pic/sftp_op04.png)
-
-- `Client` and `Server` **finish** creating the **new keys**
-
-![sftp_op01.png](./pic/sftp_op05.png)
-
-- `Client` and `Server` exchange **encrypted packets**
-
-![sftp_op01.png](./pic/sftp_op06.png)
-
-- All packets from this point on are **fully encrypted**.
-  - The operation is the **same** as **in regular FTP**, but everything is encrypted.
-
----
-
-## `TFTP`
-
-- `TFTP`
-
-  - `Trivial FTP`
-  - a simple protocol for transferring files
-  - on top of the `UDP`
-  - port number `69`
-  - designed to be **small and easy to implement**
-    - lacks most of the advanced features offered by more robust `file transfer protocols (FTP/SFTP)`
-
-- TFTP **only reads and writes files** from or to a remote server.
-  - It **cannot** list, delete, or rename files or directories
-  - it has no provisions for user **authentication**
-- Today TFTP is generally **only used** on `local area networks (LAN)`
-  - TFTP supports other services like `Bootstrap Protocol (BOOTP)`, `(Peer exchange)PEX`, & `Boot Service Discovery Protocol (BSDP)`
-
----
-
-### Operation
-
-- The `TFTP client` then **sends** a `read request (RRQ)` or **sends** a `write request (WRQ)`
-  - TFTP **splits** a file, to be transferred,** into blocks** of size **512 bytes (default)**
-  - Each `TFTP DATA block` is **numbered** and carried inside separate `UDP messages`
-  - The **last block** of a file is always sent with a size **lesser than** `512`.
-- When the peer receives a block with size **less than 512 bytes**, it treats that block as the **last block**
-
-- **Reliability**:
-
-  - Each **block** is **numbered** and sent inside a separate UDP message. Since TFTP uses UDP, reliable **delivery of each block is not guaranteed** by the underlying network protocols.
-    - So, `TFTP` itself takes care of reliability by **requiring the peer** to **acknowledge each successfully received block**.
-
-- **Flow Control**:
-
-  - `TFTP` sends data block by **block**. After sending a block, the sending end **starts a block timer**.
-    - If an **acknowledgment** is received for the block from the peer **before the timer expires**, then the **next block** of the file is **sent**.
-    - Otherwise, the current block is **resent** as soon as the block timer expires and the whole process **repeats** itself **till the block is successfully acknowledged**.
-  - Hence, `TFTP` is basically a **stop and wait protocol** and `flow control` is achieved **by the sender sending at most one outstanding block** at any instant of time. 受控于发送方在某一时刻能发送多少未完成的块。
+- FTP:
+- Control Channel:
+  - setup data connections
+  - Stays opened
+  - 21/tcp
+- Data Channel
+  - Only stays opened when transfer
+  - 20 /tcp (Active Mode)
+- **Active Mode**
+  - The **server opens** a data connection
+  - 20/tcp
+  - server initiates the connection to the client
+  - Might block by firewall
+- **Passive Mode - PASV**
+  - Client initialize -> server 21/tcp
+  - server hight port >1000/tcp -> client
+- transfer method
+  - stream
+  - block
+  - compressed
