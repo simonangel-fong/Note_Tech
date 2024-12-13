@@ -37,6 +37,9 @@
   - [CP02](./securing_edge/wk06.md)
   - [CP03](./securing_edge/wk07.md)
   - [CP04](./securing_edge/wk08.md)
+  - [pf01](./securing_edge/pf01.md)
+  - [pf02](./securing_edge/pf02.md)
+  - [pf03](./securing_edge/pf03.md)
 
 - Securing Network
 
