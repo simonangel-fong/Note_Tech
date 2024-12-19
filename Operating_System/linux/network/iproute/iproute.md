@@ -16,8 +16,11 @@
 ## `iproute` Package
 
 - Package
-  - `sudo yum install iproute`
-  - `rpm -aq | grep iproute`
+
+```sh
+sudo yum install iproute
+rpm -aq | grep iproute
+```
 
 ---
 

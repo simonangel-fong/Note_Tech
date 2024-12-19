@@ -2,8 +2,6 @@
 
 [Back](../../index.md)
 
----
-
 - [Linux - Fundamental](#linux---fundamental)
   - [What is Linux](#what-is-linux)
   - [WSL](#wsl)
@@ -22,30 +20,6 @@
   - A `FOSS(Free/Open Source Software)`
     - the source is free, but the distribution, binary, and compile code are not free.
   - Unix-like.
-
-- `Linux Distributions`
-
-  - Linux `Kernel` + Additional **software/application**
-  - Each has its own focus
-  - `distro` / `flavor`
-    - short for `distributions`
-    - https://distrowatch.com/
-  - popular distro
-    - Red Hat Enterprise Linux(RHEL)
-    - Ubuntu
-    - Fedora
-    - CentOS
-    - Debian
-    - SuSE Linux Enterprise Server(SLES)
-    - OpenSuSE
-
-- Benefits
-
-  - Run on many hardware platfoms
-  - Stable, reliable, secure
-    - great for server
-  - FOSS
-  - Free Software Ecosystem
 
 - `Kernel`
   - the core of Linux

@@ -9,6 +9,7 @@
     - [`rsyslogd daemon`](#rsyslogd-daemon)
   - [Common Log Files](#common-log-files)
   - [Service Log](#service-log)
+  - [Get Support from Redhat](#get-support-from-redhat)
 
 ---
 
@@ -109,7 +110,7 @@
 
   - contains information related to **authentication** and **authorization** privileges.
 
-- `/var/log/message`
+- `/var/log/messages`
 
   - Contains global **system messages**, including the messages that are logged during system startup.
 
@@ -130,6 +131,54 @@ grep -i error /var/log/messages
 
 ```sh
 journalctl -u service_name
+```
+
+---
+
+## Get Support from Redhat
+
+- To get support from Redhat, the system administrator can run the untility `sosreport` or `sos report` which will collect the logs and configuration file and transfer them over to the Redhat support server.
+- Can use Cockpit app to generate the report at the web-based portal.
+
+```sh
+sos report
+# sos report (version 4.8.1)
+#
+# This command will collect diagnostic and configuration information from
+# this Red Hat Enterprise Linux system and installed applications.
+#
+# An archive containing the collected information will be generated in
+# /var/tmp/sos.bdqjxjl0 and may be provided to a Red Hat support
+# representative.
+#
+# Any information provided to Red Hat will be treated in accordance with
+# the published support policies at:
+#
+#         Distribution Website : https://www.redhat.com/
+#         Commercial Support   : https://access.redhat.com/
+#
+# The generated archive may contain data considered sensitive and its
+# content should be reviewed by the originating organization before being
+# passed to any third party.
+#
+# No changes will be made to system configuration.
+#
+# Press ENTER to continue, or CTRL-C to quit.
+# ...
+# Running plugins. Please wait ...
+#
+#   Finishing plugins              [Running: subscription_manager]                          ]h]d]
+#   Finished running plugins
+# Creating compressed archive...
+#
+# Your sos report has been generated and saved in:
+#         /var/tmp/sosreport-clienthost-54353-2024-12-14-ttdzzri.tar.xz
+#
+#  Size   16.12MiB
+#  Owner  root
+#  sha256 a3657fa92bfc982427ca0fad81b4f823f9da0185739766d1007336872a7d300c
+#
+# Please send this file to your support representative.
 ```
 
 ---

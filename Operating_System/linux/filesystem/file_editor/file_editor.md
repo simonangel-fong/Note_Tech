@@ -2,6 +2,23 @@
 
 [Back](../../index.md)
 
+- [Linux - File System: File Editor](#linux---file-system-file-editor)
+  - [Linux File Editor](#linux-file-editor)
+  - [`Nano` Editor](#nano-editor)
+  - [`VI` Editor](#vi-editor)
+    - [Vi Mode](#vi-mode)
+    - [Command Mode](#command-mode)
+      - [Navigation](#navigation)
+      - [Deleting Text](#deleting-text)
+      - [Changing/Replacing Text](#changingreplacing-text)
+      - [Copying and Pasting](#copying-and-pasting)
+      - [Undo / Redo](#undo--redo)
+      - [Searching](#searching)
+    - [Insert Mode](#insert-mode)
+      - [Repeating Commands](#repeating-commands)
+    - [Line Mode](#line-mode)
+      - [Find and Replace](#find-and-replace)
+
 ---
 
 - [Linux - File System: File Editor](#linux---file-system-file-editor)

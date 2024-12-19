@@ -1,10 +1,10 @@
-# Linux - Disk
+# Linux - Hardware Management: Disk
 
 [Back](../../index.md)
 
 ---
 
-- [Linux - Disk](#linux---disk)
+- [Linux - Hardware Management: Disk](#linux---hardware-management-disk)
   - [Disk in Redhat](#disk-in-redhat)
     - [Check the disk usage](#check-the-disk-usage)
     - [Explanation of Filesystem Names](#explanation-of-filesystem-names)

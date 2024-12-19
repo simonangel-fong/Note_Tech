@@ -79,9 +79,49 @@ grep -i rheladmin /etc/passwd | cut -d: -f1,5 | sort | tr ":" " " | column -t
 
 ## Filtering Text File Data
 
-| CMD                       | DESC                         |
-| ------------------------- | ---------------------------- |
-| `grep pattern /path/file` | Print lines matching pattern |
+| CMD                                          | DESC                                                    |
+| -------------------------------------------- | ------------------------------------------------------- |
+| `grep "pattern" filename`                    | Search for a Simple Word                                |
+| `grep "^pattern" filename`                   | Matches lines beginning with                            |
+| `grep "pattern$" filename`                   | Matches lines ending with                               |
+| `grep "[0-9]" filename`                      | Match Lines with Digits                                 |
+| `grep -E "error\|warning" filename`          | Match Multiple Patterns                                 |
+| `grep "pattern" file1 file2`                 | Search in Multiple Files                                |
+| `grep -r "pattern" /path/to/directory`       | Recursive Search in Directories                         |
+| `grep -l "pattern" -r /direcotry`            | List only filenames with matches.                       |
+| `grep -v "pattern" filename`                 | Invert match: show lines that do not match the pattern. |
+| `grep -i "pattern" filename`                 | Case-Insensitive Search                                 |
+| `grep -n "pattern" filename`                 | Show Line Numbers                                       |
+| `grep -w "pattern" filename`                 | Match whole words only.                                 |
+| `grep -c "pattern" filename`                 | Count the number of matching lines.                     |
+| `grep -o "pattern" filename`                 | Print only the matched part of the line.                |
+| `grep -A NUM "pattern" filename`             | Show NUM lines after a match.                           |
+| `grep -B NUM "pattern" filename`             | Show NUM lines before a match.                          |
+| `grep -C NUM "pattern" filename`             | Show NUM lines of context (before and after).           |
+| `egrep "pattern" file1.txt file2.txt`        | Match Patterns in Multiple Files                        |
+| `egrep "error\| warning\|critical" file.txt` | Searches for lines containing any of the words.         |
+| `egrep -i "pattern" file.txt`                | Ignore Case                                             |
+| `egrep -v "pattern" file.txt`                | Show lines that do not match the pattern.               |
+| `egrep -n	"pattern" file.txt`                 | Display line numbers with the matching lines.           |
+| `egrep -c "pattern" file.txt`                | Count the Number of Matches                             |
+| `egrep "a{3}" file.txt`                      | Match a Specific Number of Repetitions                  |
+| `egrep "colou?r" file.txt`                   | the u? makes the "u" optional.                          |
+| `egrep "file-+" file.txt`                    | Match "file-" followed by one or more hyphens           |
+| `egrep -A NUM "pattern" filename`            | Show NUM lines after a match.                           |
+| `egrep -B NUM "pattern" filename`            | Show NUM lines before a match.                          |
+| `egrep -C NUM "pattern" filename`            | Show NUM lines of context (before and after).           |
+
+- `grep`:
+
+  - `global regular expression print`
+  - by default uses `basic regular expressions (BREs)`
+  - filtering and displaying lines in a file or input that match a given pattern.
+
+- `egrep`:
+  - `extended grep`
+  - using `extended regular expressions (EREs)`.
+  - provides enhanced functionality and eliminates the need to escape certain special characters like +, ?, {}, and |.
+  - equivalent to `grep -E`
 
 ---
 

@@ -11,6 +11,11 @@
   - [Lab: Manging Connection](#lab-manging-connection)
   - [Lab: Creating a Permanent Static IP Connection](#lab-creating-a-permanent-static-ip-connection)
   - [Lab: Add/Delete a Secondary Static IP to a Connection](#lab-adddelete-a-secondary-static-ip-to-a-connection)
+  - [Lab: Configure Multiple Interfaces](#lab-configure-multiple-interfaces)
+    - [List Adapters](#list-adapters)
+    - [Configure Interfaces](#configure-interfaces)
+    - [Configure Gateway and Priority](#configure-gateway-and-priority)
+    - [Configure Default DNS](#configure-default-dns)
 
 ---
 
@@ -289,14 +294,14 @@ nmcli connection modify "static_con" ipv4.gateway "192.168.204.2"
 # Set method as manual
 nmcli connection modify "static_con" ipv4.method manual
 # Set the dns ip
-nmcli connection modify "static_con" ipv4.dns 8.8.8.8
+nmcli connection modify "static_con" ipv4.dns 8.8.8.8,8.8.4.4
 # Set device
 nmcli connection modify "static_con" ifname "ens224"
 
 # Confirm configuration
 nmcli connection show static_con
 # ipv4.method:                            manual
-# ipv4.dns:                               8.8.8.8
+# ipv4.dns:                               8.8.8.8,8.8.4.4
 # ipv4.dns-search:                        --
 # ipv4.dns-options:                       --
 # ipv4.dns-priority:                      0
@@ -443,4 +448,121 @@ ip address show ens224 | grep "inet "
 
 ---
 
-[TOP](#linux---networking-networkmanager-package)
+## Lab: Configure Multiple Interfaces
+
+### List Adapters
+
+```sh
+# list all interface
+ip link show
+# 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+#     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+# 2: virbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN mode DEFAULT group default qlen 1000
+#     link/ether 52:54:00:c5:c9:4d brd ff:ff:ff:ff:ff:ff
+# 3: ens224: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+#     link/ether 00:0c:29:27:6b:f3 brd ff:ff:ff:ff:ff:ff
+#     altname enp19s0
+# 4: ens160: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+#     link/ether 00:0c:29:27:6b:fd brd ff:ff:ff:ff:ff:ff
+#     altname enp3s0
+
+nmcli d
+# DEVICE  TYPE      STATE         CONNECTION
+# ens160  ethernet  disconnected  --
+# ens224  ethernet  disconnected  --
+# virbr0  bridge    unmanaged     --
+# lo      loopback  unmanaged     --
+```
+
+---
+
+### Configure Interfaces
+
+```sh
+su -
+
+# add ens160 connection
+nmcli connection add con-name "ens160" type ethernet
+nmcli connection modify ens160 ipv4.addresses 192.168.1.130/24
+nmcli connection modify ens160 ipv4.method manual
+nmcli connection modify ens160 ifname ens160
+nmcli connection show ens160
+
+# add ens224 connection
+nmcli connection add con-name "ens224" type ethernet
+nmcli connection modify ens224 ipv4.addresses 192.168.1.135/24
+nmcli connection modify ens224 ipv4.method manual
+nmcli connection modify ens224 ifname ens224
+
+# enable connections
+nmcli connection down ens160
+nmcli connection up ens160
+# Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/4)
+nmcli connection down ens224
+nmcli connection up ens224
+# Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/5)
+
+# confirm
+nmcli c
+# NAME    UUID                                  TYPE      DEVICE
+# ens160  c6bae8b9-3866-47a6-8771-abc591b09bf7  ethernet  ens160
+# ens224  5780461f-424b-49b2-9df5-a82106ac7c77  ethernet  ens224
+nmcli d
+# DEVICE  TYPE      STATE      CONNECTION
+# ens160  ethernet  connected  ens160
+# ens224  ethernet  connected  ens224
+# virbr0  bridge    unmanaged  --
+# lo      loopback  unmanaged  --
+```
+
+---
+
+### Configure Gateway and Priority
+
+```sh
+nmcli c modify ens160 ipv4.gateway 192.168.1.2 ipv4.route-metric 100
+nmcli c down ens160; nmcli c up ens160
+# Connection 'ens160' successfully deactivated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/1)
+# Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/3)
+
+nmcli connection modify ens224 ipv4.gateway 192.168.1.2 ipv4.route-metric 200
+nmcli c down ens224; nmcli c up ens224
+# Connection 'ens224' successfully deactivated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/2)
+# Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/4)
+
+# confirm
+ip route
+# default via 192.168.1.2 dev ens160 proto static metric 100
+# default via 192.168.1.2 dev ens224 proto static metric 200
+# 192.168.1.0/24 dev ens160 proto kernel scope link src 192.168.1.130 metric 100
+# 192.168.1.0/24 dev ens224 proto kernel scope link src 192.168.1.135 metric 200
+
+# verify the default interface
+ip route get 8.8.8.8
+# 8.8.8.8 via 192.168.1.2 dev ens160 src 192.168.1.130 uid 0
+    # cache
+```
+
+---
+
+### Configure Default DNS
+
+```sh
+hostname
+# serverhost
+
+vi /etc/resolv.conf
+# Generated by NetworkManager
+# search serverhost
+# nameserver 8.8.8.8
+
+# restart nm
+systemctl restart NetworkManager
+
+# test
+ping -c4 google.ca
+```
+
+---
+
+[TOP](#linux---networking-package-networkmanager)

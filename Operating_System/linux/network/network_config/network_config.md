@@ -19,7 +19,7 @@
     - [`/etc/nsswitch.conf`](#etcnsswitchconf)
     - [`/etc/resolv.conf`](#etcresolvconf)
     - [Command](#command-1)
-    - [Example: Step-by-Step Domain Name Resolution](#example-step-by-step-domain-name-resolution)
+    - [Lab: Step-by-Step Domain Name Resolution](#lab-step-by-step-domain-name-resolution)
     - [Lab: Setup DNS and Query Domain Name](#lab-setup-dns-and-query-domain-name)
   - [Connection](#connection)
     - [`/etc/sysconfig/network-scripts/`](#etcsysconfignetwork-scripts)
@@ -343,6 +343,7 @@ hosts: files dns
 
 ```conf
 option value
+nameserver 8.8.8.8
 ```
 
 - Common options:
@@ -365,7 +366,7 @@ option value
 
 ---
 
-### Example: Step-by-Step Domain Name Resolution
+### Lab: Step-by-Step Domain Name Resolution
 
 - Configuration
 

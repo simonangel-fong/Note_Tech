@@ -148,8 +148,6 @@
 
 ---
 
----
-
 ## `top`: Display processes
 
 | Command           | Desc                                                  |

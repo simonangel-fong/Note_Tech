@@ -8,7 +8,7 @@
     - [Configuration File](#configuration-file)
   - [`wheel` Group](#wheel-group)
     - [Configuration File](#configuration-file-1)
-    - [Example: Enable a user to perform any sudo command](#example-enable-a-user-to-perform-any-sudo-command)
+    - [Lab: Enable a user to perform any sudo command](#lab-enable-a-user-to-perform-any-sudo-command)
 
 ---
 
@@ -164,7 +164,7 @@ sudo cat /
 
 ---
 
-### Example: Enable a user to perform any sudo command
+### Lab: Enable a user to perform any sudo command
 
 ```sh
 # Create the New User
@@ -183,3 +183,5 @@ su - devops1
 # test sudo command
 sudo yum update
 ```
+
+---

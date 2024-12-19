@@ -81,4 +81,4 @@
   - [ ] Scikit-learn
   - [ ] OpenCV
 
-- [F](./F/index.md)
+<!-- - [F](./F/index.md) -->

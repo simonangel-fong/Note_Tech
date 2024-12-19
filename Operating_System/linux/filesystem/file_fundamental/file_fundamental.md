@@ -15,7 +15,7 @@
       - [Symbolic Links](#symbolic-links)
       - [Hard vs soft](#hard-vs-soft)
       - [Command](#command)
-    - [`file`: display the file type](#file-display-the-file-type)
+    - [`file`: Display the file type](#file-display-the-file-type)
 
 ---
 
@@ -232,7 +232,7 @@ pwd
 
 ---
 
-### `file`: display the file type
+### `file`: Display the file type
 
 | Command         | Desc                                          |
 | --------------- | --------------------------------------------- |

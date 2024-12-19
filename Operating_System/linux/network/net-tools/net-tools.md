@@ -18,8 +18,11 @@
 ## Package `net-tools`
 
 - Package
-  - `sudo yum install net-tools`
-  - `rpm -aq | grep net-tools`
+
+```sh
+sudo yum install net-tools
+rpm -aq | grep net-tools
+```
 
 ---
 

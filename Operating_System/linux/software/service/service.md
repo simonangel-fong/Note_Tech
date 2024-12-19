@@ -18,7 +18,7 @@
     - [Mask/Unmask a Service](#maskunmask-a-service)
       - [Mask a Service](#mask-a-service)
       - [Unmask a Service](#unmask-a-service)
-  - [Example: Manage `nginx`](#example-manage-nginx)
+  - [Lab: Manage `nginx`](#lab-manage-nginx)
     - [Install `nginx` Package](#install-nginx-package)
     - [Start/Stop `nginx`](#startstop-nginx)
     - [Enable/Disable `nginx`](#enabledisable-nginx)
@@ -357,7 +357,7 @@ systemctl --all
 
 ---
 
-## Example: Manage `nginx`
+## Lab: Manage `nginx`
 
 ### Install `nginx` Package
 

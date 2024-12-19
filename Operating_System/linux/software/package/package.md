@@ -8,7 +8,7 @@
   - [Package \& Package Manager](#package--package-manager)
   - [Local Repository](#local-repository)
     - [`createrepo` Tool](#createrepo-tool)
-    - [Lab: Create a Local Repository](#lab-create-a-local-repository)
+    - [**!Lab: Create a Local Repository**](#lab-create-a-local-repository)
   - [System Upgrade/Patch Management](#system-upgradepatch-management)
     - [`yum update` vs `yum upgrade`](#yum-update-vs-yum-upgrade)
     - [`dnf update` and `dnf upgrade`](#dnf-update-and-dnf-upgrade)
@@ -95,7 +95,7 @@
 
 ---
 
-### Lab: Create a Local Repository
+### **!Lab: Create a Local Repository**
 
 - Create a dir for repo and copy packages
 
@@ -398,7 +398,7 @@ skip_if_unavailable=False
 
 - `DNF (Dandified YUM)`:
 
-  - the next-generation package manager for RPM-based Linux distributions
+  - the next-generation **package manager** for RPM-based Linux distributions
   - replace `YUM` in systems like Red Hat Enterprise Linux (RHEL) 8, CentOS 8, and Fedora.
 
 - OS: RHEL 8 / CentOS 8 & Later

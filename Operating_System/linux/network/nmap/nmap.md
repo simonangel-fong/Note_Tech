@@ -12,8 +12,11 @@
 ## `nmap` Package
 
 - Package
-  - `sudo yum install nmap`
-  - `rpm -aq | grep nmap`
+
+```sh
+sudo yum install nmap
+rpm -aq | grep nmap
+```
 
 ---
 
@@ -21,6 +24,8 @@
 
 - `nping`
   - an advanced network packet generation and testing tool
+  - allows users to generate network packets of a wide range of protocols, letting them tune virtually any field of the protocol headers.
+  - Require root privilege.
 
 | CMD                                  | DESC                               |
 | ------------------------------------ | ---------------------------------- |
@@ -32,6 +37,16 @@
 | `nping --icmp --count 5 example.com` | Number of packets to send          |
 | `nping --ttl 64 example.com`         | Set Time-To-Live value for packets |
 | `nping --rate 1000 example.com`      | Send num packets per second        |
+
+- Example
+
+```sh
+nping --tcp-connect -p 80 --rate 10000 -c 50 dest_url
+# --tcp-connect: TCP connect mode
+# -p:   ports to connect to.
+# -rate: the number of probes that Nping should send per second.
+# -c: the number of times that Nping should loop over target hosts (and in some cases target ports).
+```
 
 ---
 

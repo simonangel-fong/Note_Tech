@@ -1,10 +1,10 @@
-# Linux - File System: Permission
+# Linux - File System: File Permission
 
 [Back](../../index.md)
 
 ---
 
-- [Linux - File System: Permission](#linux---file-system-permission)
+- [Linux - File System: File Permission](#linux---file-system-file-permission)
   - [Permissions](#permissions)
     - [File permissions](#file-permissions)
     - [Directory Permissions](#directory-permissions)
@@ -243,6 +243,8 @@ rm -r /home/rheladmin/withwrite
 - If **no** mask were used permissions would be:
   - `777` for directories
   - `666` for files
+
+---
 
 ### `umask`: set file creation mask
 
@@ -611,4 +613,4 @@ ll -d /etc
 
 ---
 
-[TOP](#linux---file-system-permission)
+[TOP](#linux---file-system-file-permission)
