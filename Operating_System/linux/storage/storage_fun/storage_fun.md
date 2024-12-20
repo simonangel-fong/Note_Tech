@@ -1,31 +1,63 @@
-# Linux - Hardware Management: Disk
+# Linux - Storage Fundamental
 
 [Back](../../index.md)
 
----
-
-- [Linux - Hardware Management: Disk](#linux---hardware-management-disk)
-  - [Disk in Redhat](#disk-in-redhat)
-    - [Check the disk usage](#check-the-disk-usage)
-    - [Explanation of Filesystem Names](#explanation-of-filesystem-names)
-    - [`tmpfs`](#tmpfs)
-    - [`devtmpfs`](#devtmpfs)
-    - [`/dev/mapper/rhel_rhelhost-root`](#devmapperrhel_rhelhost-root)
-    - [`/dev/nvme0n1p1` at `/boot`](#devnvme0n1p1-at-boot)
-  - [Display Disk Usage](#display-disk-usage)
-    - [Check Disk Space Usage](#check-disk-space-usage)
-    - [Check File Space Usage](#check-file-space-usage)
-  - [View File System Details](#view-file-system-details)
-  - [!Mount and Unmount File Systems](#mount-and-unmount-file-systems)
-  - [!Disk Partitioning and Formatting](#disk-partitioning-and-formatting)
-  - [!Logical Volume Management (LVM)](#logical-volume-management-lvm)
-  - [Monitoring Disk Health](#monitoring-disk-health)
+- [Linux - Storage Fundamental](#linux---storage-fundamental)
+  - [Storage Fundamental](#storage-fundamental)
+  - [Display block device](#display-block-device)
+  - [Display disk partitions](#display-disk-partitions)
+  - [Display Filesystem Disk Usage](#display-filesystem-disk-usage)
+    - [Explanation](#explanation)
+    - [Commands](#commands)
+  - [Display File Usage](#display-file-usage)
 
 ---
 
-## Disk in Redhat
+## Storage Fundamental
 
-### Check the disk usage
+- Types of storage
+  - Local Storage
+  - SAN(Storage Area Network)
+  - NAS(Network Attached Storage)
+
+---
+
+## Display block device
+
+| Command                              | Description                                                             |
+| ------------------------------------ | ----------------------------------------------------------------------- |
+| `lsblk`                              | List information about block devices.                                   |
+| `lsblk -l`                           | Shows a list-style output (each block device on one line).              |
+| `lsblk -f`                           | Displays information about block devices, including filesystem type     |
+| `lsblk -o NAME,SIZE,TYPE,MOUNTPOINT` | Customizes output columns (e.g., name, size, type, mountpoint).         |
+| `lsblk -d`                           | Displays information about block devices but excludes their partitions. |
+| `lsblk -r`                           | Excludes devices that are removable (e.g., USB drives).                 |
+| `lsblk --output NAME,FSTYPE,UUID`    | Displays specified columns (name, filesystem type, and UUID).           |
+| `sudo blkid`                         | Display all block devices attributes.                                   |
+| `sudo blkid /dev/nvme0n1p1`          | Display a specific block device.                                        |
+
+![lsblk01.png](./pic/lsblk01.png)
+
+![blkid01.png](./pic/blkid01.png)
+
+---
+
+## Display disk partitions
+
+| CMD                     | DESC                                                       |
+| ----------------------- | ---------------------------------------------------------- |
+| `smartctl -a /dev/sda1` | Display SMART health information for the disk `/dev/sda1`. |
+| `fdisk -l`              | List partition tables of all disks                         |
+| `fdisk device_name`     | Start editing a specific disk                              |
+
+---
+
+## Display Filesystem Disk Usage
+
+- `df`
+  - Display file system disk space usage
+
+### Explanation
 
 ```sh
 df
@@ -41,7 +73,7 @@ df
 # tmpfs                             372080       4    372076   1% /run/user/1000
 ```
 
-- Columns
+- **Columns**
 
 | Col            | Desc                                                                     |
 | -------------- | ------------------------------------------------------------------------ |
@@ -52,9 +84,9 @@ df
 | **Use%**       | The **percentage** of space **used**.                                    |
 | **Mounted** on | The mount point where the file system is attached in the directory tree. |
 
-- Filesystem name explanation:
+---
 
-### Explanation of Filesystem Names
+- **Explanation of Filesystem Names**
 
 | Filesystem Name                  | Type            | Purpose                                                                | Mounted on       |
 | -------------------------------- | --------------- | ---------------------------------------------------------------------- | ---------------- |
@@ -68,8 +100,6 @@ df
 | `tmpfs`                          | `tmpfs`         | for **user-specific runtime data** (for user ID 1000).                 | `/run/user/1000` |
 
 ---
-
-### `tmpfs`
 
 - `tmpfs`
   - `temporary file system`
@@ -98,8 +128,6 @@ df
 
 ---
 
-### `devtmpfs`
-
 - `devtmpfs`
 
   - a special type of file system
@@ -127,8 +155,6 @@ df
 
 ---
 
-### `/dev/mapper/rhel_rhelhost-root`
-
 - `/dev/mapper/rhel_rhelhost-root`
 
   - a **logical volume** created using `LVM` (`Logical Volume Manager`) in Linux.
@@ -155,32 +181,26 @@ df
 
 ---
 
-### `/dev/nvme0n1p1` at `/boot`
+- `/dev/nvme0n1p1` at `/boot`
 
 - mounted to the `/boot` directory, indicating its purpose to store files necessary for the system to boot.
 
-skip
-
 ---
 
----
-
-## Display Disk Usage
-
-### Check Disk Space Usage
+### Commands
 
 | Command                | Description                                  |
 | ---------------------- | -------------------------------------------- |
 | `df`                   | Report file system disk usage.               |
 | `df -a`                | show all disk space usage                    |
-| `df -BM`               | Display disk usage in MB size                |
 | `df -h`                | Display disk usage in human-readable format. |
+| `df -BM`               | Display disk usage in MB size                |
 | `df -T`                | Include file system type in the output.      |
 | `df -h \| sort -k5 -r` | sort disk usage by use%                      |
 
 ---
 
-### Check File Space Usage
+## Display File Usage
 
 | Command              | Description                                                     |
 | -------------------- | --------------------------------------------------------------- |
@@ -193,69 +213,4 @@ skip
 
 ---
 
-## View File System Details
-
-| Command                              | Description                                                             |
-| ------------------------------------ | ----------------------------------------------------------------------- |
-| `lsblk`                              | List information about block devices.                                   |
-| `lsblk -l`                           | Shows a list-style output (each block device on one line).              |
-| `lsblk -f`                           | Displays information about block devices, including filesystem type     |
-| `lsblk -o NAME,SIZE,TYPE,MOUNTPOINT` | Customizes output columns (e.g., name, size, type, mountpoint).         |
-| `lsblk -d`                           | Displays information about block devices but excludes their partitions. |
-| `lsblk -r`                           | Excludes devices that are removable (e.g., USB drives).                 |
-| `lsblk --output NAME,FSTYPE,UUID`    | Displays specified columns (name, filesystem type, and UUID).           |
-| `sudo blkid`                         | Display all block devices attributes.                                   |
-| `sudo blkid /dev/nvme0n1p1`          | Display a specific block device.                                        |
-
-- `lsblk`:
-
-![lsblk01.png](./pic/lsblk01.png)
-
-- `blkid`:
-  - require privilege
-
-![blkid01.png](./pic/blkid01.png)
-
----
-
-## !Mount and Unmount File Systems
-
-| Command                     | Description                                     |
-| --------------------------- | ----------------------------------------------- |
-| `mount /dev/sdb1 /mnt/data` | Mount `/dev/sdb1` to `/mnt/data`.               |
-| `umount /mnt/data`          | Unmount the file system mounted at `/mnt/data`. |
-| `mount -a`                  | Mount all file systems defined in `/etc/fstab`. |
-
----
-
-## !Disk Partitioning and Formatting
-
-| Command               | Description                                     |
-| --------------------- | ----------------------------------------------- |
-| `fdisk /dev/sda`      | Interactive partition manager for MBR disks.    |
-| `parted /dev/sdb`     | Partition manager for GPT/MBR disks.            |
-| `mkfs.ext4 /dev/sdb1` | Format the partition with the ext4 file system. |
-
----
-
-## !Logical Volume Management (LVM)
-
-| Command                           | Description                                              |
-| --------------------------------- | -------------------------------------------------------- |
-| `pvcreate /dev/sdb`               | Initialize a physical volume for LVM.                    |
-| `vgcreate my_vg /dev/sdb`         | Create a volume group named `my_vg`.                     |
-| `lvcreate -L 10G -n my_lv my_vg`  | Create a 10GB logical volume named `my_lv` in `my_vg`.   |
-| `lvextend -L+5G /dev/my_vg/my_lv` | Extend the logical volume by 5GB.                        |
-| `resize2fs /dev/my_vg/my_lv`      | Resize the file system to match the logical volume size. |
-
----
-
-## Monitoring Disk Health
-
-| Command                | Description                                               |
-| ---------------------- | --------------------------------------------------------- |
-| `smartctl -a /dev/sda` | Display SMART health information for the disk `/dev/sda`. |
-| `iostat -x 1`          | Show extended disk I/O stats every second.                |
-| `iotop`                | Display real-time I/O usage by processes.                 |
-
-F
+[TOP](#linux---storage-fundamental)

@@ -9,9 +9,10 @@
   - [Kernel](./fundamental/kernel/kernel.md)
   - [System Information](./fundamental/systeminfo/systeminfo.md)
 
-- **Hardware Management**
+- [Storage Fundamental](./storage/storage_fun/storage_fun.md)
 
-  - [Disk](./hardware/disk/disk.md)
+  - [Partition](./storage/partition/partition.md)
+  - [Logical Volume Manager](./storage/lvm/lvm.md)
   - [Memory](./hardware/memory/memory.md)
 
 - **Software Management**
@@ -60,6 +61,8 @@
     - [SCP](./network/scp/scp.md)
     - [FTP](./network/ftp/ftp.md)
     - [STFP](./project/stfp/stfp.md)
+
+- [SELinux](./selinux/selinux/selinux.md)
 
 ---
 
