@@ -9,20 +9,31 @@
   - [Kernel](./fundamental/kernel/kernel.md)
   - [System Information](./fundamental/systeminfo/systeminfo.md)
 
+- [Memory](./hardware/memory/memory.md)
 - [Storage Fundamental](./storage/storage_fun/storage_fun.md)
 
-  - [Partition](./storage/partition/partition.md)
-  - [Logical Volume Manager](./storage/lvm/lvm.md)
-  - [Memory](./hardware/memory/memory.md)
+  - **Local Storage**
+    - [Partition](./storage/partition/partition.md)
+    - [Logical Volume Manager](./storage/lvm/lvm.md)
+    - [Package `Stratis`](./storage/stratis/stratis.md)
+  - [Network File System (NFS)](./storage/nfs/nfs.md)
+  - Server Message Block (SMB)
+    - [!Package `Samba`](./storage/samba/samba.md)
 
-- **Software Management**
+- **System**
+
+  - [Boot Process](./system/boot/boot.md)
+    - [Lab: Revocer root password](./system/recover_root_pwd/recover_root_pwd.md)
+  - [Shutdown Options](./system/shutdown/shutdown.md)
+  - [Tune System Performance](./software/tune_perform/tune_perform.md)
+  - [Utility `cockpit`](./software/cockpit/cockpit.md)
+
+- **Package, Process, & App**
 
   - [Packages Management](./software/package/package.md)
   - [Process Mangement](./software/process/process.md)
   - [Service Mangement](./software/service/service.md)
   - [Log and Support](./software/log/log.md)
-  - [Utility `cockpit`](./software/cockpit/cockpit.md)
-  - [Tune System Performance](./software/tune_perform/tune_perform.md)
 
 - **Shell**
 
@@ -61,8 +72,10 @@
     - [SCP](./network/scp/scp.md)
     - [FTP](./network/ftp/ftp.md)
     - [STFP](./project/stfp/stfp.md)
+  - [Firewall](./network/firewall/firewall.md)
 
 - [SELinux](./selinux/selinux/selinux.md)
+- [Container](./selinux/container/container.md)
 
 ---
 

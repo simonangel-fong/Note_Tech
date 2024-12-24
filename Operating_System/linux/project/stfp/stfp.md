@@ -2,8 +2,6 @@
 
 [Back](../../index.md)
 
----
-
 - [Linux - Network: STFP](#linux---network-stfp)
   - [SFTP Protocol](#sftp-protocol)
     - [FTP vs SFTP](#ftp-vs-sftp)
