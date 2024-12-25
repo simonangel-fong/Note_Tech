@@ -1,8 +1,8 @@
-# Linux - Software Management: Tune System Performance
+# Linux - System: Tune System Performance
 
 [Back](../../index.md)
 
-- [Linux - Software Management: Tune System Performance](#linux---software-management-tune-system-performance)
+- [Linux - System: Tune System Performance](#linux---system-tune-system-performance)
   - [Tune System Performance](#tune-system-performance)
   - [Package `tuned`: Tuning by Profiles](#package-tuned-tuning-by-profiles)
     - [Predefined Profiles](#predefined-profiles)

@@ -1,8 +1,8 @@
-# Linux - Software Management: Utility `Cockpit`
+# Linux - System Management: Utility `Cockpit`
 
 [Back](../../index.md)
 
-- [Linux - Software Management: Utility `Cockpit`](#linux---software-management-utility-cockpit)
+- [Linux - System Management: Utility `Cockpit`](#linux---system-management-utility-cockpit)
   - [`Cockpit`](#cockpit)
     - [Command](#command)
   - [Lab: Manage system via `cockpit`](#lab-manage-system-via-cockpit)

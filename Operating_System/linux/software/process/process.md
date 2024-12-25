@@ -1,8 +1,8 @@
-# Linux - Software Management: Process
+# Linux - Software: Process
 
 [Back](../../index.md)
 
-- [Linux - Software Management: Process](#linux---software-management-process)
+- [Linux - Software: Process](#linux---software-process)
   - [Terminologies](#terminologies)
     - [`daemon` vs `service`](#daemon-vs-service)
   - [Process](#process)

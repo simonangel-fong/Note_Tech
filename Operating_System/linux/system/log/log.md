@@ -1,8 +1,8 @@
-# Linux - Software Management: Log
+# Linux - System: Log
 
 [Back](../../index.md)
 
-- [Linux - Software Management: Log](#linux---software-management-log)
+- [Linux - System: Log](#linux---system-log)
   - [Log](#log)
   - [Default Logging Daemon](#default-logging-daemon)
     - [`journald daemon`](#journald-daemon)

@@ -1,10 +1,8 @@
-# Linux - Software Management: Package
+# Linux - Software: Package
 
 [Back](../../index.md)
 
----
-
-- [Linux - Software Management: Package](#linux---software-management-package)
+- [Linux - Software: Package](#linux---software-package)
   - [Package \& Package Manager](#package--package-manager)
   - [Local Repository](#local-repository)
     - [`createrepo` Tool](#createrepo-tool)

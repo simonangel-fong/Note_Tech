@@ -1,8 +1,8 @@
-# Linux - Software Management: Service
+# Linux - Software: Service
 
 [Back](../../index.md)
 
-- [Linux - Software Management: Service](#linux---software-management-service)
+- [Linux - Software: Service](#linux---software-service)
   - [Service](#service)
   - [`systemd`](#systemd)
     - [Unit File](#unit-file)
