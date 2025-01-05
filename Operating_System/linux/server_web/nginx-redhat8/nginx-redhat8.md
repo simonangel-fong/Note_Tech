@@ -1,8 +1,8 @@
-# Project - Web Server: `nginx` on `Redhat8`
+# Server - Web: `nginx` on `Redhat8`
 
 [Back](../../index.md)
 
-- [Project - Web Server: `nginx` on `Redhat8`](#project---web-server-nginx-on-redhat8)
+- [Server - Web: `nginx` on `Redhat8`](#server---web-nginx-on-redhat8)
   - [Nginx](#nginx)
   - [Installation](#installation)
 

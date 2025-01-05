@@ -36,7 +36,19 @@
   - Secure boot
 
 - `bootloader`
+
   - a program that loads a computer's operating system (OS) into memory when the computer starts up or restarts
+
+- `Master Boot Record (MBR)`
+  - the information in the first sector of a hard disk or a removable drive, responsible for loading the operating system (OS) when the computer is turned on.
+
+- `GUID Partition Table (GPT)`
+  - a standard for organizing the layout of partition tables on physical storage devices, such as hard disk drives and solid-state drives
+
+- `initramfs (initial ram file system)`
+  - a set of tools and scripts that prepares a Linux system for boot
+  - loads the necessary kernel modules and drivers to mount file systems like `/usr` or `/var`.
+
 
 ---
 
@@ -137,6 +149,10 @@
   - Start running the kernel code.
   - Displays the **boot menu**, allowing users to **select** a kernel or operating system.
   - **Loads** the selected `kernel` and the `initramfs (initial RAM filesystem)` into memory.
+
+```sh
+grub2-editenv - unset menu_auto_hide
+```
 
 ---
 

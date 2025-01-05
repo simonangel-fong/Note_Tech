@@ -3,8 +3,119 @@
 [Back](../../index.md)
 
 - [Linux - System: Recover Root Password](#linux---system-recover-root-password)
+  - [Steps to Reset the Root Password](#steps-to-reset-the-root-password)
+    - [1. Reboot the System](#1-reboot-the-system)
+    - [2. Interrupt the GRUB Bootloader](#2-interrupt-the-grub-bootloader)
+    - [3. Modify the Boot Parameters](#3-modify-the-boot-parameters)
+    - [4. Boot into Emergency Mode](#4-boot-into-emergency-mode)
+    - [5. Remount the Root Filesystem](#5-remount-the-root-filesystem)
+    - [6. Change the Root Password](#6-change-the-root-password)
+    - [7. Relabel SELinux Contexts](#7-relabel-selinux-contexts)
+    - [8. Exit and Reboot](#8-exit-and-reboot)
+    - [9. Log In with the New Password](#9-log-in-with-the-new-password)
   - [Lab: Recover Root Password](#lab-recover-root-password)
   - [Lab: Repair Filesystem from corruption](#lab-repair-filesystem-from-corruption)
+
+---
+
+## Steps to Reset the Root Password
+
+### 1. Reboot the System
+
+- From the terminal or console, reboot the system:
+
+```sh
+reboot
+```
+
+---
+
+### 2. Interrupt the GRUB Bootloader
+
+- As the server reboots, press the `e` key at the **GRUB menu** to edit the boot entry.
+
+---
+
+### 3. Modify the Boot Parameters
+
+- Use the arrow keys to navigate to the line starting with `linux` or `linux16`.
+- At the end of the line, append the following:
+
+```sh
+rd.break
+```
+
+- This tells the system to **stop the boot process** before the root filesystem is **mounted**.
+
+？？
+
+```sh
+rw init=/bin/bash
+```
+
+---
+
+### 4. Boot into Emergency Mode
+
+- Press `Ctrl + X` to boot with the modified parameters.
+
+---
+
+### 5. Remount the Root Filesystem
+
+Once the system stops in the emergency shell, **remount** the root filesystem in **read-write mode**:
+
+```sh
+mount -o remount,rw /sysroot
+```
+
+---
+
+### 6. Change the Root Password
+
+Access the system's root environment:
+
+```sh
+chroot /sysroot
+```
+
+Reset the root password using the passwd command:
+
+```sh
+passwd
+```
+
+Enter and confirm the new root password.
+
+---
+
+### 7. Relabel SELinux Contexts
+
+Create an autorelabel file to ensure SELinux relabels the filesystem:
+
+```sh
+touch /.autorelabel
+```
+
+---
+
+### 8. Exit and Reboot
+
+```sh
+# Exit the chroot environment:
+exit
+
+# Exit the emergency shell:
+exit
+```
+
+- The system will reboot. Allow it to relabel files, which might take some time.
+
+---
+
+### 9. Log In with the New Password
+
+Once the system completes the reboot, log in as root with the new password.
 
 ---
 
