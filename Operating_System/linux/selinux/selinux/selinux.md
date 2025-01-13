@@ -4,9 +4,12 @@
 
 - [Linux - SELinux](#linux---selinux)
   - [SELinux](#selinux)
-    - [`Discretionary Access Control (DAC)` vs `Mandatory Access Control (MAC)`](#discretionary-access-control-dac-vs-mandatory-access-control-mac)
-  - [SELinux Modes](#selinux-modes)
-  - [Configuration File `/etc/selinux/config`](#configuration-file-etcselinuxconfig)
+    - [`Mandatory Access Control (MAC)`](#mandatory-access-control-mac)
+    - [SELinux types](#selinux-types)
+    - [vs `Discretionary Access Control (DAC)`](#vs-discretionary-access-control-dac)
+    - [Architecture](#architecture)
+  - [States and Modes](#states-and-modes)
+    - [Configuration File `/etc/selinux/config`](#configuration-file-etcselinuxconfig)
   - [Common Commands](#common-commands)
   - [Lab:](#lab)
     - [Labeling](#labeling)
@@ -15,14 +18,19 @@
   - [SELinux policies](#selinux-policies)
     - [Types of SELinux Policies](#types-of-selinux-policies)
     - [???](#-1)
+  - [SELinux Policy Management tool: `semanage`](#selinux-policy-management-tool-semanage)
+    - [Manage file contexts](#manage-file-contexts)
+    - [`semanage port`: Manage SELinux port contexts](#semanage-port-manage-selinux-port-contexts)
+  - [Booleans](#booleans)
+    - [Lab: Configure SELinux Boolean](#lab-configure-selinux-boolean)
 
 ---
 
 ## SELinux
 
-- `SELinux (Security-Enhanced Linux)`
+- `Security Enhanced Linux (SELinux)`
 
-  - a **security architecture** integrated into the Linux **kernel** that provides a mechanism for supporting `access control security policies`.
+  - provides an **additional layer** of system security.
   - It was originally developed by the `United States National Security Agency (NSA)` as a way to enforce the principle of `least privilege` and limit the potential damage of exploited vulnerabilities.
 
 - **Benefits**:
@@ -37,10 +45,57 @@
 
 ---
 
-### `Discretionary Access Control (DAC)` vs `Mandatory Access Control (MAC)`
+### `Mandatory Access Control (MAC)`
+
+- `SELinux context` / `SELinux label`:
+
+  - a **special security label** associated with every **process** and system **resource**
+  - an identifier which abstracts away the system-level details and focuses on the **security properties** of the entity.
+    - provide a consistent way of **referencing objects** in the `SELinux policy`
+    - removes any ambiguity that can be found in other identification methods
+
+- `SELinux policy`
+
+  - a series of rules which use these contexts to define **how processes can interact with each other** and the various system **resources**.
+  - By **default**, the policy does **not allow any interaction** unless a rule explicitly grants access.
+
+- `Mandatory Access Control (MAC)`
+
+  - an access policy using `SELinux context`
+
+- `SELinux contexts` have several **fields**:
+  - user,
+  - role,
+  - type,
+  - and security level.
+
+---
+
+### SELinux types
+
+- `SELinux types`
+  - used by the most common policy rule to **define the allowed interactions between processes and system resources**
+  - usually end with `_t`.
+  - e.g.,
+    - the type name for the web server: `httpd_t`
+    - type context for files and directories in `/var/www/html/`: `httpd_sys_content_t`
+    - type contexts for files and directories in `/tmp` and `/var/tmp/`: `tmp_t`
+    - type context for web server **ports**: `http_port_t`
+  - e.g., a policy has
+    - a rule that permits Apache (the **web server process** running as `httpd_t`) to access **files and directories** with a context normally found in `/var/www/html/` and other web server directories (`httpd_sys_content_t`).
+    - **no allow rule** in the policy for files normally found in `/tmp` and `/var/tmp/`, so access is **not permitted**.
+    - With SELinux, even if Apache is **compromised**, and a malicious script gains access, it is still **not able to** access the `/tmp` directory.
+
+![example_selinux_context_type](./pic/example_selinux_context_type.png)
+
+---
+
+### vs `Discretionary Access Control (DAC)`
 
 - `Discretionary Access Control (DAC)`
-
+  - The **standard access policy** based on the **user**, **group**, and other **permissions**
+  - does not enable system administrators to create comprehensive and fine-grained security policies
+    - e.g., restricting specific applications to only viewing log files, while allowing other applications to append new data to the log files
   - **Users** have more control over their data, and can grant permissions to others.
   - **resource owners** can grant permissions at their own discretion.
   - traditional, flexible, and scalable
@@ -62,21 +117,48 @@
 
 ---
 
-## SELinux Modes
+### Architecture
 
-- SELinux can operate in three modes:
-  - `Enforcing` (**default**):
-    - Policies are **enforced**, and access violations are **blocked** and **logged**.
-  - `Permissive`:
-    - Policies are **not enforced**, but **violations are logged**.
-    - Useful for debugging and testing policies.
-  - `Disabled`:
-    - SELinux is **turned off**, and **no** policies are **enforced** or **logged**.
+- `SELinux` is a `Linux Security Module (LSM)` that is built into the Linux kernel.
+- The **SELinux subsystem** in the kernel is driven by **a security policy** which is controlled by the administrator and loaded at boot.
+- All security-relevant, kernel-level access operations on the system are **intercepted** by SELinux and examined in the **context** of the loaded security policy.
+
+  - If the loaded policy **allows** the operation, it continues.
+  - Otherwise, the operation is **blocked** and the process receives an error.
+
+- `Access Vector Cache (AVC)`
+  - the cached SELinux decisions, such as allowing or disallowing access
+  - When using these cached decisions, SELinux policy rules need to be **checked less**, which increases performance.
+  - Remember that SELinux policy rules have **no effect** if `DAC` rules **deny** access first.
 
 ---
 
-## Configuration File `/etc/selinux/config`
+## States and Modes
 
+Use the setenforce utility to change between enforcing and permissive mode. Changes made with setenforce do not persist across reboots. To change to enforcing mode, enter the setenforce 1 command as the Linux root user. To change to permissive mode, enter the setenforce 0 command. Use the getenforce utility to view the current SELinux mode:
+
+- SELinux can operate in three modes:
+  - `Enforcing`
+    - **default**, recommended
+    - Policies are **enforced**, and access violations are **blocked** and **logged**.
+    - enforcing the loaded security policy on the entire system
+  - `Permissive`:
+    - Policies are **not enforced**, but **violations are logged**.
+    - not actually deny any operations
+    - not recommended for production systems
+    - Useful for debugging and testing policies.
+  - `Disabled`:
+    - SELinux is **turned off**, and **no** policies are **enforced** or **logged**.
+    - enforcing the SELinux policy: avoid
+    - labeling any persistent objects: avoids
+      - such as labeling files, making it difficult to enable SELinux in the future.
+    - strongly discouraged
+
+---
+
+### Configuration File `/etc/selinux/config`
+
+- Persist the configuration for reboot.
 - Path: `/etc/selinux/config`
 - Parameter:
   - `SELINUX=enforcing`
@@ -107,12 +189,13 @@ SELINUXTYPE=targeted
 
 ## Common Commands
 
-| CMD                                   | DESC                                            |
-| ------------------------------------- | ----------------------------------------------- |
-| `sestatus`/`getenforce`               | Check SELinux Status                            |
-| `setenforce enforcing`/`setenforce 1` | Temporarily Enable enforcing SELinux            |
-| `setenforce permissive`               | Temporarily set Permissive SELinux Mode         |
-| `setenforce 0`                        | Temporarily set Permissive/Disable SELinux Mode |
+| CMD                                   | DESC                                    |
+| ------------------------------------- | --------------------------------------- |
+| `sestatus`/`getenforce`               | Check SELinux Status                    |
+| `setenforce enforcing`/`setenforce 1` | Temporarily Enable enforcing SELinux    |
+| `setenforce permissive`               | Temporarily set Permissive SELinux Mode |
+| `setenforce 0`                        | Temporarily set Permissive SELinux Mode |
+| `semanage permissive -a httpd_t`      | Make the httpd_t domain permissive      |
 
 - Change SELinux Mode Persistently
   - `/etc/selinux/config`
@@ -360,4 +443,166 @@ setsebool -P httpd_can_connect_ftp off
 # confirm
 getsebool -a | grep httpd_can_connect_ftp
 # httpd_can_connect_ftp --> off
+```
+
+---
+
+## SELinux Policy Management tool: `semanage`
+
+### Manage file contexts
+
+- SELinux uses **file contexts** to enforce security policies on files and directories.
+
+- Temporary Changes:
+  - Directly modifying a file's SELinux context with `chcon` is **temporary** and **reset upon relabeling**.
+- Use `semanage fcontext` for permanent changes.
+
+| CMD                                                   | DESC                             |
+| ----------------------------------------------------- | -------------------------------- |
+| `semanage fcontext -l`                                | Lists all the file context rules |
+| `ls -Z /path/to/file`                                 | Lists SELinux contexts of a file |
+| `semanage fcontext -a -t file_context '/path(/.*)?'`  | Add a custom context to a path   |
+| `semanage fcontext -a -t file_context '/path/to/file` | Add a custom context to a file   |
+| `semanage fcontext -m -t file context '/path(/.*)?'`  | Modify an Existing File Context  |
+| `semanage fcontext -d '/path(/.*)?'`                  | Remove the file context rule     |
+| `restorecon -Rv /path`                                | Apply the changes                |
+
+---
+
+### `semanage port`: Manage SELinux port contexts
+
+- `semanage port`
+  - used to manage **SELinux port contexts**.
+- SELinux policies enforce which **processes can bind to specific ports**.
+  - With semanage port, you can list, add, modify, or delete port contexts to allow or restrict services from using certain ports.
+
+| CMD                                               | DESC                                                                |
+| ------------------------------------------------- | ------------------------------------------------------------------- |
+| `semanage port -l`                                | List All Port Contexts (SELinux types, protocols, and port ranges.) |
+| `semanage port -l \| grep ':8080'`                | View a Specific Port's Context                                      |
+| `semanage port -a -t http_port_t -p tcp 8080`     | Add a New Port Context                                              |
+| `semanage port -a -t ftp_port_t -p tcp 2100-2105` | Add an SELinux type to a range of ports.                            |
+| `semanage port -m -t mysqld_port_t -p tcp 8080`   | Modify an Existing Port Context                                     |
+| `semanage port -d -t http_port_t -p tcp 8080`     | Remove a port from a specific SELinux type.                         |
+
+- Tips:
+  - **Temporarily**:
+    - modifying a port with `firewalld`
+    - not persist after a reboot
+  - **Permanently**:
+    - Using `semanage port` ensures the changes are permanent for SELinux.
+  - SELinux **Logs**:
+    - If a port-related denial occurs, check `/var/log/audit/audit.log` for details.
+  - **Testing**:
+    - Use `netstat -tuln` or `ss -tuln` to verify services listening on ports.
+
+---
+
+The semanage boolean command is used to manage SELinux booleans, which are toggles that enable or disable specific SELinux policy features. SELinux booleans provide flexibility, allowing administrators to modify SELinux behavior without rewriting policy rules.
+
+## Booleans
+
+- `SELinux Booleans`
+  - allow parts of SELinux policy to be **changed at runtime**, without reloading or recompiling SELinux policy.
+
+| CMD                                                  | DESC                                                                     |
+| ---------------------------------------------------- | ------------------------------------------------------------------------ |
+| `semanage boolean -l`                                | List All SELinux Booleans(Boolean Name, State, Default, Description)     |
+| `getsebool -a`                                       | Lists Booleans(Boolean Name, on/off)                                     |
+| `getsebool boolean_name1 boolean_name2`              | Get value of a boolean name                                              |
+| `semanage boolean -m --on httpd_enable_homedirs`     | Enable a Boolean(HTTPD to access home directories)                       |
+| `semanage boolean -m --off httpd_use_nfs`            | Disable a Boolean(NFS access by HTTPD)                                   |
+| `semanage boolean -m -N --on samba_enable_home_dirs` | **Temporarily** enable Samba's use of home directories                   |
+| `setsebool httpd_can_network_connect_db on`          | **Temporarily** enable Apache HTTP Server to connect to database servers |
+
+---
+
+### Lab: Configure SELinux Boolean
+
+- View all
+
+```sh
+# list all booleans
+semanage boolean -l
+# SELinux boolean                State  Default Description
+# abrt_anon_write                (off  ,  off)  Allow abrt to anon write
+# abrt_handle_event              (off  ,  off)  Allow abrt to handle event
+# abrt_upload_watch_anon_write   (on   ,   on)  Allow abrt to upload watch anon write
+# antivirus_can_scan_system      (off  ,  off)  Allow antivirus to can scan system
+# antivirus_use_jit              (off  ,  off)  Allow antivirus to use jit
+# auditadm_exec_content          (on   ,   on)  Allow auditadm to exec content
+# authlogin_nsswitch_use_ldap    (off  ,  off)  Allow authlogin to nsswitch use ldap
+# authlogin_radius               (off  ,  off)  Allow authlogin to radius
+# authlogin_yubikey              (off  ,  off)  Allow authlogin to yubikey
+# ...
+
+getsebool -a
+# abrt_anon_write --> off
+# abrt_handle_event --> off
+# abrt_upload_watch_anon_write --> on
+# antivirus_can_scan_system --> off
+# antivirus_use_jit --> off
+# auditadm_exec_content --> on
+# authlogin_nsswitch_use_ldap --> off
+# authlogin_radius --> off
+# ...
+```
+
+- Temporarily enable
+
+```sh
+# get a specific bool
+semanage boolean -l | grep "httpd_can_network_connect_db"
+# httpd_can_network_connect_db   (off  ,  off)  Allow httpd to can network connect db
+getsebool httpd_can_network_connect_db
+# httpd_can_network_connect_db --> off
+
+# temporarily enable a bool
+setsebool httpd_can_network_connect_db on
+# confirm
+getsebool httpd_can_network_connect_db
+# httpd_can_network_connect_db --> on
+
+# restart OS
+# Confirm bool state after reboot
+getsebool httpd_can_network_connect_db
+# httpd_can_network_connect_db --> off
+```
+
+- Permanently enable
+
+```sh
+# get a specific bool
+semanage boolean -l | grep "httpd_can_network_connect_db"
+# httpd_can_network_connect_db   (off  ,  off)  Allow httpd to can network connect db
+getsebool httpd_can_network_connect_db
+# httpd_can_network_connect_db --> off
+
+# permanently enable
+semanage boolean -m --on httpd_can_network_connect_db
+# confirm
+semanage boolean -l | grep "httpd_can_network_connect_db"
+# httpd_can_network_connect_db   (on   ,   on)  Allow httpd to can network connect db
+getsebool httpd_can_network_connect_db
+# httpd_can_network_connect_db --> on
+
+# reboot
+# confirm
+semanage boolean -l | grep "httpd_can_network_connect_db"
+# httpd_can_network_connect_db   (on   ,   on)  Allow httpd to can network connect db
+getsebool httpd_can_network_connect_db
+# httpd_can_network_connect_db --> on
+```
+
+- Permanently disable
+
+```sh
+# disable
+semanage boolean -m --off httpd_can_network_connect_db
+
+# confirm
+getsebool "httpd_can_network_connect_db"
+# httpd_can_network_connect_db --> off
+semanage boolean -l | grep "httpd_can_network_connect_db"
+# httpd_can_network_connect_db   (off  ,  off)  Allow httpd to can network connect db
 ```

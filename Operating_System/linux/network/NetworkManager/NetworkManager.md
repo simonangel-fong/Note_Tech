@@ -43,8 +43,13 @@
 
 ### Configuration File
 
-- Configuration File Directory:
+- **Deprecated** location:
+  - `/etc/sysconfig/network-scripts/`
+  - Previously, `NetworkManager` stored network profiles in `ifcfg` format in this directory
+- Configuration File location:
   - `/etc/NetworkManager`
+  - Network profiles in keyfile format in the directory:
+    - `/etc/NetworkManager/system-connections/`
 
 ---
 

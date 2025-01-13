@@ -5,6 +5,7 @@
 - [Server - Web: `nginx` on `Redhat8`](#server---web-nginx-on-redhat8)
   - [Nginx](#nginx)
   - [Installation](#installation)
+  - [Custom Default Page](#custom-default-page)
 
 ---
 
@@ -152,3 +153,50 @@ sudo firewall-cmd --list-ports
    - `http://ip_address`
 
 ![nginx_default_page](./pic/nginx_default_page.png)
+
+---
+
+## Custom Default Page
+
+- Create a custom page
+
+```sh
+mkdir -p /var/www/html/argushost
+
+cat > /var/www/html/argushost/index.html <<EOF
+<!DOCTYPE html>
+<html>
+<head>
+<title>Argushost</title>
+</head>
+<body>
+<h1>Argushost</h1>
+<p>This is a <b>test</b> page.</p>
+</body>
+</html>
+EOF
+```
+
+- Update configure file
+
+```sh
+vi /etc/nginx/nginx.conf
+# root         /var/www/html/argushost;
+```
+
+- configure SELinux
+
+```sh
+semanage fcontext -a -t httpd_sys_content_t "/var/www/html/argushost(/.*)?"
+restorecon -Rv /var/www/html/argushost/
+```
+
+- Restart nginx
+
+```sh
+systemctl restart nginx
+```
+
+---
+
+[TOP](#server---web-nginx-on-redhat8)

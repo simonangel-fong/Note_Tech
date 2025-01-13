@@ -17,6 +17,13 @@
   - [YUM (Yellowdog Updater, Modified)](#yum-yellowdog-updater-modified)
     - [Configuration File](#configuration-file-1)
     - [Common Command](#common-command-1)
+    - [Repository](#repository)
+      - [Repository Configuration File](#repository-configuration-file)
+      - [Common Commands](#common-commands)
+      - [Lab: View the Existing Repository](#lab-view-the-existing-repository)
+      - [Lab: Repository Cached Data](#lab-repository-cached-data)
+      - [Lab: Add a New Repository](#lab-add-a-new-repository)
+      - [Lab: Disable a repository](#lab-disable-a-repository)
     - [YUM vs. RPM](#yum-vs-rpm)
   - [DNF(Dandified Yum)](#dnfdandified-yum)
     - [Configuration Files](#configuration-files)
@@ -363,21 +370,479 @@ skip_if_unavailable=False
 
 ### Common Command
 
-| CMD                               | DESC                                                            |
-| --------------------------------- | --------------------------------------------------------------- |
-| `yum list available`              | Lists all available packages in the repository.                 |
-| `yum history`                     | Displays a history of YUM transactions.                         |
-| `yum clean all`                   | Cleans up cached files and metadata.                            |
-| `yum upgrade -y`                  | update version of all package and **removes** outdated packages |
-| `yum update -y`                   | Updates all installed packages to their latest versions.        |
-| `yum search key_word`             | Search for string                                               |
-| `yum info`                        | Display all info                                                |
-| `yum info package_name_pattern`   | Display info of a package                                       |
-| `yum list installed`              | List all installed package                                      |
-| `yum list installed package_name` | List an installed package                                       |
-| `yum install -y package_name`     | Install package                                                 |
-| `yum upgrade -y package_name`     | Update a package                                                |
-| `yum remove package_name`         | Removes a package and its dependencies.                         |
+- Repositories
+
+| CMD                                   | DESC                                                                 |
+| ------------------------------------- | -------------------------------------------------------------------- |
+| `yum list`                            | List all available and installed packages.                           |
+| `yum list available`                  | List all packages in the yum repositories available to be installed. |
+| `yum list available --repo=repo_name` | Lists all available packages from a specific repository              |
+| `yum list installed`                  | Lists Installed packages.                                            |
+| `yum list obsoletes`                  | ist the packages installed on the system that are obsoleted.         |
+| `yum check-update`                    | Lists packages that have updates available.                          |
+| `yum update -y`                       | Updates all installed packages to their latest versions.             |
+| `yum upgrade -y`                      | update version of all package and **removes** outdated packages      |
+| `yum info`                            | Display all info                                                     |
+| `yum history`                         | Displays a history of YUM transactions.                              |
+| `yum clean all`                       | Cleans up cached files and metadata.                                 |
+
+- For a specific package
+
+| CMD                                                         | DESC                                        |
+| ----------------------------------------------------------- | ------------------------------------------- |
+| `yum list installed package_name`                           | List an installed package                   |
+| `yum search package_name_pattern`                           | Search for string                           |
+| `yum info package_name_pattern`                             | Display info of a package                   |
+| `yum deplist package_name_pattern`                          | Display all dependencies of a package       |
+| `yum install --downloadonly --downloaddir=dir package_name` | Downloading Packages Without Installing     |
+| `yum install -y package_name`                               | Install package                             |
+| `yum localinstall /path/to/rpm`                             | Install a set of local rpm files            |
+| `yum reinstall package_name`                                | Reinstall the identically versioned package |
+| `yum upgrade -y package_name`                               | Update a package                            |
+| `yum downgrade -y package_name`                             | Downgrade a package                         |
+| `yum remove package_name`                                   | Removes a package and its dependencies.     |
+
+- ***
+
+### Repository
+
+- `repository`
+  - a storage location for software packages.
+  - These repositories are configured to allow yum to **fetch**, **install**, **update**, or **remove** packages.
+- **Types of Repositories**:
+
+  - **Base Repositories**: Official repositories provided **by the OS vendor** (e.g., BaseOS, AppStream in RHEL 8).
+  - **Third-Party** Repositories: Provided by **external vendors** or communities (e.g., EPEL).
+  - **Local** Repositories: Hosted on a local network or system, useful for **offline systems** or custom packages.
+
+---
+
+#### Repository Configuration File
+
+- Located in `/etc/yum.repos.d/`.
+- Each repository has its configuration file with the `.repo` extension.
+
+  - Default cf in rhel9:`redhat.repo`
+
+- Sample entry of CF(rhel9)
+
+```sh
+[satellite-client-6-for-rhel-9-x86_64-eus-source-rpms]
+name = Red Hat Satellite Client 6 for RHEL 9 x86_64 - Extended Update Support (Source RPMs)
+baseurl = https://cdn.redhat.com/content/eus/rhel9/$releasever/x86_64/sat-client/6/source/SRPMS
+enabled = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify = 1
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslclientkey = /etc/pki/entitlement/1175364971612571494-key.pem
+sslclientcert = /etc/pki/entitlement/1175364971612571494.pem
+sslverifystatus = 1
+metadata_expire = 86400
+enabled_metadata = 0
+```
+
+- `[satellite-client-6-for-rhel-9-x86_64-eus-source-rpms]`
+  - the **unique identifier (repository ID)** for this repository.
+  - used by `yum` or `dnf` commands to reference this specific repository.
+- `name = Red Hat Satellite Client 6 for RHEL 9 x86_64 - Extended Update Support (Source RPMs)`
+  - A d**escriptive name** for the repository, which makes it easier for users to identify the repository in `yum repolist` or `dnf repolist`.
+- `baseurl = https://cdn.redhat.com/content/eus/rhel9/$releasever/x86_64/sat-client/6/source/SRPMS`
+  - The **URL** where the repository’s packages are hosted.
+  - Details:
+    - `https://cdn.redhat.com`: The **Red Hat Content Delivery Network (CDN)** URL.
+    - `$releasever`: A **placeholder** that dynamically expands to the OS **release version** (9 in this case).
+    - `x86_64`: Specifies the **architecture** for which the repository is meant.
+    - `source/SRPMS`: Indicates that this repository provides **Source RPMs**, which contain the **source code for software**.
+- `enabled = 0`
+  - Determines if the repository is enabled for use.
+  - Value:
+    - `0`: **Disabled** (this repository will not be used unless explicitly enabled with `--enablerepo`).
+    - `1`: **Enabled** (the repository is active by default).
+- `gpgcheck = 1`
+  - Ensures that **package signatures** are verified using **GPG keys** before installation.
+  - Value:
+    - `0`: **Disabled** (not recommended for security reasons).
+    - `1`: GPG signature check is **enabled**.
+- `gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release`
+  - Specifies the file **location of the GPG key** used to verify packages.
+  - In this case, the key is stored locally in `/etc/pki/rpm-gpg/`.
+- `sslverify = 1`
+  - Enables **SSL certificate verification** to ensure a secure connection to the repository server.
+  - Value:
+    - `0`: **Disabled** (not secure).
+    - `1`: SSL verification is **enabled**.
+- `sslcacert = /etc/rhsm/ca/redhat-uep.pem`
+  - Specifies the location of the **Certificate Authority (CA)** certificate used for SSL verification.
+  - ensures that the server’s certificate is trusted.
+- `sslclientkey = /etc/pki/entitlement/1175364971612571494-key.pem`
+  - Specifies the **private key file** used for client authentication.
+  - This key **authenticates** the client to the Red Hat CDN server.
+- `sslclientcert = /etc/pki/entitlement/1175364971612571494.pem`
+  - Specifies the **client certificate file** used for authentication.
+  - This certificate works in conjunction **with the private key to verify** the client’s identity.
+- `sslverifystatus = 1`
+  - Enables verification of the SSL certificate’s **revocation status**.
+  - Value:
+    - `0`: Revocation status is **not checked**.
+    - `1`: Revocation status is **checked** (more secure).
+- `metadata_expire = 86400`
+  - Defines how long (in seconds) the **metadata cache** is valid before it is refreshed.
+  - Value: 86400 seconds (1 day).
+- `enabled_metadata = 0`
+  - Determines if **metadata updates** for this repository are enabled.
+  - Value:
+    - `0`: Metadata updates are **disabled**.
+    - `1`: Metadata updates are **enabled**.
+
+---
+
+#### Common Commands
+
+| CDM                                              | DESC                                                |
+| ------------------------------------------------ | --------------------------------------------------- |
+| `yum repolist`                                   | Displays enabled repositories by default.           |
+| `yum repolist disabled`                          | List disabled repositories.                         |
+| `yum repolist all`                               | List all repositories (enabled and disabled).       |
+| `yum repoinfo`                                   | View information for all enabled repositories       |
+| `yum repoinfo repo_id`                           | Detailed information about a specific repository.   |
+| `yum makecache`                                  | Force download of repository metadata               |
+| `yum clean all`                                  | Clears all cached data, including package metadata. |
+| `yum clean metadata --enablerepo=repo_id`        | Clear metadata for a specific repository            |
+| `yum install package_name --enablerepo=repo_id`  | Temporarily enable a repository.                    |
+| `yum install package_name --disablerepo=repo_id` | Temporarily enable a repository.                    |
+
+- **Permanently** enable/disable a repository:
+  - Edit the `.repo` file in `/etc/yum.repos.d/` and set:
+    - `enabled=1`: to enable
+    - `enabled=0`: to disable
+
+---
+
+#### Lab: View the Existing Repository
+
+```sh
+# list enabled repo
+yum repolist
+# Not root, Subscription Management repositories not updated
+# repo id                              repo name
+# rhel-9-for-x86_64-appstream-rpms     Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# rhel-9-for-x86_64-baseos-rpms        Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+
+# list disabled repo
+yum repolist disabled
+# Not root, Subscription Management repositories not updated
+# repo id                                                       repo name
+# amq-clients-3-for-rhel-9-x86_64-debug-rpms                    Red Hat AMQ Clients 3 for RHEL 9 x86_64 (Debug RPMs)
+# amq-clients-3-for-rhel-9-x86_64-rpms                          Red Hat AMQ Clients 3 for RHEL 9 x86_64 (RPMs)
+# amq-clients-3-for-rhel-9-x86_64-source-rpms                   Red Hat AMQ Clients 3 for RHEL 9 x86_64 (Source RPMs)
+# amq-interconnect-textonly-1-for-middleware-rpms               Red Hat AMQ Interconnect Text-Only Advisories
+# amq-textonly-1-for-middleware-rpms                            Red Hat JBoss AMQ Text-Only Advisories
+# ansible-automation-platform-2.2-for-rhel-9-x86_64-debug-rpms  Red Hat Ansible Automation Platform 2.2 for RHEL 9 x86_64 (Debug RPMs)
+# ansible-automation-platform-2.2-for-rhel-9-x86_64-rpms        Red Hat Ansible Automation Platform 2.2 for RHEL 9 x86_64 (RPMs)
+# ansible-automation-platform-2.2-for-rhel-9-x86_64-source-rpms Red Hat Ansible Automation Platform 2.2 for RHEL 9 x86_64 (Source RPMs)
+# ...
+
+
+# List all repo
+yum repolist all
+# Not root, Subscription Management repositories not updated
+# repo id                                                       repo name                   status
+# amq-clients-3-for-rhel-9-x86_64-debug-rpms                    Red Hat AMQ Clients 3 for R disabled
+# amq-clients-3-for-rhel-9-x86_64-rpms                          Red Hat AMQ Clients 3 for R disabled
+# amq-clients-3-for-rhel-9-x86_64-source-rpms                   Red Hat AMQ Clients 3 for R disabled
+# ...
+# rhel-9-for-x86_64-appstream-eus-source-rpms                   Red Hat Enterprise Linux 9  disabled
+# rhel-9-for-x86_64-appstream-rpms                              Red Hat Enterprise Linux 9  enabled
+# rhel-9-for-x86_64-appstream-source-rpms                       Red Hat Enterprise Linux 9  disabled
+# ...
+# rhel-9-for-x86_64-baseos-eus-source-rpms                      Red Hat Enterprise Linux 9  disabled
+# rhel-9-for-x86_64-baseos-rpms                                 Red Hat Enterprise Linux 9  enabled
+# rhel-9-for-x86_64-baseos-source-rpms                          Red Hat Enterprise Linux 9  disabled
+# ...
+
+
+# View information for all enabled repositories
+yum repoinfo
+# Not root, Subscription Management repositories not updated
+# Last metadata expiration check: 0:39:44 ago on Tue 07 Jan 2025 04:57:53 PM EST.
+# Repo-id            : rhel-9-for-x86_64-appstream-rpms
+# Repo-name          : Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# Repo-revision      : 1735784335
+# Repo-updated       : Wed 01 Jan 2025 09:18:55 PM EST
+# Repo-pkgs          : 21,802
+# Repo-available-pkgs: 20,894
+# Repo-size          : 77 G
+# Repo-baseurl       : https://cdn.redhat.com/content/dist/rhel9/9/x86_64/appstream/os
+# Repo-expire        : 86,400 second(s) (last: Tue 07 Jan 2025 04:57:53 PM EST)
+# Repo-filename      : /etc/yum.repos.d/redhat.repo
+
+# Repo-id            : rhel-9-for-x86_64-baseos-rpms
+# Repo-name          : Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+# Repo-revision      : 1734567864
+# Repo-updated       : Wed 18 Dec 2024 07:24:24 PM EST
+# Repo-pkgs          : 8,246
+# Repo-available-pkgs: 8,246
+# Repo-size          : 22 G
+# Repo-baseurl       : https://cdn.redhat.com/content/dist/rhel9/9/x86_64/baseos/os
+# Repo-expire        : 86,400 second(s) (last: Tue 07 Jan 2025 04:57:42 PM EST)
+# Repo-filename      : /etc/yum.repos.d/redhat.repo
+# Total packages: 30,048
+
+# Info of enabled repos
+yum repoinfo rhel-9-for-x86_64-baseos-rpms rhel-9-for-x86_64-appstream-rpms
+# Not root, Subscription Management repositories not updated
+# Last metadata expiration check: 0:43:17 ago on Tue 07 Jan 2025 04:57:53 PM EST.
+# Repo-id            : rhel-9-for-x86_64-appstream-rpms
+# Repo-name          : Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# Repo-status        : enabled
+# Repo-revision      : 1735784335
+# Repo-updated       : Wed 01 Jan 2025 09:18:55 PM EST
+# Repo-pkgs          : 21,802
+# Repo-available-pkgs: 20,894
+# Repo-size          : 77 G
+# Repo-baseurl       : https://cdn.redhat.com/content/dist/rhel9/9/x86_64/appstream/os
+# Repo-expire        : 86,400 second(s) (last: Tue 07 Jan 2025 04:57:53 PM EST)
+# Repo-filename      : /etc/yum.repos.d/redhat.repo
+
+# Repo-id            : rhel-9-for-x86_64-baseos-rpms
+# Repo-name          : Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+# Repo-status        : enabled
+# Repo-revision      : 1734567864
+# Repo-updated       : Wed 18 Dec 2024 07:24:24 PM EST
+# Repo-pkgs          : 8,246
+# Repo-available-pkgs: 8,246
+# Repo-size          : 22 G
+# Repo-baseurl       : https://cdn.redhat.com/content/dist/rhel9/9/x86_64/baseos/os
+# Repo-expire        : 86,400 second(s) (last: Tue 07 Jan 2025 04:57:42 PM EST)
+# Repo-filename      : /etc/yum.repos.d/redhat.repo
+# Total packages: 30,048
+
+# Info of disabled repos
+yum repoinfo satellite-client-6-for-rhel-9-x86_64-eus-source-rpms
+# Not root, Subscription Management repositories not updated
+# Last metadata expiration check: 0:42:25 ago on Tue 07 Jan 2025 04:57:53 PM EST.
+# Repo-id            : satellite-client-6-for-rhel-9-x86_64-eus-source-rpms
+# Repo-name          : Red Hat Satellite Client 6 for RHEL 9 x86_64 - Extended Update Support
+#                    : (Source RPMs)
+# Repo-status        : disabled
+# Repo-baseurl       : https://cdn.redhat.com/content/eus/rhel9/9/x86_64/sat-client/6/source/SRPMS
+# Repo-expire        : 86,400 second(s) (last: unknown)
+# Repo-filename      : /etc/yum.repos.d/redhat.repo
+# Total packages: 0
+```
+
+---
+
+#### Lab: Repository Cached Data
+
+```sh
+# Get metadata of a repo before cleaning
+yum repoinfo rhel-9-for-x86_64-baseos-rpms
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 0:01:08 ago on Tue 07 Jan 2025 06:23:15 PM EST.
+# Repo-id            : rhel-9-for-x86_64-baseos-rpms
+# Repo-name          : Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+# Repo-status        : enabled
+# Repo-revision      : 1734567864
+# Repo-updated       : Wed 18 Dec 2024 07:24:24 PM EST
+# Repo-pkgs          : 8,246
+# Repo-available-pkgs: 8,246
+# Repo-size          : 22 G
+# Repo-baseurl       : https://cdn.redhat.com/content/dist/rhel9/9/x86_64/baseos/os
+# Repo-expire        : 86,400 second(s) (last: Tue 07 Jan 2025 06:23:01 PM EST)
+# Repo-filename      : /etc/yum.repos.d/redhat.repo
+# Total packages: 8,246
+
+# clean cached meta data of a repo
+yum clean metadata --enablerepo=rhel-9-for-x86_64-baseos-rpms
+# Updating Subscription Management repositories.
+# Cache was expired
+# 17 files removed
+
+# Get metadata of a repo after cleaning
+# metadata need to download first
+yum repoinfo  rhel-9-for-x86_64-baseos-rpms
+# Updating Subscription Management repositories.
+# Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)             1.7 MB/s |  40 MB     00:23
+# Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)          1.7 MB/s |  47 MB     00:27
+# Last metadata expiration check: 0:00:04 ago on Tue 07 Jan 2025 06:26:36 PM EST.
+# Repo-id            : rhel-9-for-x86_64-baseos-rpms
+# Repo-name          : Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+# Repo-status        : enabled
+# Repo-revision      : 1734567864
+# Repo-updated       : Wed 18 Dec 2024 07:24:24 PM EST
+# Repo-pkgs          : 8,246
+# Repo-available-pkgs: 8,246
+# Repo-size          : 22 G
+# Repo-baseurl       : https://cdn.redhat.com/content/dist/rhel9/9/x86_64/baseos/os
+# Repo-expire        : 86,400 second(s) (last: Tue 07 Jan 2025 06:26:22 PM EST)
+# Repo-filename      : /etc/yum.repos.d/redhat.repo
+# Total packages: 8,246
+
+# force to cache metadata
+yum makecache
+# Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)             7.8 kB/s | 4.1 kB     00:00
+# Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)           17 kB/s | 4.5 kB     00:00
+# Metadata cache created.
+```
+
+---
+
+#### Lab: Add a New Repository
+
+```sh
+# Create a .repo file
+sudo nano /etc/yum.repos.d/custom.repo
+
+# [ol8-baseos]
+# name=Oracle Linux 8 (x86_64) BaseOS Latest
+# baseurl=https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64
+# enabled=1
+# gpgcheck=0
+
+# Verify the new repository
+yum repolist
+# Updating Subscription Management repositories.
+# repo id                              repo name
+# ol8-baseos                           Oracle Linux 8 (x86_64) BaseOS Latest
+# rhel-9-for-x86_64-appstream-rpms     Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# rhel-9-for-x86_64-baseos-rpms        Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+
+# Test repository connectivity
+yum repoinfo ol8-baseos
+# Updating Subscription Management repositories.
+# Oracle Linux 8 (x86_64) BaseOS Latest                             1.7 MB/s |  85 MB     00:48
+# Last metadata expiration check: 0:00:08 ago on Tue 07 Jan 2025 06:35:39 PM EST.
+# Repo-id            : ol8-baseos
+# Repo-name          : Oracle Linux 8 (x86_64) BaseOS Latest
+# Repo-status        : enabled
+# Repo-revision      : 1736258980
+# Repo-updated       : Tue 07 Jan 2025 09:09:46 AM EST
+# Repo-pkgs          : 24,180
+# Repo-available-pkgs: 24,180
+# Repo-size          : 74 G
+# Repo-baseurl       : https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64
+# Repo-expire        : 172,800 second(s) (last: Tue 07 Jan 2025 06:35:39 PM EST)
+# Repo-filename      : /etc/yum.repos.d/custom.repo
+# Total packages: 24,180
+
+# get info of a package from the enable repo
+yum info nano
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 0:02:14 ago on Tue 07 Jan 2025 06:35:39 PM EST.
+# Installed Packages
+# Name         : nano
+# Version      : 5.6.1
+# Release      : 6.el9
+# Architecture : x86_64
+# Size         : 2.7 M
+# Source       : nano-5.6.1-6.el9.src.rpm
+# Repository   : @System
+# From repo    : rhel-9-for-x86_64-baseos-rpms
+# Summary      : A small text editor
+# URL          : https://www.nano-editor.org
+# License      : GPLv3+
+# Description  : GNU nano is a small and friendly text editor.
+
+# Available Packages
+# Name         : nano
+# Version      : 2.9.8
+# Release      : 3.el8_10
+# Architecture : src
+# Size         : 2.8 M
+# Source       : None
+# Repository   : ol8-baseos
+# Summary      : A small text editor
+# URL          : https://www.nano-editor.org
+# License      : GPLv3+
+# Description  : GNU nano is a small and friendly text editor.
+```
+
+#### Lab: Disable a repository
+
+- Disable Temporarily
+
+```sh
+yum info nano --disablerepo=ol8-baseos
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 0:04:20 ago on Tue 07 Jan 2025 06:39:53 PM EST.
+# Installed Packages
+# Name         : nano
+# Version      : 5.6.1
+# Release      : 6.el9
+# Architecture : x86_64
+# Size         : 2.7 M
+# Source       : nano-5.6.1-6.el9.src.rpm
+# Repository   : @System
+# From repo    : rhel-9-for-x86_64-baseos-rpms
+# Summary      : A small text editor
+# URL          : https://www.nano-editor.org
+# License      : GPLv3+
+# Description  : GNU nano is a small and friendly text editor.
+```
+
+- Disable Permanently
+
+```sh
+sudo nano /etc/yum.repos.d/custom.repo
+# enabled=0
+
+# confirm
+yum repolist
+# Updating Subscription Management repositories.
+# repo id                              repo name
+# rhel-9-for-x86_64-appstream-rpms     Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# rhel-9-for-x86_64-baseos-rpms        Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+```
+
+- Enable Temporarily
+
+```sh
+# confirm repo is disabled
+yum repolist disabled | grep ol8
+# ol8-baseos                                                    Oracle Linux 8 (x86_64) BaseOS Latest
+
+# enable temporarily
+yum info nano --enablerepo=ol8-baseos
+# Updating Subscription Management repositories.
+# Oracle Linux 8 (x86_64) BaseOS Latest                              29 kB/s | 4.3 kB     00:00
+# Installed Packages
+# Name         : nano
+# Version      : 5.6.1
+# Release      : 6.el9
+# Architecture : x86_64
+# Size         : 2.7 M
+# Source       : nano-5.6.1-6.el9.src.rpm
+# Repository   : @System
+# From repo    : rhel-9-for-x86_64-baseos-rpms
+# Summary      : A small text editor
+# URL          : https://www.nano-editor.org
+# License      : GPLv3+
+# Description  : GNU nano is a small and friendly text editor.
+
+# Available Packages
+# Name         : nano
+# Version      : 2.9.8
+# Release      : 3.el8_10
+# Architecture : src
+# Size         : 2.8 M
+# Source       : None
+# Repository   : ol8-baseos
+# Summary      : A small text editor
+# URL          : https://www.nano-editor.org
+# License      : GPLv3+
+# Description  : GNU nano is a small and friendly text editor.
+```
+
+- Remove custom repo
+
+```sh
+sudo rm /etc/yum.repos.d/custom.repo
+
+# confirm
+yum repolist all | grep ol8
+```
 
 ---
 

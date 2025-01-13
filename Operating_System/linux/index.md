@@ -12,8 +12,7 @@
 
 - System
 
-  - [!Boot Process](./system/boot/boot.md)
-    - [!Lab: Revocer root password](./system/recover_root_pwd/recover_root_pwd.md)
+  - [Boot Process & Recover Root Password](./system/boot/boot.md)
   - [Shutdown Options](./system/shutdown/shutdown.md)
   - [Tune System Performance](./system/tune_perform/tune_perform.md)
   - [Utility `cockpit`](./system/cockpit/cockpit.md)
@@ -74,6 +73,8 @@
     - [STFP](./project/stfp/stfp.md)
 
 - [SELinux](./selinux/selinux/selinux.md)
+  - [Context](./selinux/context/context.md)
+  - [Targeted Policy](./selinux/target_policy/target_policy.md)
 - [Container](./container/container/container.md)
   - [Podman](./container/podman/podman.md)
 
@@ -81,18 +82,21 @@
 
 ## Service Deployments
 
-- Web Server
+- Web App
   - [Wordpress-Mysql-Nginx-Ubuntu](./project/wordpress_mysql_nginx_ubuntu.md)
   - [!Wordpress-Mysql-Nginx-Redhat](./project/wordpress_mysql_nginx_redhat.md)
   - [!Wordpress-Mysql-Appache2-Redhat](./project/wordpress_mysql_appache2_redhat.md)
+  - [Django+Nginx+MySQL+RHEL8](./project/django_nginx_mysql_rhel8.md)
 - SMTP Server
   - [Sending Gmail using `Postfix` on `Redhat8`](./project/gmail-postfix-redhat8/gmail-postfix-redhat8.md)
   - [Sending Gmail using `Postfix` on `Ubuntu24`](./project/gmail-postfix-ubuntu24/gmail-postfix-ubuntu24.md)
 - Web Server
   - [`nginx` on `Redhat8`](./server_web/nginx-redhat8/nginx-redhat8.md)
+  - [](./server_web/nginx-redhat8/nginx-redhat8.md)
 - Database Server
-  - [Oracle 19c on `Redhat9`](./server_db/orcl19_redhat9/orcl19_redhat9.md)
+  - [!Oracle 19c on `Redhat9`](./server_db/orcl19_redhat9/orcl19_redhat9.md)
   - [`mysql` on `Ubuntu24`](./server_db/mysql_ubuntu24/mysql_ubuntu24.md)
+  - [`mysql` on `Oracle Linux 8`](./server_db/mysql_ol8/mysql_ol8.md)
 
 ---
 
@@ -101,6 +105,15 @@
 - [Connect Domain Name with Homelab(Cloudflare-Nginx)](./homelab/cloudflare_dns_tunnel/cloudflare_dns_tunnel.md)
 
 - [Practice Infrastructure](./infrastructure/infrastructure.md)
+
+---
+
+## RHCSA Practice
+
+- [Network](./rhcsa/network/network.md)
+- [YUM](./rhcsa/yum/yum.md)
+- [SELinux](./rhcsa/selinux/selinux.md)
+- [User and Group](./rhcsa/user_group/user_group.md)
 
 ---
 
