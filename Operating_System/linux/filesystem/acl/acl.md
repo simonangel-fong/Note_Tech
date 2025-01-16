@@ -320,8 +320,6 @@ ll /tmp/acltest
 # -rw-rw-r--. 1 serveradmin serveradmin 12 Dec 18 20:33 /tmp/acltest
 ```
 
-```
-
-
 ---
-```
+
+[TOP](#linux---file-system-access-control-list)

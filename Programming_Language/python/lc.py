@@ -1,26 +1,30 @@
-class Solution:
-    def mergeAlternately(self, word1: str, word2: str) -> str:
-        min_len = min(len(word1), len(word2))
-        result = []
-        for i in range(0, min_len):
-            result.append(word1[i])
-            result.append(word2[i])
+from typing import List
 
-        result += word1[i+1:]
-        result += word2[i+1:]
-        return "".join(result)
+
+class Solution:
+    def kidsWithCandies(self, candies: List[int], extraCandies: int) -> List[bool]:
+        # get the max of the candies
+        maxCount = max(candies)
+        # create output result array
+        result = [True]*len(candies)
+        # loop candies
+        for i in range(len(candies)):
+            # check if < maxCount
+            if candies[i] + extraCandies < maxCount:
+                result[i] = False
+        return result
 
 
 s = Solution()
+candies = [2, 3, 5, 1, 3]
+extraCandies = 3
+print(s.kidsWithCandies(candies, extraCandies))
 
-word1 = "abc"
-word2 = "pqr"
-print(s.mergeAlternately(word1, word2))
 
-word1 = "ab"
-word2 = "pqrs"
-print(s.mergeAlternately(word1, word2))
+candies = [4, 2, 1, 1, 2]
+extraCandies = 1
+print(s.kidsWithCandies(candies, extraCandies))
 
-word1 = "abcd"
-word2 = "pq"
-print(s.mergeAlternately(word1, word2))
+candies = [12, 1, 12]
+extraCandies = 10
+print(s.kidsWithCandies(candies, extraCandies))

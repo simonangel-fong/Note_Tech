@@ -133,7 +133,7 @@ server_ip:/shared_dir /mount_point nfs defaults 0 0
 - install packages
 
 ```sh
-yum install nfs-utils libnfsidmap -y
+yum install nfs-utils -y
 rpm -qa | grep nfs
 # nfs-utils-2.3.3-59.el8.x86_64
 # libnfsidmap-2.3.3-59.el8.x86_64

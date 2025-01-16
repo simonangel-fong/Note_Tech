@@ -3,245 +3,197 @@
 [Back](../../index.md)
 
 - [Linux - SELinux: Context](#linux---selinux-context)
-  - [SELinux Contexts](#selinux-contexts)
-  - [SELinux user](#selinux-user)
-    - [Confined users and Unconfined users](#confined-users-and-unconfined-users)
-    - [role](#role)
-    - [type](#type)
-    - [level](#level)
-  - [Common Commands](#common-commands)
-  - [Lab:](#lab)
-    - [View Proces Content](#view-proces-content)
-    - [View User's Context](#view-users-context)
+  - [SELinux Context](#selinux-context)
+    - [Components of an SELinux Context](#components-of-an-selinux-context)
+    - [Common Commands](#common-commands)
+  - [How SELinux Context Works for Files and Processes](#how-selinux-context-works-for-files-and-processes)
+    - [Example Scenario: Web Server and File Access](#example-scenario-web-server-and-file-access)
+  - [SELinux Ports](#selinux-ports)
 
 ---
 
-## SELinux Contexts
+## SELinux Context
 
-- `SELinux contexts`
+- `SELinux context`
+  - a set of labels assigned to processes, files, and other system objects to **control access** based on SELinux rules.
 
-  - used on **processes**, Linux **users**, and **files**, on Linux operating systems that run SELinux.
-  - used to make access control decisions.
+---
 
-| CMD     | DESC                                              |
-| ------- | ------------------------------------------------- |
-| `ls -Z` | View the SELinux context of files and directories |
+### Components of an SELinux Context
 
-- The `security context` for a Linux user consists of the `SELinux user`, the `SELinux role`, and the `SELinux type`.
+- `user:role:type:level`
+- `User`:
 
-  - e.g., `user_u:user_r:user_t`
-    - `user_u`: Is the SELinux user.
-    - `user_r`: Is the SELinux role.
-    - `user_t`: Is the SELinux type.
+  - Represents the `SELinux user` **associated with the object or process**.
+  - e.g., `system_u`, `unconfined_u`.
 
-- After a Linux user logs in, its `SELinux user` **cannot** change.
+- `Role`:
 
-  - However, its `type` and `role` can change, for example, during transitions.
+  - Defines the role **associated with the object or process**.
+  - determine what `SELinux types` **a user can access**.
+  - Common roles include:
+    - `object_r`: Used for **files**, **directories**, and other **objects**.
+    - `system_r`: Used for system **processes**.
 
-- To see the SELinux user mapping on your system, use the semanage login -l command as root:
+- `Type`:
+
+  - Specifies the **type** of the object or process.
+  - e.g.,
+    - `httpd_sys_content_t`: For web server content.
+    - `ssh_t`: For SSH processes.
+  - `SELinux policies` define the **access permissions** between types.
+
+- `Level`:
+  - Indicates the **sensitivity level (MLS/MCS category)**.
+  - Most systems use a single level, `s0`.
+
+---
+
+### Common Commands
+
+- View
+
+| CMD                    | DESC                                              |
+| ---------------------- | ------------------------------------------------- |
+| `ls -Z /var/www/html`  | Display SELinux contexts of files and directories |
+| `ps -eZ \| grep httpd` | Display SELinux contexts of running processes     |
+
+- Default SELinux context
+
+| CMD                                     | DESC                                                  |
+| --------------------------------------- | ----------------------------------------------------- |
+| `matchpathcon /var/www/html/index.html` | Check the default SELinux context for a specific file |
+| `matchpathcon /var/www/html`            | Check the default context for a directory             |
+
+- Temporarily change context
+  - Changes made with `chcon` are not persistent and will reset after a system relabel.
+
+| CMD                                                      | DESC                                     |
+| -------------------------------------------------------- | ---------------------------------------- |
+| `chcon -t httpd_sys_content_t /var/www/html/index.html`  | Change the type of a file                |
+| `chcon -u system_u -r object_r /var/www/html/index.html` | Change the user and role (rarely needed) |
+
+- Persistent Context Changes
+  - `semanage fcontext` command
+  - `relabel` command
+
+| CMD                                                                | DESC                           |
+| ------------------------------------------------------------------ | ------------------------------ |
+| `semanage fcontext -a -t httpd_sys_content_t '/custom/path(/.*)?'` | Add a custom file context rule |
+| `restorecon -Rv /custom/path`                                      | Apply the changes              |
+
+- Troubleshooting
+
+| CMD                                                 | DESC                                 |
+| --------------------------------------------------- | ------------------------------------ |
+| `ausearch -m avc -ts recent`                        | Check the SELinux logs for denials   |
+| `grep "denied" /var/log/audit/audit.log`            | Analyze AVC Denials                  |
+| `grep denied /var/log/audit/audit.log \| audit2why` | Generate Human-Readable Explanations |
+| `sealert -a /var/log/audit/audit.log`               | View Troubleshooting Suggestions     |
+
+---
+
+## How SELinux Context Works for Files and Processes
+
+- SELinux enforces access control through **policies** that match the `context` of processes (subjects) and files (objects).
+- The decision to allow or deny access depends on whether the process context has the appropriate permissions to interact with the file context.
+
+---
+
+### Example Scenario: Web Server and File Access
+
+- Scenario:
+  - A web server (process) like `httpd` needs to serve a **file** located in `/var/www/html/index.html`.
+  - SELinux ensures that the web server **process** (`httpd_t`) can access the **file** (`httpd_sys_content_t`) based on the defined **policy**
+
+1. Process Context
+   - Every running process in Linux has an SELinux context.
+   - the Apache web server runs under the `httpd_t` type.
 
 ```sh
-semanage login -l
-
-# Login Name           SELinux User         MLS/MCS Range        Service
-# __default__          unconfined_u         s0-s0:c0.c1023       *
-# root                 unconfined_u         s0-s0:c0.c1023       *
+ps -eZ | grep httpd
+# system_u:system_r:httpd_t:s0       1066 ?        00:00:00 httpd
 ```
 
-> Columns
->
-> - **Login Name**: Linux users
-> - **SELinux User**: The SELinux user to whom the Linux user is mapped.
->   For processes, the SELinux user limits which roles and levels are accessible.
-> - **MLS/MCS Range**: level used by `Multi-Level Security (MLS)` and `Multi-Category Security (MCS)`.
-
----
-
-## SELinux user
-
-- `SELinux user`
-
-  - an identity **known to the authorized policy**
-  - Each `Linux user` is **mapped** to an `SELinux user` via SELinux **policy**.
-
-- a `Linux user` has the **restrictions** of the `SELinux user` to which it is assigned.
-
-  - When a `Linux user` that is assigned to an `SELinux user` **launches a process**, this process **inherits** the `SELinux user`’s **restrictions**, unless other rules specify a different role or type.
-
-- By default, **all** `Linux users` in Red Hat Enterprise Linux, including users with administrative privileges, are **mapped** to the **unconfined SELinux user** `unconfined_u`.
-  - You can improve the security of the system by assigning users to SELinux confined users.
-  - `Linux users` are mapped to the SELinux `__default__` login **by default**, which is mapped to the SELinux `unconfined_u` user.
-
-| CMD                 | DESC                                                              |
-| ------------------- | ----------------------------------------------------------------- |
-| `semanage login -l` | View the SELinux user mapping                                     |
-| `seinfo -u`         | list the available SELinux users(needs `setools-console` package) |
-
----
-
-### Confined users and Unconfined users
-
-- `Confined users`
-  - **restricted** by SELinux rules **explicitly** defined in the current `SELinux policy`.
-- `Unconfined users`
-
-  - subject to only **minimal restrictions** by SELinux.
-
-- If an **unconfined** Linux user **executes an application** that SELinux policy defines as one that can transition from the `unconfined_t` domain to its own **confined domain**, the unconfined Linux user is **still subject** to the restrictions of that **confined domain**.
-
-  - The security benefit of this is that, even though a Linux **user** is running **unconfined**, the **application** remains **confined**.
-  - Therefore, the exploitation of a flaw in the application can be limited by the policy.
-
-- Each **confined** user is **restricted** by a **confined user domain**.
-- The SELinux policy can also define a transition from a confined user domain to its own **target confined domain**.
-  - In such a case, confined users are **subject** to the **restrictions** of that **target confined domain**.
-  - The main point is that special privileges are associated with the confined users according to their `role`.
-
----
-
-### role
-
-- `Role-Based Access Control (RBAC)` security model
-  - Part of SELinux
-- `role`
-  - an attribute of `RBAC`.
-- `SELinux users` are **authorized** for `roles`, and `roles` are **authorized** for `domains`.
-  - The `role` serves as an **intermediary** between `domains` and SELinux `users`.
-  - The `role` can be used to determine which `domains` can be **entered** and which **object** types can be accessed.
-    - This helps reduce vulnerability to **privilege escalation attacks**.
-
-
-
-
-
-
+2. File Context
+   - Every file has an SELinux context.
+   - Files in `/var/www/html` should have the type `httpd_sys_content_t` to allow the web server to access them.
 
 ```sh
-semanage user -l
-#                 Labeling   MLS/       MLS/
-# SELinux User    Prefix     MCS Level  MCS Range                      SELinux Roles
-
-# guest_u         user       s0         s0                             guest_r
-# root            user       s0         s0-s0:c0.c1023                 staff_r sysadm_r system_r unconfined_r
-# staff_u         user       s0         s0-s0:c0.c1023                 staff_r sysadm_r system_r unconfined_r
-# sysadm_u        user       s0         s0-s0:c0.c1023                 sysadm_r
-# system_u        user       s0         s0-s0:c0.c1023                 system_r unconfined_r
-# unconfined_u    user       s0         s0-s0:c0.c1023                 system_r unconfined_r
-# user_u          user       s0         s0                             user_r
-# xguest_u        user       s0         s0                             xguest_r
+ls -Z /var/www/html/hello_world/index.html
+# unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/hello_world/index.html
 ```
 
+3. Policy Rules
 
-```sh
-seinfo -r
+   - SELinux policies define which types of **processes** can access which types of **files** and how they can **interact**.
 
-# Roles: 15
-#    auditadm_r
-#    container_user_r
-#    dbadm_r
-#    guest_r
-#    logadm_r
-#    nx_server_r
-#    object_r
-#    secadm_r
-#    staff_r
-#    sysadm_r
-#    system_r
-#    unconfined_r
-#    user_r
-#    webadm_r
-#    xguest_r
-```
+4. Access Request
 
+   - When the httpd process tries to read `/var/www/html/hello_world/index.html`, SELinux checks:
+     - The process type (`httpd_t`).
+     - The file type (`httpd_sys_content_t`).
+     - The policy for allowed **actions**.
+     - If the action (e.g., read) is permitted by the policy, access is granted. Otherwise, access is denied.
 
+5. Handling Denied Access
 
+   - If the file context is incorrect, SELinux will deny access.
+   - Check the Denial Log: `ausearch -m avc -ts recent`
+
+6. Fixing Contexts
+   - To fix mismatched contexts, change the file type using `restorecon` or `chcon`.
 
 ---
 
-### type
+## SELinux Ports
 
-- `type`
-  - an attribute of `Type Enforcement`.
-  - defines a `domain` for **processes**, and a `type` for **files**.
-- `SELinux policy rules` define how `types` can **access** each other,
-  - whether it be a `domain` accessing a `type`,
-  - or a `domain` accessing another `domain`.
-- **Access is only allowed** if a specific SELinux **policy rule** exists that **allows** it.
+- `SELinux Ports`
 
----
+  - ports are managed **as part of the policy** to control **which ports services are allowed to use**.
+  - The SELinux policy includes a **mapping of port numbers to security labels** (contexts) for specific services.
+  - This helps enforce that **only allowed services** can bind to specific **ports**, enhancing system security.
 
-### level
+- Port Context
+  - SELinux associates a **port** with a **context**, which includes a **type** that defines which service can use that port.
+  - e.g.,
+    - **HTTP (Port 80)**: `http_port_t` type.
+    - **SSH (Port 22)**: `ssh_port_t` type.
+- Port Types
+  - Port types define the **services that are allowed to bind to specific ports**.
+  - Common port types include:
+    - `http_port_t`: For HTTP services.
+    - `ssh_port_t`: For SSH services.
+    - `mysqld_port_t`: For MySQL services.
+- TCP/UDP Ports
 
-- `level`
-  - an attribute of `MLS` and `MCS`.
-- `MLS range`
+  - SELinux differentiates between `TCP` and `UDP` ports.
+  - Ports for both protocols can be labeled and managed **separately**.
 
-  - a pair of levels
-  - written as
-    - `lowlevel-highlevel` if the levels **differ**
-    - `lowlevel` if the levels are **identical** (s0-s0 is the same as s0).
+- Audit Logs for Port Denials
+  - If a service fails to bind to a port, check SELinux logs in `/var/log/audit/audit.log` for denial messages.
 
-- Each `level` is a **sensitivity-category pair**, with categories being optional.
+| CMD                                               | DESC                                                      |
+| ------------------------------------------------- | --------------------------------------------------------- |
+| `semanage port -l`                                | List all SELinux-managed ports and their associated types |
+| `semanage port -l \| grep ':8080'`                | View a Specific Port's Context                            |
+| `semanage port -a -t http_port_t -p tcp 8080`     | Add a New Port Context                                    |
+| `semanage port -a -t ftp_port_t -p tcp 2100-2105` | Add an SELinux type to a range of ports.                  |
+| `semanage port -m -t mysqld_port_t -p tcp 8080`   | Modify an Existing Port Context                           |
+| `semanage port -d -t http_port_t -p tcp 8080`     | Remove a port from a specific SELinux type.               |
 
-  - If there are **categories**, the level is written as `sensitivity:category-set`.
-  - If there are **no categories**, it is written as `sensitivity`.
-  - If the category set is a contiguous series, it can be abbreviated.
-    - For example, `c0.c3` is the same as `c0,c1,c2,c3`.
-
-- `/etc/selinux/targeted/setrans.conf` file
-
-  - maps levels (`s0:c0`) to human-readable form (that is CompanyConfidential).
-  - Do not edit setrans.conf with a text editor
-  - use the `semanage` command to make changes.
-
-- Sample of CF
-
-```sh
-cat /etc/selinux/targeted/setrans.conf
-# s0=SystemLow
-# s0-s0:c0.c1023=SystemLow-SystemHigh
-# s0:c0.c1023=SystemHigh
-```
-
-> - CF: contains human-readable table
-> - `s0`: the only one sensitivity When targeted policy enforces MCS
-> - `s0-s0:c0.c1023`: sensitivity `s0` and authorized for all categories
-
----
-
-## Common Commands
-
-| CMD                     | DESC                                         |
-| ----------------------- | -------------------------------------------- |
-| `ps -eZ \| grep passwd` | Get context of a process                     |
-| `id -Z`                 | Get context associated with the current user |
+- Tips:
+  - **Temporarily**:
+    - modifying a port with `firewalld`
+    - not persist after a reboot
+  - **Permanently**:
+    - Using `semanage port` ensures the changes are permanent for SELinux.
+  - SELinux **Logs**:
+    - If a port-related denial occurs, check `/var/log/audit/audit.log` for details.
+  - **Testing**:
+    - Use `netstat -tuln` or `ss -tuln` to verify services listening on ports.
+  - Back Up Configuration
+    - Use `semanage export` to back up SELinux configurations, including port mappings.
+    - e.g., `semanage export > selinux_config_backup.txt`
 
 ---
-
-## Lab:
-
-### View Proces Content
-
-```sh
-ps -eZ | grep passwd
-# unconfined_u:unconfined_r:passwd_t:s0-s0:c0.c1023 5768 pts/1 00:00:00 passwd
-```
-
-> - `passwd_exec_t`: Context Type
->   the user's shell process transitions to the passwd_t domain
-
----
-
-### View User's Context
-
-```sh
-# view context of root user
-id -Z
-# unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-```
-
-> - Current user is mapped to the SELinux `unconfined_u` user
-> - running as the `unconfined_r` role
-> - running in the `unconfined_t` domain
-> - MLS range: `s0-s0`, = `s0`
-> - categories the user has access to is defined by c0.c1023, which is all categories (c0 through to c1023).

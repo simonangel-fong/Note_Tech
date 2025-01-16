@@ -150,21 +150,22 @@
 
 ## Archive/Compress Files
 
-| Command                    | Desc                                                       |
-| -------------------------- | ---------------------------------------------------------- |
-| `tar cf tar_file target`   | **Create** a tar archive from a target.                    |
-| `tar cfzv tar_file target` | **Create** a tar archive from a target, using compression. |
-| `tar tf tar_file`          | **Display** the table of contents (list).                  |
-| `tar xf tar_file`          | **Extract** files from the archive.                        |
-| `tar vxf tar_file`         | **Extract** files from the archive displaying a file list  |
-| `gzip filename`            | Compress the files into `.gz` file                         |
-| `gzip -v filename`         | Verbose output                                             |
-| `gzip -k filename`         | Keep the original file                                     |
-| `gzip -r directory`        | Compress all files in a directory                          |
-| `gzip -9 filename`         | Change the compression level, from 1 to 9. Default 6       |
-| `gunzip gz_file`           | Uncompress files.                                          |
-| `gunzip -vk gz_file`       | Uncompress files and Verbose output, keep the gz file      |
-| `zcat gz_file`             | displaying the contents of a gzip compressed file          |
+| Command                    | Desc                                                                               |
+| -------------------------- | ---------------------------------------------------------------------------------- |
+| `tar cf tar_file target`   | **Create** a tar archive from a target.                                            |
+| `tar cfzv tar_file target` | **Create** a tar archive from a target, using compression.                         |
+| `tar tf tar_file`          | **Display** the table of contents (list).                                          |
+| `tar xf tar_file`          | **Extract** files from the archive.                                                |
+| `tar vxf tar_file`         | **Extract** files from the archive displaying a file list                          |
+| `tar vxfj tar_file`        | **Extract** files from the archive displaying a file list using .bzip2 Compression |
+| `gzip filename`            | Compress the files into `.gz` file                                                 |
+| `gzip -v filename`         | Verbose output                                                                     |
+| `gzip -k filename`         | Keep the original file                                                             |
+| `gzip -r directory`        | Compress all files in a directory                                                  |
+| `gzip -9 filename`         | Change the compression level, from 1 to 9. Default 6                               |
+| `gunzip gz_file`           | Uncompress files.                                                                  |
+| `gunzip -vk gz_file`       | Uncompress files and Verbose output, keep the gz file                              |
+| `zcat gz_file`             | displaying the contents of a gzip compressed file                                  |
 
 - example
 

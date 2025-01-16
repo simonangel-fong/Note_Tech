@@ -70,11 +70,12 @@
     - [SSH](./network/ssh/ssh.md)
     - [SCP](./network/scp/scp.md)
     - [FTP](./network/ftp/ftp.md)
-    - [STFP](./project/stfp/stfp.md)
+    - [STFP](./network/stfp/stfp.md)
+    - [NTP](./network/ntp/ntp.md)
 
 - [SELinux](./selinux/selinux/selinux.md)
   - [Context](./selinux/context/context.md)
-  - [Targeted Policy](./selinux/target_policy/target_policy.md)
+  - [Policy](./selinux/policy/policy.md)
 - [Container](./container/container/container.md)
   - [Podman](./container/podman/podman.md)
 
@@ -114,6 +115,12 @@
 - [YUM](./rhcsa/yum/yum.md)
 - [SELinux](./rhcsa/selinux/selinux.md)
 - [User and Group](./rhcsa/user_group/user_group.md)
+- [File permission](./rhcsa/file_permission/file_permission.md)
+- [Cron](./rhcsa/cron/cron.md)
+- [NFS](./rhcsa/nfs/nfs.md)
+- [tar](./rhcsa/tar/tar.md)
+- [File System](./rhcsa/fs/fs.md)
+- [Time Syn](./rhcsa/chrony/chrony.md)
 
 ---
 
