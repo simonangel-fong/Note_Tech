@@ -5,6 +5,8 @@
 - [RHCSA User and Group](#rhcsa-user-and-group)
   - [Question](#question)
     - [Solution](#solution)
+  - [Question: user uid](#question-user-uid)
+  - [Solution](#solution-1)
 
 ---
 
@@ -105,4 +107,25 @@ su - harry
 # without pwd
 
 
+```
+
+---
+
+## Question: user uid
+
+```conf
+Create a user "unilao" with UID "2334" with password as "ablerate".
+```
+---
+
+## Solution
+
+```sh
+# create user
+useradd -u 2334 unilao
+# pwd
+echo "unilao:ablerate" | sudo chpasswd
+
+# confirm
+id unilao
 ```

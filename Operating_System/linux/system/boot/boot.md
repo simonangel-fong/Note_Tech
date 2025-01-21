@@ -29,7 +29,7 @@
     - [1. Interrupt the Boot Process](#1-interrupt-the-boot-process)
     - [2. Modify the GRUB2 Boot Parameters](#2-modify-the-grub2-boot-parameters)
     - [3. Access the Emergency Shell](#3-access-the-emergency-shell)
-  - [Lab: Recover root password (RHEL 9)(using rd.break)](#lab-recover-root-password-rhel-9using-rdbreak-1)
+  - [Lab: Recover root password (RHEL 9)(using init=/bin/sh)](#lab-recover-root-password-rhel-9using-initbinsh)
     - [Modify the GRUB2 Boot Parameters](#modify-the-grub2-boot-parameters)
     - [Access the Emergency Shell](#access-the-emergency-shell)
 
@@ -208,8 +208,8 @@ GRUB_ENABLE_BLSCFG=true
 | `grub2-install /dev/path`                         | Installing GRUB2 Bootloader                         |
 | `grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg` | Generates or updates the grub.cfg file              |
 | `grub2-editenv list`                              | View GRUB Environment Variables                     |
-| `grub2-editenv - unset menu_auto_hide`            | Disable GRUB menu auto-hide function                |
 | `grub2-set-default 1`                             | Sets the default boot entry by index or name.       |
+| `grub2-editenv - unset menu_auto_hide`            | Disable GRUB menu auto-hide function                |
 
 ---
 
@@ -466,7 +466,7 @@ reboot
 
 ---
 
-## Lab: Recover root password (RHEL 9)(using rd.break)
+## Lab: Recover root password (RHEL 9)(using init=/bin/sh)
 
 - In RHEL 9, dracut-055-45.git20220404.el9_0 has this issue, upgrade to dracut-057-13.git20220816.el9 or later will fix this issue.
   - ref: https://access.redhat.com/solutions/6983531

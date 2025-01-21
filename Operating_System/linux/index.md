@@ -84,10 +84,14 @@
 ## Service Deployments
 
 - Web App
+
   - [Wordpress-Mysql-Nginx-Ubuntu](./project/wordpress_mysql_nginx_ubuntu.md)
   - [!Wordpress-Mysql-Nginx-Redhat](./project/wordpress_mysql_nginx_redhat.md)
   - [!Wordpress-Mysql-Appache2-Redhat](./project/wordpress_mysql_appache2_redhat.md)
-  - [Django+Nginx+MySQL+RHEL8](./project/django_nginx_mysql_rhel8.md)
+  - [Django+Nginx+Gunicorn+RHEL8](./server_web/django_nginx_gunicorn_ol8/django_nginx_gunicorn_ol8.md)
+  - [Test: Django](./server_web/test_django/test_django.md)
+  - [Test: Mysql](./server_web/test_mysql/test_mysql.md)
+
 - SMTP Server
   - [Sending Gmail using `Postfix` on `Redhat8`](./project/gmail-postfix-redhat8/gmail-postfix-redhat8.md)
   - [Sending Gmail using `Postfix` on `Ubuntu24`](./project/gmail-postfix-ubuntu24/gmail-postfix-ubuntu24.md)
@@ -121,6 +125,7 @@
 - [tar](./rhcsa/tar/tar.md)
 - [File System](./rhcsa/fs/fs.md)
 - [Time Syn](./rhcsa/chrony/chrony.md)
+- [Reset root password](./rhcsa/reset_root/reset_root.md)
 
 ---
 

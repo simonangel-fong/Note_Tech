@@ -110,22 +110,23 @@
   - find files match the expression
   - default: find all files in the current directory
 
-| Command                                | Desc                                                           |
-| -------------------------------------- | -------------------------------------------------------------- |
-| `find`                                 | Find everything under the current directory                    |
-| `find path -name file_name`            | Find files and directories matching pattern under the path     |
-| `find /usr/sbin/ -name "*config"`      | Find the file that ends with "config"                          |
-| `find path -iname file_name`           | ignore case                                                    |
-| `find path -ls -name file_name`        | Performs ls on each of the found items                         |
-| `find /usr -name "s*" -ls`             | comprehensive search                                           |
-| `find path -mtime days`                | find files that are days old                                   |
-| `find /usr -mtime +10 -mtime -90`      | find files that are more 10 days old but less than 90 days old |
-| `find path -size num`                  | Finds file that are of size num                                |
-| `find /usr -size +1M`                  | Finds file that are larger than 1M                             |
-| `find -newer file_name`                | Finds file that are newer than file.                           |
-| `find /etc -type d -newer /etc/passwd` | Find all directories that are newer than the passwd file       |
-| `find -exec command {} \;`             | Run command against all the files that are found               |
-| `find . -exec file {} \;`              | Execute file command on each items under the current directory |
+| Command                                            | Desc                                                           |
+| -------------------------------------------------- | -------------------------------------------------------------- |
+| `find`                                             | Find everything under the current directory                    |
+| `find path -name file_name`                        | Find files and directories matching pattern under the path     |
+| `find /usr/sbin/ -name "*config"`                  | Find the file that ends with "config"                          |
+| `find path -iname file_name`                       | ignore case                                                    |
+| `find path -ls -name file_name`                    | Performs ls on each of the found items                         |
+| `find /usr -name "s*" -ls`                         | comprehensive search                                           |
+| `find path -mtime days`                            | find files that are days old                                   |
+| `find /usr -mtime +10 -mtime -90`                  | find files that are more 10 days old but less than 90 days old |
+| `find path -size num`                              | Finds file that are of size num                                |
+| `find /usr -size +1M`                              | Finds file that are larger than 1M                             |
+| `find -newer file_name`                            | Finds file that are newer than file.                           |
+| `find /etc -type d -newer /etc/passwd`             | Find all directories that are newer than the passwd file       |
+| `find -exec command {} \;`                         | Run command against all the files that are found               |
+| `find . -exec file {} \;`                          | Execute file command on each items under the current directory |
+| `find / -user username -exec cp -rf  {} /path/ \;` | Copies each file or directory recursively to the path          |
 
 ---
 

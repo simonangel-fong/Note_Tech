@@ -5,6 +5,10 @@
 - [RHCSA File System](#rhcsa-file-system)
   - [Question](#question)
     - [Solution](#solution)
+  - [Question: Find all files](#question-find-all-files)
+    - [Solution](#solution-1)
+  - [Question: grep](#question-grep)
+    - [Solution](#solution-2)
 
 ---
 
@@ -52,4 +56,57 @@ getfacl /var/tmp/fstab
 # group::r--
 # mask::rw-
 # other::r--
+```
+
+---
+
+## Question: Find all files
+
+```conf
+Find all files and directories which is created by a user "natasha" in to this system and copy it into a "/root/natashafiles" directory.
+```
+
+---
+
+### Solution
+
+```sh
+# create dir
+mkdir -p /root/natashafiles
+# find and copy
+find / -user natasha -exec cp -r --parents {} /root/natashafiles \; 2>/dev/null
+
+# verify
+ls -lR /root/natashafiles
+```
+
+- Note, in the exame, it might ask to create a script for this.
+
+---
+
+## Question: grep
+
+```conf
+Find all strings "ich" from "/usr/share/dict/words" file and copy that strings in a /root/lines file.
+```
+
+---
+
+### Solution
+
+```sh
+grep "ich" /usr/share/dict/words > /root/lines
+```
+
+- for special symbol
+
+```sh
+# Using Backslash (\)
+grep "a\*b" /path/to/file 
+
+# Using Single Quotes (')
+grep 'a*b' /path/to/file
+
+# search pattern as a fixed string
+grep -F "a*b" /path/to/file
 ```
