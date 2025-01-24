@@ -89,6 +89,7 @@
   - [!Wordpress-Mysql-Nginx-Redhat](./project/wordpress_mysql_nginx_redhat.md)
   - [!Wordpress-Mysql-Appache2-Redhat](./project/wordpress_mysql_appache2_redhat.md)
   - [Django+Nginx+Gunicorn+RHEL8](./server_web/django_nginx_gunicorn_ol8/django_nginx_gunicorn_ol8.md)
+  - [File Download: Nginx+RHEL8](./server_web/file_download_nginx_ol8/file_download_nginx_ol8.md)
   - [Test: Django](./server_web/test_django/test_django.md)
   - [Test: Mysql](./server_web/test_mysql/test_mysql.md)
 
@@ -126,6 +127,9 @@
 - [File System](./rhcsa/fs/fs.md)
 - [Time Syn](./rhcsa/chrony/chrony.md)
 - [Reset root password](./rhcsa/reset_root/reset_root.md)
+- [LVM](./rhcsa/lvm/lvm.md)
+- [Tune](./rhcsa/tune/tune.md)
+- [Container](./rhcsa/container/container.md)
 
 ---
 

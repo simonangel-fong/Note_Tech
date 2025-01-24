@@ -7,6 +7,8 @@
     - [Solution](#solution)
   - [Question: user uid](#question-user-uid)
   - [Solution](#solution-1)
+  - [Question: welcome message](#question-welcome-message)
+    - [Solution](#solution-2)
 
 ---
 
@@ -128,4 +130,56 @@ echo "unilao:ablerate" | sudo chpasswd
 
 # confirm
 id unilao
+```
+
+---
+
+## Question: welcome message
+
+```conf
+Build an application rhcsa that print the message when logged in as ablerate user
+"Welcome to user ablerate "
+```
+---
+
+- Confiregure: create user "ablerate"
+
+```sh
+useradd ablerate
+passwd ablerate
+```
+
+---
+
+### Solution
+
+```sh
+su - ablerate
+
+# Create a shell script
+vi ~/rhcsa
+
+#!/bin/bash
+echo "Welcome to user ablerate"
+
+# Set execute permissions
+chmod +x ~/rhcsa
+
+# Modify the .bashrc File
+vi ~/.bashrc
+
+# add a line
+~/rhcsa
+
+# logout and login
+exit
+su - ablerate
+# Welcome to user ablerate
+```
+
+- Troubleshooting
+
+```sh
+# If it show "permission denied" when logging in, change mod
+chmod +x ~/rhcsa
 ```
