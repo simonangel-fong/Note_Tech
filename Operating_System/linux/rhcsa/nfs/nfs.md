@@ -29,6 +29,10 @@ password for netuser is ablerate.
 # install package
 yum install -y nfs-utils autofs
 
+showmount -e 192.168.128.50
+# Export list for 192.168.128.50:
+# /home/guests/netuserX 192.168.128.0/24
+
 # Edit auto fs cf
 vi /etc/auto.master
 # add entry: mount_point  Map_file

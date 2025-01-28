@@ -13,8 +13,8 @@
 ```conf
 Configure your server a VM repository installed the packages distribution is available via YUM:
 
-Base os url = http://content.example.com/rhel9.0/x86_64/dvd/BaseOS
-App stream url= http://content.example.com/rhel9.0/x86_64/dvd/AppStream
+Base os url = https://yum.oracle.com/repo/OracleLinux/OL8/baseos/latest/x86_64
+App stream url= https://yum.oracle.com/repo/OracleLinux/OL8/appstream/x86_64/
 ```
 
 ---
@@ -22,7 +22,7 @@ App stream url= http://content.example.com/rhel9.0/x86_64/dvd/AppStream
 ## Solution
 
 ```sh
-# Optional: Remove Default Repositories 
+# Optional: Remove Default Repositories
 # sudo mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
 
 # create repo cf

@@ -361,9 +361,6 @@ resize2fs /dev/wgroup/wshare 300M
 # Resizing the filesystem on /dev/wgroup/wshare to 307200 (1k) blocks.
 # The filesystem on /dev/wgroup/wshare is now 307200 (1k) blocks long.
 
-# confirm
-resize2fs /dev/wgroup/wshare
-
 # Resize the Logical Volume
 lvreduce -L -100M /dev/wgroup/wshare
 # Rounding size to boundary between physical extents: 96.00 MiB.

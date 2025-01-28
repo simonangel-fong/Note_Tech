@@ -110,12 +110,13 @@
 
 - [Connect Domain Name with Homelab(Cloudflare-Nginx)](./homelab/cloudflare_dns_tunnel/cloudflare_dns_tunnel.md)
 
-- [Practice Infrastructure](./infrastructure/infrastructure.md)
+- [Samba](./homelab/samba/samba.md)
 
 ---
 
 ## RHCSA Practice
 
+- [Setup Env](./rhcsa/env/env.md)
 - [Network](./rhcsa/network/network.md)
 - [YUM](./rhcsa/yum/yum.md)
 - [SELinux](./rhcsa/selinux/selinux.md)
