@@ -32,6 +32,7 @@ Exam can have filesystem - vfat, xfs
 - Create partition
   - careful, the following question might need the the space
   - size = PE size \* extents = 400MB
+- physical extent
 
 ```sh
 # find the new disk
@@ -207,6 +208,16 @@ lvremove /dev/wgroup/wshare
 # remove volume group
 vgremove /dev/wgroup
 #  Volume group "wgroup" successfully removed
+
+# remove physical volume
+pvremove /dev/sda1
+# Labels on physical volume "/dev/sda1" successfully wiped.
+
+# remove partition
+fdisk /dev/sda
+d # Delete Partitions
+p # confirm
+w # save and quit
 ```
 
 ---
@@ -305,8 +316,7 @@ swapon -s
 ## Question
 
 ```conf
-Resize your vo logical volume, it should be approx 300MB( note -> only size accepted from
-270mb to 290mb).
+Resize your vo logical volume, it should be approx 300MB( note -> only size accepted from 270mb to 290mb).
 ```
 
 ---

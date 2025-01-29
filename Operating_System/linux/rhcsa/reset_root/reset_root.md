@@ -39,3 +39,11 @@ touch /.autorelabel
 exit
 exit
 ```
+
+---
+
+- Troubleshooting
+
+```sh
+grub2-editenv - set menu_auto_hide=0
+```
