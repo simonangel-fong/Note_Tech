@@ -4,10 +4,13 @@
 
 - [Linux - Storage: Logical Volume Manager](#linux---storage-logical-volume-manager)
   - [Logical Volume Manager (LVM)](#logical-volume-manager-lvm)
-    - [Physical Volume](#physical-volume)
-    - [Volume Group](#volume-group)
-    - [Logical Volume](#logical-volume)
-    - [File System](#file-system)
+    - [Architecture](#architecture)
+    - [Physical Volume (PV)](#physical-volume-pv)
+    - [PV Commands](#pv-commands)
+    - [Volume Group (VG)](#volume-group-vg)
+    - [VG Commands](#vg-commands)
+    - [Logical Volume (LV)](#logical-volume-lv)
+    - [LV Commands](#lv-commands)
   - [Lab: Add Disk and Create LVM Partition](#lab-add-disk-and-create-lvm-partition)
     - [Add a New Hard Disk](#add-a-new-hard-disk)
     - [Identify New Device](#identify-new-device)
@@ -27,6 +30,18 @@
     - [Extend Volume Group by associating New Physical Volume](#extend-volume-group-by-associating-new-physical-volume)
     - [Extend target Logical Volume](#extend-target-logical-volume)
     - [Extend target Filesystem](#extend-target-filesystem)
+  - [Lab: Create LV from a partition and a disk](#lab-create-lv-from-a-partition-and-a-disk)
+    - [Create PV and VG](#create-pv-and-vg)
+    - [Create LV](#create-lv)
+    - [Extend size](#extend-size)
+    - [Rename a LV](#rename-a-lv)
+    - [Reduce LV size](#reduce-lv-size)
+    - [Resize LV size](#resize-lv-size)
+    - [Delete LV](#delete-lv)
+    - [Remove a PE from a VG](#remove-a-pe-from-a-vg)
+    - [Remove a VG](#remove-a-vg)
+    - [Remove all PV](#remove-all-pv)
+    - [Remove partition](#remove-partition)
 
 ---
 
@@ -50,27 +65,24 @@
 
 ---
 
+### Architecture
+
 ![lvm_diagram01](./pic/lvm_diagram01.png)
+
+- `LVM` accumulates spaces taken from `partitions` or entire `disks` (called `Physical Volumes`) to form a **logical container** (called `Volume Group`), which is then divided into **logical partitions** (called `Logical Volumes`).
+
+---
+
+### Physical Volume (PV)
 
 - `Physical Volume (PV)`:
 
   - Represents a physical storage **device or a partition** on a disk.
   - Example: `/dev/sda1`, `/dev/sda2`.
 
-- `Volume Group (VG)`:
-
-  - A pool of `physical volumes` grouped together.
-  - Acts as a **container** for `logical volumes`.
-  - Example: `my_vg`
-
-- `Logical Volume (LV)`:
-
-  - A **virtual partition** carved out of a `volume group`.
-  - Example: `/dev/my_vg/data`.
-
 ---
 
-### Physical Volume
+### PV Commands
 
 | CMD                        | DESC                                          |
 | -------------------------- | --------------------------------------------- |
@@ -85,64 +97,91 @@
 
 ---
 
-### Volume Group
+### Volume Group (VG)
 
-| CMD                          | DESC                                                 |
-| ---------------------------- | ---------------------------------------------------- |
-| `vgdisplay`                  | Display all Volume Group                             |
-| `vgdisplay vg_name`          | Display a Volume Group                               |
-| `vgs`                        | Display all Volume Group Statistics                  |
-| `vgs vg_name`                | Display a Volume Group Statistics                    |
-| `vgcreate vg_name pv_name`   | Create a Volume Group from a Physical Volume         |
-| `vgcreate vg_name pv1 pv2`   | Create a Volume Group from multiple Physical Volumes |
-| `vgextend vg_name pv_name`   | Add a Physical Volume to a Volume Group              |
-| `vgreduce vg_name pv_name`   | Remove a Physical Volume from a Volume Group         |
-| `vgremove vg_name`           | Remove a Volume Group                                |
-| `vgchange -a y vg_name`      | Activate a Volume Group                              |
-| `vgchange -a n vg_name`      | Deactivate a Volume Group                            |
-| `vgrename old_name new_name` | Rename a Volume Group                                |
-| `vgcfgbackup vg_name`        | Backup Volume Group Metadata                         |
-| `vgcfgrestore vg_name`       | Restore Volume Group Metadata                        |
+- `Volume Group (VG)`:
+
+  - A pool of `physical volumes` grouped together.
+  - Acts as a **container** for `logical volumes`.
+  - Example: `my_vg`
+
+- `Physical Extent`
+
+  - the logical pieces which a physical volume are divided into to add to a volume group
+  - the smallest allocatable unit of space in LVM.
+  - define when creating a volume group
+    - default 4MB.
+  - physical volume size = PE size \* extent #
 
 ---
 
-### Logical Volume
+### VG Commands
 
-| CMD                                                     | DESC                                  |
-| ------------------------------------------------------- | ------------------------------------- |
-| `lvdisplay`                                             | Display Logical Volume Information    |
-| `lvdisplay lv_path`                                     | Display a Logical Volume Information  |
-| `lvs`                                                   | Display Logical Volume Metadata       |
-| `lvs lv_path`                                           | Display a Logical Volume Metadata     |
-| `lvcreate -L SIZE -n lv_name vg_name`                   | Create a Logical Volume               |
-| `lvextend -L+SIZE lv_path`                              | Extend a Logical Volume               |
-| `lvreduce -L-SIZE lv_path`                              | Reduce a Logical Volume               |
-| `lvremove lv_path`                                      | Remove a Logical Volume               |
-| `lvrename vg_name old_name new_name`                    | Rename a Logical Volume               |
-| `lvcreate -L SIZE -s -n snapshot_name original_lv_name` | Create a Snapshot of a Logical Volume |
-| `lvchange -ay lv_path`                                  | Activate a Logical Volume             |
-| `lvchange -an lv_path`                                  | Deactivate a Logical Volume           |
+| CMD                               | DESC                                                 |
+| --------------------------------- | ---------------------------------------------------- |
+| `vgdisplay`                       | Display all Volume Group                             |
+| `vgdisplay vg_name`               | Display a Volume Group                               |
+| `vgs`                             | Display all Volume Group Statistics                  |
+| `vgs vg_name`                     | Display a Volume Group Statistics                    |
+| `vgcreate vg_name pv_name`        | Create a Volume Group from a Physical Volume         |
+| `vgcreate vg_name pv1 pv2`        | Create a Volume Group from multiple Physical Volumes |
+| `vgcreate -s 8MB vg_name pv_name` | Create a Volume Group with a specific PE             |
+| `vgrename old_name new_name`      | Rename a Volume Group                                |
+| `vgextend vg_name pv_name`        | Add a Physical Volume to a Volume Group              |
+| `vgreduce vg_name pv_name`        | Remove a Physical Volume from a Volume Group         |
+| `vgchange -a y vg_name`           | Activate a Volume Group                              |
+| `vgchange -a n vg_name`           | Deactivate a Volume Group                            |
+| `vgcfgbackup vg_name`             | Backup Volume Group Metadata                         |
+| `vgcfgrestore vg_name`            | Restore Volume Group Metadata                        |
+| `vgremove vg_name`                | Remove a Volume Group                                |
+
+---
+
+### Logical Volume (LV)
+
+- `Logical Volume (LV)`:
+
+  - A **virtual partition** carved out of a `volume group`.
+  - Example: `/dev/my_vg/data`.
+
+- `Logical Extent`
+  - A `logical volume` is made up of `Logical Extents (LE)`.
+  - `Logical extents` are a set of `physical extents` allocated to the `logical volume`.
+  - `Logical extents` point to `physical extents`, and they may be random or contiguous.
+  - The larger a `logical volume` is, the more `logical extents` it will have.
+    - normally: PE = LE
+    - default: 4MB
+  - LV size = LE size \* LE #
 
 ---
 
-### File System
+### LV Commands
 
-| CMD                                 | DESC                                      |
-| ----------------------------------- | ----------------------------------------- |
-| `blkid fs_name`                     | Display file system type and UUID.        |
-| `file -s fs_name`                   | Display the file system type of a device. |
-| `df -h`                             | Display File System Usage                 |
-| `mkfs.fs_type partition`            | Create a file system on a partition       |
-| `mkfs.fs_type lv_path`              | Create a file system on a logical volume. |
-| `resize2fs fs_name`                 | Increase ext4 size                        |
-| `resize2fs fs_name new_size`        | Decrease ext4 size                        |
-| `xfs_growfs fs_name`                | Increase XFS size                         |
-| `mount fs_name dir`                 | Mount a file system to a directory.       |
-| `mount -t ext4 fs_name mount_point` | Mount with a specific file system type    |
-| `umount fs_name`                    | Unmount a File System                     |
-| `umount mount_point`                | Unmount a File System                     |
+| CMD                                                     | DESC                                            |
+| ------------------------------------------------------- | ----------------------------------------------- |
+| `lvdisplay`                                             | Display Logical Volume Information              |
+| `lvdisplay lv_path`                                     | Display a Logical Volume Information            |
+| `lvs`                                                   | Display Logical Volume Metadata                 |
+| `lvs lv_path`                                           | Display a Logical Volume Metadata               |
+| `lvcreate -L 10G -n lv_name vg_name`                    | Create a Logical Volume                         |
+| `lvcreate -l 50 -n lv_name vg1`                         | Create a lv using a specific extent             |
+| `lvcreate -l 60%VG -n lv_name vg_name`                  | Create a lv using 60% of VG                     |
+| `lvcreate -l 100%FREE -n lv_name vg1`                   | Create a lv using all of VG                     |
+| `lvrename vg_name old_name new_name`                    | Rename a Logical Volume                         |
+| `lvextend -L 120G -r lv_name`                           | Extend a lv and underlying filesystem to a size |
+| `lvextend -L +40G -r lv_name`                           | Extend a lv and underlying filesystem by a size |
+| `lvextend -L +100%FREE -r lv_name`                      | Extend a lv and underlying filesystem to 100%   |
+| `lvreduce -L 120G -r lv_name`                           | Reduce a lv and underlying filesystem to a size |
+| `lvreduce -L -40G -r lv_name`                           | Reduce a lv and underlying filesystem by a size |
+| `lvresize -L+120G -r lv_path`                           | Extend a lv and underlying file system          |
+| `lvresize -L-120G -r lv_path`                           | Reduce a lv and underlying file system          |
+| `lvcreate -L SIZE -s -n snapshot_name original_lv_name` | Create a Snapshot of a Logical Volume           |
+| `lvchange -ay lv_path`                                  | Activate a Logical Volume                       |
+| `lvchange -an lv_path`                                  | Deactivate a Logical Volume                     |
+| `lvremove lv_path`                                      | Remove a Logical Volume                         |
 
 ---
+
 
 ## Lab: Add Disk and Create LVM Partition
 
@@ -715,6 +754,317 @@ xfs_growfs /dev/mapper/vg_oracle-lv_oracle
 df -h /dev/mapper/vg_oracle-lv_oracle
 # Filesystem                       Size  Used Avail Use% Mounted on
 # /dev/mapper/vg_oracle-lv_oracle  2.0G   47M  2.0G   3% /oracle
+```
+
+---
+
+## Lab: Create LV from a partition and a disk
+
+- set the PE size of 16MB
+- Create a vg from a part and disk
+
+### Create PV and VG
+
+```sh
+# create partition
+parted /dev/sda mkpart main 1 256M
+parted /dev/sda mkpart second 257M 1024M
+
+# confirm
+lsblk
+# NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+# sda             8:0    0    1G  0 disk
+# ├─sda1          8:1    0  243M  0 part
+# └─sda2          8:2    0  732M  0 part
+# sdb             8:16   0  512M  0 disk
+
+pvs -v
+# PV         VG     Fmt  Attr PSize   PFree   DevSize PV UUID
+# /dev/sda1         lvm2 ---  243.00m 243.00m 243.00m 3mfZIg-33cl-o9dk-X4mx-MDcL-A6T5-9t9StN
+# /dev/sda2  vgbook lvm2 a--  720.00m 720.00m 732.00m G1YHrH-D1Z6-b3E1-xJGl-fiOs-T5b2-EL6GxU
+# /dev/sdb   vgbook lvm2 a--  496.00m 496.00m 512.00m 7iSL6S-OCHw-SI1n-Yk9L-N29s-2Bwa-NyHXZ2
+
+# create pe
+pvcreate /dev/sda2 /dev/sdb
+# Physical volume "/dev/sda2" successfully created.
+# Physical volume "/dev/sdb" successfully created.
+
+# create vg
+vgcreate -s 16M -v vgbook /dev/sda2 /dev/sdb
+# Wiping signatures on new PV /dev/sda2.
+# Wiping signatures on new PV /dev/sdb.
+# Adding physical volume '/dev/sda2' to volume group 'vgbook'
+# Adding physical volume '/dev/sdb' to volume group 'vgbook'
+# Creating volume group backup "/etc/lvm/backup/vgbook" (seqno 1).
+# Volume group "vgbook" successfully created
+
+# confirm
+vgs -v
+# VG     Attr   Ext    #PV #LV #SN VSize  VFree  VG UUID                                VProfile
+# vgbook wz--n- 16.00m   2   0   0 <1.19g <1.19g wRPf4K-bYyM-KTia-sbIz-Os04-W6Yi-WU6SVZ
+
+vgdisplay -v vgbook
+# --- Volume group ---
+# VG Name               vgbook
+# System ID
+# Format                lvm2
+# Metadata Areas        2
+# Metadata Sequence No  1
+# VG Access             read/write
+# VG Status             resizable
+# MAX LV                0
+# Cur LV                0
+# Open LV               0
+# Max PV                0
+# Cur PV                2
+# Act PV                2
+# VG Size               <1.19 GiB
+# PE Size               16.00 MiB
+# Total PE              76
+# Alloc PE / Size       0 / 0
+# Free  PE / Size       76 / <1.19 GiB
+# VG UUID               wRPf4K-bYyM-KTia-sbIz-Os04-W6Yi-WU6SVZ
+
+# --- Physical volumes ---
+# PV Name               /dev/sda2
+# PV UUID               G1YHrH-D1Z6-b3E1-xJGl-fiOs-T5b2-EL6GxU
+# PV Status             allocatable
+# Total PE / Free PE    45 / 45
+
+# PV Name               /dev/sdb
+# PV UUID               7iSL6S-OCHw-SI1n-Yk9L-N29s-2Bwa-NyHXZ2
+# PV Status             allocatable
+# Total PE / Free PE    31 / 31
+```
+
+---
+
+### Create LV
+
+- Create lv using LE: 12
+  - so the size = LE * PE = 16*12 = 192MB
+
+```sh
+lvcreate -l 12 -n lvbook vgbook
+
+# confirm
+lvs
+# LV     VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+# lvbook vgbook -wi-a----- 192.00m
+
+lvdisplay /dev/vgbook/lvbook
+# --- Logical volume ---
+# LV Path                /dev/vgbook/lvbook
+# LV Name                lvbook
+# VG Name                vgbook
+# LV UUID                pXAYaf-uFDt-sw7t-1eFV-EVGD-pZDb-wM1tD9
+# LV Write Access        read/write
+# LV Creation host, time ServerB, 2025-02-01 18:30:38 -0500
+# LV Status              available
+# # open                 0
+# LV Size                192.00 MiB
+# Current LE             12
+# Segments               1
+# Allocation             inherit
+# Read ahead sectors     auto
+# - currently set to     256
+# Block device           253:2
+```
+
+---
+
+### Extend size
+
+- Add new pv to vg
+
+```sh
+# add new partition to vg
+vgextend vgbook /dev/sda1
+# Volume group "vgbook" successfully extended
+
+# confirm
+vgs -v
+# VG     Attr   Ext    #PV #LV #SN VSize VFree VG UUID                                VProfile
+# vgbook wz--n- 16.00m   3   1   0 1.42g 1.23g wRPf4K-bYyM-KTia-sbIz-Os04-W6Yi-WU6SVZ
+```
+
+- Extend lv
+
+```sh
+# extend lv
+lvextend -L +200M /dev/vgbook/lvbook
+#  Rounding size to boundary between physical extents: 208.00 MiB.
+#   Size of logical volume vgbook/lvbook changed from 192.00 MiB (12 extents) to 400.00 MiB (25 extents).
+#   Logical volume vgbook/lvbook successfully resized.
+
+lvs /dev/vgbook/lvbook
+  # LV     VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  # lvbook vgbook -wi-a----- 400.00m
+```
+
+---
+
+### Rename a LV
+
+```sh
+lvrename /dev/vgbook/lvbook lvbooknew
+# Renamed "lvbook" to "lvbooknew" in volume group "vgbook"
+
+# confirm
+lvs
+# LV        VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+# lvbooknew vgbook -wi-a----- 400.00m
+```
+
+---
+
+### Reduce LV size
+
+```sh
+lvreduce -L 50M /dev/vgbook/lvbooknew
+# Rounding size to boundary between physical extents: 64.00 MiB.
+# No file system found on /dev/vgbook/lvbooknew.
+# Size of logical volume vgbook/lvbooknew changed from 400.00 MiB (25 extents) to 64.00 MiB (4 extents).
+# Logical volume vgbook/lvbooknew successfully resized.
+
+# confirm
+lvs
+# LV        VG     Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+# lvbooknew vgbook -wi-a----- 64.00m
+```
+
+---
+
+### Resize LV size
+
+```sh
+lvresize -L +90M /dev/vgbook/lvbooknew
+# Rounding size to boundary between physical extents: 96.00 MiB.
+#   Size of logical volume vgbook/lvbooknew changed from 64.00 MiB (4 extents) to 160.00 MiB (10 extents).
+#   Logical volume vgbook/lvbooknew successfully resized.
+
+# confirm
+lvs
+# LV        VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+# lvbooknew vgbook -wi-a----- 160.00m
+```
+
+---
+
+### Delete LV
+
+```sh
+lvremove /dev/vgbook/lvbooknew
+# Do you really want to remove active logical volume vgbook/lvbooknew? [y/n]: y
+  # Logical volume "lvbooknew" successfully removed.
+
+# confirm
+lvs
+```
+
+---
+
+### Remove a PE from a VG
+
+```sh
+vgreduce vgbook /dev/sda2
+#   Removed "/dev/sda2" from volume group "vgbook"
+
+# confirm
+vgdisplay vgbook
+# --- Volume group ---
+#   VG Name               vgbook
+#   System ID
+#   Format                lvm2
+#   Metadata Areas        2
+#   Metadata Sequence No  9
+#   VG Access             read/write
+#   VG Status             resizable
+#   MAX LV                0
+#   Cur LV                0
+#   Open LV               0
+#   Max PV                0
+#   Cur PV                2
+#   Act PV                2
+#   VG Size               736.00 MiB
+#   PE Size               16.00 MiB
+#   Total PE              46
+#   Alloc PE / Size       0 / 0
+#   Free  PE / Size       46 / 736.00 MiB
+#   VG UUID               wRPf4K-bYyM-KTia-sbIz-Os04-W6Yi-WU6SVZ
+
+#   --- Physical volumes ---
+#   PV Name               /dev/sdb
+#   PV UUID               7iSL6S-OCHw-SI1n-Yk9L-N29s-2Bwa-NyHXZ2
+#   PV Status             allocatable
+#   Total PE / Free PE    31 / 31
+
+#   PV Name               /dev/sda1
+#   PV UUID               3mfZIg-33cl-o9dk-X4mx-MDcL-A6T5-9t9StN
+#   PV Status             allocatable
+#   Total PE / Free PE    15 / 15
+```
+
+---
+
+### Remove a VG
+
+```sh
+vgremove vgbook
+#  Volume group "vgbook" successfully removed
+
+# confirm
+vgs
+```
+
+---
+
+### Remove all PV
+
+```sh
+pvremove /dev/sda1 /dev/sda2 /dev/sdb
+  # Labels on physical volume "/dev/sda1" successfully wiped.
+  # Labels on physical volume "/dev/sda2" successfully wiped.
+  # Labels on physical volume "/dev/sdb" successfully wiped.
+
+# confirm
+pvs
+```
+
+---
+
+### Remove partition
+
+```sh
+parted /dev/sda print
+# Model: ATA VMware Virtual S (scsi)
+# Disk /dev/sda: 1074MB
+# Sector size (logical/physical): 512B/512B
+# Partition Table: gpt
+# Disk Flags:
+
+# Number  Start   End     Size   File system  Name    Flags
+#  1      1049kB  256MB   255MB               main
+#  2      257MB   1024MB  768MB               second
+
+parted /dev/sda rm 1;parted /dev/sda rm 2
+# Information: You may need to update /etc/fstab.
+# Information: You may need to update /etc/fstab.
+
+# confirm
+parted /dev/sda print
+# Model: ATA VMware Virtual S (scsi)
+# Disk /dev/sda: 1074MB
+# Sector size (logical/physical): 512B/512B
+# Partition Table: gpt
+# Disk Flags:
+
+# Number  Start  End  Size  File system  Name  Flags
+
+lsblk
+# NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+# sda             8:0    0    1G  0 disk
+# sdb             8:16   0  512M  0 disk
 ```
 
 ---

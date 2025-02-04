@@ -4,6 +4,9 @@
 
 - [Linux - Storage Fundamental](#linux---storage-fundamental)
   - [Storage Fundamental](#storage-fundamental)
+    - [Storage Management](#storage-management)
+    - [Master Boot Record (MBR)](#master-boot-record-mbr)
+    - [GUID Partition Table (GPT)](#guid-partition-table-gpt)
   - [Display block device](#display-block-device)
   - [Display disk partitions](#display-disk-partitions)
   - [Display Filesystem Disk Usage](#display-filesystem-disk-usage)
@@ -19,6 +22,54 @@
   - Local Storage
   - SAN(Storage Area Network)
   - NAS(Network Attached Storage)
+
+---
+
+### Storage Management
+
+- A `disk` in RHEL can be **carved up** into several `partitions`.
+- `partition information`
+
+  - stored on the disk in a small region, which is **read** by the operating system **at boot time**.
+  - This region is `MBR` or `GPT`
+
+- At system boot, the BIOS/UEFI **scans** all storage devices, **detects** the presence of MBR/GPT areas, identifies the
+  boot disks, **loads** the **bootloader program** in memory from the default boot disk, executes the boot code to read the partition table and identify the /boot partition, loads the kernel in memory, and passes control over to it.
+- `MBR`/ `GPT` job:
+  - store disk partition information and the boot code.
+
+---
+
+### Master Boot Record (MBR)
+
+- `Master Boot Record (MBR)`
+
+  - the region storing partition information on on the **BIOS-based** systems
+  - resides on the **first sector** of the boot disk.
+  - store partition table information on **x86-based** computers
+  - storage space less than `2TB`
+
+- MBR allows the creation of three types of partition:
+
+  - primary
+  - logical
+  - extended
+
+- only **primary** and **logical** can be used for **data storage**;
+  - the **extended** is a mere enclosure for holding the **logical partitions** and it is **not** meant for data storage.
+- MBR supports creation of up to **four** **primary** partitions numbered 1 through 4 at a time.
+  - In case additional partitions are required, one of the primary partitions must be **deleted** and replaced with an **extended** partition to be able to add **logical** partitions (up to 11) within that extended partition.
+
+---
+
+### GUID Partition Table (GPT)
+
+- `Globally Unique Identifiers (GUID) Partition Table (GPT) `
+
+  - the region storing partition information on on the **UEFI-based** systems
+  - ntegrated into the `UEFI` firmware
+  - ability to construct up to 128 partitions
+  - no concept of extended or logical partitions
 
 ---
 

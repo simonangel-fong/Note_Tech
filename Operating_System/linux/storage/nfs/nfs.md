@@ -10,6 +10,12 @@
   - [Client](#client)
   - [Lab: Create an NFS Server](#lab-create-an-nfs-server)
   - [Lab: Configure NFS Client](#lab-configure-nfs-client)
+  - [Package: `AutoFS`](#package-autofs)
+    - [Configuration File](#configuration-file)
+    - [AutoFS Maps](#autofs-maps)
+    - [Lab: Direct Map](#lab-direct-map)
+    - [Lab: Indirect map](#lab-indirect-map)
+    - [Lab: Auto mounting User Home](#lab-auto-mounting-user-home)
 
 ---
 
@@ -153,6 +159,7 @@ systemctl start rpcbind nfs-server rpc-statd nfs-idmapd
 ```sh
 # create dedicated dir for sharing
 mkdir /shared_data
+chmod 755 /shared_data
 # create resource
 touch /shared_data/resource
 echo "this is resource on server" > /shared_data/resource
@@ -177,8 +184,9 @@ exportfs -rv
 - Disable firewall
 
 ```sh
-systemctl stop firewalld
-systemctl status firewalld
+firewall-cmd --permanent --add-service nfs
+firewall-cmd --reload
+firewall-cmd --list-all
 ```
 
 ---
@@ -265,4 +273,164 @@ cat /shared_data/client/test
 
 ```sh
 umount /mnt/app
+```
+
+- Persist NFS share on client
+
+```sh
+echo "192.168.1.130:/shared_data /mnt/app nfs _netdev 0 0"
+```
+
+---
+
+## Package: `AutoFS`
+
+- `Auto File System (AutoFS)`
+
+  - a service that mounts and unmounts a share on the clients during runtime as well as system reboots.
+  - a client-side service
+
+- With a proper **entry** placed in AutoFS configuration files, the `AutoFS` service **automatically mounts** a share upon detecting an activity in its mount point with a command such as `ls` or `cd`.
+- To avoid inconsistencies, mounts managed with `AutoFS` should **not** be mounted or unmounted manually or via the `/etc/fstab` file.
+
+- `maps`
+  - NFS shares be defined in text configuration files
+  - CF location: `/etc/auto.master.d`
+- With AutoFS, a share is **unmounted automatically** if it is not accessed for **five minutes** by **default**.
+
+- `automount`
+  - the daemon of AutoFS service
+  - invoked at system boot
+  - It reads the AutoFS master **map** and creates initial **mount point** entries, but it does not mount any shares yet.
+  - When the service **detects** a user activity under a mount point during runtime, it **mounts** the requested file system at that time.
+  - If a share remains **idle** for a certain time period, **automount unmounts** it by itself.
+
+---
+
+### Configuration File
+
+- `/etc/autofs.conf`
+
+- Sample:
+
+```conf
+[ autofs ]
+timeout = 300
+browse_mode = no
+mount_nfs_default_protocol = 4
+[amd]
+dismount_interval = 300
+```
+
+---
+
+### AutoFS Maps
+
+- 3 common AutoFS map types:
+  - `master`
+    - location: `/etc/auto.master`
+  - `direct`
+    - used to **mount shares automatically** on any number of unrelated mount points.
+    - always visible to users
+    - Local and direct mounted shares can coexist under one parent directory.
+  - `indirect`
+    - when need to mount all of the shares under one common parent directory.
+    - visible only after they have been accessed.
+    - Local and indirect mounted shares cannot coexist under the same parent directory.
+
+---
+
+### Lab: Direct Map
+
+```sh
+dnf install -y autofs
+
+showmount -e 192.168.128.50
+# Export list for 192.168.128.50:
+# /home/guests/netuserX 192.168.128.0/24
+
+# create mount point
+mkdir /autodir
+
+# add entry in master file
+vi /etc/auto.master
+/-  /etc/auto.master.d/auto.dir
+
+# create file and map mount point
+vi etc/auto.master.d/auto.dir
+/autodir 192.168.128.50:/home/guests/netuserX
+
+# confirm autofs running
+systemctl status autofs.service -l --no-pager
+
+# confirm
+ll /autodir
+# total 4
+# -rw-r--r--. 1 xanadu xanadu 22 Jan 31 14:21 testfile
+```
+
+---
+
+### Lab: Indirect map
+
+```sh
+# create mount point
+mkdir /indirect
+
+# edit misc file
+vi /etc/auto.misc
+autoindir 192.168.128.50:/home/guests/netuserX
+
+# confirm
+ll /misc/autoindir/
+# total 4
+# -rw-r--r--. 1 xanadu xanadu 22 Jan 31 14:21 testfile
+```
+
+---
+
+### Lab: Auto mounting User Home
+
+- Server:
+  - Create user `netuserX` with UID 3000
+  - Add home directory `/home/netuserX` to the list of NFS shares.
+
+```sh
+useradd -u 3000 netuserX
+echo password | passwd --stdin netuserX
+
+# add entry
+echo "/home 192.168.128.0/24(rw)" >> /etc/exports
+
+# export all share
+exportfs -avr
+# exporting 192.168.128.50:/home
+# exporting 192.168.128.0/24:/home/guests/netuserX
+```
+
+- Client:
+  - Create user `netuserX` with UID 3000 and no home dir.
+  - Create mount poit `/nfshome`
+  - Create indirect map to the remote user home.
+
+```sh
+# create user
+# -M: no home dir
+# -b: specify base dir
+useradd netuserX -u 3000 -Mb /nfshome
+echo password | passwd --stdin netuserX
+
+# create mount point
+mkdir /nfshome
+
+# add entry to master
+echo "/nfshome  /etc/auto.master.d/auto.home" >> /etc/auto.master
+
+# create cf
+echo "* -rw 192.168.128.50:/home/netuserX" > /etc/auto.master.d/auto.home
+
+# confirm
+su - netuserX
+pwd
+# /nfshome/netuserX
 ```

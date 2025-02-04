@@ -6,11 +6,14 @@
   - [Partition](#partition)
     - [Types of Partitions](#types-of-partitions)
     - [Partitioning Schemes](#partitioning-schemes)
+    - [Thin Provisioning](#thin-provisioning)
     - [Geting Disk Device Info](#geting-disk-device-info)
   - [Configuration File](#configuration-file)
-    - [`/etc/fstab`](#etcfstab)
     - [`/etc/mtab`](#etcmtab)
+    - [`/proc/partitions`](#procpartitions)
   - [Common Commands](#common-commands)
+    - [`parted`: Manage Partitions](#parted-manage-partitions)
+    - [Lab: Create new parition](#lab-create-new-parition)
     - [`fdisk`: Manage Partitions](#fdisk-manage-partitions)
     - [`mkfs`: Format a partition](#mkfs-format-a-partition)
     - [`mount`: Attach a Filesystem](#mount-attach-a-filesystem)
@@ -32,12 +35,17 @@
 
   - a **logical division** of a **physical storage device** (e.g., a hard disk or SSD).
   - allows a single physical disk to be **divided into separate sections**, each **functioning as an independent unit** for organizing data.
+    - can exist on a portion of a disk, on an entire disk, or it may span **multiple** disks.
 
 - Benefits:
+
   - To **separate** the operating **system**, user **data**, and application **files**.
   - To install **multiple operating systems** on a single disk.
   - To optimize performance by **allocating** specific partitions for **swap** or **log** files.
   - To **enable different filesystem types** for different purposes.
+
+- `Partitioning information`
+  - stored at special disk locations that the system **references at boot time**.
 
 ---
 
@@ -63,6 +71,13 @@
 - `GPT (GUID Partition Table)`:
   - **Modern** scheme, supports **unlimited** partitions (typically **128 by default**).
   - Handles disks **larger than 2 TB**.
+
+---
+
+### Thin Provisioning
+
+- `Thin provisioning` technology
+  - allows for an economical allocation and utilization of storage space by moving arbitrary data blocks to contiguous locations, which **results in empty block elimination**.
 
 ---
 
@@ -107,43 +122,6 @@
 
 ## Configuration File
 
-### `/etc/fstab`
-
-- `/etc/fstab`
-
-  - A configuration file that defines how and where partitions, devices, and remote filesystems should be **mounted at system boot** or **manually**.
-    - Automates the mounting of filesystems **at boot**.
-    - Provides a convenient way to **manually mount** filesystems without specifying detailed options.
-
-- **Structure**
-  - Each line represents a filesystem and its mount configuration
-
-| Field             | Description                                                               |
-| ----------------- | ------------------------------------------------------------------------- |
-| `Device`          | The block device or remote filesystem.                                    |
-| `Mount Point`     | The directory where the filesystem will be mounted.                       |
-| `Filesystem Type` | The type of filesystem (e.g., ext4, xfs, vfat, nfs).                      |
-| `Options`         | Mount options (e.g., defaults, ro, noexec).                               |
-| `Dump`            | Backup utility flag: 0 to skip dump or 1 to include.                      |
-| `Pass`            | Filesystem check order during boot (0 to skip, 1 for root, 2 for others). |
-
-- Example
-
-```conf
-# Device          Mount Point     FS Type     Options         Dump   Pass
-/dev/sda1         /               ext4        defaults        1      1
-/dev/sda2         /home           ext4        defaults        1      2
-UUID=abc123       /mnt/storage    xfs         noatime         0      2
-```
-
-- Common Mount Options
-  - `defaults`: Default options (rw, suid, dev, exec, auto, nouser, and async).
-  - `ro`: Read-only.
-  - `noatime`: Prevents updating file access times.
-  - `noexec`: Prevents execution of binaries on this partition.
-  - `user`: Allows non-root users to mount.
-
----
 
 ### `/etc/mtab`
 
@@ -174,7 +152,158 @@ tmpfs     /tmp  tmpfs rw,nosuid,nodev   0   0
 
 ---
 
+### `/proc/partitions`
+
+- `/proc/partitions`:
+
+  - contains partition block allocation information.
+
+- Sample
+
+```conf
+major minor  #blocks  name
+
+ 259        0   20971520 nvme0n1
+ 259        1     614400 nvme0n1p1
+ 259        2    1048576 nvme0n1p2
+ 259        3   19306496 nvme0n1p3
+ 253        0   17207296 dm-0
+ 253        1    2097152 dm-1
+   8        0    1048576 sda
+   8        1      97280 sda1
+```
+
+---
+
 ## Common Commands
+
+### `parted`: Manage Partitions
+
+- `parted`
+
+  - **disk partitioning tool** used to create, modify, delete, and manage partitions on a disk.
+  - supports both `MBR` and `GPT` schemes
+  - supports to create up to 128 partitions on a single GPT disk.
+
+- Common Partition table type:
+
+  - `gpt`: provides support for GUID partition tables;
+  - `msdos`: provides support for DOS-style MBR partition tables;
+
+- Common Flags
+  - `boot` :Marks the partition as bootable.
+  - `esp`: Marks an EFI System Partition (for UEFI boot).
+  - `lvm` Indicates the partition is used by LVM (Logical Volume Manager).
+  - `swap`: Marks the partition as swap space.
+  - `raid`: Marks the partition as part of a RAID array.
+  - `hidden`： Hides the partition from the OS.
+  - `msftres`: Microsoft Reserved Partition (for Windows).
+
+| Subcommands                                        | Description                                              |
+| -------------------------------------------------- | -------------------------------------------------------- |
+| `parted /dev/sda`                                  | Start Interactive Mode                                   |
+| `parted /dev/sda print`                            | Displays the partition table                             |
+| `parted /dev/sda mklabel gpt`                      | Create a new disklabel. Common labels are gpt and msdos. |
+| `parted /dev/sda mkpart part_name 1MiB 10GiB`      | Create a New Partition.                                  |
+| `parted /dev/sda mkpart part_name ext4 1MiB 10GiB` | Create a New Partition with filesystem.                  |
+| `parted /dev/sda name part_num part_name`          | Assigns a name to a partition                            |
+| `parted /dev/sda resizepart 1 15GiB`               | Resize a Partition                                       |
+| `pparted /dev/sdX set part_num lvm on/off`         | Set a flags                                              |
+| `parted /dev/sda rm 1`                             | Delete a Partition                                       |
+
+### Lab: Create new parition
+
+- Assign label
+
+```sh
+# sda is the new disk
+lsblk
+# NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+# sda             8:0    0    1G  0 disk
+# nvme0n1       259:0    0   20G  0 disk
+# ├─nvme0n1p1   259:1    0  600M  0 part /boot/efi
+# ├─nvme0n1p2   259:2    0    1G  0 part /boot
+# └─nvme0n1p3   259:3    0 18.4G  0 part
+#   ├─rhel-root 253:0    0 16.4G  0 lvm  /
+#   └─rhel-swap 253:1    0    2G  0 lvm  [SWAP]
+
+# view the current partition, error: unrecognised disk label
+parted sda print
+# Error: /dev/sda: unrecognised disk label
+# Model: ATA VMware Virtual S (scsi)
+# Disk /dev/sda: 1074MB
+# Sector size (logical/physical): 512B/512B
+# Partition Table: unknown
+# Disk Flags:
+
+# assign label
+parted /dev/sda mklabel msdos
+# Information: You may need to update /etc/fstab
+
+# Confirm
+parted /dev/sda print
+# Model: ATA VMware Virtual S (scsi)
+# Disk /dev/sda: 1074MB
+# Sector size (logical/physical): 512B/512B
+# Partition Table: msdos
+# Disk Flags:
+
+# Number  Start  End  Size  Type  File system  Flags
+```
+
+- Create primary partition with a size of 100mb
+
+```sh
+parted /dev/sda mkpart primary 1mb 101mb
+# Information: You may need to update /etc/fstab.
+
+# confirm
+parted /dev/sda print
+# Model: ATA VMware Virtual S (scsi)
+# Disk /dev/sda: 1074MB
+# Sector size (logical/physical): 512B/512B
+# Partition Table: msdos
+# Disk Flags:
+
+# Number  Start   End    Size    Type     File system  Flags
+#  1      1049kB  101MB  99.6MB  primary
+
+lsblk
+# NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+# sda             8:0    0    1G  0 disk
+```
+
+- Delete a partition
+
+```sh
+# display table before deleting
+parted /dev/sda print
+# Model: ATA VMware Virtual S (scsi)
+# Disk /dev/sda: 1074MB
+# Sector size (logical/physical): 512B/512B
+# Partition Table: msdos
+# Disk Flags:
+
+# Number  Start   End    Size    Type     File system  Flags
+#  1      1049kB  101MB  99.6MB  primary
+
+# delete
+parted /dev/sda rm 1
+# Information: You may need to update /etc/fstab.
+
+# confirm
+parted /dev/sda print
+# Model: ATA VMware Virtual S (scsi)
+# Disk /dev/sda: 1074MB
+# Sector size (logical/physical): 512B/512B
+# Partition Table: msdos
+# Disk Flags:
+
+# Number  Start  End  Size  Type  File system  Flags
+
+```
+
+---
 
 ### `fdisk`: Manage Partitions
 

@@ -23,6 +23,7 @@
   - Local Storage
     - [Partition](./storage/partition/partition.md)
     - [Logical Volume Manager](./storage/lvm/lvm.md)
+    - [Filesystem & Swap](./storage/fs_swap/fs_swap.md)
     - [Package `Stratis`](./storage/stratis/stratis.md)
   - [Network File System (NFS)](./storage/nfs/nfs.md)
   - [Server Message Block (SMB)](./storage/samba/samba.md)
