@@ -58,9 +58,15 @@
 
 - Current Policy
 
-| CMD        | DESC                        |
-| ---------- | --------------------------- |
-| `sestatus` | Get the Current Policy Type |
+| CMD           | DESC                                                           |
+| ------------- | -------------------------------------------------------------- |
+| `sestatus`    | Display the Current Policy Type                                |
+| `seinfo`      | Display the components of a SELinux policy                     |
+| `seinfo -t`   | Display a list of types                                        |
+| `seinfo -r`   | Display a list of roles                                        |
+| `seinfo -u`   | Display a list of users                                        |
+| `sesearch -A` | Search for allow rules in a SELinux policy                     |
+| `sesearch -T` | Search for type_transition, type_member, and type_change rules |
 
 - Module
 
@@ -110,14 +116,14 @@
 
 ### Common Commands
 
-| CMD                                                                 | DESC                                                        |
-| ------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `getsebool -a`                                                      | List all available SELinux Booleans and their current state |
-| `semanage boolean -l`                                               | List all Booleans and their descriptions                    |
-| `getsebool httpd_can_network_connect`                               | check the state of a specific Boolean                       |
-| `setsebool httpd_can_network_connect on`                            | set a Boolean value for the current session                 |
-| `setsebool -P httpd_can_network_connect=1 samba_enable_home_dirs=1` | Set Boolean Persistently                                    |
-| `semanage boolean --modify --on http_allow_homedirs`                | Set a Boolean Persistently                                  |
+| CMD                                                                 | DESC                                                           |
+| ------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `getsebool -a`                                                      | List all available SELinux Booleans and their current state    |
+| `semanage boolean -l`                                               | List all Booleans and their descriptions                       |
+| `getsebool httpd_can_network_connect`                               | Display the state of a specific Boolean                        |
+| `setsebool httpd_can_network_connect on`                            | Enable a Boolean value for the current session **Temporarily** |
+| `setsebool -P httpd_can_network_connect=1 samba_enable_home_dirs=1` | Enable a Boolean Persistently                                  |
+| `semanage boolean -m --on http_allow_homedirs`                      | Enable a Boolean Persistently                                  |
 
 ---
 

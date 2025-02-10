@@ -72,7 +72,7 @@
     - [SCP](./network/scp/scp.md)
     - [FTP](./network/ftp/ftp.md)
     - [STFP](./network/stfp/stfp.md)
-    - [NTP](./network/ntp/ntp.md)
+    - [NTP & System Date Time](./network/ntp/ntp.md)
 
 - [SELinux](./selinux/selinux/selinux.md)
   - [Context](./selinux/context/context.md)

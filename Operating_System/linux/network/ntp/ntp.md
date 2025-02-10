@@ -1,11 +1,15 @@
-# Linux - Network: NTP
+# Linux - Network: NTP & System Date Time
 
 [Back](../../index.md)
 
-- [Linux - Network: NTP](#linux---network-ntp)
+- [Linux - Network: NTP \& System Date Time](#linux---network-ntp--system-date-time)
   - [NTP](#ntp)
   - [`chronyd`: System Time Package](#chronyd-system-time-package)
+    - [Configuration File](#configuration-file)
+    - [Command: `chronyc`](#command-chronyc)
     - [Lab: Configure `chronyd`](#lab-configure-chronyd)
+  - [System Date and Time](#system-date-and-time)
+    - [Lab: Configure data time](#lab-configure-data-time)
 
 ---
 
@@ -36,49 +40,58 @@
   - a standard way to synchronized the time to the NTP server.
 
 - Package
-  - `dnf install chrony`
-- Command
-  - `chronyc`
-- Service
-  - `systemctl start/restart chronyd`
-- Configuration File
-  - `/etc/chronyd.conf`
-    - `pool`: NTP server
-- Log file
-  - `/var/log/chrony/`
-- Firewall Configuration
 
+  - `dnf install chrony`
+
+- Daemon
+
+  - `systemctl start/restart chronyd`
+
+- Log file
+
+  - `/var/log/chrony/`
+  - `journalctl -u chronyd`
+
+- Firewall Configuration
   - `firewall-cmd --permanent --add-service=ntp`
   - `ss -ntlp | grep 123`
 
-- Commands and tools:
+---
 
-| CMD                                          | DESC                                  |
-| -------------------------------------------- | ------------------------------------- |
-| `date`                                       | print or set the system date and time |
-| `timedatectl`                                | Control the system time and date      |
-| `timedatectl list-timezones`                 | Show known time zones                 |
-| `timedatectl set-timezone America/New_York`  | Set a time zone                       |
-| `timedatectl set-time HH:MM:SS`              | Set a time                            |
-| `timedatectl set-time '2024-11-11 11:11:11'` | Set date and time                     |
-| `timedatectl set-ntp true`                   | Enable NTP synchronization            |
+### Configuration File
 
-- chronyc interaction mode
+- `/etc/chronyd.conf`
 
-| CMD       | Desc                    |
-| --------- | ----------------------- |
-| `help`    | Show help info          |
-| `sources` | Show current NTP server |
-| `quit`    | Exit current session    |
+  - `pool`: NTP server
+
+- Common Config
+
+| Directive   | desc                                                              |
+| ----------- | ----------------------------------------------------------------- |
+| `driftfile` | location and name of the drift file                               |
+| `logdir`    | Sets the log file location                                        |
+| `pool`      | hostname for a pool of time servers.                              |
+| `server`    | hostname or IP address of a single time server.                   |
+| `peer`      | hostname or IP address of a timeserver at the same stratum level. |
+
+- `iburst` option
+  - dictates the `Chrony` service to send the first four update requests to the time server every 2 seconds.
+
+---
+
+### Command: `chronyc`
 
 - chronyc command
 
-| CMD                  | Desc                                              |
-| -------------------- | ------------------------------------------------- |
-| `chronyc sources -v` | Displays the list of Synchronization Sources      |
-| `chronyc tracking`   | Shows the current time source, offset, and drift. |
-| `chronyc ntpdata`    | Manually Query NTP Server                         |
-| `chronyc makestep`   | Manually Update Time.                             |
+| CMD                   | Desc                                              |
+| --------------------- | ------------------------------------------------- |
+| `chronyc sources -v`  | Lists detailed NTP sources and their statuses.    |
+| `chronyc sources`     | Lists configured NTP servers and their state.     |
+| `chronyc tracking`    | Shows system time status, drift, and sync source. |
+| `chronyc sourcestats` | Displays statistics about NTP sources.            |
+| `chronyc activity`    | Shows the number of active and inactive sources.  |
+| `chronyc ntpdata`     | Displays detailed NTP source data.                |
+| `chronyc makestep`    | manually force synchronization                    |
 
 ---
 
@@ -95,7 +108,7 @@ rpm -q chrony
 vi /etc/chrony.conf
 # make some changes for the NTP server
 # 8.8.8.8 is not a valid NTP server
-pool 8.8.8.8
+pool 8.8.8.8 iburst
 
 # restart service
 systemctl restart chronyd
@@ -189,3 +202,92 @@ chronyc makestep
 ```
 
 ---
+
+## System Date and Time
+
+- Commands and tools:
+
+| CMD                                          | DESC                                  |
+| -------------------------------------------- | ------------------------------------- |
+| `date`                                       | print or set the system date and time |
+| `timedatectl`                                | Control the system time and date      |
+| `timedatectl set-ntp true/false`             | Enable/Disable NTP synchronization    |
+| `timedatectl list-timezones`                 | Show known time zones                 |
+| `timedatectl set-timezone America/New_York`  | Set a time zone                       |
+| `timedatectl set-time HH:MM:SS`              | Set a time                            |
+| `timedatectl set-time '2024-11-11 11:11:11'` | Set date and time                     |
+
+- When configure the system date and time, it requires that the NTP/Chrony service is deactivated in order to make time adjustments.
+  - `timedatectl set-ntp false`
+
+---
+
+### Lab: Configure data time
+
+- Display date time
+
+```sh
+date
+# Sat 08 Feb 2025 04:54:41 PM EST
+
+timedatectl
+#                Local time: Sat 2025-02-08 16:57:19 EST
+#            Universal time: Sat 2025-02-08 21:57:19 UTC
+#                  RTC time: Sat 2025-02-08 21:57:19
+#                 Time zone: America/Toronto (EST, -0500)
+# System clock synchronized: yes
+#               NTP service: active
+#           RTC in local TZ: no
+```
+
+- Configure date time
+
+```sh
+# try set date time without disabling ntp
+timedatectl set-time "2019-11-18 23:00"
+# Failed to set time: Automatic time synchronization is enabled
+
+# disable ntp
+timedatectl set-ntp false
+# confirm
+timedatectl
+#                Local time: Sat 2025-02-08 16:59:12 EST
+#            Universal time: Sat 2025-02-08 21:59:12 UTC
+#                  RTC time: Sat 2025-02-08 21:59:12
+#                 Time zone: America/Toronto (EST, -0500)
+# System clock synchronized: yes
+#               NTP service: inactive
+#           RTC in local TZ: no
+
+# set new date time
+timedatectl set-time "2019-11-18 23:00"
+# confirm
+date
+# Mon 18 Nov 2019 11:00:24 PM EST
+timedatectl
+#                Local time: Mon 2019-11-18 23:00:03 EST
+#            Universal time: Tue 2019-11-19 04:00:03 UTC
+#                  RTC time: Tue 2019-11-19 04:00:03
+#                 Time zone: America/Toronto (EST, -0500)
+# System clock synchronized: no
+#               NTP service: inactive
+#           RTC in local TZ: no
+```
+
+- Re-enable ntp
+
+```sh
+# enable ntp
+timedatectl set-ntp true
+
+date
+# Sat 08 Feb 2025 05:02:49 PM EST
+timedatectl
+#                Local time: Sat 2025-02-08 17:02:42 EST
+#            Universal time: Sat 2025-02-08 22:02:42 UTC
+#                  RTC time: Sat 2025-02-08 22:02:42
+#                 Time zone: America/Toronto (EST, -0500)
+# System clock synchronized: yes
+#               NTP service: active
+#           RTC in local TZ: no
+```

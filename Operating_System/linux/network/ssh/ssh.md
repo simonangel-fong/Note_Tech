@@ -21,6 +21,7 @@
     - [Lab: Access with `ssh-keys`](#lab-access-with-ssh-keys)
   - [Lab: Install `openssh` on Redhat](#lab-install-openssh-on-redhat)
   - [Lab: Install `openssh` on Ubuntu](#lab-install-openssh-on-ubuntu)
+  - [Lab: Generate Key](#lab-generate-key)
 
 ---
 
@@ -156,30 +157,29 @@
 
 ### Common Configuration
 
-- `Port`
+| Directives                        | Default                | Desc                                                          |
+| --------------------------------- | ---------------------- | ------------------------------------------------------------- |
+| `Port`                            | 22                     | the port on which SSH listens                                 |
+| `ListenAddress`                   | 0.0.0.0                | local addresses the sshd service should listen on             |
+| `AuthorizedKeysFile`              | ~/.ssh/authorized_keys | the location of the file containing a user’s authorized keys. |
+| `PermitRootLogin`                 | yes                    | Whether enabling root login                                   |
+| `PubkeyAuthentication`            | yes                    | Whether enable users to use key pair to login                 |
+| `PasswordAuthentication`          | yes                    | Whether enable clients to login with a username and password  |
+| `PermitEmptyPasswords`            | no                     | Whether enablethe use of null passwords.                      |
+| `ChallengeResponseAuthentication` | yes                    | Whether enable challenge response authentication mechanism    |
+| `UsePAM`                          | yes                    | Whether enable user authentication via PAM.                   |
+| `X11Forwarding`                   | No                     | Whether enable remote access to graphical applications        |
+| `SyslogFacility`                  | AUTH                   | Defines the facility code to be used                          |
+| `LogLevel`                        | INFO                   | the level of criticality for the messages to be logged.       |
 
-  - the port on which SSH listens
-  - default: 22
+- Best practice
 
-- `PermitRootLogin`
+```conf
+# Set PermitRootLogin to no to prohibit root from logging in with SSH. Then, elevate a user's privileges after logging in.
+PermitRootLogin no
 
-  - Whether enabling root login
-  - Default: yes
-  - Best practice: `no`
-    - Set PermitRootLogin to no to prohibit root from logging in with SSH. Then, elevate a user's privileges after logging in.
-    - `PermitRootLogin no`
-
-- `PubkeyAuthentication`
-
-  - allow users to use key pair to login instead of passwords.
-  - Best practise: yes
-    - `PubkeyAuthentication yes`
-
-- `PasswordAuthentication`
-  - allow clients to login with a username and password defined on the server system.
-  - Default: yes
-  - Best practise: no
-    - `PasswordAuthentication no`
+PasswordAuthentication no
+```
 
 ---
 
@@ -405,5 +405,35 @@ ssh username@ip
 ```
 
 ---
+
+## Lab: Generate Key
+
+```sh
+# on the client
+# Generate RSA keys without a password (-N) and without detailed output (-q).
+ssh-keygen -N "" -q
+
+# confirm
+# private key
+cat ~/.ssh/id_rsa
+
+# public key
+cat ~/.ssh/id_rsa.pub
+
+# copy public key to server
+ssh-copy-id 192.168.128.50
+# confirm the client know the host
+cat ~/.ssh/known_hosts
+
+# connect
+ssh 192.168.128.50
+
+# Confirm login attempt on server
+tail /var/log/secure
+
+# run server command in the client
+ssh 192.168.128.50 hostname
+ssh 192.168.128.50 nmcli c
+```
 
 [TOP](#linux---network-ssh)

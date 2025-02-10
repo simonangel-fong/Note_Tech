@@ -12,6 +12,7 @@
     - [Configuration File `/etc/selinux/config`](#configuration-file-etcselinuxconfig)
     - [Common Commands](#common-commands)
     - [Lab: Change SELinux status](#lab-change-selinux-status)
+  - [Domain Transitioning](#domain-transitioning)
 
 ---
 
@@ -176,13 +177,14 @@ SELINUXTYPE=targeted
 
 ### Common Commands
 
-| CMD                                   | DESC                                    |
-| ------------------------------------- | --------------------------------------- |
-| `sestatus`/`getenforce`               | Check SELinux Status                    |
-| `setenforce enforcing`/`setenforce 1` | Temporarily Enable enforcing SELinux    |
-| `setenforce permissive`               | Temporarily set Permissive SELinux Mode |
-| `setenforce 0`                        | Temporarily set Permissive SELinux Mode |
-| `semanage permissive -a httpd_t`      | Make the httpd_t domain permissive      |
+| CMD                                     | DESC                                                  |
+| --------------------------------------- | ----------------------------------------------------- |
+| `getenforce`                            | Display current SELinux mode                          |
+| `setenforce 1`/`setenforce enforcing`   | Temporarily Enable enforcing SELinux                  |
+| `setenforce 0` /`setenforce permissive` | Temporarily Set Permissive SELinux Mode               |
+| `sestatus`                              | Display SELinux status and the SELinux policy         |
+| `sestatus -v`                           | Display SELinux status and process and file contexts. |
+| `semanage permissive -a httpd_t`        | Change apache to a permissive domain                  |
 
 - Change SELinux Mode Persistently
   - `/etc/selinux/config`
@@ -260,3 +262,10 @@ getenforce
 ```
 
 ---
+
+## Domain Transitioning
+
+- SELinux **allows** a process running in one domain **to enter another domain** to execute an application that is **restricted** to run in that domain **only**, provided a rule exists in the **policy to support** such transition.
+
+- `entrypoint`
+  - a permission setting that SELinux defines in its policy to **control** processes that **can transition** into another domain.

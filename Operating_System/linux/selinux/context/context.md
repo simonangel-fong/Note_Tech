@@ -4,8 +4,10 @@
 
 - [Linux - SELinux: Context](#linux---selinux-context)
   - [SELinux Context](#selinux-context)
+    - [Copying, Moving, and Archiving Files with SELinux Contexts](#copying-moving-and-archiving-files-with-selinux-contexts)
     - [Components of an SELinux Context](#components-of-an-selinux-context)
     - [Common Commands](#common-commands)
+    - [Lab: Change Context](#lab-change-context)
   - [How SELinux Context Works for Files and Processes](#how-selinux-context-works-for-files-and-processes)
     - [Example Scenario: Web Server and File Access](#example-scenario-web-server-and-file-access)
   - [SELinux Ports](#selinux-ports)
@@ -16,6 +18,18 @@
 
 - `SELinux context`
   - a set of labels assigned to processes, files, and other system objects to **control access** based on SELinux rules.
+
+---
+
+### Copying, Moving, and Archiving Files with SELinux Contexts
+
+- If a file is **copied** to a different directory, the destination file will **receive the destination directory’s context**, unless the `--preserve=context` switch is specified with the cp command to retain the source file’s original context.复制新文件：适应新标签
+
+- If a copy operation **overwrites** the destination file in the same or different directory, the file being copied will **receive the context of the overwritten file**, unless the `--preserve=context` switch is specified with the `cp` command to **preserve** the source file’s **original context**. 覆盖复制：保留旧文件标签
+
+- If a file is **moved** to the same or different directory, the SELinux context will **remain intact**, which may differ from the destination directory’s context. 移动：保留旧标签
+
+- If a file is archived with the tar command, use the `--selinux` option to preserve the context. 存档：默认不保留标签
 
 ---
 
@@ -65,7 +79,7 @@
 | `matchpathcon /var/www/html/index.html` | Check the default SELinux context for a specific file |
 | `matchpathcon /var/www/html`            | Check the default context for a directory             |
 
-- Temporarily change context
+- **Temporarily** change context
   - Changes made with `chcon` are not persistent and will reset after a system relabel.
 
 | CMD                                                      | DESC                                     |
@@ -90,6 +104,62 @@
 | `grep "denied" /var/log/audit/audit.log`            | Analyze AVC Denials                  |
 | `grep denied /var/log/audit/audit.log \| audit2why` | Generate Human-Readable Explanations |
 | `sealert -a /var/log/audit/audit.log`               | View Troubleshooting Suggestions     |
+
+---
+
+### Lab: Change Context
+
+- Temporaly
+
+```sh
+# create file
+mkdir /tmp/sedir1
+touch /tmp/sedir1/sefile1
+
+# list context
+ll -dZ /tmp/sedir1
+# drwxr-xr-x. 2 root root unconfined_u:object_r:user_tmp_t:s0 21 Feb 10 00:44 /tmp/sedir1
+ll -Z /tmp/sedir1/sefile1
+# -rw-r--r--. 1 root root unconfined_u:object_r:user_tmp_t:s0 0 Feb 10 00:44 /tmp/sedir1/sefile1
+
+# change contenxt
+chcon -v -u user_u -t public_content_t -R /tmp/sedir1/
+# changing security context of '/tmp/sedir1/sefile1'
+# changing security context of '/tmp/sedir1/'
+
+# confirm
+ll -dZ /tmp/sedir1
+# drwxr-xr-x. 2 root root user_u:object_r:public_content_t:s0 21 Feb 10 00:44 /tmp/sedir1
+ll -Z /tmp/sedir1/sefile1
+# -rw-r--r--. 1 root root user_u:object_r:public_content_t:s0 0 Feb 10 00:44 /tmp/sedir1/sefile1
+```
+
+- Reboot
+
+```sh
+reboot
+
+ll -dZ /tmp/sedir1
+# drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 21 Feb 10 00:44 /tmp/sedir1
+ll -Z /tmp/sedir1/sefile1
+# -rw-r--r--. 1 root root system_u:object_r:unlabeled_t:s0 0 Feb 10 00:44 /tmp/sedir1/sefile1
+```
+
+- Persistently
+
+```sh
+# add context
+semanage fcontext -a -s user_u -t public_content_t "/tmp/sedir1(/.*)?"
+# Apply the New Context to the Files
+restorecon -Rv /tmp/sedir1
+
+reboot
+
+ll -dZ /tmp/sedir1
+# drwxr-xr-x. 2 root root user_u:object_r:public_content_t:s0 21 Feb 10 00:44 /tmp/sedir1
+ll -Z /tmp/sedir1/sefile1
+# -rw-r--r--. 1 root root user_u:object_r:public_content_t:s0 0 Feb 10 00:44 /tmp/sedir1/sefile1
+```
 
 ---
 

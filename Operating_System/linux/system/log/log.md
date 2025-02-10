@@ -4,6 +4,7 @@
 
 - [Linux - System: Log](#linux---system-log)
   - [Log](#log)
+    - [Common Log File](#common-log-file)
   - [Default Logging Daemon](#default-logging-daemon)
     - [`journald daemon`](#journald-daemon)
     - [`rsyslogd daemon`](#rsyslogd-daemon)
@@ -22,12 +23,26 @@
 
   - For example, there is a **default system** log file, a log file just for **security messages**, and a log file for **cron tasks**.
 
-- Log File Location
+---
 
-- `/var/log/`:
-  - Most log files
-  - Some applications
-    - e.g., `httpd`, `samba`
+### Common Log File
+
+- Most system logs are stored in `/var/log/`.
+- Common log files include:
+
+| Log File                    | Description                           |
+| --------------------------- | ------------------------------------- |
+| `/var/log/messages`         | General system logs                   |
+| `/var/log/secure`           | Authentication & security logs        |
+| `/var/log/boot.log`         | Boot process logs                     |
+| `/var/log/dnf.log`          | Package management logs               |
+| `/var/log/cron`             | Cron job logs                         |
+| `/var/log/chrony/`          | a directory to store `Chrony` logs    |
+| `/var/log/maillog`          | Mail server logs(postfix, smtpd, ...) |
+| `/var/log/httpd/access.log` | Apache web server access log          |
+| `/var/log/httpd/error.log`  | Apache error log                      |
+| `/var/log/mysql.log`        | MySQL database log                    |
+| `/var/log/audit/audit.log`  | SELinux & security audit logs         |
 
 ---
 
@@ -35,8 +50,11 @@
 
 - By **default**, these **2** logging tools **coexist** on your system.
 
-  - `journald`
-  - `rsyslogd`
+  - `journald`:
+    - the default logging system in RHEL 9.
+  - `rsyslogd`:
+    - Traditional Syslog
+    - RHEL 9 still supports rsyslog for compatibility.
 
 ---
 
@@ -84,27 +102,6 @@
 ## Common Log Files
 
 - Most log files located at `/var/log/`
-
-- `/var/log/boot.log` / `/var/log/boot.log-<date>`
-
-  - a Linux log file that contains information about the **server's startup process**, including messages that are logged as the server starts up.
-  - This log file is useful for diagnosing issues with a system's boot.
-
-- `/var/log/chrony/`
-
-  - a directory to store `Chrony` logs
-  - `Network Time Protocol (NTP)`
-    - a protocol that allows the synchronization of system clocks
-  - `chronyd`
-    - a tool that synchronizes the time of a system with a `Network Time Protocol (NTP)` server
-
-- `/var/log/cron`
-
-  - stores cron logs for CentOS and RHEL systems
-
-- `/var/log/maillog`
-
-  - used for mail server logs, handy for postfix, smtpd, or email-related services info running on server.
 
 - `/var/log/secure`
 

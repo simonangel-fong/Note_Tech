@@ -15,12 +15,14 @@
     - [Command](#command)
     - [Lab: Change Hostname](#lab-change-hostname)
   - [DNS Service](#dns-service)
-    - [`/etc/hosts`](#etchosts)
-    - [`/etc/nsswitch.conf`](#etcnsswitchconf)
-    - [`/etc/resolv.conf`](#etcresolvconf)
-    - [Command](#command-1)
-    - [Lab: Step-by-Step Domain Name Resolution](#lab-step-by-step-domain-name-resolution)
-    - [Lab: Setup DNS and Query Domain Name](#lab-setup-dns-and-query-domain-name)
+    - [Configuration File](#configuration-file)
+      - [`/etc/hosts`](#etchosts)
+      - [`/etc/resolv.conf`](#etcresolvconf)
+      - [`/etc/nsswitch.conf`](#etcnsswitchconf)
+      - [Lab: Step-by-Step Domain Name Resolution](#lab-step-by-step-domain-name-resolution)
+      - [Lab: Setup DNS using `nmcli`](#lab-setup-dns-using-nmcli)
+    - [DNS Lookup](#dns-lookup)
+      - [Lab: Lookup and Reverse Lookup Domain Name](#lab-lookup-and-reverse-lookup-domain-name)
   - [Connection](#connection)
     - [`/etc/sysconfig/network-scripts/`](#etcsysconfignetwork-scripts)
     - [Commond](#commond)
@@ -269,7 +271,9 @@ hostnamectl
 
 ## DNS Service
 
-### `/etc/hosts`
+### Configuration File
+
+#### `/etc/hosts`
 
 - `/etc/hosts`
   - a **simple text file** used for `hostname-to-IP` **address mapping**.
@@ -284,7 +288,49 @@ IP_address  hostname  [aliases...]
 
 ---
 
-### `/etc/nsswitch.conf`
+#### `/etc/resolv.conf`
+
+- `/etc/resolv.conf`
+
+  - a file used to **configure DNS** (`Domain Name System`) settings.
+  - It defines **how the system resolves domain names** to IP addresses by specifying the DNS servers and search domains.
+  - It specifies:
+    - The DNS servers to use for resolving domain names.
+    - The search domains to append to unqualified hostnames.
+
+- File format
+
+```conf
+option value
+nameserver 8.8.8.8
+```
+
+- Common options:
+
+  - `search`: Defines a list of domain names to append to unqualified hostnames for resolution.
+  - `nameserver`: Specifies a **DNS server** by its IP address.
+  - `domain`: Specifies the **default search domain**.
+  - `options`: Allows additional resolver options, such as timeouts.
+    - `options timeout:2 attempts:3`
+
+- Example:
+
+```conf
+domain example.com
+search example.net example.org example.edu example.gov
+nameserver 192.168.0.1
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+```
+
+- On a system with this file **absent**, the resolver utilities
+  - only **query** the `nameserver` configured on the **localhost**,
+  - determine the **domain** name **from the hostname** of the system,
+  - and construct the **search** path based on the domain name.
+
+---
+
+#### `/etc/nsswitch.conf`
 
 - `/etc/nsswitch.conf` file
 
@@ -329,44 +375,7 @@ hosts: files dns
 
 ---
 
-### `/etc/resolv.conf`
-
-- `/etc/resolv.conf`
-
-  - a file used to **configure DNS** (`Domain Name System`) settings.
-  - It defines **how the system resolves domain names** to IP addresses by specifying the DNS servers and search domains.
-  - It specifies:
-    - The DNS servers to use for resolving domain names.
-    - The search domains to append to unqualified hostnames.
-
-- File format
-
-```conf
-option value
-nameserver 8.8.8.8
-```
-
-- Common options:
-  - `search`: Defines a list of domain names to append to unqualified hostnames for resolution.
-  - `nameserver`: Specifies a **DNS server** by its IP address.
-  - `domain`: Specifies the **default search domain**.
-  - `options`: Allows additional resolver options, such as timeouts.
-    - `options timeout:2 attempts:3`
-
----
-
-### Command
-
-| CMD                                                   | Desc                      |
-| ----------------------------------------------------- | ------------------------- |
-| `nmcli connection modify "id_name" ipv4.dns "dns_ip"` | Set the DNS ip            |
-| `sudo nano /etc/resolv.conf`                          | Configure DNS server      |
-| `grep "nameserver" /etc/resolv.conf`                  | Get DNS server            |
-| `nslookup target_domain`                              | Query domain name servers |
-
----
-
-### Lab: Step-by-Step Domain Name Resolution
+#### Lab: Step-by-Step Domain Name Resolution
 
 - Configuration
 
@@ -441,7 +450,7 @@ ping abc.com
 
 ---
 
-### Lab: Setup DNS and Query Domain Name
+#### Lab: Setup DNS using `nmcli`
 
 - Setup DNS
 
@@ -463,24 +472,122 @@ grep "nameserver" /etc/resolv.conf
 # nameserver 192.168.204.2
 ```
 
-- Query Domain Name
+---
+
+### DNS Lookup
+
+| CMD                                                   | Desc                                       |
+| ----------------------------------------------------- | ------------------------------------------ |
+| `nmcli connection modify "id_name" ipv4.dns "dns_ip"` | Set the DNS ip                             |
+| `sudo nano /etc/resolv.conf`                          | Configure DNS server                       |
+| `grep "nameserver" /etc/resolv.conf`                  | Get DNS server                             |
+| `nslookup target_domain`                              | DNS lookup a domain name                   |
+| `nslookup target_domain nameserver`                   | DNS lookup a domain name with a nameserver |
+| `dig target_domain`                                   | DNS lookup a domain name                   |
+| `host target_domain`                                  | DNS lookup a domain name                   |
+| `dig -x ip_address`                                   | Reverse lookup                             |
+| `host -v ip_address`                                  | Reverse lookup                             |
+| `nslookup ip_address`                                 | Reverse lookup                             |
+
+---
+
+#### Lab: Lookup and Reverse Lookup Domain Name
 
 ```sh
 # Get DNS server
 grep "nameserver" /etc/resolv.conf
-# nameserver 8.8.4.4
-# nameserver 192.168.204.2
+# nameserver 192.168.128.2
 
 # query a domain name
 nslookup google.com
-# Server:         8.8.4.4
-# Address:        8.8.4.4#53
+# Server:         192.168.128.2
+# Address:        192.168.128.2#53
 
 # Non-authoritative answer:
 # Name:   google.com
-# Address: 172.217.1.14
+# Address: 142.251.32.78
 # Name:   google.com
 # Address: 2607:f8b0:400b:807::200e
+
+# DNS lookup using a specific nameserver
+nslookup google.com 192.168.128.2
+# Server:         192.168.128.2
+# Address:        192.168.128.2#53
+
+# Non-authoritative answer:
+# Name:   google.com
+# Address: 142.251.41.78
+# Name:   google.com
+# Address: 2607:f8b0:400b:807::200e
+
+dig google.com
+# ; <<>> DiG 9.16.23-RH <<>> google.com
+# ;; global options: +cmd
+# ;; Got answer:
+# ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48899
+# ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+# ;; OPT PSEUDOSECTION:
+# ; EDNS: version: 0, flags:; MBZ: 0x0005, udp: 4000
+# ;; QUESTION SECTION:
+# ;google.com.                    IN      A
+
+# ;; ANSWER SECTION:
+# google.com.             5       IN      A       172.217.165.14
+
+# ;; Query time: 17 msec
+# ;; SERVER: 192.168.128.2#53(192.168.128.2)
+# ;; WHEN: Sat Feb 08 17:22:12 EST 2025
+# ;; MSG SIZE  rcvd: 55
+
+host google.com
+# google.com has address 142.251.32.78
+# google.com has IPv6 address 2607:f8b0:400b:807::200e
+# google.com mail is handled by 10 smtp.google.com.
+
+
+```
+
+- perform a reverse lookup
+
+```sh
+# perform a reverse lookup
+dig -x 172.217.165.14
+# ; <<>> DiG 9.16.23-RH <<>> -x 172.217.165.14
+# ;; global options: +cmd
+# ;; Got answer:
+# ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7501
+# ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+# ;; OPT PSEUDOSECTION:
+# ; EDNS: version: 0, flags:; MBZ: 0x0005, udp: 4000
+# ;; QUESTION SECTION:
+# ;14.165.217.172.in-addr.arpa.   IN      PTR
+
+# ;; ANSWER SECTION:
+# 14.165.217.172.in-addr.arpa. 5  IN      PTR     yyz12s06-in-f14.1e100.net.
+
+# ;; Query time: 8 msec
+# ;; SERVER: 192.168.128.2#53(192.168.128.2)
+# ;; WHEN: Sat Feb 08 17:26:16 EST 2025
+# ;; MSG SIZE  rcvd: 95
+
+host -v 8.8.8.8
+# Trying "8.8.8.8.in-addr.arpa"
+# ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 63281
+# ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+# ;; QUESTION SECTION:
+# ;8.8.8.8.in-addr.arpa.          IN      PTR
+
+# ;; ANSWER SECTION:
+# 8.8.8.8.in-addr.arpa.   5       IN      PTR     dns.google.
+
+# Received 62 bytes from 192.168.128.2#53 in 9 ms
+
+nslookup 8.8.8.8
+# 8.8.8.8.in-addr.arpa    name = dns.google.
+# Authoritative answers can be found from:
 ```
 
 ---
