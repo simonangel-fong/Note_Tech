@@ -14,20 +14,54 @@
     - [`find`: advanced search](#find-advanced-search)
   - [Move, Copy, Delete](#move-copy-delete)
   - [Archive/Compress Files](#archivecompress-files)
+    - [Archive commands](#archive-commands)
+    - [Lab: Archive](#lab-archive)
+      - [Create archive file without Compression](#create-archive-file-without-compression)
+      - [Extract archived files](#extract-archived-files)
+      - [Create archive file with Compression](#create-archive-file-with-compression)
+      - [Archive multiple files](#archive-multiple-files)
+      - [Append file to existing tarfile](#append-file-to-existing-tarfile)
+      - [Restore a specific file from tarfile](#restore-a-specific-file-from-tarfile)
+    - [Compress Commands](#compress-commands)
+    - [Lab: Compress File with `gzip`](#lab-compress-file-with-gzip)
+    - [Lab: Compress File with `bzip2`](#lab-compress-file-with-bzip2)
   - [File's Disk Usage](#files-disk-usage)
 
 ---
 
 ## Create new file
 
-| Cmd                  | desc                            |
-| -------------------- | ------------------------------- |
-| `touch file`         | create new file                 |
-| `cp file destinatio` | copy and create new file        |
-| `vi file`            | Create new file using vi editor |
+| Cmd                        | desc                            |
+| -------------------------- | ------------------------------- |
+| `touch file`               | create new file                 |
+| `touch -d 2019-09-20 file` | Set the date on file1           |
+| `touch -m file`            | change the modification time    |
+| `cp file destinatio`       | copy and create new file        |
+| `vi file`                  | Create new file using vi editor |
 
 - `vi`:
   - file would be created unless saving the file.
+
+```sh
+touch newfile
+ll
+# total 0
+# -rw-r--r--. 1 root root 0 Feb 12 13:41 newfile
+
+# Change date on a file
+touch -d 2019-02-09 newfile
+# confirm
+ll
+# total 0
+# -rw-r--r--. 1 root root 0 Feb  9  2019 newfile
+
+# Change modfication time
+touch -m newfile
+ll
+# total 0
+# -rw-r--r--. 1 root root 0 Feb 12 13:42 newfile
+
+```
 
 ---
 
@@ -132,81 +166,269 @@
 
 ## Move, Copy, Delete
 
-| Command                          | Desc                                                         |
-| -------------------------------- | ------------------------------------------------------------ |
-| `mv source destination`          | Move/Rename file                                             |
-| `mv -f source destination`       | Force to overwrite                                           |
-| `mv -i source destination`       | Move/Rename file, prompt before overwrite                    |
-| `mv -u source destination`       | Move only when the SOURCE file is newer than the destination |
-| `cp source destination`          | Copy file                                                    |
-| `cp source1 source2 destination` | Copy multiple files to a destination                         |
-| `cp -f source destination`       | Force copy file                                              |
-| `cp -i source destination`       | Copy file, prompt before overwrite                           |
-| `cp -n source destination`       | do not overwrite an existing file                            |
-| `rm file`                        | Remove file                                                  |
-| `rm -f file`                     | Force to remove a file                                       |
-| `rm -i file`                     | prompt before every removal                                  |
+| Command                        | Desc                                                              |
+| ------------------------------ | ----------------------------------------------------------------- |
+| `mv source destination`        | Move/Rename file                                                  |
+| `mv -f source destination`     | Force to overwrite                                                |
+| `mv -i source destination`     | Move/Rename file, prompt before overwrite                         |
+| `mv -u source destination`     | Move only when the SOURCE file is newer than the destination      |
+| `cp sourcefile newfile`        | Copy file within the same direcotry                               |
+| `cp sourcefile dest_dir/`      | Copy file file to a destination directory                         |
+| `cp file1 file2 dest_dir`      | Copy multiple files to a destination directory                    |
+| `cp -r source_dir/ dest_dir/ ` | Copy all files within a source direcotry to destination directory |
+| `cp -p sourcefile dest_dir/`   | Copy and preserve the attributes                                  |
+| `cp -f source destination`     | Force copy file                                                   |
+| `cp -i source destination`     | Copy file, prompt before overwrite                                |
+| `cp -n source destination`     | do not overwrite an existing file                                 |
+| `rm file`                      | Remove file                                                       |
+| `rm -f file`                   | Force to remove a file                                            |
+| `rm -i file`                   | prompt before every removal                                       |
 
 ---
 
 ## Archive/Compress Files
 
-| Command                    | Desc                                                                               |
-| -------------------------- | ---------------------------------------------------------------------------------- |
-| `tar cf tar_file target`   | **Create** a tar archive from a target.                                            |
-| `tar cfzv tar_file target` | **Create** a tar archive from a target, using compression.                         |
-| `tar tf tar_file`          | **Display** the table of contents (list).                                          |
-| `tar xf tar_file`          | **Extract** files from the archive.                                                |
-| `tar vxf tar_file`         | **Extract** files from the archive displaying a file list                          |
-| `tar vxfj tar_file`        | **Extract** files from the archive displaying a file list using .bzip2 Compression |
-| `gzip filename`            | Compress the files into `.gz` file                                                 |
-| `gzip -v filename`         | Verbose output                                                                     |
-| `gzip -k filename`         | Keep the original file                                                             |
-| `gzip -r directory`        | Compress all files in a directory                                                  |
-| `gzip -9 filename`         | Change the compression level, from 1 to 9. Default 6                               |
-| `gunzip gz_file`           | Uncompress files.                                                                  |
-| `gunzip -vk gz_file`       | Uncompress files and Verbose output, keep the gz file                              |
-| `zcat gz_file`             | displaying the contents of a gzip compressed file                                  |
+### Archive commands
 
-- example
+- create a single compressed archive of hundreds of files and directories.打包
+- `tar` or `star`
+  - **preserve** general file **attributes** such as ownership, owning group, and timestamp as well as extended attributes such as ACLs and SELinux contexts.
+
+| Command                     | Desc                                                                               |
+| --------------------------- | ---------------------------------------------------------------------------------- |
+| `tar -cf tar_file target`   | **Create** a tar archive from a target.                                            |
+| `tar -cpf tar_file target`  | **Create** a tar archive from a target, Preserve file permissions                  |
+| `tar -cvfz tar_file target` | **Create** a tar archive from a target, using gzip compression.                    |
+| `tar -cvjz tar_file target` | **Create** a tar archive from a target, using bzip2 compression.                   |
+| `tar -tf tar_file`          | **Display** the table of contents (list).                                          |
+| `tar -xf tar_file`          | **Extract** files from the archive.                                                |
+| `tar -xvf tar_file`         | **Extract** files from the archive displaying a file list                          |
+| `tar -xvfj tar_file`        | **Extract** files from the archive displaying a file list using .bzip2 Compression |
+
+---
+
+### Lab: Archive
+
+#### Create archive file without Compression
 
 ```sh
-mkdir tardir
-cd tardir
-touch sheet.csv word.doc
-cd ..
-ll tardir
+mkdir /root/tardir
+touch /root/tardir/sheet.csv /root/tardir/word.doc
+ll /root/tardir
+# total 0
+# -rw-r--r--. 1 root root 0 Feb 11 19:57 sheet.csv
+# -rw-r--r--. 1 root root 0 Feb 11 19:57 word.doc
 
 # create an archive file from tardir directory
-tar cf tps.tar tardir
+tar -cvf /root/archive.tar /root/tardir
+# /root/tardir/
+# /root/tardir/sheet.csv
+# /root/tardir/word.doc
+# confirm
+ll -h /root/archive.tar
+# -rw-r--r--. 1 root root 10K Feb 11 20:15 /root/archive.tar
 
 # list a tar file's content
-tar tf tps.tar
-# tardir/
-# tardir/sheet.csv
-# tardir/word.doc
+tar -tvf /root/archive.tar
+# drwxr-xr-x root/root         0 2025-02-11 19:57 root/tardir/
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/sheet.csv
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/word.doc
+```
 
-# Extract files to /tmp
-cd /tmp
-tar xf /home/rheladmin/rhel/tps.tar
-ll -d tardir
-# drwxrwxr-x. 2 rheladmin rheladmin 39 Nov 13 21:50 tardir
+---
 
-# list files as extracting files
-tar vxf /home/rheladmin/rhel/tps.tar
-# tardir/
-# tardir/sheet.csv
-# tardir/word.doc
+#### Extract archived files
 
-# create an archive file from tardir directory
-tar cf tps.tar tardir
+```sh
+# Extract files to /root/exdir
+mkdir /root/exdir
+tar -vxf /root/archive.tar -C /root/exdir
+# root/tardir/
+# root/tardir/sheet.csv
+# root/tardir/word.doc
 
-# archive without compress
-tar cf arch.tar tardir/
-tar czf archc.tar tardir/
-ll -h
-# -rw-rw-r--. 1 rheladmin rheladmin  70K Nov 13 22:12 archc.tar
-# -rw-rw-r--. 1 rheladmin rheladmin 180K Nov 13 22:12 arch.tar
+# confirm
+ll -R /root/exdir
+# /root/exdir:
+# total 0
+# drwxr-xr-x. 3 root root 20 Feb 11 20:05 root
+
+# /root/exdir/root:
+# total 0
+# drwxr-xr-x. 2 root root 39 Feb 11 19:57 tardir
+
+# /root/exdir/root/tardir:
+# total 0
+# -rw-r--r--. 1 root root 0 Feb 11 19:57 sheet.csv
+# -rw-r--r--. 1 root root 0 Feb 11 19:57 word.doc
+```
+
+---
+
+#### Create archive file with Compression
+
+```sh
+# auto compress
+tar -caf /root/archive_auto.tar /root/tardir
+
+# use bzip2
+tar -cjf /root/archive_bzip2.tar /root/tardir
+
+# use gzip
+tar -czf /root/archive_gzip.tar /root/tardir
+
+# confirm and compare
+ll -hS /root/archive.tar /root/archive_auto.tar /root/archive_bzip2.tar /root/archive_gzip.tar
+# -rw-r--r--. 1 root root 10K Feb 11 20:22 /root/archive_auto.tar
+# -rw-r--r--. 1 root root 10K Feb 11 20:15 /root/archive.tar
+# -rw-r--r--. 1 root root 168 Feb 11 20:22 /root/archive_bzip2.tar
+# -rw-r--r--. 1 root root 167 Feb 11 20:23 /root/archive_gzip.tar
+```
+
+---
+
+#### Archive multiple files
+
+```sh
+tar -cvf /root/archive_multi.tar /root/tardir/sheet.csv /root/tardir/word.doc
+# tar: Removing leading `/' from member names
+# /root/tardir/sheet.csv
+# tar: Removing leading `/' from hard link targets
+# /root/tardir/word.doc
+
+# confirm
+ll -h /root/archive_multi.tar
+# -rw-r--r--. 1 root root 10K Feb 11 20:58 /root/archive_multi.tar
+tar -tvf /root/archive_multi.tar
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/sheet.csv
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/word.doc
+```
+
+#### Append file to existing tarfile
+
+```sh
+# append
+tar -rvf /root/archive_multi.tar /etc/fstab
+# tar: Removing leading `/' from member names
+# /etc/fstab
+# tar: Removing leading `/' from hard link targets
+
+# confirm
+ll -h /root/archive_multi.tar
+# -rw-r--r--. 1 root root 10K Feb 11 21:01 /root/archive_multi.tar
+tar -tvf /root/archive_multi.tar
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/sheet.csv
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/word.doc
+# -rw-r--r-- root/root       666 2025-01-27 02:21 etc/fstab
+```
+
+#### Restore a specific file from tarfile
+
+```sh
+tar -tvf /root/archive_multi.tar
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/sheet.csv
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/word.doc
+# -rw-r--r-- root/root       666 2025-01-27 02:21 etc/fstab
+
+# extract
+tar -xvf /root/archive_multi.tar etc/fstab -C /root
+# etc/fstab
+
+# confirm
+ll -h /root/etc/fstab
+# -rw-r--r--. 1 root root 666 Jan 27 02:21 /root/etc/fstab/
+
+tar -tvf /root/archive_multi.tar
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/sheet.csv
+# -rw-r--r-- root/root         0 2025-02-11 19:57 root/tardir/word.doc
+# -rw-r--r-- root/root       666 2025-01-27 02:21 etc/fstab
+
+
+```
+
+---
+
+### Compress Commands
+
+- compression tools
+  - `gzip`/`gunzip`
+    - create a compressed file of each of the specified files
+    - adds the `.gz` extension to each file
+  - `bzip2` /`bunzip2`
+    - creates a compressed file of each of the specified files
+    - adds the `.bz2` extension to each file
+
+| Command                  | Desc                                                  |
+| ------------------------ | ----------------------------------------------------- |
+| `gzip filename`          | Compress the files into `.gz` file                    |
+| `gzip -c file1 > foo.gz` | Compress to a destination                             |
+| `gzip -v filename`       | Verbose output                                        |
+| `gzip -k filename`       | Keep the original file                                |
+| `gzip -r directory`      | Compress all files in a directory                     |
+| `gzip -9 filename`       | Change the compression level, from 1 to 9. Default 6  |
+| `gunzip gz_file`         | Uncompress files.                                     |
+| `gunzip -vk gz_file`     | Uncompress files and Verbose output, keep the gz file |
+| `bzip2 file_name`        | Compress the files into `.bz2` file                   |
+| `bunzip2 bz2_file`       | Uncompress the files                                  |
+
+---
+
+### Lab: Compress File with `gzip`
+
+```sh
+mkdir /root/gzipdir
+touch /root/gzipdir/sheet.csv /root/gzipdir/word.doc
+
+
+gzip /root/gzipdir/sheet.csv /root/gzipdir/word.doc
+
+# confirm
+ll -h /root/gzipdir/
+# total 8.0K
+# -rw-r--r--. 1 root root 30 Feb 11 20:39 sheet.csv.gz
+# -rw-r--r--. 1 root root 29 Feb 11 20:39 word.doc.gz
+
+# list files
+gzip -l /root/gzipdir/sheet.csv.gz
+#  compressed        uncompressed  ratio uncompressed_name
+#          30                   0   0.0% /root/gzipdir/sheet.csv
+
+# extract
+gunzip /root/gzipdir/sheet.csv.gz /root/gzipdir/word.doc.gz
+# confirm
+ll -h /root/gzipdir/
+# total 0
+# -rw-r--r--. 1 root root 0 Feb 11 20:39 sheet.csv
+# -rw-r--r--. 1 root root 0 Feb 11 20:39 word.doc
+```
+
+---
+
+### Lab: Compress File with `bzip2`
+
+```sh
+mkdir /root/bzip2
+touch /root/bzip2/sheet.csv /root/bzip2/word.doc
+
+ll -h /root/bzip2/
+# total 0
+# -rw-r--r--. 1 root root 0 Feb 11 20:45 sheet.csv
+# -rw-r--r--. 1 root root 0 Feb 11 20:45 word.doc
+
+# compress with bzip2
+bzip2 /root/bzip2/sheet.csv /root/bzip2/word.doc
+# confirm
+ll -h /root/bzip2/
+# total 8.0K
+# -rw-r--r--. 1 root root 14 Feb 11 20:45 sheet.csv.bz2
+# -rw-r--r--. 1 root root 14 Feb 11 20:45 word.doc.bz2
+
+# extract
+bunzip2  /root/bzip2/sheet.csv.bz2 /root/bzip2/word.doc.bz2
+ll -h /root/bzip2/
+# total 0
+# -rw-r--r--. 1 root root 0 Feb 11 20:45 sheet.csv
+# -rw-r--r--. 1 root root 0 Feb 11 20:45 word.doc
 ```
 
 ---

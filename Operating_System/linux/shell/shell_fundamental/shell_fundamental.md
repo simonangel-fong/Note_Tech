@@ -13,6 +13,7 @@
   - [Executing Commands](#executing-commands)
     - [Privileged Execution](#privileged-execution)
     - [Command Path](#command-path)
+    - [Lab: which, whereis, type](#lab-which-whereis-type)
     - [`man`](#man)
   - [Aliases](#aliases)
     - [Commands](#commands)
@@ -187,6 +188,21 @@ echo 'export PS1="[\A \u@\h \W]\$ "' >> ~/.bash_profile
 
 - `which`:
   - shows the full path of (shell) commands.
+
+---
+
+### Lab: which, whereis, type
+
+```sh
+which cd
+# /usr/bin/cd
+
+type cd
+# cd is a shell builtin
+
+whereis cd
+# cd: /usr/bin/cd /usr/share/man/man1/cd.1.gz /usr/share/man/man1p/cd.1p.gz
+```
 
 ---
 

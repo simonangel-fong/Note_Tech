@@ -7,3 +7,5 @@
 - [OS1](./OS1/OS1.md)
 - [Interface](./interface/interface.md)
 - [Gather](./gather/gather.md)
+- [MIS](./mis/mis.md)
+- [Researching and Documenting](./doc/doc.md)

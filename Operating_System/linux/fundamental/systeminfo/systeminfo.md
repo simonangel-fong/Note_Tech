@@ -17,6 +17,10 @@
     - [Command `uname -a`](#command-uname--a)
     - [Command `hostnamectl`](#command-hostnamectl)
   - [System Information](#system-information)
+    - [Lab: System information](#lab-system-information)
+      - [Session file and uptime](#session-file-and-uptime)
+      - [System information](#system-information-1)
+      - [CPU](#cpu)
 
 ---
 
@@ -276,13 +280,117 @@ hostnamectl
 
 ## System Information
 
-| Command       | Description                          |
-| ------------- | ------------------------------------ |
-| `uptime`      | how long the system has been running |
-| `uptime -p`   | show uptime in pretty format         |
-| `uptime -s`   | system up since                      |
-| `hostnamectl` | Query the system hostname            |
-| `date`        |                                      |
-| `date -s`     |                                      |
+| Command       | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `tty`         | Display current active terminal session file   |
+| `uptime`      | how long the system has been running           |
+| `uptime -p`   | show uptime in pretty format                   |
+| `uptime -s`   | system up since                                |
+| `hostnamectl` | Query the system hostname                      |
+| `date`        |                                                |
+| `date -s`     |                                                |
+| `uname`       | Display system information                     |
+| `uname -a`    | Display all information                        |
+| `uname -s`    | Display the kernel name                        |
+| `uname -p`    | Display the processor type                     |
+| `lscpu`       | Display information about the CPU architecture |
 
 ---
+
+### Lab: System information
+
+#### Session file and uptime
+
+```sh
+tty
+# /dev/pts/1
+
+uptime
+#  18:23:11 up  2:13,  4 users,  load average: 0.00, 0.00, 0.00
+
+uptime -p
+# up 2 hours, 13 minutes
+```
+
+> `uptime`:
+>
+> - current system time: `18:23:11`
+> - up duration: `2:13`
+> - number of logged-in users: `4 users`
+> - CPU load averages over the past 1, 5, and 15 minutes: `0.00, 0.00, 0.00`
+
+---
+
+#### System information
+
+```sh
+uname
+# Linux
+
+uname -a
+# Linux localhost.localdomain 5.14.0-503.22.1.el9_5.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Jan 15 08:02:15 EST 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+uname -p
+# x86_64
+```
+
+---
+
+#### CPU
+
+```sh
+lscpu
+# Architecture:             x86_64
+#   CPU op-mode(s):         32-bit, 64-bit
+#   Address sizes:          45 bits physical, 48 bits virtual
+#   Byte Order:             Little Endian
+# CPU(s):                   2
+#   On-line CPU(s) list:    0,1
+# Vendor ID:                GenuineIntel
+#   BIOS Vendor ID:         GenuineIntel
+#   Model name:             Intel(R) Core(TM) 5 120U
+#     BIOS Model name:      Intel(R) Core(TM) 5 120U
+#     CPU family:           6
+#     Model:                186
+#     Thread(s) per core:   1
+#     Core(s) per socket:   1
+#     Socket(s):            2
+#     Stepping:             3
+#     BogoMIPS:             4991.99
+#     Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36
+#                           clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc a
+#                           rch_perfmon rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid tsc_k
+#                           nown_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt
+#                            aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch pti ssbd
+#                            ibrs ibpb stibp fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rd
+#                           seed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves avx_
+#                           vnni arat umip gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clea
+#                           r serialize flush_l1d arch_capabilities
+# Virtualization features:
+#   Hypervisor vendor:      VMware
+#   Virtualization type:    full
+# Caches (sum of all):
+#   L1d:                    96 KiB (2 instances)
+#   L1i:                    64 KiB (2 instances)
+#   L2:                     2.5 MiB (2 instances)
+#   L3:                     24 MiB (2 instances)
+# NUMA:
+#   NUMA node(s):           1
+#   NUMA node0 CPU(s):      0,1
+# Vulnerabilities:
+#   Gather data sampling:   Not affected
+#   Itlb multihit:          Not affected
+#   L1tf:                   Mitigation; PTE Inversion
+#   Mds:                    Mitigation; Clear CPU buffers; SMT Host state unknown
+#   Meltdown:               Mitigation; PTI
+#   Mmio stale data:        Unknown: No mitigations
+#   Reg file data sampling: Vulnerable: No microcode
+#   Retbleed:               Mitigation; IBRS
+#   Spec rstack overflow:   Not affected
+#   Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+#   Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+#   Spectre v2:             Mitigation; IBRS; IBPB conditional; STIBP disabled; RSB filling; PBRSB-e
+#                           IBRS Not affected; BHI SW loop, KVM SW loop
+#   Srbds:                  Not affected
+#   Tsx async abort:        Not affected
+```

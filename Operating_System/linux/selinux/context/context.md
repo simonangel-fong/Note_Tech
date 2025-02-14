@@ -5,12 +5,15 @@
 - [Linux - SELinux: Context](#linux---selinux-context)
   - [SELinux Context](#selinux-context)
     - [Copying, Moving, and Archiving Files with SELinux Contexts](#copying-moving-and-archiving-files-with-selinux-contexts)
+    - [Lab: Copy Files with and without Context](#lab-copy-files-with-and-without-context)
     - [Components of an SELinux Context](#components-of-an-selinux-context)
     - [Common Commands](#common-commands)
     - [Lab: Change Context](#lab-change-context)
   - [How SELinux Context Works for Files and Processes](#how-selinux-context-works-for-files-and-processes)
     - [Example Scenario: Web Server and File Access](#example-scenario-web-server-and-file-access)
   - [SELinux Ports](#selinux-ports)
+    - [Common Commands](#common-commands-1)
+    - [Lab: Add and Delete Network Ports](#lab-add-and-delete-network-ports)
 
 ---
 
@@ -30,6 +33,35 @@
 - If a file is **moved** to the same or different directory, the SELinux context will **remain intact**, which may differ from the destination directory’s context. 移动：保留旧标签
 
 - If a file is archived with the tar command, use the `--selinux` option to preserve the context. 存档：默认不保留标签
+
+---
+
+### Lab: Copy Files with and without Context
+
+```sh
+touch /tmp/sefile2
+ll -Z /tmp/sefile2
+# -rw-r--r--. 1 root root unconfined_u:object_r:user_tmp_t:s0 0 Feb 10 16:45 /tmp/sefile2
+
+# copy file without context
+cp /tmp/sefile2 /etc/default
+ll -Z /etc/default/sefile2
+# -rw-r--r--. 1 root root unconfined_u:object_r:etc_t:s0 0 Feb 10 16:48 /etc/default/sefile2
+```
+
+> The **target** file (/etc/default/sefile2) **received** the **default** context of the **destination** directory (/etc/default).
+
+```sh
+# Remove the /etc/default/sefile2 file, and copy it again with the --preserve=context option:
+rm /etc/default/sefile2
+cp /tmp/sefile2 /etc/default --preserve=context
+
+# confirm
+ll -Z /etc/default/sefile2
+# -rw-r--r--. 1 root root unconfined_u:object_r:user_tmp_t:s0 0 Feb 10 16:51 /etc/default/sefile2
+```
+
+> - The original context (user_tmp_t) is preserved on the target file after the copy operation has finished.
 
 ---
 
@@ -132,33 +164,40 @@ ll -dZ /tmp/sedir1
 # drwxr-xr-x. 2 root root user_u:object_r:public_content_t:s0 21 Feb 10 00:44 /tmp/sedir1
 ll -Z /tmp/sedir1/sefile1
 # -rw-r--r--. 1 root root user_u:object_r:public_content_t:s0 0 Feb 10 00:44 /tmp/sedir1/sefile1
-```
 
-- Reboot
+semanage fcontext -lC
+# SELinux fcontext                                   type               Context
+# /tmp/sedir1(/.*)?                                  all files          user_u:object_r:public_content_t:s0
 
-```sh
-reboot
-
-ll -dZ /tmp/sedir1
-# drwxr-xr-x. 2 root root system_u:object_r:unlabeled_t:s0 21 Feb 10 00:44 /tmp/sedir1
-ll -Z /tmp/sedir1/sefile1
-# -rw-r--r--. 1 root root system_u:object_r:unlabeled_t:s0 0 Feb 10 00:44 /tmp/sedir1/sefile1
 ```
 
 - Persistently
+  - Add the directory recursively to the policy database
 
 ```sh
-# add context
+# add context to the policy database
 semanage fcontext -a -s user_u -t public_content_t "/tmp/sedir1(/.*)?"
+semanage fcontext -lC
+# SELinux fcontext                                   type               Context
+# /tmp/sedir1(/.*)?                                  all files          user_u:object_r:public_content_t:s0
+
+# Temporarily change context
+chcon -v -u staff_u -t etc_t -R /tmp/sedir1
+# changing security context of '/tmp/sedir1/sefile1'
+# changing security context of '/tmp/sedir1'
+ll -dZ /tmp/sedir1; ll -Z /tmp/sedir1/sefile1
+# drwxr-xr-x. 2 root root staff_u:object_r:etc_t:s0 21 Feb 10 16:12 /tmp/sedir1
+# -rw-r--r--. 1 root root staff_u:object_r:etc_t:s0 0 Feb 10 16:12 /tmp/sedir1/sefile1
+
 # Apply the New Context to the Files
 restorecon -Rv /tmp/sedir1
+# Relabeled /tmp/sedir1 from staff_u:object_r:etc_t:s0 to staff_u:object_r:public_content_t:s0
+# Relabeled /tmp/sedir1/sefile1 from staff_u:object_r:etc_t:s0 to staff_u:object_r:public_content_t:s0
 
-reboot
-
-ll -dZ /tmp/sedir1
-# drwxr-xr-x. 2 root root user_u:object_r:public_content_t:s0 21 Feb 10 00:44 /tmp/sedir1
-ll -Z /tmp/sedir1/sefile1
-# -rw-r--r--. 1 root root user_u:object_r:public_content_t:s0 0 Feb 10 00:44 /tmp/sedir1/sefile1
+# confirm
+ll -dZ /tmp/sedir1; ll -Z /tmp/sedir1/sefile1
+# drwxr-xr-x. 2 root root staff_u:object_r:public_content_t:s0 21 Feb 10 16:12 /tmp/sedir1
+# -rw-r--r--. 1 root root staff_u:object_r:public_content_t:s0 0 Feb 10 16:12 /tmp/sedir1/sefile1
 ```
 
 ---
@@ -241,16 +280,8 @@ ls -Z /var/www/html/hello_world/index.html
   - Ports for both protocols can be labeled and managed **separately**.
 
 - Audit Logs for Port Denials
-  - If a service fails to bind to a port, check SELinux logs in `/var/log/audit/audit.log` for denial messages.
 
-| CMD                                               | DESC                                                      |
-| ------------------------------------------------- | --------------------------------------------------------- |
-| `semanage port -l`                                | List all SELinux-managed ports and their associated types |
-| `semanage port -l \| grep ':8080'`                | View a Specific Port's Context                            |
-| `semanage port -a -t http_port_t -p tcp 8080`     | Add a New Port Context                                    |
-| `semanage port -a -t ftp_port_t -p tcp 2100-2105` | Add an SELinux type to a range of ports.                  |
-| `semanage port -m -t mysqld_port_t -p tcp 8080`   | Modify an Existing Port Context                           |
-| `semanage port -d -t http_port_t -p tcp 8080`     | Remove a port from a specific SELinux type.               |
+  - If a service fails to bind to a port, check SELinux logs in `/var/log/audit/audit.log` for denial messages.
 
 - Tips:
   - **Temporarily**:
@@ -267,3 +298,46 @@ ls -Z /var/www/html/hello_world/index.html
     - e.g., `semanage export > selinux_config_backup.txt`
 
 ---
+
+### Common Commands
+
+| CMD                                               | DESC                                                      |
+| ------------------------------------------------- | --------------------------------------------------------- |
+| `semanage port -l`                                | List all SELinux-managed ports and their associated types |
+| `semanage port -l \| grep ':8080'`                | View a Specific Port's Context                            |
+| `semanage port -a -t http_port_t -p tcp 8080`     | Add a New Port Context                                    |
+| `semanage port -a -t ftp_port_t -p tcp 2100-2105` | Add an SELinux type to a range of ports.                  |
+| `semanage port -m -t mysqld_port_t -p tcp 8080`   | Modify an Existing Port Context                           |
+| `semanage port -d -t http_port_t -p tcp 8080`     | Remove a port from a specific SELinux type.               |
+
+---
+
+### Lab: Add and Delete Network Ports
+
+- add a non-standard network port 8010 to the SELinux policy database for the httpd service and confirm the addition.
+
+```sh
+# List (-l) the ports for the httpd service
+semanage port -l | grep ^http_port
+# http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+
+# Add (-a) port 8010 with type (-t) http_port_t and protocol (-p) tcp to the policy
+semanage port -a -t http_port_t -p tcp 8010
+
+# confirm
+semanage port -Cl
+# SELinux Port Type              Proto    Port Number
+# http_port_t                    tcp      8010
+
+semanage port -l | grep ^http_port
+# http_port_t                    tcp      8010, 80, 81, 443, 488, 8008, 8009, 8443, 9000
+
+# Delete (-d) port 8010 from the policy and confirm:
+semanage port -d -p tcp 8010
+
+# confirm
+semanage port -Cl
+# return nothting
+semanage port -l | grep ^http_port
+# http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+```

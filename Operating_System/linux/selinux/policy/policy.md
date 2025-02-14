@@ -11,6 +11,8 @@
     - [SELinux Policy vs Boolean](#selinux-policy-vs-boolean)
     - [Common Commands](#common-commands-1)
     - [Lab: Allowing HTTPD to Connect to the Network](#lab-allowing-httpd-to-connect-to-the-network)
+    - [Lab: View and Toggle SELinux Boolean Values](#lab-view-and-toggle-selinux-boolean-values)
+  - [Audit](#audit)
 
 ---
 
@@ -149,4 +151,120 @@ semanage boolean -m httpd_can_network_connect --on
 # verify
 semanage boolean -l | grep httpd_can_network_connect
 # httpd_can_network_connect      (on   ,   on)  Allow httpd to can network connect
+```
+
+---
+
+### Lab: View and Toggle SELinux Boolean Values
+
+- display the current state of the Boolean nfs_export_all_rw. You will toggle its value temporarily, and reboot the system. You will flip its value persistently after the system has been back up.
+
+```sh
+# display boolean nfs_export_all_rw
+getsebool -a | grep nfs_export_all_rw
+# nfs_export_all_rw --> on
+
+getsebool nfs_export_all_rw
+# nfs_export_all_rw --> on
+
+semanage boolean -l | grep nfs_export_all_rw
+# nfs_export_all_rw              (on   ,   on)  Allow nfs to export all rw
+```
+
+- Temporarily turn off
+
+```sh
+# Turn off the value of nfs_export_all_rw
+setsebool nfs_export_all_rw off
+# confirm
+getsebool -a | grep nfs_export_all_rw
+# nfs_export_all_rw --> off
+
+# reboot
+reboot
+
+# confirm
+getsebool -a | grep nfs_export_all_rw
+# nfs_export_all_rw --> on
+```
+
+- Persistently turn off
+
+```sh
+semanage boolean -m nfs_export_all_rw -0
+
+# confirm
+semanage boolean -l | grep nfs_export_all_rw
+# nfs_export_all_rw              (off  ,  off)  Allow nfs to export all rw
+
+getsebool nfs_export_all_rw
+# nfs_export_all_rw --> off
+
+# reboot
+reboot
+
+getsebool nfs_export_all_rw
+# nfs_export_all_rw --> off
+```
+
+---
+
+## Audit
+
+- SELinux generates **alerts** for system activities when it runs in enforcing or permissive mode.
+  - It writes the alerts to
+    - the `/var/log/audit/audit.log` file if the `auditd daemon` is running, or
+    - to the `/var/log/`messages file via the `rsyslog daemon` in the absence of auditd.
+- SELinux also logs the alerts that are generated due to **denial of an action**, and identifies them with a type tag `AVC (Access Vector Cache)` in the `audit.log` file.
+
+  - It also writes the **rejection** in the messages file with a **message ID**, and how to view the message details.
+
+- Example of AVC denied log
+
+```log
+type=AVC msg=audit(1739222970.855:62): avc:  denied  { name_bind } for  pid=1149 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket permissive=0
+type=AVC msg=audit(1739224751.486:66): avc:  denied  { name_bind } for  pid=1061 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket permissive=0
+type=AVC msg=audit(1739224751.486:67): avc:  denied  { name_bind } for  pid=1061 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket permissive=0
+type=AVC msg=audit(1739225039.728:61): avc:  denied  { name_bind } for  pid=1117 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket permissive=0
+type=AVC msg=audit(1739225039.728:62): avc:  denied  { name_bind } for  pid=1117 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket permissive=0
+```
+
+- analyze (-a) all AVC records in the audit.log file
+
+```sh
+sealert -a /var/log/audit/audit.log
+```
+
+- Using ausearch to check the recen denials
+
+```sh
+# try to restart service
+systemctl restart httpd.service
+# Job for httpd.service failed because the control process exited with error code.
+# See "systemctl status httpd.service" and "journalctl -xeu httpd.service" for details.
+
+# check the recent denials
+ausearch -m avc -ts recent
+# ----
+# time->Mon Feb 10 17:24:52 2025
+# type=PROCTITLE msg=audit(1739226292.355:144): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
+# type=SYSCALL msg=audit(1739226292.355:144): arch=c000003e syscall=49 success=no exit=-13 a0=4 a1=55cfd8e9c4a0 a2=1c a3=7fff32576f5c items=0 ppid=1 pid=2333 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
+# type=AVC msg=audit(1739226292.355:144): avc:  denied  { name_bind } for  pid=2333 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket permissive=0
+# ----
+# time->Mon Feb 10 17:24:52 2025
+# type=PROCTITLE msg=audit(1739226292.355:145): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
+# type=SYSCALL msg=audit(1739226292.355:145): arch=c000003e syscall=49 success=no exit=-13 a0=3 a1=55cfd8e9c3e0 a2=10 a3=7fff32576f5c items=0 ppid=1 pid=2333 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
+# type=AVC msg=audit(1739226292.355:145): avc:  denied  { name_bind } for  pid=2333 comm="httpd" src=82 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:reserved_port_t:s0 tclass=tcp_socket permissive=0
+
+# check the log
+journalctl -u httpd --no-pager
+# Feb 10 17:24:52 localhost.localdomain systemd[1]: Starting The Apache HTTP Server...
+# Feb 10 17:24:52 localhost.localdomain httpd[2333]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain. Set the 'ServerName' directive globally to suppress this message
+# Feb 10 17:24:52 localhost.localdomain httpd[2333]: (13)Permission denied: AH00072: make_sock: could not bind to address [::]:82
+# Feb 10 17:24:52 localhost.localdomain httpd[2333]: (13)Permission denied: AH00072: make_sock: could not bind to address 0.0.0.0:82
+# Feb 10 17:24:52 localhost.localdomain httpd[2333]: no listening sockets available, shutting down
+# Feb 10 17:24:52 localhost.localdomain httpd[2333]: AH00015: Unable to open logs
+# Feb 10 17:24:52 localhost.localdomain systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE
+# Feb 10 17:24:52 localhost.localdomain systemd[1]: httpd.service: Failed with result 'exit-code'.
+# Feb 10 17:24:52 localhost.localdomain systemd[1]: Failed to start The Apache HTTP Server.
 ```

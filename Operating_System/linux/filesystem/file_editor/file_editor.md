@@ -204,6 +204,7 @@
 | Key                  | Desc                                   |
 | -------------------- | -------------------------------------- |
 | `:w`                 | Writes (saves) the file.               |
+| `:w file2`           | Writes (saves) into a new file         |
 | `:w!`                | Forces the file to be saved.           |
 | `:q`                 | Quit.                                  |
 | `:q!`                | Quit **without saving** changes.       |

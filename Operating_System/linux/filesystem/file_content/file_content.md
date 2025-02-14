@@ -8,6 +8,7 @@
     - [Search a user name in `/etc/passwd`](#search-a-user-name-in-etcpasswd)
   - [Filtering Text File Data](#filtering-text-file-data)
   - [Sorting Text File Data](#sorting-text-file-data)
+  - [Text File Statistics](#text-file-statistics)
   - [Comparing Files](#comparing-files)
 
 ---
@@ -176,6 +177,39 @@ sort -u -k2 txtfile
 # user: bob
 # tags: credentials
 # site: facebook.com
+```
+
+---
+
+## Text File Statistics
+
+| Command           | Desc                                                  |
+| ----------------- | ----------------------------------------------------- |
+| `wc text_file`    | Display newline, word, and byte counts for each file. |
+| `wc -c text_file` | Display byte counts for each file.                    |
+| `wc -m text_file` | Display character counts for each file.               |
+| `wc -w text_file` | Display word counts for each file.                    |
+| `wc -l text_file` | Display newline counts for each file.                 |
+
+```sh
+wc /etc/profile
+# 78  247 1899 /etc/profile
+
+# Display newline counts
+wc -l /etc/profile
+# 78 /etc/profile
+
+# Display word counts
+wc -w /etc/profile
+# 247 /etc/profile
+
+# Display character counts
+wc -m /etc/profile
+# 1899 /etc/profile
+
+# Display byte counts
+wc -c /etc/profile
+# 1899 /etc/profile
 ```
 
 ---
