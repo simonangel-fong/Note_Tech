@@ -5,8 +5,15 @@
 - [Linux - File System: Access Control List](#linux---file-system-access-control-list)
   - [Access Control List (ACL)](#access-control-list-acl)
     - [Default ACLs](#default-acls)
+    - [Lab: Default ACL](#lab-default-acl)
+      - [Create default ACl for dir](#create-default-acl-for-dir)
+      - [Delete all default](#delete-all-default)
     - [Effective ACLs and Mask](#effective-acls-and-mask)
     - [ACL Command](#acl-command)
+    - [Mask](#mask)
+    - [Lab: ACL grand and revoke](#lab-acl-grand-and-revoke)
+      - [Grant](#grant)
+      - [Revoke](#revoke)
   - [Standard Permissions vs ACLs](#standard-permissions-vs-acls)
   - [Lab: ACL](#lab-acl)
     - [Retrieve Stardard Permissions](#retrieve-stardard-permissions)
@@ -24,12 +31,17 @@
   - allow you to assign **specific permissions to individual users or groups** for files and directories, beyond the typical owner, group, and others model.
 
 - **Advantages**:
+
   - **Granular control**:
     - ACLs allow setting permissions for multiple users or groups on the same file or directory.
   - **No need to create new groups**:
     - You can assign permissions to individual users without changing group memberships.
   - **More flexibility**:
     - You can define read, write, and execute permissions for each user or group independently.
+
+- categorized
+  - `access ACLs`: set on individual files and directories
+  - `default ACLs`: only be applied at the directory level with files and subdirectories inheriting them automatically.
 
 ---
 
@@ -42,6 +54,8 @@
     - ensure **consistent permissions** for all **newly created files and subdirectories** under a parent directory.
   - Used for **directories**, not individual files
   - do not affect existing files
+
+- default ACLs can be described as the **maximum discretionary permissions** that can be allocated on a directory.
 
 - Example:
 
@@ -77,6 +91,72 @@ getfacl /parent_directory/new_file
 
 # Remove a Default ACL
 setfacl -x d:u:alice /parent_directory
+```
+
+---
+
+### Lab: Default ACL
+
+```sh
+su - user1
+mkdir /tmp/projectacl
+getfacl -c /tmp/projectacl
+# user::rwx
+# group::r-x
+# other::r-x
+```
+
+#### Create default ACl for dir
+
+```sh
+setfacl -dm u:user100:7,u:user200:rwx /tmp/projectacl
+getfacl -c /tmp/projectacl
+# user::rwx
+# group::r-x
+# other::r-x
+# default:user::rwx
+# default:user:user100:rwx
+# default:user:user200:rwx
+# default:group::r-x
+# default:mask::rwx
+# default:other::r-x
+
+# create dir under project
+mkdir /tmp/projectacl/projdir1
+getfacl -c /tmp/projectacl/projdir1
+# user::rwx
+# user:user100:rwx
+# user:user200:rwx
+# group::r-x
+# mask::rwx
+# other::r-x
+# default:user::rwx
+# default:user:user100:rwx
+# default:user:user200:rwx
+# default:group::r-x
+# default:mask::rwx
+# default:other::r-x
+
+# creat fiel under project
+# note the effective is rw
+touch /tmp/projectacl/projfile1
+getfacl -c /tmp/projectacl/projfile1
+# user::rw-
+# user:user100:rwx                #effective:rw-
+# user:user200:rwx                #effective:rw-
+# group::r-x                      #effective:r--
+# mask::rw-
+# other::r--
+```
+
+#### Delete all default
+
+```sh
+setfacl -k /tmp/projectacl
+getfacl -c /tmp/projectacl
+# user::rwx
+# group::r-x
+# other::r-x
 ```
 
 ---
@@ -117,16 +197,30 @@ user:alice:rw-
 
 ### ACL Command
 
-| CMD                                                  | DESC                                          |
-| ---------------------------------------------------- | --------------------------------------------- |
-| `getfacl filename`                                   | Display the ACL of a file or directory        |
-| `setfacl -m u:username:permissions filename`         | Grant a user specific permissions             |
-| `setfacl -rm u:username:permissions directory_name`  | Grant a user specific permissions recursively |
-| `setfacl -m g:groupname:permissions filename`        | Grant a group specific permissions            |
-| `setfacl -m d:u:username:permissions directory_name` | Set a **default ACL** for directories         |
-| `setfacl -x u:username filename`                     | Remove specific ACLs                          |
-| `setfacl -m m:permissions filename`                  | Modify the Mask                               |
-| `setfacl -b filename`                                | Remove all ACLs                               |
+| CMD                                                 | DESC                                          |
+| --------------------------------------------------- | --------------------------------------------- |
+| `getfacl filename`                                  | Display the ACL of a file or directory        |
+| `setfacl -m u:lisa:r filee`                         | Grant a user specific permissions             |
+| `setfacl -rm u:username:permissions directory_name` | Grant a user specific permissions recursively |
+| `setfacl -m g:groupname:permissions filename`       | Grant a group specific permissions            |
+| `setfacl -x u:lisa file`                            | Remove specific ACLs                          |
+| `setfacl -x g:staff file`                           | Remove specific ACLs                          |
+| `setfacl -b filename`                               | Remove all ACLs                               |
+
+- Mask
+
+| CMD                     | DESC                                            |
+| ----------------------- | ----------------------------------------------- |
+| `setfacl -m m::rx file` | Modify the Mask                                 |
+| `setfacl -n filename`   | Prevents an automatic recalculation of the mask |
+
+- Default acl
+
+| CMD                                                  | DESC                                  |
+| ---------------------------------------------------- | ------------------------------------- |
+| `setfacl -m d:u:username:permissions directory_name` | Set a **default ACL** for directories |
+| `setfacl -d filename`                                | Applies to default ACLs               |
+| `setfacl -k filename`                                | Removes all default ACLs              |
 
 - If the output of `ls -l` command contains a `+` at the end of the permissions (e.g., `rw-rw----+`), ACLs are in use.
 - Setting `w` permission with ACL does not allow to remove the a file.
@@ -140,10 +234,111 @@ user:alice:rw-
     - Sets the access ACL for a group.
   - `m:perms`
     - Sets the effective rights mask.
+    - **Maximum permissions** for a named user or a named group.
+      - If this is set to rw-, for example, then no named user or group will have permissions beyond read and write.
   - `o:perms`
     - Sets the access ACL for users other than the ones in the group for the file.
   - `d:rules`
     - Sets the default ACL for a directory.
+
+---
+
+### Mask
+
+- `ACL mask`
+  - determines the **maximum allowable permissions** placed for a named user or group on a file or directory.
+    - If it is set to rw, for instance, no named user or group will exceed those permissions.
+
+```sh
+getfacl -c aclfile1
+# user::rw-
+# group::r--
+# other::r--
+
+setfacl -m u:user100:rw,m:r aclfile1
+getfacl -c aclfile1
+# user::rw-
+# user:user100:rw-                #effective:r--
+# group::r--
+# mask::r--
+# other::r--
+
+# update mask
+setfacl -m m:rw aclfile1
+getfacl -c aclfile1
+# user::rw-
+# user:user100:rw-
+# group::r--
+# mask::rw-
+# other::r--
+```
+
+---
+
+### Lab: ACL grand and revoke
+
+#### Grant
+
+```sh
+# login as user100
+su - user100
+touch /tmp/acluser100
+ll /tmp/acluser100
+# -rw-r--r--. 1 user100 user100 0 Feb 15 15:22 /tmp/acluser100
+getfacl -c /tmp/acluser100
+# user::rw-
+# group::r--
+# other::r--
+
+# acl: grant
+# note the mask always eqaul to the max
+setfacl -m u:user200:6 /tmp/acluser100
+ll /tmp/acluser100
+# -rw-rw-r--+ 1 user100 user100 0 Feb 15 15:22 /tmp/acluser100
+getfacl -c /tmp/acluser100
+# getfacl: Removing leading '/' from absolute path names
+# user::rw-
+# user:user200:rw-
+# group::r--
+# mask::rw-
+# other::r--
+
+setfacl -m u:user1:rwx /tmp/acluser100
+getfacl -c /tmp/acluser100
+# getfacl: Removing leading '/' from absolute path names
+# user::rw-
+# user:user200:rw-
+# user:user1:rwx
+# group::r--
+# mask::rwx
+# other::r--
+```
+
+#### Revoke
+
+```sh
+setfacl -x u:user1 /tmp/acluser100
+# confirm
+# note the mask shrink
+getfacl -c /tmp/acluser100
+# getfacl: Removing leading '/' from absolute path names
+# user::rw-
+# user:user200:rw-
+# group::r--
+# mask::rw-
+# other::r--
+
+# delete all acl
+setfacl -b /tmp/acluser100
+getfacl -c /tmp/acluser100
+# getfacl: Removing leading '/' from absolute path names
+# user::rw-
+# group::r--
+# other::r--
+
+ll /tmp/acluser100
+# -rw-r--r--. 1 user100 user100 0 Feb 15 15:22 /tmp/acluser100
+```
 
 ---
 

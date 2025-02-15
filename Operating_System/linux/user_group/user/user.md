@@ -6,13 +6,17 @@
   - [User ID](#user-id)
     - [Types of UIDs](#types-of-uids)
     - [Types of UID for proecess](#types-of-uid-for-proecess)
-  - [User Configuration Files: `/etc/passwd`](#user-configuration-files-etcpasswd)
+  - [User Configuration Files](#user-configuration-files)
+    - [`/etc/login.defs`](#etclogindefs)
+    - [`/etc/passwd`](#etcpasswd)
   - [User Management](#user-management)
     - [Add a new user](#add-a-new-user)
     - [Delete a user account](#delete-a-user-account)
     - [Change a user account](#change-a-user-account)
+    - [No-Login (Non-Interactive) User Account](#no-login-non-interactive-user-account)
     - [Display user information](#display-user-information)
     - [Switch user](#switch-user)
+    - [History of User Login](#history-of-user-login)
 
 ---
 
@@ -102,7 +106,22 @@
 
 ---
 
-## User Configuration Files: `/etc/passwd`
+## User Configuration Files
+
+User account information for local users is stored in four files
+that are located in the /etc directory. These files—passwd,
+shadow, group, and gshadow—are updated when a user or
+group account is created, modified, or deleted.
+
+- automatic backups by default as passwd-, shadow-, group-, and gshadow- in the /etc directory.
+
+---
+
+### `/etc/login.defs`
+
+`/etc/default/useradd`
+
+### `/etc/passwd`
 
 - User information, including `UIDs`, is stored in the `/etc/passwd` file.
 
@@ -149,16 +168,20 @@ username:x:UID:GID:comment:home_directory:shell
 
 ### Add a new user
 
-| CMD                             | DESC                                              |
-| ------------------------------- | ------------------------------------------------- |
-| `useradd username`              | Create a new user                                 |
-| `useradd username -c comment`   | Create a new user with comment                    |
-| `useradd username -d home_path` | Create a new user and specify a user directory    |
-| `useradd username -m`           | Create a new user and home directory if not exits |
-| `useradd username -g group`     | Create a new user and specify primary group       |
-| `useradd username -G g1,g2`     | Create a new user and specify additional group    |
-| `useradd username -s bash`      | Create a new user and specify shell               |
-| `useradd username -u uid`       | Create a new user and specify UID                 |
+| CMD                                  | DESC                                              |
+| ------------------------------------ | ------------------------------------------------- |
+| `useradd username`                   | Create a new user                                 |
+| `useradd username -c comment`        | Create a new user with comment                    |
+| `useradd username -s bash`           | Create a new user and specify shell               |
+| `useradd username -m`                | Create a new user and home directory if not exits |
+| `useradd username -b /home`          | Defines the absolute path to the base directory   |
+| `useradd username -d /home/username` | Create a new user and specify a user directory    |
+| `useradd username -e 2025-01-01`     | Specify disabled date                             |
+| `useradd username -g group`          | Create a new user and specify primary group       |
+| `useradd username -G g1,g2`          | Create a new user and specify additional group    |
+| `useradd username -u uid`            | Create a new user and specify UID                 |
+| `useradd username -o`                | Creates a user account sharing the existing UID   |
+| `useradd username -r`                | Creates a service account with a UID below 1000   |
 
 - If username already exists:
 
@@ -197,15 +220,15 @@ tail -1 /etc/passwd
 
 ### Change a user account
 
-| CMD                             | DESC                                |
-| ------------------------------- | ----------------------------------- |
-| `usermod username -l logname`   | Modify a user's login name          |
-| `usermod username -u UID`       | Modify a user's UID                 |
-| `usermod username -g group`     | Modify a user's initial login group |
-| `usermod username -G g1,g2`     | Modify a user's group list          |
-| `usermod username -c comment`   | Modify a user's comment             |
-| `usermod username -d home_path` | Modify content to a user's new home |
-| `usermod username -s shell`     | Modify a user's shell               |
+| CMD                                | DESC                                                     |
+| ---------------------------------- | -------------------------------------------------------- |
+| `usermod username -l logname`      | Modify a user's login name                               |
+| `usermod username -u UID`          | Modify a user's UID                                      |
+| `usermod username -g group`        | Modify a user's initial login group                      |
+| `usermod username -aG g1,g2`       | Adds a user to group list                                |
+| `usermod username -c comment`      | Modify a user's comment                                  |
+| `usermod username -d -m home_path` | Modify content to a user's new home and move the content |
+| `usermod username -s shell`        | Modify a user's shell                                    |
 
 - Example
 
@@ -250,6 +273,36 @@ tail -1 /etc/passwd
 
 ---
 
+### No-Login (Non-Interactive) User Account
+
+- `useradd -s /sbin/nologin newuser`
+
+```sh
+grep nologin /etc/passwd
+# bin:x:1:1:bin:/bin:/sbin/nologin
+# daemon:x:2:2:daemon:/sbin:/sbin/nologin
+# adm:x:3:4:adm:/var/adm:/sbin/nologin
+```
+
+```sh
+su -
+useradd -s /sbin/nologin user4
+echo "password" | passwd --stdin user4
+
+# try login
+su - user4
+# This account is currently not available.
+
+# create msg file
+echo "this is a nologin msg" > /etc/nologin.txt
+
+# try login
+su - user4
+# this is a nologin msg
+```
+
+---
+
 ### Display user information
 
 | CMD           | DESC                                                       |
@@ -281,6 +334,96 @@ tail -1 /etc/passwd
 
 - If an evn var has exported, the env var can be used after switching to another user without loading its env var, `su username`.
   - If the user is changed using `su - username`, then the env var for this user will be loaded and the exported env var in the same session cannot be used.
+
+---
+
+### History of User Login
+
+- File:
+  - `/var/log/wtmp`: keeps a record of all login and logout activities
+  - `/var/log/btmp`: keeps a record of all unsuccessful login attempts
+  - `/var/log/lastlog`: keeps a record of the most recent user login attempts
+
+| CMD           | DESC                                                         |
+| ------------- | ------------------------------------------------------------ |
+| `last`        | history of successful user login attempts and system reboots |
+| `last reboot` | list system reboot details                                   |
+| `lastb`       | history of unsuccessful user login attempts                  |
+| `lastlog`     | Reporting Recent User Login Attempts                         |
+
+```sh
+last
+# rheladmi pts/0        192.168.128.1    Sat Feb 15 14:40   still logged in
+# reboot   system boot  5.14.0-362.24.1. Sat Feb 15 14:39   still running
+# reboot   system boot  5.14.0-362.24.1. Sat Feb 15 14:38 - 14:38  (00:00)
+# rheladmi tty2         tty2             Fri Jan 31 15:30 - down   (00:01)
+# rheladmi seat0        login screen     Fri Jan 31 15:30 - down   (00:01)
+# reboot   system boot  5.14.0-362.24.1. Fri Jan 31 15:30 - 15:32  (00:01)
+# rheladmi tty2         tty2             Mon Jan 27 17:56 - down   (00:03)
+# rheladmi seat0        login screen     Mon Jan 27 17:56 - down   (00:03)
+# reboot   system boot  5.14.0-362.24.1. Mon Jan 27 17:56 - 17:59  (00:03)
+# rheladmi tty2         tty2             Mon Jan 27 02:33 - down   (00:03)
+# rheladmi seat0        login screen     Mon Jan 27 02:33 - down   (00:03)
+# reboot   system boot  5.14.0-362.24.1. Mon Jan 27 02:33 - 02:37  (00:04)
+
+# wtmp begins Mon Jan 27 02:33:11 2025
+
+last reboot
+# reboot   system boot  5.14.0-362.24.1. Sat Feb 15 14:39   still running
+# reboot   system boot  5.14.0-362.24.1. Sat Feb 15 14:38 - 14:38  (00:00)
+# reboot   system boot  5.14.0-362.24.1. Fri Jan 31 15:30 - 15:32  (00:01)
+# reboot   system boot  5.14.0-362.24.1. Mon Jan 27 17:56 - 17:59  (00:03)
+# reboot   system boot  5.14.0-362.24.1. Mon Jan 27 02:33 - 02:37  (00:04)
+
+# wtmp begins Mon Jan 27 02:33:11 2025
+
+lastb
+# rheladmi ssh:notty    192.168.128.1    Sat Feb 15 16:07 - 16:07  (00:00)
+# rheladmi ssh:notty    192.168.128.1    Sat Feb 15 16:07 - 16:07  (00:00)
+# rheladmi ssh:notty    192.168.128.1    Sat Feb 15 16:07 - 16:07  (00:00)
+
+# btmp begins Sat Feb 15 16:07:07 2025
+
+lastlog
+# Username         Port     From                                       Latest
+# root             pts/0                                              Sat Feb 15 15:59:27 -0500 2025
+# bin                                                                 **Never logged in**
+# daemon                                                              **Never logged in**
+# adm                                                                 **Never logged in**
+# lp                                                                  **Never logged in**
+# sync                                                                **Never logged in**
+# shutdown                                                            **Never logged in**
+# halt                                                                **Never logged in**
+# mail                                                                **Never logged in**
+# operator                                                            **Never logged in**
+# games                                                               **Never logged in**
+# ftp                                                                 **Never logged in**
+# nobody                                                              **Never logged in**
+# systemd-coredump                                                    **Never logged in**
+# dbus                                                                **Never logged in**
+# polkitd                                                             **Never logged in**
+# avahi                                                               **Never logged in**
+# rtkit                                                               **Never logged in**
+# pipewire                                                            **Never logged in**
+# sssd                                                                **Never logged in**
+# libstoragemgmt                                                      **Never logged in**
+# systemd-oom                                                         **Never logged in**
+# tss                                                                 **Never logged in**
+# geoclue                                                             **Never logged in**
+# cockpit-ws                                                          **Never logged in**
+# cockpit-wsinstance                                                    **Never logged in**
+# flatpak                                                             **Never logged in**
+# colord                                                              **Never logged in**
+# setroubleshoot                                                      **Never logged in**
+# clevis                                                              **Never logged in**
+# gdm              tty1                                               Sat Feb 15 14:39:21 -0500 2025
+# gnome-initial-setup                                                    **Never logged in**
+# sshd                                                                **Never logged in**
+# chrony                                                              **Never logged in**
+# dnsmasq                                                             **Never logged in**
+# tcpdump                                                             **Never logged in**
+# rheladmin        pts/0                                              Sat Feb 15 15:59:17 -0
+```
 
 ---
 

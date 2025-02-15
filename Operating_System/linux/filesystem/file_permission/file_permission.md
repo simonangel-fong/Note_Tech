@@ -12,13 +12,21 @@
     - [`chmod`: Changing file Permissions](#chmod-changing-file-permissions)
   - [File Creation Mask](#file-creation-mask)
     - [`umask`: set file creation mask](#umask-set-file-creation-mask)
+  - [Special File Permissions](#special-file-permissions)
     - [`Setuid` mode: execute as the owner's permission](#setuid-mode-execute-as-the-owners-permission)
+      - [commands](#commands)
+      - [Lab: Change change setuid on `su`](#lab-change-change-setuid-on-su)
       - [Set Up `Setuid` for a file](#set-up-setuid-for-a-file)
     - [`Setgid` mode: execute as group permission](#setgid-mode-execute-as-group-permission)
-      - [Set Up `Setgid` for a file](#set-up-setgid-for-a-file)
+      - [Shared Directories](#shared-directories)
+      - [Command](#command)
+      - [Lab: Set Up `Setgid` for a file](#lab-set-up-setgid-for-a-file)
+      - [Lab: Set GID on a share file](#lab-set-gid-on-a-share-file)
       - [Set Up `Setgid` for a directory](#set-up-setgid-for-a-directory)
     - [`Sticky Bit`](#sticky-bit)
+      - [Command](#command-1)
       - [Set Up A `Sticky Bit`](#set-up-a-sticky-bit)
+      - [Lab: sticky bit](#lab-sticky-bit)
     - [Setting Special Permissions With Number Notation](#setting-special-permissions-with-number-notation)
   - [File Ownership](#file-ownership)
     - [`chown`: change file owner and group](#chown-change-file-owner-and-group)
@@ -264,11 +272,11 @@ rm -r /home/rheladmin/withwrite
   - **setgid**
   - **sticky**
 
-| Command    | Desc                               |
-| ---------- | ---------------------------------- |
-| `umask`    | display the umask                  |
-| `umas -S`  | display the umask in symbolic mode |
-| `umas 007` | set the umask                      |
+| Command     | Desc                               |
+| ----------- | ---------------------------------- |
+| `umask`     | display the umask                  |
+| `umask -S`  | display the umask in symbolic mode |
+| `umask 007` | set the umask                      |
 
 - 即默认权限：文件夹 777， 文件 666
   - 通过设置 mask 007， 则新建文件夹是 770， 新建文件是 660.
@@ -278,12 +286,89 @@ rm -r /home/rheladmin/withwrite
 
 ---
 
+- default umask value:`0022`
+- **predefined initial permission**
+
+  - files: `666 (rw-rw-rw-)`
+  - directories: `777 (rwxrwxrwx)`
+
+- Calculating Default Permissions
+
+  - `Default Permissions` = `Initial Permissions` - `umask`
+  - File default permission = 666 - 022 = 644
+  - dir default permission = 777 - 022 = 755
+
+- The umask value set at the command line will be **lost as soon as you log off**.
+
+```sh
+su - root
+whoami
+# root
+umask
+# 0022
+umask -S
+# u=rwx,g=rx,o=rx
+
+# default permission
+touch defaultfile
+ll defaultfile
+# -rw-r--r--. 1 normaluser normaluser 0 Feb 14 23:44 defaultfile
+
+mkdir defaultdir
+ll -d defaultdir
+# drwxr-xr-x. 2 normaluser normaluser 6 Feb 14 23:45 defaultdir
+```
+
+- Modify umask
+
+```sh
+umask 027
+umask
+# 0027
+
+umask u=rwx,g=xr,o=
+umask
+# 0027
+
+touch newfile1
+ll newfile1
+# -rw-r-----. 1 normaluser normaluser 0 Feb 14 23:48 newfile1
+
+mkdir newdir
+ll -d newdir
+# drwxr-x---. 2 normaluser normaluser 6 Feb 14 23:51 newdir
+```
+
+---
+
+## Special File Permissions
+
+- `setuid bits`
+
+  - defined on **binary executable files** to provide **non-owners** and **non-group** members the ability to run them with the privileges of the owner or the owning group,
+    respectively.
+
+- `setgid bit`
+  - defined on **binary executable files** to provide **non-owners** and **non-group** members the ability to run them with the privileges of the owner or the owning group,
+    respectively.
+  - set on **shared directories** for group collaboration.
+- `sticky bit`
+  - set on **public directories** for **inhibiting** file erasures by non-owners.
+
+---
+
 ### `Setuid` mode: execute as the owner's permission
 
 - `setuid` mode
 
+  - set user identifier bit
   - a Linux **file permission setting** that allows a user to **execute** that file or program with the permission of the **owner** of that file.
   - primarily used to elevate the privileges of the current user.
+
+- If the file already has the “x” bit set for the group, the long listing will show a lowercase “s”, otherwise it will list it with an uppercase “S”.
+- The setuid bit has no effect on directories.
+
+---
 
 - Example of setuid: `sudo` and `su` command
 
@@ -309,6 +394,50 @@ ll /usr/bin/su
 > 2. The `s` in the permission indicates that when a user **executes** this program, the operating system will execute that file not as the user, but as 'root'.
 > 3. this allows a normal user to **perform elevated system functions** without having to log in as the root user.
 > 4. Same servers the command `su`.
+
+---
+
+#### commands
+
+| CMD                          | DESC           |
+| ---------------------------- | -------------- |
+| `chmod -v u+s /usr/bin/su`   | Enable setuid  |
+| `chmod -v +4000 /usr/bin/su` | Enable setuid  |
+| `chmod -v u-s /usr/bin/su`   | Disable setuid |
+| `chmod -v -4000 /usr/bin/su` | Disable setuid |
+
+#### Lab: Change change setuid on `su`
+
+- Revoke setuid
+
+```sh
+su -
+whoami
+# root
+chmod -v u-s /usr/bin/su
+# mode of '/usr/bin/su' changed from 4755 (rwsr-xr-x) to 0755 (rwxr-xr-x)
+
+# switch from root to normal user
+su - rheladmin
+whoami
+# rheladmin
+
+# switch from normal user to root
+su -
+# Password:
+# su: Authentication failure
+```
+
+- Regrant setuid
+
+```sh
+# as root
+chmod -v u+s /usr/bin/su
+# mode of '/usr/bin/su' changed from 0755 (rwxr-xr-x) to 4755 (rwsr-xr-x)
+ll /usr/bin/su
+# -rwsr-xr-x. 1 root root 56944 Aug 24  2023 /usr/bin/su
+
+```
 
 ---
 
@@ -355,7 +484,13 @@ ll /home/rheladmin/myfile
 
 - `Setgid`
 
+  - set group identifier bit
   - A process, when executed, will run as the group that owns the file.
+
+- set on binary executable files at the group level.
+  - the file is **executed** by **non-owners** with the exact same **privileges** as that of the **group** members.
+
+---
 
 - Example: `locate` command
 
@@ -366,9 +501,31 @@ ll /usr/bin/locate
 # -rwx--s--x. 1 root slocate 47128 Aug 12  2018 /usr/bin/locate
 ```
 
+- Example: `write` command
+
+```sh
+ll /usr/bin/write
+# -rwxr-sr-x. 1 root tty 23800 Aug 24  2023 /usr/bin/write
+```
+
 ---
 
-#### Set Up `Setgid` for a file
+#### Shared Directories
+
+- `setgid bit` can be set on group-shared directories to allow files and subdirectories created underneath to automatically **inherit** the directory's **owning group**
+
+#### Command
+
+| CMD                             | DESC           |
+| ------------------------------- | -------------- |
+| `chmod -v g+s /usr/bin/write`   | Enable setgid  |
+| `chmod -v +2000 /usr/bin/write` | Enable setgid  |
+| `chmod -v g-s /usr/bin/write`   | Disable setgid |
+| `chmod -v -2000 /usr/bin/write` | Disable setgid |
+
+---
+
+#### Lab: Set Up `Setgid` for a file
 
 ```sh
 # create myfile2
@@ -407,6 +564,52 @@ ll /home/rheladmin/myfile2
 
 ---
 
+#### Lab: Set GID on a share file
+
+```sh
+# create group
+groupadd -g 9999 sgrp
+
+# create 2 members
+useradd -G sgrp user100
+useradd -G sgrp user200
+
+# create dir and change ownership
+mkdir /sdir
+chown -v root:sgrp /sdir
+# changed ownership of '/sdir' from root:root to root:sgrp
+
+# set setgid bit
+chmod -v g+s /sdir
+# mode of '/sdir' changed from 0755 (rwxr-xr-x) to 2755 (rwxr-sr-x)
+
+# change permission, group member can write
+chmod -v g+w,o-rwx /sdir
+# mode of '/sdir' changed from 2755 (rwxr-sr-x) to 2770 (rwxrws---)
+
+# confirm
+ll -d /sdir
+# drwxrws---. 2 root sgrp 6 Feb 15 13:08 /sdir
+```
+
+- switch and create file to confirm
+
+```sh
+su - user100
+touch /sdir/file100
+ll /sdir/file100
+# -rw-r--r--. 1 user100 sgrp 0 Feb 15 13:11 /sdir/file100
+
+su - user200
+touch /sdir/file200
+ll /sdir/file200
+# -rw-r--r--. 1 user200 sgrp 0 Feb 15 13:11 /sdir/file200
+```
+
+> Both file created by different users has the same group
+
+---
+
 #### Set Up `Setgid` for a directory
 
 ```sh
@@ -441,12 +644,28 @@ ll -d /home/rheladmin/mydir/
 
 - A typical use of this is `/tmp/`. The `/tmp` directory can be written to by any user, but other users cannot delete the files of others.
 
+- If the directory already has the “x” bit set for public, the long listing
+will show a lowercase “t”, otherwise it will list it with an uppercase “T”.
+
+---
+
 ```sh
 ll -d /tmp/
 # drwxrwxrwt. 18 root root 4096 Nov 13 20:09 /tmp/
 ```
 
 > Notice that /tmp can be written to by everyone but has the `t` in place of the `x` at the end of the permissions list. This means it has the `sticky bit`.
+
+---
+
+#### Command
+
+| CMD                   | DESC           |
+| --------------------- | -------------- |
+| `chmod -v o+t /tmp`   | Enable Sticky  |
+| `chmod -v +1000 /tmp` | Enable Sticky  |
+| `chmod -v o-t /tmp`   | Disable Sticky |
+| `chmod -v -1000 /tmp` | Disable Sticky |
 
 ---
 
@@ -466,6 +685,49 @@ ls -ld /home/rheladmin/mydir2
 chmod -t /home/rheladmin/mydir2
 ls -ld /home/rheladmin/mydir2
 # drwxrwxr-x. 2 rheladmin rheladmin 6 Nov 13 20:51 /home/rheladmin/mydir2
+```
+
+---
+
+#### Lab: sticky bit
+
+```sh
+# login as user100
+su - user100
+# create a file
+touch /tmp/stickyfile
+ll /tmp/stickyfile
+# -rw-r--r--. 1 user100 user100 0 Feb 15 13:24 /tmp/stickyfile
+
+# login as user200
+su - user200
+# try to remove file
+rm /tmp/stickyfile
+# rm: remove write-protected regular empty file '/tmp/stickyfile'? y
+# rm: cannot remove '/tmp/stickyfile': Operation not permitted
+```
+
+- Change permission on /tmp
+
+```sh
+su -
+chmod o-t /tmp
+# confirm
+ll -d /tmp
+# drwxrwxrwx. 22 root root 4096 Feb 15 13:27 /tmp
+
+# login as user200
+su - user200
+rm /tmp/stickyfile
+# rm: remove write-protected regular empty file '/tmp/stickyfile'? y
+```
+
+- Restore sticky bit on /tmp
+
+```sh
+su -
+chmod -v +1000 /tmp
+# mode of '/tmp' changed from 0777 (rwxrwxrwx) to 1777 (rwxrwxrwt)
 ```
 
 ---
