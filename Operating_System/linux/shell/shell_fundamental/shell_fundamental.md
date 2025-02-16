@@ -10,6 +10,13 @@
     - [Shell prompt customization](#shell-prompt-customization)
     - [Persist PS1 Changes](#persist-ps1-changes)
   - [Environmental Variables](#environmental-variables)
+  - [Environment Variables](#environment-variables)
+    - [Persisting Environment Variables](#persisting-environment-variables)
+    - [Common Env Var](#common-env-var)
+    - [Env Var Management](#env-var-management)
+    - [Lab: Env](#lab-env)
+    - [Lab: Create and export Local variable; Unset the variable](#lab-create-and-export-local-variable-unset-the-variable)
+  - [Customize the primary shell prompt](#customize-the-primary-shell-prompt)
   - [Executing Commands](#executing-commands)
     - [Privileged Execution](#privileged-execution)
     - [Command Path](#command-path)
@@ -21,6 +28,7 @@
   - [Shell History](#shell-history)
     - [`history`](#history)
     - [`!`syntax](#syntax)
+  - [Grep](#grep)
 
 ---
 
@@ -140,11 +148,165 @@ echo 'export PS1="[\A \u@\h \W]\$ "' >> ~/.bash_profile
 ## Environmental Variables
 
 - `Environmental Variables`
+
   - Storage location that has name-value pairs
   - 这些是由操作系统或用户设置的特殊变量，用于配置 Shell 的行为和影响其执行环境。
   - Typically **uppercase**
   - Access the contents by executing:
     - `echo $VAR_NAME`
+
+- types of variables
+  - local variable:
+    - value of a local variable is only available in the **current** shell.
+  - environment variable
+    - the value stored in an environment variable is accessible to the program, as well as any **subprograms** that it spawns during its lifecycle.
+
+---
+
+## Environment Variables
+
+- `Environment Variable`
+
+  - a **storage location** that has a name and a value.
+    - They often effect the way programs behave.
+    - used to enhance and to standardize your shell environment on Linux systems.
+  - Name/Value pairs
+    - `NAME=value`
+  - Default: upper case
+
+- Value:
+
+  - do not use space sign
+
+- vs **program/process**
+  - When a `process` is **started** it **inherits** the **exported** `environment variables` of the process that **spawned** it.
+  - A variable that is set or changed **only effects** the **current running process** unless it is exported.
+  - The variables that are **not exported** are called `local variables`.
+  - The `export` command allows variables to be used by **subsequently** executed commands
+
+---
+
+### Persisting Environment Variables
+
+```sh
+echo 'export TZ="US/Pacific"' >> ~/.bash_profile
+```
+
+### Common Env Var
+
+| Environment Variables | Variable Description                                          |
+| --------------------- | ------------------------------------------------------------- |
+| `EDITOR`              | The program to run to perform edits.                          |
+| `HOME`                | The Home directory of the user.                               |
+| `LOGNAME`             | The login name of the user.                                   |
+| `MAIL`                | The location of the user's local inbox.                       |
+| `OLDPWD`              | The previous working directory.                               |
+| `PATH`                | A colon separated list of directories to search for commands. |
+| `PAGER`               | This program may be called to view a file.                    |
+| `PS1`                 | The primary prompt string.                                    |
+| `PWD`                 | The present working directory.                                |
+| `USER`                | The username of the user.                                     |
+
+---
+
+### Env Var Management
+
+| Command                      | Desc                                 |
+| ---------------------------- | ------------------------------------ |
+| `env`                        | list all env var                     |
+| `printenv`                   | print all environment                |
+| `printenv \| less`           | print all environment                |
+| `printenv ENV_VAR1 ENV_VAR2` | print environment var, without `$`   |
+| `echo $ENV_VAR1 $ENV_VAR2`   | print environment var                |
+| `export ENV_VAR="value"`     | **Create/Update** an environment var |
+| `unset ENV_VAR`              | Removing an env var                  |
+
+---
+
+### Lab: Env
+
+```sh
+echo $PATH
+# /root/.local/bin:/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+
+printenv PATH
+# /root/.local/bin:/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+
+echo $SHELL
+# /bin/bash
+
+printenv SHELL
+# /bin/bash
+```
+
+---
+
+### Lab: Create and export Local variable; Unset the variable
+
+```sh
+# define local
+VR1=RHEL9
+# display
+echo $VR1
+# RHEL9
+
+# create a sub-shell
+bash
+# try to display local var\
+# note: nothing returns
+echo $VR1
+#
+
+# exit the subshell
+exit
+# make a var an env var
+echo $VR1
+# RHEL9
+export VR1
+
+# create sub-shell
+bash
+# display env
+echo $VR1
+# RHEL9
+```
+
+- Unset
+
+```sh
+unset VR1
+# try to display
+# note: nothing returns
+echo $VR1
+
+```
+
+---
+
+## Customize the primary shell prompt
+
+- `$PS1`: store primary command prompt
+
+```sh
+# display the default prompt
+echo $PS1
+# [\u@\h \W]\$
+
+# modify temporarily
+export PS1="<$LOGNAME on $(hostname) in \$PWD>"
+# new prompt
+# <root on ServerB in /var/log>
+
+# permanently
+# Edit the .profile file
+vi /root/.bash_profile
+# export PS1="<$LOGNAME on $(hostname) in $PWD>"
+
+# logout and login
+exit
+su -
+# <root on ServerB in /root>
+```
 
 ---
 
@@ -279,9 +441,23 @@ echo 'alias cls='clear'' >> ~/.bash_profile
 
 ### `history`
 
+- three variables—HISTFILE, HISTSIZE, and HISTFILESIZE—that control the location and history storage.
+- `.bash_history`: in the user’s home directory
+
 - `HISTSIZE`: Controls the number of commands to retain in history
 
   - default: `1000`
+
+```sh
+echo $HISTFILE
+# /root/.bash_history
+
+echo $HISTSIZE
+# 1000
+
+echo $HISTFILESIZE
+# 1000
+```
 
 - Searching history:
 
@@ -293,6 +469,43 @@ echo 'alias cls='clear'' >> ~/.bash_profile
 | CMD       | DESC                       |
 | --------- | -------------------------- |
 | `history` | Displays the shell history |
+
+```sh
+history
+# 1  clear
+# 2  cat /etc/hostname
+# 3  clear
+# 4  vi /etc/hosts
+# 5  clear
+# 6  useradd xanadu
+# ...
+
+history 5
+# 362  echo $HISTSIZE
+# 363  echo $HISTFILESIZE
+# 364  history
+# 365  history --help
+# 366  history 5
+
+# To re-execute
+# note: #3=clear
+!3
+
+# re-execute the most recent occurrence starting with "ch"
+# note: chage
+!ch
+
+# To remove entry 24 from history:
+history -d 24
+```
+
+- disable the shell’s history expansion feature
+
+```sh
+set +o history
+# reenble
+set -o history
+```
 
 ### `!`syntax
 
@@ -329,3 +542,21 @@ vi !:2
 head file1 file2 hamlet.txt
 vi !$
 ```
+
+---
+
+## Grep
+
+| CMD                                       | DESC                                                         |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| `grep root /etc/passwd`                   | Search for pattern                                           |
+| `grep ^root /etc/passwd`                  | Search for pattern at the beginning of the line              |
+| `grep bash$ /etc/passwd`                  | Search for pattern at the end of the line                    |
+| `grep 'aliases and functions' ~/.bashrc`  | Search for pattern                                           |
+| `grep -n 'nologin' /etc/passwd`           | show the line numbers                                        |
+| `grep -v root /etc/passwd`                | Search exclusively                                           |
+| `grep -v $^ ~/.bashrc`                    | exclude all the empty lines                                  |
+| `grep -i path /etc/bashrc`                | case-insensitive search                                      |
+| `grep -w acce.. /etc/lvm/lvm.conf`        | begin with letters “acce” followed by exactly two characters |
+| `ls -l /etc \| grep -E 'cron\|ly'`        | Using Regex                                                  |
+| `grep -ve ^& -ve ^# /etc/ssh/sshd_config` | Multiple patterns                                            |

@@ -35,6 +35,7 @@
   - [Exit Codes](#exit-codes)
   - [Debugging](#debugging)
   - [Handle Errors Gracefully](#handle-errors-gracefully)
+  - [Shell Startup Files](#shell-startup-files)
 
 ---
 
@@ -869,3 +870,29 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 ```
+
+---
+
+## Shell Startup Files
+
+- startup (or initialization) files
+
+  - These files are sourced by the shell following user **authentication** at the time of logging in and **before** the command prompt appears.
+
+- two types of startup files:
+
+  - system-wide
+    - set the general environment **for all users** at the time of their login to the system.
+    - `/etc/bashrc`
+    - `/etc/profile`: Sets common environment variables
+    - `/etc/profile.d`
+  - per-user
+    - override or modify system default definitions set by the system-wide startup files.
+    - `.bashrc`: Defines functions and aliases
+    - `.bash_profile`: Sets environment variables and sources the `.bashrc`
+    - `.bash_logout`
+
+- Running order:
+  - The system runs the `/etc/profile` file first, followed by `.bash_profile`, `.bashrc`, and finally the `/etc/bashrc` file.
+  - a per-user file `.bash_logout` in the user’s home
+    directory, when the user leaves the shell or logs off

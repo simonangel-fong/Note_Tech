@@ -323,14 +323,15 @@ su - user4
 
 ### Switch user
 
-| Command                       | Desc                                               |
-| ----------------------------- | -------------------------------------------------- |
-| `whoami`                      | Display the effective username                     |
-| `su` / `su -`                 | Change become superuser                            |
-| `su username`                 | Change user ID                                     |
-| `su - username`               | Change user ID and load env                        |
-| `su username -c 'command1'`   | Change user ID without env and execute the command |
-| `su - username -c 'command1'` | Change user ID with env and execute the command    |
+| Command                       | Desc                                            |
+| ----------------------------- | ----------------------------------------------- |
+| `whoami`                      | Display effective (current) username            |
+| `logname`                     | Display the login / real (original) name        |
+| `su` / `su -`                 | Change become superuser                         |
+| `su username`                 | Change user ID                                  |
+| `su - username`               | Change user ID with the startup scripts         |
+| `su username -c 'command1'`   | Change user ID and execute the command          |
+| `su - username -c 'command1'` | Change user ID with env and execute the command |
 
 - If an evn var has exported, the env var can be used after switching to another user without loading its env var, `su username`.
   - If the user is changed using `su - username`, then the env var for this user will be loaded and the exported env var in the same session cannot be used.

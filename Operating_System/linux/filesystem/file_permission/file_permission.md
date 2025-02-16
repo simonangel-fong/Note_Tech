@@ -645,7 +645,7 @@ ll -d /home/rheladmin/mydir/
 - A typical use of this is `/tmp/`. The `/tmp` directory can be written to by any user, but other users cannot delete the files of others.
 
 - If the directory already has the “x” bit set for public, the long listing
-will show a lowercase “t”, otherwise it will list it with an uppercase “T”.
+  will show a lowercase “t”, otherwise it will list it with an uppercase “T”.
 
 ---
 
@@ -790,6 +790,7 @@ ls -ld mydir
 | `chown new_owner file_name` | Change the file's owner                  |
 | `chown -R new_owner dir`    | Change the directory's owner recursively |
 | `chown owner:group file`    | Change the file's owner and group        |
+| `chown :group file`         | Change the file's group                  |
 
 ---
 

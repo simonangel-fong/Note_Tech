@@ -7,15 +7,12 @@
     - [Input/Output Types](#inputoutput-types)
     - [Null Device](#null-device)
     - [Redirection](#redirection)
+  - [`tee`: Redirect both display and a file](#tee-redirect-both-display-and-a-file)
     - [`|`: Pips](#-pips)
     - [Wildcard](#wildcard)
   - [Lab: I/O Redirection](#lab-io-redirection)
     - [Redirect the Error Output](#redirect-the-error-output)
     - [Redirect to Null Device](#redirect-to-null-device)
-  - [Environment Variables](#environment-variables)
-    - [Common Env Var](#common-env-var)
-    - [Env Var Management](#env-var-management)
-    - [Persisting Environment Variables](#persisting-environment-variables)
 
 ---
 
@@ -73,8 +70,49 @@
   - Used with redirection to signal that a `file descriptor` is being **used**.
 - `2>&1`
   - Combine stderr and standard output.
+- `&>file`
+  - redirect both output and error to alternative locations
 - `2>file`
   - Redirect standard **error to a file**.
+
+```sh
+ls /usr /cdr &>output.out
+cat output.out
+# ls: cannot access '/cdr': No such file or directory
+# /usr:
+# bin
+# games
+# include
+# lib
+# lib64
+# libexec
+# local
+# sbin
+# share
+# src
+# tmp
+```
+
+---
+
+## `tee`: Redirect both display and a file
+
+| CMD                          | DESC                             |
+| ---------------------------- | -------------------------------- |
+| `ls /etc \| tee /tmp/output` | printed on the screen as well as |
+| redirected to file           |
+
+```sh
+# As user1 on server1, run the ls command on /etc, /dvd, and
+# /var. Have the output printed on the screen as well as
+# redirected to file /tmp/ioutput, and the errors forwarded to
+# file /tmp/ioerror. Check both files after the execution of the
+# command and analyze the results. (Hint: Input, Output, and
+# Error Redirections).
+
+ls /dvd /var > /tmp/output 2> /tmp/error
+```
+
 
 ---
 
@@ -213,63 +251,3 @@ ls file.txt not-here >/dev/null 2>&1
 ```
 
 ---
-
-## Environment Variables
-
-- `Environment Variable`
-
-  - a **storage location** that has a name and a value.
-    - They often effect the way programs behave.
-    - used to enhance and to standardize your shell environment on Linux systems.
-  - Name/Value pairs
-    - `NAME=value`
-  - Default: upper case
-
-- Value:
-
-  - do not use space sign
-
-- vs **program/process**
-  - When a `process` is **started** it **inherits** the **exported** `environment variables` of the process that **spawned** it.
-  - A variable that is set or changed **only effects** the **current running process** unless it is exported.
-  - The variables that are **not exported** are called `local variables`.
-  - The `export` command allows variables to be used by **subsequently** executed commands
-
----
-
-### Common Env Var
-
-| Environment Variables | Variable Description                                          |
-| --------------------- | ------------------------------------------------------------- |
-| `EDITOR`              | The program to run to perform edits.                          |
-| `HOME`                | The Home directory of the user.                               |
-| `LOGNAME`             | The login name of the user.                                   |
-| `MAIL`                | The location of the user's local inbox.                       |
-| `OLDPWD`              | The previous working directory.                               |
-| `PATH`                | A colon separated list of directories to search for commands. |
-| `PAGER`               | This program may be called to view a file.                    |
-| `PS1`                 | The primary prompt string.                                    |
-| `PWD`                 | The present working directory.                                |
-| `USER`                | The username of the user.                                     |
-
----
-
-### Env Var Management
-
-| Command                      | Desc                                 |
-| ---------------------------- | ------------------------------------ |
-| `env`                        | list all env var                     |
-| `printenv`                   | print all environment                |
-| `printenv \| less`           | print all environment                |
-| `printenv ENV_VAR1 ENV_VAR2` | print environment var, without `$`   |
-| `echo $ENV_VAR1 $ENV_VAR2`   | print environment var                |
-| `export ENV_VAR="value"`     | **Create/Update** an environment var |
-| `unset ENV_VAR`              | Removing an env var                  |
-
----
-
-### Persisting Environment Variables
-
-```sh
-echo 'export TZ="US/Pacific"' >> ~/.bash_profile
-```

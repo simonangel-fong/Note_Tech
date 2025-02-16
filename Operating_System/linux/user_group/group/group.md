@@ -11,7 +11,9 @@
     - [`/etc/gshadow`](#etcgshadow)
   - [Group Management](#group-management)
     - [Adding a new group](#adding-a-new-group)
+    - [Lab: create group](#lab-create-group)
     - [Changing a new group](#changing-a-new-group)
+    - [Lab: Update and delete group](#lab-update-and-delete-group)
     - [Group Administration](#group-administration)
     - [Deleting a new group](#deleting-a-new-group)
     - [Display Group Info](#display-group-info)
@@ -111,9 +113,37 @@ group_name:encrypted_password:group_admins:group_members
 | `groupadd g_name`           | create a new group                             |
 | `groupadd g_name -g GID`    | create a new group and specify a gid           |
 | `groupadd g_name -g GID -o` | create a new group and specify a duplicate gid |
-| `groupadd g_name -r`        | create a system group                          |
+| `groupadd g_name -r`        | create a system group below 1000               |
 
 - updates `/etc/group`
+
+---
+
+### Lab: create group
+
+```sh
+su -
+groupadd -g 5000 linuxadmin
+groupadd -o -g 5000 dba
+
+# confirm
+tail -2 /etc/group
+# linuxadmin:x:5000:
+# dba:x:5000:
+
+# add user
+usermod -aG dba user100
+
+# confirm
+id user100
+# uid=1003(user100) gid=1003(user100) groups=1003(user100),5000(linuxadmin)
+
+groups user100
+# user100 : user100 linuxadmin
+
+grep dba /etc/group
+# dba:x:5000:user100
+```
 
 ---
 
@@ -141,6 +171,23 @@ usermod testuser -g testgroup
 
 # Add a User to a Group
 usermod testuser -aG testgroup,wheel
+```
+
+---
+
+### Lab: Update and delete group
+
+```sh
+groupmod -n sysadm linuxadmin
+groupmod -g 6000 sysadm
+
+# confirm
+grep sysadm /etc/group
+# sysadm:x:6000:
+
+# remove group
+groupdel sysadm
+grep sysadm /etc/group
 ```
 
 ---

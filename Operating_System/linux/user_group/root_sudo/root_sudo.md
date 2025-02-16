@@ -5,7 +5,10 @@
 - [Linux - User Management: `root` and `sudo`](#linux---user-management-root-and-sudo)
   - [Root User](#root-user)
   - [`sudo`: superuser do](#sudo-superuser-do)
+  - [Doing as Superuser (or Doing as Substitute User)](#doing-as-superuser-or-doing-as-substitute-user)
     - [Configuration File](#configuration-file)
+    - [Entry format](#entry-format)
+    - [Sudo command log](#sudo-command-log)
   - [`wheel` Group](#wheel-group)
     - [Configuration File](#configuration-file-1)
     - [Lab: Enable a user to perform any sudo command](#lab-enable-a-user-to-perform-any-sudo-command)
@@ -86,7 +89,21 @@ id
 
 ---
 
+## Doing as Superuser (or Doing as Substitute User)
+
+These users can then precede one of those commands with a
+utility called sudo (superuser do, a.k.a. substitute user do) at
+the time of executing that command. The users are prompted
+to **enter their own password**, and if correct, the command is
+executed successfully for them.
+
 ### Configuration File
+
+- `visudo`
+
+  - a command to edit `sudo` file.
+
+- Example: Enable a user to execute a previlige command
 
 - `/etc/sudoers` File
 
@@ -97,20 +114,49 @@ id
     - as what users those commands can be run
   - It is edited using the `visudo` command, which prevents syntax errors that could lock you out.
 
-  - Entry format: `user host=(users) [NOPASSWD:]commands`
+---
 
-  ```conf
-  # The root user has unrestricted privileges.
-  root ALL=(ALL) ALL
-  # The user john can restart Apache without a password.
-  john ALL=(ALL) NOPASSWD: /bin/systemctl restart apache2
-  ```
+### Entry format
 
-- `visudo`
+- `user host=(users) [NOPASSWD:]commands`
 
-  - a command to edit `sudo` file.
+- full access
 
-- Example: Enable a user to execute a previlige command
+```conf
+# full access to every administrative function
+root  ALL=(ALL) ALL    # root
+user1 ALL=(ALL) ALL   # user
+%dba  ALL=(ALL) ALL    # group
+```
+
+- Limited access
+
+```conf
+user1 ALL=/usr/bin/cat
+%dba  ALL=/usr/bin/cat
+```
+
+- No password prompt
+
+```conf
+# No password prompt for all
+user1 ALL=(ALL) NOPASSWD:ALL
+%dba  ALL=(ALL) NOPASSWD:ALL
+
+# No password prompt for a command
+john  ALL=(ALL) NOPASSWD: /bin/systemctl restart apache2
+```
+
+- use alias
+
+```conf
+Cmnd_Alias  PKGCMD = /usr/bin/yum, /usr/bin/rpm
+User_Alias  PKGADM = user1, user100, user200
+
+PKGADM  ALL = PKGCMD
+```
+
+---
 
 ```sh
 su -
@@ -131,6 +177,28 @@ sudo yum upgrade -y
 # try other commands
 sudo cat /
 # Sorry, user devops is not allowed to execute '/bin/cat /' as root on rhelhost.localdomain.
+```
+
+---
+
+### Sudo command log
+
+The sudo command logs successful authentication and
+command data to the /var/log/secure file under the name of
+the actual user executing the command
+
+```sh
+tail /var/log/secure
+# Feb 15 19:42:23 ServerB groupadd[4391]: new group: name=dba, GID=5000
+# Feb 15 19:43:20 ServerB usermod[4398]: add 'user100' to group 'dba'
+# Feb 15 19:43:20 ServerB usermod[4398]: add 'user100' to shadow group 'dba'
+# Feb 15 19:46:35 ServerB groupmod[4411]: group changed in /etc/group (group linuxadmin/5000, new name: sysadm)
+# Feb 15 19:46:35 ServerB groupmod[4411]: group changed in /etc/gshadow (group linuxadmin, new name: sysadm)
+# Feb 15 19:46:53 ServerB groupmod[4425]: group changed in /etc/group (group sysadm/5000, new gid: 6000)
+# Feb 15 19:46:53 ServerB groupmod[4425]: group changed in /etc/passwd (group sysadm/5000, new gid: 6000)
+# Feb 15 19:48:36 ServerB groupdel[4432]: group 'sysadm' removed from /etc/group
+# Feb 15 19:48:36 ServerB groupdel[4432]: group 'sysadm' removed from /etc/gshadow
+# Feb 15 19:48:36 ServerB groupdel[4432]: group 'sysadm' removed
 ```
 
 ---

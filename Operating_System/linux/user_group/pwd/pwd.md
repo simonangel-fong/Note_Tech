@@ -7,7 +7,10 @@
     - [User password configuration file: `/etc/shadow`](#user-password-configuration-file-etcshadow)
     - [Set Password for a user](#set-password-for-a-user)
     - [Set passwords for multiple users](#set-passwords-for-multiple-users)
-    - [Set Password Age Policy for a user](#set-password-age-policy-for-a-user)
+  - [Password Aging Management](#password-aging-management)
+    - [Lab: Configure aging](#lab-configure-aging)
+    - [Lab: Lock and unlock a user account](#lab-lock-and-unlock-a-user-account)
+    - [Lab: Expire a password](#lab-expire-a-password)
     - [Set a Default Password Age Policy: Using `/etc/login.defs`](#set-a-default-password-age-policy-using-etclogindefs)
 
 ---
@@ -139,7 +142,7 @@ sudo tail -3 /etc/shadow
 
 ---
 
-### Set Password Age Policy for a user
+## Password Aging Management
 
 - Password Age:
 
@@ -150,11 +153,11 @@ sudo tail -3 /etc/shadow
 | `chage username -l`            | Display the password aging information for the user.                                            |
 | `chage username`               | Set password aging info in Interactive Mode                                                     |
 | `chage username -d 2024-12-31` | Set the **last** password change date (format: YYYY-MM-DD or days since epoch).                 |
-| `chage username -m 7`          | Set the **minimum** number of days before a user can change their password.                     |
 | `chage username -M 90`         | Set the **maximum** number of days a password is valid before requiring a change.               |
+| `chage username -m 7`          | Set the **minimum** number of days before a user can change their password.                     |
 | `chage username -W 10`         | Set the number of days before password expiration that the user will be **warned**.             |
-| `chage username -E 2024-12-31` | Set the account **expiration** date (format: YYYY-MM-DD or `-1` for **no expiration**).         |
 | `chage username -I 15`         | Set the number of **inactive** days after password expiration before the account is **locked**. |
+| `chage username -E 2024-12-31` | Set the account **expiration** date (format: YYYY-MM-DD or `-1` for **no expiration**).         |
 
 - Example:
 
@@ -192,6 +195,145 @@ sudo chage user1 -l
 # verify in /etc/shadow file
 grep user1 /etc/shadow
 # user1:$6$jAHNMnu7qD/GSP$JaYbHsImlO.k12wCIVFHu7oHIqKRXy2Z/7.86WZ31/8ixkySQTP4nDXO0bh9zNUgcKY05Y96Yl/UlbnwJJkJT1:20052:15:120:30:10::
+```
+
+---
+
+### Lab: Configure aging
+
+configure password aging for user100
+using the chage command. You will set mindays to 7,
+maxdays to 28, and warndays to 5, and verify the new
+settings. You will then rerun the command and set account
+expiry to January 31, 2020. You will complete the exercise
+with another confirmation.
+
+```sh
+chage -m 7 -M 28 -W 5 user100
+chage -E 2020-01-31 user100
+chage -l user100
+# Last password change                                    : Feb 15, 2025
+# Password expires                                        : Mar 15, 2025
+# Password inactive                                       : never
+# Account expires                                         : Jan 31, 2020
+# Minimum number of days between password change          : 7
+# Maximum number of days between password change          : 28
+# Number of days of warning before password expires       : 5
+```
+
+---
+
+### Lab: Lock and unlock a user account
+
+- Create a user
+
+```sh
+su -
+useradd userpwd
+echo "password" | passwd --stdin userpwd
+
+# test login
+su - userpwd
+whoami
+# userpwd
+```
+
+- Lock a user
+
+```sh
+su -
+passwd -S userpwd
+# userpwd PS 2025-02-15 0 99999 7 -1 (Password set, SHA512 crypt.)
+
+usermod -L userpwd
+# passwd -l userpwd
+
+# confirm
+passwd -S userpwd
+# userpwd LK 2025-02-15 0 99999 7 -1 (Password locked.)
+
+# note the "!"
+grep userpwd /etc/shadow
+# userpwd:!$6$An4Ho3jXbHJ1g96p$BhONmv2TC5G/QRS53FodMQ1lmLWP9dZaE0XDAolZNe3rYdverzv02AUxLWHV2LMWG92k7axVgEkIw6mD/JP.D.:20135:0:99999:7:::
+
+# try to login
+su - userpwd
+# Password:
+# su: Authentication failure
+```
+
+- Unlock
+
+```sh
+usermod -U userpwd
+# passwd -u userpwd
+
+# confirm
+passwd -S userpwd
+# userpwd PS 2025-02-15 0 99999 7 -1 (Password set, SHA512 crypt.)
+grep userpwd /etc/shadow
+# userpwd:$6$An4Ho3jXbHJ1g96p$BhONmv2TC5G/QRS53FodMQ1lmLWP9dZaE0XDAolZNe3rYdverzv02AUxLWHV2LMWG92k7axVgEkIw6mD/JP.D.:20135:0:99999:7:::
+
+# try to login
+su - userpwd
+# Password:
+whoami
+# userpwd
+```
+
+---
+
+### Lab: Expire a password
+
+```sh
+su -
+passwd -S userpwd
+# userpwd PS 2025-02-15 0 99999 7 -1 (Password set, SHA512 crypt.)
+chage userpwd -l
+# Last password change                                    : Feb 16, 2025
+# Password expires                                        : never
+# Password inactive                                       : never
+# Account expires                                         : never
+# Minimum number of days between password change          : 0
+# Maximum number of days between password change          : 99999
+# Number of days of warning before password expires       : 7
+
+passwd -e userpwd
+# Expiring password for user userpwd.
+# passwd: Success
+
+# confirm
+# note the date
+passwd -S userpwd
+# userpwd PS 1969-12-31 0 99999 7 -1 (Password set, SHA512 crypt.)
+
+chage userpwd -l
+# Last password change                                    : password must be changed
+# Password expires                                        : password must be changed
+# Password inactive                                       : password must be changed
+# Account expires                                         : never
+# Minimum number of days between password change          : 0
+# Maximum number of days between password change          : 99999
+# Number of days of warning before password expires       : 7
+
+# try to login
+su - userpwd
+# Password:
+# You are required to change your password immediately (administrator enforced).
+# Current password:
+# New password:
+# Retype new password:
+
+passwd -S userpwd
+# userpwd PS 2025-02-15 0 99999 7 -1 (Password set, SHA512 crypt.)
+chage userpwd -l
+# Last password change                                    : Feb 16, 2025
+# Password expires                                        : never
+# Password inactive                                       : never
+# Account expires                                         : never
+# Minimum number of days between password change          : 0
+# Maximum number of days between password change          : 99999
+# Number of days of warning before password expires       : 7
 ```
 
 ---
