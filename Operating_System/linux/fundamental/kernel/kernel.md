@@ -13,6 +13,11 @@
   - [Lab: I/O Redirection](#lab-io-redirection)
     - [Redirect the Error Output](#redirect-the-error-output)
     - [Redirect to Null Device](#redirect-to-null-device)
+  - [Kernel](#kernel)
+    - [Kernel Version](#kernel-version)
+    - [Kernel dir](#kernel-dir)
+    - [Installing the Kernel](#installing-the-kernel)
+    - [Lab: Download and Install a New Kernel](#lab-download-and-install-a-new-kernel)
 
 ---
 
@@ -112,7 +117,6 @@ cat output.out
 
 ls /dvd /var > /tmp/output 2> /tmp/error
 ```
-
 
 ---
 
@@ -251,3 +255,37 @@ ls file.txt not-here >/dev/null 2>&1
 ```
 
 ---
+
+## Kernel
+
+```sh
+# list kernel package
+yum list installed kernel*
+# Installed Packages
+# kernel.x86_64                       5.14.0-362.24.1.el9_3           @rhel-9-for-x86_64-baseos-rpms
+# kernel.x86_64                       5.14.0-503.23.2.el9_5           @rhel-9-for-x86_64-baseos-rpms
+# kernel-core.x86_64                  5.14.0-362.24.1.el9_3           @rhel-9-for-x86_64-baseos-rpms
+# kernel-core.x86_64                  5.14.0-503.23.2.el9_5           @rhel-9-for-x86_64-baseos-rpms
+# kernel-modules.x86_64               5.14.0-362.24.1.el9_3           @rhel-9-for-x86_64-baseos-rpms
+# kernel-modules.x86_64               5.14.0-503.23.2.el9_5           @rhel-9-for-x86_64-baseos-rpms
+# kernel-modules-core.x86_64          5.14.0-362.24.1.el9_3           @rhel-9-for-x86_64-baseos-rpms
+# kernel-modules-core.x86_64          5.14.0-503.23.2.el9_5           @rhel-9-for-x86_64-baseos-rpms
+# kernel-tools.x86_64                 5.14.0-503.23.2.el9_5           @rhel-9-for-x86_64-baseos-rpms
+# kernel-tools-libs.x86_64            5.14.0-503.23.2.el9_5           @rhel-9-for-x86_64-baseos-rpms
+```
+
+### Kernel Version
+
+```sh
+uname -r
+# 5.14.0-503.23.2.el9_5.x86_64
+# Major version.Major revision.kernel patch version-Redhat version.enterprise linux 9.processor architecture 
+
+# general Linux: 5.14.0
+```
+
+### Kernel dir
+
+### Installing the Kernel
+
+### Lab: Download and Install a New Kernel

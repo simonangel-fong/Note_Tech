@@ -13,8 +13,14 @@
   - [RPM(Red Hat Package Manager)](#rpmred-hat-package-manager)
     - [Configuration File](#configuration-file)
     - [Common Command](#common-command)
+    - [Lab: validate a package](#lab-validate-a-package)
+    - [Lab: Package Management Tasks](#lab-package-management-tasks)
+    - [Lab: restore a corrupted package](#lab-restore-a-corrupted-package)
     - [Lab: Install, Get CF, and Remove `nginx` Manually](#lab-install-get-cf-and-remove-nginx-manually)
   - [YUM (Yellowdog Updater, Modified)](#yum-yellowdog-updater-modified)
+    - [Application Streams and Modules](#application-streams-and-modules)
+      - [BaseOS](#baseos)
+      - [Application Stream (AppStream).](#application-stream-appstream)
     - [Configuration File](#configuration-file-1)
     - [Common Command](#common-command-1)
     - [Repository](#repository)
@@ -24,6 +30,15 @@
       - [Lab: Repository Cached Data](#lab-repository-cached-data)
       - [Lab: Add a New Repository](#lab-add-a-new-repository)
       - [Lab: Disable a repository](#lab-disable-a-repository)
+      - [Lab: Configure Access to PreBuilt ISO Repositories](#lab-configure-access-to-prebuilt-iso-repositories)
+  - [Individual Package Management](#individual-package-management)
+    - [Lab: Individual Package Management](#lab-individual-package-management)
+    - [Lab: detemine the package of a file](#lab-detemine-the-package-of-a-file)
+  - [Package Group Management](#package-group-management)
+    - [Lab: Package Group Management](#lab-package-group-management)
+  - [Module Management](#module-management)
+    - [Lab: Manipulate Modules](#lab-manipulate-modules)
+    - [Lab: Install a Module from an Alternative Stream](#lab-install-a-module-from-an-alternative-stream)
     - [YUM vs. RPM](#yum-vs-rpm)
   - [DNF(Dandified Yum)](#dnfdandified-yum)
     - [Configuration Files](#configuration-files)
@@ -215,18 +230,230 @@ yum update -y
 
 ### Common Command
 
-| CMD                     | DESC                                             |
-| ----------------------- | ------------------------------------------------ |
-| `rpm -qa`               | Lists all installed RPM packages.                |
-| `rpm -q package_name`   | Queries information about an installed package.  |
-| `rpm -qc package_name`  | List configuration file for an installed package |
-| `rpm -qf /path/to/file` | Display the package to which the file belong     |
-| `rpm -ql package_name`  | Lists all files installed by a package.          |
-| `rpm -V package_name`   | Verifies the integrity of an installed package.  |
-| `rpm -i package.rpm`    | Installs an RPM package.                         |
-| `rpm -ivh package.rpm`  | Installs a package with a progress bar.          |
-| `rpm -U package.rpm`    | Upgrades an existing package or installs it.     |
-| `rpm -e package_name`   | Removes (erases) a package.                      |
+- Query
+
+| CMD                                                      | DESC                                                                |
+| -------------------------------------------------------- | ------------------------------------------------------------------- |
+| `rpm -qa`                                                | Lists all installed RPM packages.                                   |
+| `rpm -q chrony`                                          | Display full package name                                           |
+| `rpm -qip /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm` | Query an (uninstalled) package file                                 |
+| `rpm -qi chrony`                                         | Display installable package information about an installed package. |
+| `rpm -ql chrony`                                         | Lists all files installed by a package.                             |
+| `rpm -qf /var/log/chrony`                                | Display package to which the file belong                            |
+| `rpm -qc chrony`                                         | List configuration file for an installed package                    |
+| `rpm -qd chrony`                                         | Lists documentation files files in a package                        |
+| `rpm -qR chrony`                                         | Lists all dependenies of a package.                                 |
+| `rpm -q --whatrequires bash`                             | Query all packages that require                                     |
+
+- Manage
+
+| CMD                                                                    | DESC                                         |
+| ---------------------------------------------------------------------- | -------------------------------------------- |
+| `rpm -i /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm`                 | Installs an RPM package.                     |
+| `rpm -ivh /mnt/AppStram/Packages/zsh-5.8-9.el9.x86_64.rpm`             | Installs a package with a progress bar.      |
+| `rpm -Fvh --replacepkgs /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm` | Overwrite the existing package.              |
+| `rpm -Uvh /mnt/AppStream/Packages/sushi-3.38.1-2.el9.x86_64.rpm`       | Upgrades an existing package or installs it. |
+| `rpm -Fvh /mnt/AppStream/Packages/sushi-3.38.1-2.el9.x86_64.rpm`       | Upgrades an existing package.                |
+| `rpm -ev sushi`                                                        | Removes (erases) a package.                  |
+
+- Validate
+
+| CMD                                                        | DESC                                           |
+| ---------------------------------------------------------- | ---------------------------------------------- |
+| `rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release` | import the GPG key                             |
+| `rpm -q gpg-pubkey`                                        | List keys                                      |
+| `rpm -K /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm`     | Validates the signature and package integrity. |
+| `rpm -V at`                                                | Verifying Package Attributes                   |
+
+- Extracting
+
+| CMD                                                         | DESC                                                                  |
+| ----------------------------------------------------------- | --------------------------------------------------------------------- |
+| `rpm2cpio /mnt/BaseOS/Packages/chrony-4.3-1.el9.x86_64.rpm` | Extract cpio archive from RPM                                         |
+| `cpio -id cpio_archive`                                     | Extract all files from cpio archive，create dir, retain time of files |
+
+---
+
+### Lab: validate a package
+
+```sh
+rpm -K /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm --nosignature
+# /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm: digests OK
+
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+rpm -K /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm
+# /mnt/BaseOS/Packages/zsh-5.8-9.el9.x86_64.rpm: digests signatures OK
+
+rpm -q gpg-pubkey
+# gpg-pubkey-fd431d51-4ae0493b
+# gpg-pubkey-5a6340b3-6229229e
+
+# query key
+rpm -qi gpg-pubkey-fd431d51-4ae0493b
+# Name        : gpg-pubkey
+# Version     : fd431d51
+# Release     : 4ae0493b
+# Architecture: (none)
+# Install Date: Sun 16 Feb 2025 03:37:00 PM
+# Group       : Public Keys
+# Size        : 0
+# License     : pubkey
+# Signature   : (none)
+# Source RPM  : (none)
+# Build Date  : Thu 22 Oct 2009 07:59:55 AM
+# Build Host  : localhost
+# Packager    : Red Hat, Inc. (release key 2) <security@redhat.com>
+# Summary     : Red Hat, Inc. (release key 2) <security@redhat.com> public key
+# Description :
+# -----BEGIN PGP PUBLIC KEY BLOCK-----
+# Version: rpm-4.16.1.3 (NSS-3)
+# ...
+
+
+rpm -V at
+# note: return nothing if no changes in the attributes
+
+# make change
+ll /etc/sysconfig/atd
+# -rw-r--r--. 1 root root 403 Apr  4  2022 /etc/sysconfig/atd
+chmod -v 770 /etc/sysconfig/atd
+# mode of '/etc/sysconfig/atd' changed from 0644 (rw-r--r--) to 0770 (rwxrwx---)
+ll /etc/sysconfig/atd
+# -rwxrwx---. 1 root root 403 Apr  4  2022 /etc/sysconfig/atd
+
+#  verification check on package
+# M: permission or file type is altered
+# c: cf
+rpm -V at
+# .M.......  c /etc/sysconfig/atd
+
+#  verification check on file
+rpm -Vf /etc/sysconfig/atd
+# .M.......  c /etc/sysconfig/atd
+
+# reset
+chmod -v 0644 /etc/sysconfig/atd
+# mode of '/etc/sysconfig/atd' changed from 0770 (rwxrwx---) to 0644 (rw-r--r--)
+
+# check
+rpm -V at
+```
+
+---
+
+### Lab: Package Management Tasks
+
+```sh
+# list rpm file and file path
+ll /mnt/AppStream/Packages/dcraw*
+# -r--r--r--. 1 root root 281589 Nov 20  2021 /mnt/AppStream/Packages/dcraw-9.28.0-13.el9.x86_64.rpm
+
+# verify the integrity
+rpm -K /mnt/AppStream/Packages/dcraw-9.28.0-13.el9.x86_64.rpm
+# /mnt/AppStream/Packages/dcraw-9.28.0-13.el9.x86_64.rpm: digests signatures OK
+
+# install
+rpm -ivh /mnt/AppStream/Packages/dcraw-9.28.0-13.el9.x86_64.rpm
+# Verifying...                          ################################# [100%]
+# Preparing...                          ################################# [100%]
+# Updating / installing...
+#    1:dcraw-9.28.0-13.el9              ################################# [100%]
+
+# get info
+rpm -qi dcraw
+# Name        : dcraw
+# Version     : 9.28.0
+# Release     : 13.el9
+# Architecture: x86_64
+# Install Date: Sun 16 Feb 2025 06:42:33 PM
+# Group       : Unspecified
+# Size        : 567034
+# License     : GPLv2+
+# Signature   : RSA/SHA256, Sat 20 Nov 2021 11:33:10 PM, Key ID 199e2f91fd431d51
+# Source RPM  : dcraw-9.28.0-13.el9.src.rpm
+# Build Date  : Mon 09 Aug 2021 05:25:43 PM
+# Build Host  : x86-vm-54.build.eng.bos.redhat.com
+# Packager    : Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
+# Vendor      : Red Hat, Inc.
+# URL         : http://www.dechifro.org/dcraw/
+# Summary     : Tool for decoding raw image data from digital cameras
+# Description :
+# This package contains dcraw, a command line tool to decode raw image data
+# downloaded from digital cameras.
+
+# list all files
+rpm -ql dcraw
+# /usr/bin/dcraw
+# /usr/lib/.build-id
+# /usr/lib/.build-id/c3
+# /usr/lib/.build-id/c3/6a86661b1ecf227ea635d79eeb1e4da9b36ed4
+# /usr/share/locale/ca/LC_MESSAGES/dcraw.mo
+# /usr/share/locale/cs/LC_MESSAGES/dcraw.mo
+# /usr/share/locale/da/LC_MESSAGES/dcraw.mo
+# /usr/share/locale/de/LC_MESSAGES/dcraw.mo
+# /usr/share/locale/eo/LC_MESSAGES/dcraw.mo
+# /usr/share/locale/es/LC_MESSAGES/dcraw.mo
+# ...
+
+# list all document
+rpm -qd dcraw
+# /usr/share/man/ca/man1/dcraw.1.gz
+# /usr/share/man/cs/man1/dcraw.1.gz
+# /usr/share/man/da/man1/dcraw.1.gz
+# /usr/share/man/de/man1/dcraw.1.gz
+# ...
+
+# Verify the attributes of each file
+rpm -Vv dcraw
+# .........    /usr/bin/dcraw
+# .........  a /usr/lib/.build-id
+# .........  a /usr/lib/.build-id/c3
+# .........  a /usr/lib/.build-id/c3/6a86661b1ecf227ea635d79eeb1e4da9b36ed4
+# .........    /usr/share/locale/ca/LC_MESSAGES/dcraw.mo
+# .........    /usr/share/locale/cs/LC_MESSAGES/dcraw.mo
+# ...
+
+# remove package
+rpm -ev dcraw
+# Preparing packages...
+# dcraw-9.28.0-13.el9.x86_64
+
+rpm -qa | grep dcraw
+```
+
+---
+
+### Lab: restore a corrupted package
+
+- Assuming you have lost the /etc/chrony.conf configuration file and want to retrieve it from its installable package and put it back.
+
+```sh
+# determine what package
+rpm -qf /etc/chrony.conf
+# chrony-4.5-3.el9.x86_64
+
+# create dir for process
+mkdir /tmp/chrony_rpm
+cd /tmp/chrony_rpm
+
+rpm2cpio /mnt/BaseOS/Packages/chrony-4.3-1.el9.x86_64.rpm | cpio -idm
+# 1253 blocks
+
+ll
+# total 0
+# drwxr-xr-x. 5 root root 92 Feb 16 18:14 etc
+# drwxr-xr-x. 6 root root 53 Feb 16 18:14 usr
+# drwxr-xr-x. 4 root root 28 Feb 16 18:14 var
+
+# locate the chrony.conf file
+find . -name chrony.conf
+# ./etc/chrony.conf
+# ./usr/lib/sysusers.d/chrony.conf
+
+# overwrite corrupted file
+cp ./etc/chrony.conf /etc/chrony.conf
+# cp: overwrite '/etc/chrony.conf'? y
+```
 
 ---
 
@@ -342,6 +569,40 @@ rpm -qai | grep nginx
 
 ---
 
+### Application Streams and Modules
+
+#### BaseOS
+
+includes the **core** set of RHEL 8
+components including the kernel, modules, bootloader, and
+other foundational software packages
+
+#### Application Stream (AppStream).
+
+comes standard with **core
+applications**, as well as several **add-on applications** many of
+them in the traditional rpm format and some in the new
+modular format.
+
+---
+
+Sample repo
+
+```conf
+# exclusive ID
+[BaseOS_RHEL_8.0]
+# description
+name= RHEL 8.0 base operating system components
+# location
+baseurl=file:///mnt/BaseOS
+# repository is active
+enabled=1
+# GPG-checked for authenticity
+gpgcheck=0
+```
+
+---
+
 ### Configuration File
 
 - `yum` configuration files:
@@ -385,6 +646,7 @@ skip_if_unavailable=False
 | `yum info`                            | Display all info                                                     |
 | `yum history`                         | Displays a history of YUM transactions.                              |
 | `yum clean all`                       | Cleans up cached files and metadata.                                 |
+| `yum repolist`                        | Lists enabled repositories                                           |
 
 - For a specific package
 
@@ -401,8 +663,9 @@ skip_if_unavailable=False
 | `yum upgrade -y package_name`                               | Update a package                            |
 | `yum downgrade -y package_name`                             | Downgrade a package                         |
 | `yum remove package_name`                                   | Removes a package and its dependencies.     |
+| `yum provide /local/file`                                   | Display the package.                        |
 
-- ***
+---
 
 ### Repository
 
@@ -842,6 +1105,557 @@ sudo rm /etc/yum.repos.d/custom.repo
 
 # confirm
 yum repolist all | grep ol8
+```
+
+---
+
+#### Lab: Configure Access to PreBuilt ISO Repositories
+
+```sh
+df -h | grep mnt
+# /dev/sr0               9.9G  9.9G     0 100% /mnt
+
+# create local repo
+vi /etc/yum.repos.d/local.repo
+
+[BaseOS]
+name=BaseOS
+baseurl=file:///mnt/BaseOS
+gpgcheck=0
+
+[AppStream]
+name=AppStream
+baseurl=file:///mnt/AppStream
+gpgcheck=0
+
+# confirm
+yum repolist
+# Updating Subscription Management repositories.
+# repo id                              repo name
+# AppStream                            AppStream
+# BaseOS                               BaseOS
+# rhel-9-for-x86_64-appstream-rpms     Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# rhel-9-for-x86_64-baseos-rpms        Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)
+
+# query the repos
+yum repoquery
+# ...
+# zstd-0:1.5.1-2.el9.x86_64
+# zziplib-0:0.13.71-11.el9_4.i686
+# zziplib-0:0.13.71-11.el9_4.x86_64
+# zziplib-0:0.13.71-9.el9.i686
+# zziplib-0:0.13.71-9.el9.x86_64
+# ...
+
+# query a repo
+yum repoquery --repo "BaseOS"
+# ...
+# zstd-0:1.5.1-2.el9.x86_64
+# zziplib-0:0.13.71-11.el9_4.i686
+# zziplib-0:0.13.71-11.el9_4.x86_64
+# zziplib-0:0.13.71-9.el9.i686
+# zziplib-0:0.13.71-9.el9.x86_64
+# ...
+
+# query for a package
+yum repoquery --repo "BaseOS" | grep zsh
+# Last metadata expiration check: 0:02:45 ago on Sun 16 Feb 2025 07:30:53 PM.
+# zsh-0:5.8-9.el9.x86_64
+```
+
+---
+
+## Individual Package Management
+
+```sh
+# list all installed
+yum list installed
+# list a package in all installed
+yum list installed gnome*
+# lsit all in repos
+yum list
+# list all updatable
+yum list updates
+# list for a package
+yum list bc
+# list recent added
+yum list recent
+```
+
+- Local isntall
+
+```sh
+yum localinstall /mnt/AppStream/Packages/dcraw-9.28.0-13.el9.x86_64.rpm
+```
+
+---
+
+### Lab: Individual Package Management
+
+```sh
+# check if installed
+yum list installed | grep cifs-utils
+
+# Determine if the cifs-utils package is available
+yum repoquery cifs-utils --repo=BaseOS
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 0:22:32 ago on Sun 16 Feb 2025 07:30:53 PM.
+# cifs-utils-0:7.0-1.el9.x86_64
+
+# get info
+yum info cifs-utils --repo=BaseOS
+# Available Packages
+# Name         : cifs-utils
+# Version      : 7.0
+# Release      : 1.el9
+# Architecture : x86_64
+# Size         : 103 k
+# Source       : cifs-utils-7.0-1.el9.src.rpm
+# Repository   : BaseOS
+# Summary      : Utilities for mounting and managing CIFS mounts
+# URL          : http://linux-cifs.samba.org/cifs-utils/
+# License      : GPLv3
+# Description  : The SMB/CIFS protocol is a standard file sharing protocol widely deployed
+#              : on Microsoft Windows machines. This package contains tools for mounting
+#              : shares on Linux using the SMB/CIFS protocol. The tools in this package
+#              : work in conjunction with support in the kernel to allow one to mount a
+#              : SMB/CIFS share onto a client and use it as if it were a standard Linux
+#              : file system.
+
+# install
+yum install -y cifs-utils --repo=BaseOS
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 0:23:44 ago on Sun 16 Feb 2025 07:30:53 PM.
+# Dependencies resolved.
+# ==================================================================================================
+#  Package                  Architecture         Version                 Repository            Size
+# ==================================================================================================
+# Installing:
+#  cifs-utils               x86_64               7.0-1.el9               BaseOS               103 k
+
+# Transaction Summary
+# ==================================================================================================
+# Install  1 Package
+
+# Total size: 103 k
+# Installed size: 220 k
+# Downloading Packages:
+# Running transaction check
+# Transaction check succeeded.
+# Running transaction test
+# Transaction test succeeded.
+# Running transaction
+#   Preparing        :                                                                          1/1
+#   Installing       : cifs-utils-7.0-1.el9.x86_64                                              1/1
+#   Running scriptlet: cifs-utils-7.0-1.el9.x86_64                                              1/1
+#   Verifying        : cifs-utils-7.0-1.el9.x86_64                                              1/1
+# Installed products updated.
+
+# Installed:
+#   cifs-utils-7.0-1.el9.x86_64
+
+# Complete!
+
+# display installed
+yum info cifs-utils
+# Installed Packages
+# Name         : cifs-utils
+# Version      : 7.0
+# Release      : 1.el9
+# Architecture : x86_64
+# Size         : 220 k
+# Source       : cifs-utils-7.0-1.el9.src.rpm
+# Repository   : @System
+# From repo    : BaseOS
+# Summary      : Utilities for mounting and managing CIFS mounts
+# URL          : http://linux-cifs.samba.org/cifs-utils/
+# License      : GPLv3
+# Description  : The SMB/CIFS protocol is a standard file sharing protocol widely deployed
+#              : on Microsoft Windows machines. This package contains tools for mounting
+#              : shares on Linux using the SMB/CIFS protocol. The tools in this package
+#              : work in conjunction with support in the kernel to allow one to mount a
+#              : SMB/CIFS share onto a client and use it as if it were a standard Linux
+#              : file system.
+
+# remove
+dnf remove -y cifs-utils
+
+# confirm
+dnf list installed | grep cifs-utils
+```
+
+---
+
+### Lab: detemine the package of a file
+
+```sh
+yum provides /etc/passwd
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 0:28:02 ago on Sun 16 Feb 2025 07:30:53 PM.
+# setup-2.13.7-6.el9.noarch : A set of system configuration and setup files
+# Repo        : rhel-9-for-x86_64-baseos-rpms
+# Matched from:
+# Filename    : /etc/passwd
+
+# setup-2.13.7-7.el9.noarch : A set of system configuration and setup files
+# Repo        : rhel-9-for-x86_64-baseos-rpms
+# Matched from:
+# Filename    : /etc/passwd
+
+# search package
+yum search system-config
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 0:29:26 ago on Sun 16 Feb 2025 07:30:53 PM.
+# ================================== Name Matched: system-config ===================================
+# system-config-printer-libs.noarch : Libraries and shared code for printer administration tool
+# system-config-printer-udev.x86_64 : Rules for udev for automatic configuration of USB printers
+# ================================= Summary Matched: system-config =================================
+# cups-pk-helper.x86_64 : A helper that makes system-config-printer use PolicyKit
+```
+
+---
+
+## Package Group Management
+
+```sh
+# list all group from all repos
+yum group list
+# Available Environment Groups:
+#    Server
+#    Minimal Install
+#    Workstation
+#    Custom Operating System
+#    Virtualization Host
+# Installed Environment Groups:
+#    Server with GUI
+# Installed Groups:
+#    Headless Management
+#    Container Management
+# Available Groups:
+#    Legacy UNIX Compatibility
+#    Graphical Administration Tools
+#    System Tools
+#    RPM Development Tools
+#    Development Tools
+#    .NET Development
+#    Security Tools
+#    Smart Card Support
+#    Console Internet Tools
+#    Network Servers
+#    Scientific Support
+
+# summary
+yum group summary
+# Installed Groups: 2
+# Available Groups: 11
+
+# include hidden
+yum group list hidden
+
+yum group list --installed
+# Installed Environment Groups:
+#    Server with GUI
+# Installed Groups:
+#    Headless Management
+#    Container Management
+
+yum group info "Network Servers"
+# Group: Network Servers
+#  Description: These packages include network-based servers such as DHCP, Kerberos and NIS.
+#  Optional Packages:
+#    dhcp-server
+#    dnsmasq
+#    freeradius
+#    frr
+#    idn2
+#    krb5-server
+#    libreswan
+#    radvd
+#    rsyslog-gnutls
+#    rsyslog-gssapi
+#    rsyslog-mysql
+#    rsyslog-pgsql
+#    rsyslog-relp
+#    syslinux
+#    tang
+
+# install
+yum groupinstall -y "Network Servers"
+# Dependencies resolved.
+# ==================================================================================================
+#  Package                Architecture          Version                Repository              Size
+# ==================================================================================================
+# Installing Groups:
+#  Network Servers
+
+# Transaction Summary
+# ==================================================================================================
+
+# Complete!
+
+# update group
+yum groupupdate -y "Network Servers"
+
+# remove
+yum groupremove -y "Network Servers"
+```
+
+---
+
+### Lab: Package Group Management
+
+```sh
+# check if installed
+yum group list installed
+# Installed Environment Groups:
+#    Server with GUI
+# Installed Groups:
+#    Headless Management
+#    Container Management
+
+# check if available
+yum group list available | grep "System Tools"
+  #  System Tools
+
+# get info
+yum group info "System Tools"
+#  Default Packages:
+#    NetworkManager-libreswan
+#    chrony
+#    cifs-utils
+#    libreswan
+#    nmap
+#    openldap-clients
+#    samba-client
+#    setserial
+#    tigervnc
+#    tmux
+#    zsh
+#  Optional Packages:
+#    PackageKit-command-not-found
+#    aide
+#    autofs
+#    bacula-client
+#    chrpath
+#    convmv
+#    createrepo_c
+#    environment-modules
+#    freerdp
+#    fuse
+#    gpm
+#    hardlink
+#    initscripts
+#    initscripts-service
+#    iotop
+#    lzop
+#    mc
+#    mrtg
+#    mtx
+#    net-snmp-utils
+#    netconsole-service
+#    oddjob
+#    oddjob-mkhomedir
+#    pmdk-convert
+#    readonly-root
+#    rear
+#    speech-dispatcher
+#    speech-dispatcher-espeak-ng
+#    sysstat
+#    wireshark
+
+# isntall
+yum group install -y "System Tools"
+# ...
+# Installed:
+#   NetworkManager-libreswan-1.2.22-4.el9_5.x86_64       cifs-utils-7.0-5.el9.x86_64
+#   fltk-1.3.8-1.el9.x86_64                              ldns-1.7.1-11.el9.x86_64
+#   libreswan-4.15-3.el9.x86_64                          nmap-3:7.92-3.el9.x86_64
+#   nss-tools-3.101.0-10.el9_2.x86_64                    openldap-clients-2.6.6-3.el9.x86_64
+#   samba-client-4.20.2-2.el9_5.x86_64                   setserial-2.17-54.el9.x86_64
+#   tigervnc-1.14.1-1.el9_5.x86_64                       tigervnc-icons-1.14.1-1.el9_5.noarch
+#   tigervnc-license-1.14.1-1.el9_5.noarch               tmux-3.2a-5.el9.x86_64
+#   unbound-libs-1.16.2-8.el9_5.1.x86_64
+
+# Complete!
+
+# remove
+yum group remove -y "system tools"
+# Removed:
+#   NetworkManager-libreswan-1.2.22-4.el9_5.x86_64       cifs-utils-7.0-5.el9.x86_64
+#   fltk-1.3.8-1.el9.x86_64                              ldns-1.7.1-11.el9.x86_64
+#   libreswan-4.15-3.el9.x86_64                          nmap-3:7.92-3.el9.x86_64
+#   nss-tools-3.101.0-10.el9_2.x86_64                    openldap-clients-2.6.6-3.el9.x86_64
+#   samba-client-4.20.2-2.el9_5.x86_64                   setserial-2.17-54.el9.x86_64
+#   tigervnc-1.14.1-1.el9_5.x86_64                       tigervnc-icons-1.14.1-1.el9_5.noarch
+#   tigervnc-license-1.14.1-1.el9_5.noarch               tmux-3.2a-5.el9.x86_64
+#   unbound-libs-1.16.2-8.el9_5.1.x86_64
+
+# Complete!
+```
+
+---
+
+## Module Management
+
+| CMD                                      | DESC                                     |
+| ---------------------------------------- | ---------------------------------------- |
+| `yum module list`                        | list all modules                         |
+| `yum module list nodejs`                 | list a module                            |
+| `yum module list nodejs:18`              | list a module of specified stream        |
+| `yum module list --enabled`              | list all enabled module streams          |
+| `yum module list --installed`            | list all installed module streams        |
+| `yum module install -y nodejs:18`        | Install a module                         |
+| `yum module update -y nodejs:18`         | update a module                          |
+| `yum module install -y nodejs:20/common` | install a module of a stream and profile |
+| `yum module info --profile nodejs`       | List all profiles                        |
+| `yum module info --profile nodejs:20`    | List all profiles of a stream            |
+| `yum module remove -y nodejs:18`         | Remove a module                          |
+| `yum module reset nodejs`                | Reset a module                           |
+
+---
+
+### Lab: Manipulate Modules
+
+```sh
+# check if installed
+yum module list postgresql
+# AppStream
+# Name              Stream        Profiles                 Summary
+# postgresql        15            client, server [d]       PostgreSQL server and client module
+
+# Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# Name              Stream        Profiles                 Summary
+# postgresql        15            client, server [d]       PostgreSQL server and client module
+# postgresql        16            client, server [d]       PostgreSQL server and client module
+
+# Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled
+
+# display info of 16 stream
+yum module info postgresql:16
+# Updating Subscription Management repositories.
+# Last metadata expiration check: 1:15:58 ago on Sun 16 Feb 2025 07:30:53 PM.
+# Name             : postgresql
+# Stream           : 16
+# Version          : 9040020240108131224
+# Context          : rhel9
+# Architecture     : x86_64
+# Profiles         : client, server [d]
+# Default profiles : server
+# Repo             : rhel-9-for-x86_64-appstream-rpms
+# Summary          : PostgreSQL server and client module
+# ...
+
+# isntall with default profile
+yum module install -y --profile postgresql:16 -y
+# ...
+# Installed:
+#   postgresql-16.6-1.module+el9.5.0+22557+8cb08ba5.x86_64
+#   postgresql-private-libs-16.6-1.module+el9.5.0+22557+8cb08ba5.x86_64
+#   postgresql-server-16.6-1.module+el9.5.0+22557+8cb08ba5.x86_64
+
+# Complete!
+
+# show info after installed
+yum module info postgresql:16
+# Name             : postgresql
+# Stream           : 16 [e] [a]
+# Version          : 9040020240108131224
+# Context          : rhel9
+# Architecture     : x86_64
+# Profiles         : client, server [d] [i]
+# Default profiles : server
+# ...
+
+# remove
+yum module remove -y postgresql:16
+# ...
+# Removed:
+#   postgresql-16.6-1.module+el9.5.0+22557+8cb08ba5.x86_64
+#   postgresql-private-libs-16.6-1.module+el9.5.0+22557+8cb08ba5.x86_64
+#   postgresql-server-16.6-1.module+el9.5.0+22557+8cb08ba5.x86_64
+
+# Complete!
+```
+
+---
+
+### Lab: Install a Module from an Alternative Stream
+
+```sh
+# check state of stream
+ yum module list nodejs
+# AppStream
+# Name         Stream       Profiles                                        Summary
+# nodejs       18           common [d], development, minimal, s2i           Javascript runtime
+# nodejs       20 [e]       common [d] [i], development, minimal, s2i       Javascript runtime
+
+# Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# Name         Stream       Profiles                                        Summary
+# nodejs       18           common [d], development, minimal, s2i           Javascript runtime
+# nodejs       20 [e]       common [d] [i], development, minimal, s2i       Javascript runtime
+# nodejs       22           common [d], development, minimal, s2i           Javascript runtime
+
+# Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled
+
+# remove nodejs 20
+yum module remove nodejs -y
+# Removed:
+#   nodejs-1:20.18.2-1.module+el9.5.0+22758+4ad2c198.x86_64
+#   nodejs-docs-1:20.18.2-1.module+el9.5.0+22758+4ad2c198.noarch
+#   nodejs-full-i18n-1:20.18.2-1.module+el9.5.0+22758+4ad2c198.x86_64
+#   npm-1:10.8.2-1.20.18.2.1.module+el9.5.0+22758+4ad2c198.x86_64
+
+# Complete!
+
+# confirm
+yum module list nodejs
+# AppStream
+# Name          Stream        Profiles                                     Summary
+# nodejs        18            common [d], development, minimal, s2i        Javascript runtime
+# nodejs        20 [e]        common [d], development, minimal, s2i        Javascript runtime
+
+# Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# Name          Stream        Profiles                                     Summary
+# nodejs        18            common [d], development, minimal, s2i        Javascript runtime
+# nodejs        20 [e]        common [d], development, minimal, s2i        Javascript runtime
+# nodejs        22            common [d], development, minimal, s2i        Javascript runtime
+
+# Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled
+
+# reset module
+yum module reset -y nodejs
+# Resetting modules:
+#  nodejs
+
+# Transaction Summary
+# ==================================================================================================
+
+# Complete!
+
+# install nodejs:22/minimal
+yum module install -y nodejs:22/minimal --allowerasing
+# Installed:
+#   nodejs-1:22.11.0-1.module+el9.5.0+22488+08122204.x86_64
+#   nodejs-docs-1:22.11.0-1.module+el9.5.0+22488+08122204.noarch
+#   nodejs-full-i18n-1:22.11.0-1.module+el9.5.0+22488+08122204.x86_64
+#   nodejs-libs-1:22.11.0-1.module+el9.5.0+22488+08122204.x86_64
+
+# Complete!
+
+# confirm
+yum module list nodejs
+# AppStream
+# Name         Stream       Profiles                                        Summary
+# nodejs       18           common [d], development, minimal, s2i           Javascript runtime
+# nodejs       20           common [d], development, minimal, s2i           Javascript runtime
+
+# Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)
+# Name         Stream       Profiles                                        Summary
+# nodejs       18           common [d], development, minimal, s2i           Javascript runtime
+# nodejs       20           common [d], development, minimal, s2i           Javascript runtime
+# nodejs       22 [e]       common [d], development, minimal [i], s2i       Javascript runtime
+
+# Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled
 ```
 
 ---

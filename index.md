@@ -1,9 +1,18 @@
 # 技术笔记
 
 - Ongoing
-  - [ ] [Linux](./Operating_System/linux/index.md)
+
+  - [ ] [Docker](./Operating_System/docker/index.md)
+
+- [HomeLab](./homelab/index.md)
 
 ---
+
+- OS
+
+  - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
+  - [ ] [Linux](./Operating_System/linux/index.md)
+  - [ ] [Airflow](./Operating_System/airflow/index.md)
 
 - Database
 
@@ -49,12 +58,6 @@
     - [ ] Project: [GitHub:Web hosting - S3](https://github.com/simonangel-fong/AWS_POC_Web_Hosting)
     - [x] Project: [Import VM into AMI](./AWS/Projects/vm2ami.md)
   - [ ] [Terraform](./terraform/index.md)
-
-- OS
-
-  - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
-  - [ ] [Docker](./Operating_System/docker/index.md)
-  - [ ] [Airflow](./Operating_System/airflow/index.md)
 
 - Mobile
 

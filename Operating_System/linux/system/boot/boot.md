@@ -32,6 +32,9 @@
   - [Lab: Recover root password (RHEL 9)(using init=/bin/sh)](#lab-recover-root-password-rhel-9using-initbinsh)
     - [Modify the GRUB2 Boot Parameters](#modify-the-grub2-boot-parameters)
     - [Access the Emergency Shell](#access-the-emergency-shell)
+  - [grub.cfg File](#grubcfg-file)
+  - [Booting into Specific Targets](#booting-into-specific-targets)
+    - [Lab: Reset the root User Password](#lab-reset-the-root-user-password)
 
 ---
 
@@ -495,4 +498,73 @@ touch /.autorelabel
 
 # Reboot the system
 /usr/sbin/reboot -f
+```
+
+---
+
+## grub.cfg File
+
+```sh
+# change value
+vi /etc/default/grub
+# GRUB_TIMEOUT=10
+
+# apply
+grub2-mkconfig -o /boot/grub2/grub.cfg
+# Generating grub configuration file ...
+# Adding boot menu entry for UEFI Firmware Settings ...
+# done
+# on UEFI systems.
+# grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+
+```
+
+---
+
+## Booting into Specific Targets
+
+- “emergency”
+
+```sh
+emergency
+```
+
+- “rescue"
+
+```sh
+rescue
+1
+s
+single
+```
+
+---
+
+### Lab: Reset the root User Password
+
+- GRUB2 menu > edit mode
+
+```sh
+rd.break
+```
+
+- special shell
+
+```sh
+# Make /sysroot appear as mounted on / using the chroot command:
+chroot /sysroot
+
+# Remount the root file system in read/write mode
+mount -o remount,rw /
+# change pwd
+passwd
+
+# Create a hidden file called .autorelabel to run SELinux relabeling on all files
+touch /.autorelabel
+
+# exit command to quit the chroot shell
+exit
+
+# restart the system and boot it to the default target.
+reboot
 ```

@@ -8,7 +8,12 @@
     - [Unit File](#unit-file)
     - [`systemctl` and `service` Command](#systemctl-and-service-command)
   - [`systemd` Management](#systemd-management)
-  - [Service Management](#service-management)
+  - [Unit Management](#unit-management)
+  - [Service Units Management](#service-units-management)
+  - [Target Unit Management](#target-unit-management)
+    - [Lab: Change target](#lab-change-target)
+      - [Default target](#default-target)
+      - [Switch currrent target](#switch-currrent-target)
     - [Start/Stop a service](#startstop-a-service)
       - [Start a Service](#start-a-service)
       - [Stop a Service](#stop-a-service)
@@ -163,18 +168,12 @@ systemctl list-unit-files | grep masked
 
 ## `systemd` Management
 
-| CMD                                        | DESC                                                 |
-| ------------------------------------------ | ---------------------------------------------------- |
-| `systemctl --version`                      | Used to check if the systemd installed               |
-| `ps -ef \| grep systemd`                   | Used to check if the systemd running                 |
-| `systemctl --all` / `systemctl list-units` | Display all available systemd units                  |
-| `systemctl list-unit-files`                | List all unit files                                  |
-| `systemctl reboot`                         | Reboots a Linux system                               |
-| `systemctl poweroff`                       | Shut down the system                                 |
-| `systemctl get-default`                    | View the current default target                      |
-| `systemctl set-default <target_name>`      | Change the default target                            |
-| `systemctl set-default graphical.target`   | Set the system to boot into a graphical environment. |
-| `systemctl isolate rescue.target`          | Switch to Rescue Mode                                |
+| CMD                                        | DESC                                   |
+| ------------------------------------------ | -------------------------------------- |
+| `systemctl --version`                      | Used to check if the systemd installed |
+| `ps -ef \| grep systemd`                   | Used to check if the systemd running   |
+| `systemctl --all` / `systemctl list-units` | Display all available systemd units    |
+| `systemctl list-unit-files`                | List all unit files                    |
 
 ---
 
@@ -190,30 +189,84 @@ systemctl --all
 
 ```
 
-- `systemctl list-unit` vs `systemctl list-unit-files`
-
-| Command                     | Output                                    | Use Case                                 |
-| --------------------------- | ----------------------------------------- | ---------------------------------------- |
-| `systemctl list-units`      | Lists **active units** and current states | Which units currently active or inactive |
-| `systemctl list-unit-files` | Lists `unit files` and states             | Which services to **start at boot**      |
-
 ---
 
-## Service Management
+## Unit Management
 
-| CMD                                 | DESC                                                  |
-| ----------------------------------- | ----------------------------------------------------- |
-| `systemctl show unit_name`          | Show the service's properties                         |
-| `systemctl status service_name`     | Check the status of a service                         |
-| `systemctl start service_name`      | Start a service                                       |
-| `systemctl stop service_name`       | Stop a service                                        |
-| `systemctl reload service_name`     | Reload the configuration of a service                 |
-| `systemctl restart service_name`    | Stop and Start a service after a configuration change |
-| `systemctl is-enabled service_name` | Check if a service is enabled                         |
-| `systemctl enable service_name`     | Enable a service at boot time                         |
-| `systemctl disable service_name`    | Disable a service at boot time                        |
-| `systemctl mask service_name`       | Disable a service completely including dependencies   |
-| `systemctl unmask service_name`     | Enable a service completely including dependencies    |
+| CMD                                  | DESC                                                 |
+| ------------------------------------ | ---------------------------------------------------- |
+| `systemctl` / `systemctl list-units` | Lists **active units(in memory)** and current states |
+| `systemctl list-units -a`            | Lists all units, active + inactive                   |
+| `systemctl list-units -t socket`     | Lists all socke type unit                            |
+| `systemctl list-units --failed`      | Lists all failed unit at last system boot            |
+| `systemctl list-unit-files`          | Lists `unit files` and states                        |
+| `systemctl list-sockets`             | Lists units of type socket                           |
+| `systemctl list-dependencies`        | Lists dependency tree for all unit                   |
+| `systemctl list-dependencies crond`  | Lists dependency tree for a unit                     |
+| `systemctl show`                     | Show all properties                                  |
+| `systemctl show crond`               | Show the service's properties                        |
+
+## Service Units Management
+
+| CMD                               | DESC                                                  |
+| --------------------------------- | ----------------------------------------------------- |
+| `systemctl list-units -t service` | Lists all serivces type unit                          |
+| `systemctl daemon-reload`         | Re-reads and reloads all unit configuration files     |
+| `systemctl status crond`          | Check the status of a service                         |
+| `systemctl is-enabled crond`      | Check if a service is enabled                         |
+| `systemctl is-active crond`       | Checks whether a unit is running                      |
+| `systemctl is-failed crond`       | Checks whether a unit is in the failed state          |
+| `systemctl start crond`           | Start a service                                       |
+| `systemctl stop crond`            | Stop a service                                        |
+| `systemctl reload crond`          | Reload the configuration of a service                 |
+| `systemctl restart crond`         | Stop and Start a service after a configuration change |
+| `systemctl enable crond`          | Enable a service at boot time                         |
+| `systemctl disable crond`         | Disable a service at boot time                        |
+| `systemctl mask crond`            | Disable a service completely including dependencies   |
+| `systemctl unmask crond`          | Enable a service completely including dependencies    |
+| `systemctl kill unit_name`        | Terminates all processes for a unit                   |
+
+## Target Unit Management
+
+- `rescue` and `emergency` targets are for troubleshooting and system recovery purposes
+- `poweroff` and `halt` are similar to `shutdown`, and `hibernate` is suitable for mobile devices.
+
+| CMD                                             | DESC                                                       |
+| ----------------------------------------------- | ---------------------------------------------------------- |
+| `systemctl list-units -t target`                | Lists all target type unit                                 |
+| `systemctl list-units -t target --state active` | Get the current ative target units                         |
+| `systemctl get-default`                         | Shows the default boot target                              |
+| `systemctl set-default graphical.target`        | Set the system to boot into a graphical environment.       |
+| `systemctl isolate rescue.target`               | Switch to Rescue Mode (Start one unit and stop all others) |
+| `systemctl reboot`                              | Reboots a Linux system                                     |
+| `systemctl poweroff`                            | Shut down the system                                       |
+
+### Lab: Change target
+
+#### Default target
+
+```sh
+systemctl get-default
+# graphical.target
+
+systemctl set-default multi-user
+# Removed "/etc/systemd/system/default.target".
+# Created symlink /etc/systemd/system/default.target → /usr/lib/systemd/system/multi-user.target.
+
+systemctl set-default graphical.target
+Removed "/etc/systemd/system/default.target".
+Created symlink /etc/systemd/system/default.target → /usr/lib/systemd/system/graphical.target.
+```
+
+#### Switch currrent target
+
+```sh
+# To switch into multi-user
+systemctl isolate multi-user
+# To return to the graphical target:
+systemctl isolate graphical
+
+```
 
 ---
 

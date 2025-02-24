@@ -46,6 +46,16 @@ sudo systemctl status tuned
 sudo systemctl enable --now tuned
 ```
 
+- CF dir
+
+```sh
+/etc/tuned
+```
+
+- Profile locate
+
+- `/usr/lib/tuned`
+
 ---
 
 ### Predefined Profiles
@@ -76,7 +86,7 @@ sudo systemctl enable --now tuned
 | CMD                              | DESC                                        |
 | -------------------------------- | ------------------------------------------- |
 | `tuned-adm list`                 | List Available Profiles                     |
-| `tuned-adm active`               | Check Current Active Profile                |
+| `tuned-adm active`               | Show Current Active Profile                 |
 | `tuned-adm recommend`            | Recommend an Optimal Profile for the System |
 | `tuned-adm profile profile_name` | Switch to a desired Profile                 |
 | `tuned-adm off`                  | Turn Off Tuning                             |
