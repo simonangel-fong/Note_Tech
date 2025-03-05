@@ -105,13 +105,15 @@
   - [!Oracle 19c on `Redhat9`](./server_db/orcl19_redhat9/orcl19_redhat9.md)
   - [`mysql` on `Ubuntu24`](./server_db/mysql_ubuntu24/mysql_ubuntu24.md)
   - [`mysql` on `Oracle Linux 8`](./server_db/mysql_ol8/mysql_ol8.md)
+  - [MSSQL on `OEL8`](./server_db/mssql_ol8/mssql_ol8.md)
 
-- Private Cloud
+- Local Network
   - [Local Package Repository](./package_repo_rhel9/package_repo_rhel9.md)
-  - [DHCP Server](./dhcp_server_rhel9/dhcp_server_rhel9.md)
-  - [RHEL9: PXE Installation Server](./rhel9_pxe_install_server/rhel9_pxe_install_server.md)
-  - [Oracle Linux 8: PXE Installation Server](./oel8_pxe_install_server/oel8_pxe_install_server.md)
   - [UEFI HTTP Source](./uefi_http_server/uefi_http_server.md)
+  - [DHCP Server](./dhcp_server_rhel9/dhcp_server_rhel9.md)
+  - [RHEL9 PXE Installation Server on RHEL9 ](./rhel9_pxe_install_server/rhel9_pxe_install_server.md)
+  - [OEL8 PXE Installation Server on RHEL9](./oel8_pxe_install_server/oel8_pxe_install_server.md)
+  - [!Ubuntu PXE Installation Server on RHEL9](./ubuntu_pxe_install_server/ubuntu_pxe_install_server.md)
 
 ---
 

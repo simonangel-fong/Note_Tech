@@ -1,12 +1,15 @@
-# Hands-on: PXE Installation Server - RHEL 9
+# Hands-on: RHEL9 PXE Installation Server running RHEL9
 
 [Back](../index.md)
 
-- [Hands-on: PXE Installation Server - RHEL 9](#hands-on-pxe-installation-server---rhel-9)
+- [Hands-on: RHEL9 PXE Installation Server running RHEL9](#hands-on-rhel9-pxe-installation-server-running-rhel9)
   - [Configure Server Network](#configure-server-network)
-  - [Configuring the DHCPv4 server for network boot](#configuring-the-dhcpv4-server-for-network-boot)
-    - [Configuring a TFTP server for UEFI-based clients](#configuring-a-tftp-server-for-uefi-based-clients)
-    - [Configuring a TFTP server for BIOS-based clients](#configuring-a-tftp-server-for-bios-based-clients)
+  - [Configure HTTP (Enabling Installation Repository)](#configure-http-enabling-installation-repository)
+  - [Configure TFTP (PXE Bootloader)](#configure-tftp-pxe-bootloader)
+  - [Congfigure DHCP](#congfigure-dhcp)
+    - [Using `dhcp-server`](#using-dhcp-server)
+  - [Client](#client)
+    - [Using `dnsmasq`](#using-dnsmasq)
 
 ---
 
@@ -14,7 +17,6 @@
 - Subnet IP: `192.168.128.0/24`
 - Broadcast IP: `192.168.128.255`
 - RHEL9 DVD path: `/dev/sr0`
-- Mount path: `/mnt`
 
 ## Configure Server Network
 
@@ -29,18 +31,126 @@ nmcli c up ens160
 
 hostnamectl set-hostname pxe-server
 echo "192.168.128.10 pxe-server" >> /etc/hosts
+
+dnf upgrade -y
+dnf clean all
 ```
 
 ---
 
-## Configuring the DHCPv4 server for network boot
+## Configure HTTP (Enabling Installation Repository)
 
 ```sh
+# Install the HTTP server
+dnf install -y httpd
+
+# mount dvd
+mkdir -p /var/www/html/rhel9
+mount -o ro /dev/sr0 /var/www/html/rhel9/
+
+# Start and enable the HTTP service
+systemctl enable --now httpd
+
+# Allow HTTP traffic through the firewall
+firewall-cmd --permanent --add-service=http
+firewall-cmd --reload
+
+# confirm
+firewall-cmd --list-services
+
+# access by
+http://192.168.128.10/rhel9
+```
+
+---
+
+## Configure TFTP (PXE Bootloader)
+
+- The TFTP server is responsible for delivering the PXE bootloader to the client.
+
+```sh
+# Install the TFTP server:
+dnf install -y tftp-server
+
+
+# ===== EFI Configuration
+# copy boot image files
+mkdir -pv /var/lib/tftpboot/rhel9/pxelinux
+cp -rv /var/www/html/rhel9/EFI/ /var/lib/tftpboot/rhel9
+cp -v /var/www/html/rhel9/images/pxeboot/{vmlinuz,initrd.img} /var/lib/tftpboot/rhel9/pxelinux
+
+# Replace the PXE boot menu file for EFI
+tee /var/lib/tftpboot/rhel9/EFI/BOOT/grub.cfg <<EOF
+set default="1"
+
+set timeout=120
+menuentry 'Install Oracle Linux 8.10.0' {
+  linux rhel9/pxelinux/vmlinuz ip=dhcp inst.repo=http://192.168.128.10/rhel9/
+  # linuxefi rhel9/pxelinux/vmlinuz ip=dhcp inst.repo=http://192.168.128.10/rhel9/ quiet
+  initrd rhel9/pxelinux/initrd.img
+  # initrdefi rhel9/pxelinux/initrd.img
+}
+EOF
+
+# ===== BIOS Configuration
+# download and Copy PXELINUX bootloader files
+dnf install -y syslinux
+cp -v /usr/share/syslinux/* /var/lib/tftpboot/rhel9/pxelinux
+# create cf
+mkdir -v /var/lib/tftpboot/rhel9/pxelinux/pxelinux.cfg
+cat > /var/lib/tftpboot/rhel9/pxelinux/pxelinux.cfg/default <<EOF
+default vesamenu.c32
+prompt 1
+timeout 600
+
+display boot.msg
+
+label linux
+  menu label ^Install system
+  menu default
+  kernel vmlinuz
+  append initrd=initrd.img ip=dhcp inst.repo=http://192.168.128.10/rhel9/
+
+label vesa
+  menu label Install system with ^basic video driver
+  kernel vmlinuz
+  append initrd=initrd.img ip=dhcp inst.xdriver=vesa nomodeset inst.repo=http://192.168.128.10/rhel9/
+
+label rescue
+  menu label ^Rescue installed system
+  kernel vmlinuz
+  append initrd=initrd.img inst.rescue inst.repo=http://192.168.128.10/rhel9/
+
+label local
+  menu label Boot from ^local drive
+  localboot 0xffff
+EOF
+
+chmod -R 755 /var/lib/tftpboot/rhel9/
+
+# Start and enable the TFTP service:
+systemctl enable --now tftp.socket
+
+# Allow TFTP traffic through the firewall
+firewall-cmd --permanent --add-service=tftp
+firewall-cmd --reload
+
+# confirm
+firewall-cmd --list-services
+```
+
+---
+
+## Congfigure DHCP
+
+### Using `dhcp-server`
+
+```sh
+# Install the DHCP server
 dnf install -y dhcp-server
 
-# Set up a DHCPv4 server
-
-cat > /etc/dhcp/dhcpd.conf <<EOF
+# Configure DHCP by editing /etc/dhcp/dhcpd.conf:
+tee /etc/dhcp/dhcpd.conf <<EOF
 option architecture-type code 93 = unsigned integer 16;
 
 subnet 192.168.128.0 netmask 255.255.255.0 {
@@ -51,126 +161,91 @@ subnet 192.168.128.0 netmask 255.255.255.0 {
   default-lease-time 600;
   max-lease-time 86400;
 
-  # Handle PXE Clients
-  # Defines a DHCP class named "pxeclients" to match devices that send the DHCP vendor-class-identifier as "PXEClient".
   class "pxeclients" {
     match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
     next-server 192.168.128.10;
-        # If the architecture type (option 93) is 00:07, which indicates a UEFI x86_64 system
         if option architecture-type = 00:07 {
-            filename "redhat/EFI/BOOT/BOOTX64.EFI";
+            filename "rhel9/EFI/BOOT/BOOTX64.EFI";
         }
         # Otherwise (for legacy BIOS clients)
         else {
-            filename "pxelinux/pxelinux.0";
+            filename "rhel9/pxelinux/pxelinux.0";
         }
+
   }
 
-    # Handle HTTP Boot Clients
-    # Defines a class "httpclients" for clients that request PXE boot over HTTP (HTTPBoot).
-    class "httpclients" {
-        match if substring (option vendor-class-identifier, 0, 10) = "HTTPClient";
-        option vendor-class-identifier "HTTPClient";
-        filename "http://192.168.128.10/redhat/iso/EFI/BOOT/BOOTX64.EFI";
+  class "httpclients" {
+    match if substring (option vendor-class-identifier, 0, 10) = "HTTPClient";
+    option vendor-class-identifier "HTTPClient";
+    filename "http://192.168.128.10/rhel9/EFI/BOOT/BOOTX64.EFI";
     }
 }
 EOF
 
+# Start and enable the DHCP service:
 systemctl enable --now dhcpd
+systemctl restart dhcpd
+systemctl status dhcpd
 
-firewall-cmd --add-service=dhcp --permanent
-firewall-cmd --reload
+# Allow DHCP traffic through the firewall:
+sudo firewall-cmd --permanent --add-service=dhcp
+sudo firewall-cmd --reload
+# confirm
 firewall-cmd --list-services
+systemctl status dhcpd
 ```
 
 ---
 
-### Configuring a TFTP server for UEFI-based clients
+## Client
+
+- Power up and select OS to install.
+
+---
+
+### Using `dnsmasq`
 
 ```sh
-dnf install -y tftp-server
-firewall-cmd --add-service=tftp --permanent
+# Installing dnsmasq
+dnf install -y dnsmasq
+
+# Create soft link of grubx64.efi, which is read during EFI installation, to the tftpboot boot dir
+ln -s /var/lib/tftpboot/rhel9/EFI/BOOT/grubx64.efi /var/lib/tftpboot/
+
+# Backup cf
+cp /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+
+cat > /etc/dnsmasq.conf<<EOF
+# Don't function as a DNS server:
+port=0
+
+# Log lots of extra information about DHCP transactions.
+log-dhcp
+
+# Specify the interface listened on
+interface=ens160
+# IP address range: start ip,end ip,mask,lease time
+dhcp-range=192.168.128.100,192.168.128.200,255.255.255.0,12h
+
+# Enable TFTP
+enable-tftp
+# specify tftp root
+tftp-root=/var/lib/tftpboot
+
+# BIOS PXE Boot
+dhcp-match=set:x86pc,option:client-arch,0
+dhcp-boot=tag:x86pc,rhel9/pxelinux/pxelinux.0
+
+# UEFI boot settings
+dhcp-match=set:efi-x86_64,option:client-arch,7
+dhcp-boot=tag:efi-x86_64,rhel9/EFI/BOOT/BOOTX64.EFI
+
+EOF
+
+dnsmasq --test
+
+systemctl enable --now dnsmasq
+
+firewall-cmd --permanent --zone=public --add-service=dhcp
 firewall-cmd --reload
-firewall-cmd --list-services
-
-mount -o ro -t iso9660 /dev/sr0 /mnt
-
-mkdir -v /var/lib/tftpboot/redhat
-# mkdir: created directory '/var/lib/tftpboot/redhat'
-cp -rv /mnt/EFI /var/lib/tftpboot/redhat/
-
-chmod -R 755 /var/lib/tftpboot/redhat/
-
-# Replace the content of /var/lib/tftpboot/redhat/EFI/BOOT/grub.cfg
-cat > /var/lib/tftpboot/redhat/EFI/BOOT/grub.cfg <<EOF
-set timeout=60
-menuentry 'RHEL 9' {
-  linux images/RHEL-9/vmlinuz ip=dhcp inst.repo=http://192.168.128.10/redhat/iso/
-  initrd images/RHEL-9/initrd.img
-}
-EOF
-
-# Create a subdirectory to store the boot image files
-mkdir -pv /var/lib/tftpboot/images/RHEL-9/
-cp -v /mnt/images/pxeboot/{vmlinuz,initrd.img} /var/lib/tftpboot/images/RHEL-9/
-
-# Start and enable the tftp.socket service:
-systemctl enable --now tftp.socket
 ```
-
-- The PXE boot server is now ready to serve PXE clients.
-  - You can start the client, which is the system to which you are installing Red Hat Enterprise Linux, select PXE Boot when prompted to specify a boot source, and start the network installation.
-
----
-
-### Configuring a TFTP server for BIOS-based clients
-
-```sh
-# copy
-cp -pr /mnt/AppStream/Packages/syslinux-tftpboot-6.04-0.20.el9.noarch.rpm /root
-
-# Extract the package
-rpm2cpio syslinux-tftpboot-6.04-0.20.el9.noarch.rpm | cpio -dimv
-
-# Create a pxelinux/ directory in tftpboot/ and copy all the files from the directory into the pxelinux/ directory:
-mkdir /var/lib/tftpboot/pxelinux
-cp /root/tftpboot/* /var/lib/tftpboot/pxelinux
-
-# Create the directory pxelinux.cfg/
-mkdir /var/lib/tftpboot/pxelinux/pxelinux.cfg
-cat > /var/lib/tftpboot/pxelinux/pxelinux.cfg/default <<EOF
-default vesamenu.c32
-prompt 1
-timeout 600
-
-display boot.msg
-
-label linux
-  menu label ^Install system
-  menu default
-  kernel images/RHEL-9/vmlinuz
-  append initrd=images/RHEL-9/initrd.img ip=dhcp inst.repo=http://192.168.128.10/redhat/iso
-
-label vesa
-  menu label Install system with ^basic video driver
-  kernel images/RHEL-9/vmlinuz
-  append initrd=images/RHEL-9/initrd.img ip=dhcp inst.xdriver=vesa nomodeset inst.repo=http://192.168.128.10/redhat/iso
-
-label rescue
-  menu label ^Rescue installed system
-  kernel images/RHEL-9/vmlinuz
-  append initrd=images/RHEL-9/initrd.img inst.rescue
-  inst.repo=http://192.168.128.10/redhat/iso
-
-label local
-  menu label Boot from ^local drive
-  localboot 0xffff
-EOF
-
-# Create a subdirectory to store the boot image files in the /var/lib/tftpboot/ directory, and copy the boot image files to the directory. In this example, the directory is /var/lib/tftpboot/pxelinux/images/RHEL-9/
-mkdir -pv /var/lib/tftpboot/pxelinux/images/RHEL-9/
-cp -v /mnt/images/pxeboot/{vmlinuz,initrd.img} /var/lib/tftpboot/pxelinux/images/RHEL-9/
-
-```
-
----
