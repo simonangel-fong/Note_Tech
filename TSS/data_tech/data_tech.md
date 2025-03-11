@@ -9,3 +9,4 @@
 - [WK05](./wk05/wk05.md)
 - [WK06](./wk06/wk06.md)
 - [WK07](./wk07/wk07.md)
+- [WK08](./wk08/wk08.md)

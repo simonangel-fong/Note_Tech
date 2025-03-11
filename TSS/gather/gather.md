@@ -7,4 +7,5 @@
 - [WK03](./wk03/wk03/wk03.md)
 - [WK04](./wk04/wk04/wk04.md)
 - [WK05](./wk05/wk05/wk05.md)
-- [WK06](./wk06/wk06.md)
+- WK06 - Test
+- [WK07](./wk07/wk07.md)

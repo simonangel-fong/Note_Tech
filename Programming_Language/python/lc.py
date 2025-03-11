@@ -2,27 +2,28 @@ from typing import List
 
 
 class Solution:
-    def isSubsequence(self, s: str, t: str) -> bool:
-        # 2 pointers: spointer, tpointer
-        # each t: match; if match spointer+1
-        # return: if spointer == len
+    def maxArea(self, height: List[int]) -> int:
+        left = 0
+        right = len(height)-1
+        maxArea = 0
+        while left < right:
+            min_height = min(height[left], height[right])
+            maxArea = max(maxArea, min_height*(right-left))
+            if height[left] <= height[right]:
+                left += 1
+                # continuely moving to the next higher height
+                while height[left] < min_height:
+                    left += 1
+            else:
+                right -= 1
+                while height[right] < min_height:
+                    right -= 1
+        return maxArea
 
-        spointer = tpointer = 0
 
-        while spointer < len(s) and tpointer < len(t):
-            # match
-            if t[tpointer] == s[spointer]:
-                spointer += 1
-            tpointer += 1
-        return spointer == len(s)
+S = Solution()
+height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
+print(S.maxArea(height))
 
-
-sol = Solution()
-
-s = "abc"
-t = "ahbgdc"
-print(sol.isSubsequence(s, t))
-
-s = "axc"
-t = "ahbgdc"
-print(sol.isSubsequence(s, t))
+height = [1, 1]
+print(S.maxArea(height))
