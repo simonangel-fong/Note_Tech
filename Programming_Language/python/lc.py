@@ -1,29 +1,34 @@
-from typing import List
-
-
 class Solution:
-    def findMaxAverage(self, nums: List[int], k: int) -> float:
-        currentSum = maxSum = sum(nums[:k])
-        for i in range(len(nums)-k):
-            currentSum -= nums[i]
-            currentSum += nums[k+i]
-            maxSum = max(currentSum, maxSum)
+    def maxVowels(self, s: str, k: int) -> int:
+        dum = ["z"]*(k-1)
+        dumStr = "".join(dum) + s
+        vowl = set('aeiou')
+        maxCount = currentCount = 0
 
-        return maxSum / k
+        for i in range(0, len(dumStr)):
+            if dumStr[i] in vowl and currentCount < k:
+                currentCount += 1
+
+            if dumStr[i] not in vowl and 0 < currentCount:
+                currentCount -= 1
+
+            maxCount = max(maxCount, currentCount)
+        return maxCount
 
 
 S = Solution()
+# s = "zzzabciiidef"
+# k = 3
+# print(S.maxVowels(s, k))
 
-# nums = [1, 12, -5, -6, 50, 3]
-# k = 4
-# print(S.findMaxAverage(nums, k))
-# 12.75000
+# s = "aeiou"
+# k = 2
+# print(S.maxVowels(s, k))
 
-# nums = [5]
-# k = 1
-# print(S.findMaxAverage(nums, k))
-# # 5.00000
+# s = "leetcode"
+# k = 3
+# print(S.maxVowels(s, k))
 
-nums = [-1]
-k = 1
-print(S.findMaxAverage(nums, k))
+s = "weallloveyou"
+k = 7
+print(S.maxVowels(s, k))

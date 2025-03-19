@@ -103,6 +103,7 @@
 - Database Server
 
   - [!Oracle 19c on `Redhat9`](./server_db/orcl19_redhat9/orcl19_redhat9.md)
+  - [Oracle 19c on `Redhat8.10`](./server_db/orcl19_redhat8/orcl19_redhat8.md)
   - [`mysql` on `Ubuntu24`](./server_db/mysql_ubuntu24/mysql_ubuntu24.md)
   - [`mysql` on `Oracle Linux 8`](./server_db/mysql_ol8/mysql_ol8.md)
   - [MSSQL on `OEL8`](./server_db/mssql_ol8/mssql_ol8.md)
