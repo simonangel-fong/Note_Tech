@@ -117,3 +117,7 @@
 
 - [Project: node.js app](./pro_nodejs/pro_nodejs.md)
 - [Project: Docker Compose with Multiple local containers](./pro_compose_multicon/pro_compose_multicon.md)
+
+---
+
+- [Deploy Oracle Database 19c using Docker on RHEL 8.10](./deploy_oracle19c_docker_rhel8.md)
