@@ -10,3 +10,4 @@
 - WK06 - Test
 - [WK07](./wk07/wk07.md)
 - [WK10](./wk10/wk10.md)
+- [WK11](./wk11/wk11.md)
