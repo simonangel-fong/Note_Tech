@@ -91,4 +91,5 @@
 - [TSS](./TSS/tss.md)
 
 
-https://docs.google.com/presentation/d/11a-QBQ-Qd8LIZD2j1-SBuVkT6Ai1tx3s/edit?usp=sharing&ouid=105526691141860935521&rtpof=true&sd=true
+https://docs.google.com/presentation/d/11a-QBQ-Qd8LIZD2j1-SBuVkT6Ai1tx3s/edit?usp=drive_link&ouid=105526691141860935521&rtpof=true&sd=true
+
