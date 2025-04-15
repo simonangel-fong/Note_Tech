@@ -13,3 +13,5 @@
 - [WK09](./wk09/wk09.md)
 - [WK10](./wk10/wk10.md)
 - [WK11](./wk11/wk11.md)
+- [Final](./final/final.md)
+
