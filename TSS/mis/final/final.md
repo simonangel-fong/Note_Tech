@@ -14,28 +14,35 @@
 
 ## IS governance and Ethics
 
-- **What is Information Systems Governance**
+- **What is Information Systems `Governance`**
 
-  - `Information systems governance` is the development of consistent, cohesive **management policies** and verifiable **internal processes** for information technology and related services.
-  - The **goal** of information systems governance is to **improve the benefits** of an organization’s IT investment over time. It involves establishing **reporting structures** and **review processes** to **improve quality**, **reduce** service **costs** and delivery time, **reduce** IT **risks**, and better support business processes.
-
----
-
-- **Information Systems Audit, and why it’s needed**
-  - An `Information Systems Audit` **evaluates** an organization's IT **systems**, **processes**, and **controls** to ensure security, reliability, and compliance **with regulations and standards**.
-  - Reasons Why It’s Needed
-    - **Security Assurance**: Identifies **vulnerabilities** and ensures **robust protection** against cyber threats.
-    - **Compliance**: **Verifies adherence to legal**, regulatory, and industry standards (e.g., `GDPR`, `HIPAA`).
-    - **Risk Management**: **Detects and mitigates risks** related to data breaches, system failures, or fraud.
-    - **Operational Efficiency**: Highlights **inefficiencies** in IT **processes**, improving performance and resource use.
-    - **Stakeholder Trust**: Builds **confidence among customers**, investors, and partners by demonstrating secure and compliant systems.
+  - `Information systems governance`
+    - a **process** that **ensures** an organization's IT **resources and policies** are **aligned with its strategic goals**, values, and stakeholders
+  - **goal**
+    - **improve the benefits** of an organization’s IT **investment** over time.
+  - It involves
+    - establishing **reporting structures** and **review processes** to **improve quality**, 质量
+    - **reduce** service **costs** and delivery time, 成本
+    - **reduce** IT **risks**, 风险
+    - and better **support** business processes. 支持
 
 ---
 
-- **Information Systems Ethics**
+- **Information Systems `Audit`, and why it’s needed**
+  - `Information Systems Audit`
+    - a process of **examination** and **evaluation** of an organization's information **technology**, **operations** and **controls**, to ensure compliance **with regulations and standards**.
+  - Reasons Why It’s Needed. It helps
+    - Identifies **inefficiencies** in IT **processes**, improving performance and resource use.
+    - Identifies **vulnerabilities** and ensures **robust protection** against cyber threats.
+    - **Verifies adherence to legal**, regulatory, and industry standards (e.g., `GDPR`, `HIPAA`).
+    - Builds **confidence among customers**, investors, and partners by demonstrating secure and compliant systems.
 
-  - `Information Systems Ethics` involves the **principles guiding the responsible use**, management, and development of IT systems, focusing on **privacy**, **security**, **fairness**, and **accountability**.
+---
 
+- **Information Systems `Ethics`**
+
+  - `Information Systems Ethics`
+    - the **moral principles and standards** that **guide the use** of **technology** and **information** within **organizations and society**.
   - Simple Example
     - A company develops a mobile app that **collects user location data**. Ethically, the company should:
       - **Inform** users clearly about data collection and **obtain** their **consent**.
@@ -45,10 +52,16 @@
 
 ---
 
-- **The Green IT**
-  - `Green IT` aims to **improve energy efficiency, promote recyclability**, and **reduce the use of materials** that are hazardous to the environment.
-    - It represents a **choice to consider** not only the **financial implications of using IT** but also the **effects** on **people** and the **environment**.
-  - Examples include using **sleep mode** for energy savings, the `ENERGY STAR program` for **efficient equipment**, and e-**cycling** through organizations like the Electronics Product Recycling Association (EPRA).
+- **The `Green` IT**
+  - the **practice** of **designing**, **manufacturing**, **using**, and **disposing** of computing resources **in an environmentally friendly way**
+  - Goal:
+    - improve **energy efficiency**,
+    - promote **recyclability**,
+    - **reduce the use of materials** that are hazardous to the environment.
+  - Examples include
+    - using **sleep mode** for energy savings,
+    - the `ENERGY STAR program` for **efficient equipment**,
+    - and e-**cycling** through organizations like the Electronics Product Recycling Association (EPRA).
 
 ---
 
@@ -56,43 +69,46 @@
 
 - **What Is Identity Theft?**
 
-  - `Identity theft` involves the **unauthorized use** of **personal information**, such as a person’s name, address, date of birth, and social insurance number, to **impersonate someone** for **fraudulent purposes**.
+  - `Identity theft`
+    - the **unauthorized use** of **personal information**, such as a person’s name, address, date of birth, and social insurance number, to **commit fraud** or other **crimes**
   - It is a rapidly **growing crime in Canada** and can be used to commit other crimes.
 
 ---
 
 - **What Is PIPEDA?**
 
-- The `Personal Information Protection and Electronic Documents Act (PIPEDA)` is a **Canadian law** that **balances** **individuals' right** to privacy with **organizations' need** to collect, use, and **share** personal information for business purposes.
+- The `Personal Information Protection and Electronic Documents Act (PIPEDA)`
+  - a **Canadian law** that **balances** **individuals' right** to privacy with **organizations' need** to collect, use, and share personal information for business purposes.
   - It governs how data is **collected** and **used**, ensuring that **individuals know** **what** information is collected, **how** it will be used, and that it is secure, accurate, and up to date.
-  - PIPEDA also **prohibits** using personal information for purposes **other than what was agreed upon**, such as selling it. The law helps **foster trust in e-commerce** but does **not fully eliminate risks** like `information theft`.
+  - PIPEDA also **prohibits** using personal information for purposes **other than what was agreed upon**, such as selling it. The law helps **foster trust in e-commerce**
+  - does **not fully eliminate risks** like `information theft`.
 
 ---
 
 - **What Types of Security Threats Do Organizations Face?**
-- Organizations face three main sources of security threats:
+- Organizations face **three main sources** of security threats:
 
+  - **Natural Events and Disasters**:
+    - Events like **fires, floods**, earthquakes, or other natural disasters that can **disrupt operations** or cause **data loss**.
   - **Human Error and Mistakes**:
     - **Accidental** problems **caused by employees or outsiders**, such as **misconfigurations** or data **entry errors**.
   - **Malicious Human Activity**:
     - **Intentional actions** by individuals, such as **hacking**, **phishing**, or pretexting, aimed at damaging or exploiting data and systems.
-  - **Natural Events and Disasters**:
-    - Events like **fires, floods**, earthquakes, or other natural disasters that can **disrupt operations** or cause **data loss**.
 
 - There are **five types of security problems** for organizations:
-  - Unauthorized data **disclosure**
+  - **Unauthorized data disclosure**
     - occur by **human error** when someone **releases data** in **violation** of policy
     - occur by **malicious human activity**
       - Phishing, Spoofing, Sniffing
-  - Incorrect data **modification**
-    - occur by human error and system error: entering wrong prices
-    - occur by malicious human activity: Hacking and computer crimes
-  - **Faulty** service
+  - **Incorrect data modification**
+    - occur by human error and system error: **entering** wrong prices
+    - occur by malicious human activity: **Hacking** and computer crimes
+  - **Faulty service**
     - due to incorrect system operations
     - result of human error by making procedural mistakes
   - **Denial of service**
     - attacker floods a server with internet traffic to prevent users access.
-  - Loss of **infrastructure**
+  - **Loss of infrastructure**
     - Human errors
     - Malicious activity
     - Natural disasters
