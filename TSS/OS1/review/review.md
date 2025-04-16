@@ -152,7 +152,7 @@
 
   - **Process** of **determining** which process will **own CPU for execution** while another process is **on hold**
     - Selects 1 `process` **in memory** that is **ready** for execution
-    - Whenever cpu is idle, assign cpu for ready process.
+    - Whenever cpu is **idle**, assign cpu for ready process.
 
 - `Short-term scheduler`:
 

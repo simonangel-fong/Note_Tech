@@ -33,7 +33,7 @@
     - a process of **examination** and **evaluation** of an organization's information **technology**, **operations** and **controls**, to ensure compliance **with regulations and standards**.
   - Reasons Why It’s Needed. It helps
     - Identifies **inefficiencies** in IT **processes**, improving performance and resource use.
-    - Identifies **vulnerabilities** and ensures **robust protection** against cyber threats.
+    - Identifies **vulnerabilities** and ensures **robust protection** against cyber **threats**.
     - **Verifies adherence to legal**, regulatory, and industry standards (e.g., `GDPR`, `HIPAA`).
     - Builds **confidence among customers**, investors, and partners by demonstrating secure and compliant systems.
 
@@ -105,7 +105,7 @@
     - occur by malicious human activity: **Hacking** and computer crimes
   - **Faulty service**
     - due to incorrect system operations
-    - result of human error by making procedural mistakes
+    - result of human error by making **procedural mistakes**
   - **Denial of service**
     - attacker floods a server with internet traffic to prevent users access.
   - **Loss of infrastructure**
@@ -115,32 +115,54 @@
 
 ---
 
-- **What Is Disaster Preparedness?**
+- **What Is `Disaster Preparedness`?**
 
-- `Disaster preparedness` involves **planning** and **organizing** measures to **ensure** that an organization can **continue its operation**s in the **event of a disaster**.
+- `Disaster preparedness`
+  - **proactive steps** to be ready for **potential emergencies**, like natural disasters or public health crises.
+  - involves **planning** and **organizing** measures to **ensure** that an organization can **continue its operation**s in the **event of a disaster**.
+  - Goal:
+    - help **minimize downtime** and ensure **business continuity** during emergencies.
 - Key steps include:
 
-  - **Locating infrastructure in safe areas** to minimize risk.
-  - **Identifying mission-critical systems** that are essential for operations.
-  - **Determining resources** needed to run those **systems**, such as computers, software, and trained personnel.
-  - **Preparing remote backup facilities**, including hot sites (ready-to-use recovery centers), cold sites (empty spaces for customer-provided equipment), and warm sites (a balance between the two).
+  - Locating infrastructure in **safe areas** to minimize risk.
+  - Identifying **mission-critical systems** that are essential for operations.
+  - Determining **resources** needed to run those **systems**, such as computers, software, and trained personnel.
+  - Preparing remote **backup facilities**, including hot sites (ready-to-use recovery centers), cold sites (empty spaces for customer-provided equipment), and warm sites (a balance between the two).
   - **Training and rehearsing** to ensure smooth transitions during a disaster.
-
-- These efforts help minimize downtime and ensure business continuity during emergencies.
 
 ---
 
-- **How Should Organizations Respond to Security Incidents**
+- **How Should Organizations Respond to `Security Incidents`**
+
+- `incident response plan`
+
+  - a **structured document** outlining how an organization will **prepare** for, **detect**, **respond** to, and **recover** from `security incidents`, such as data breaches or cyberattacks
+
+- Goal:
+
+  - help **minimize damage** and **recover more swiftly** from a security breach.
 
 - Organizations should have a **well-prepared `incident response plan`** in place, which includes:
 
-  - Having a **plan**: **Define actions** to take and **contacts** to reach during a security incident.
-  - **Centralized reporting**: Ensure all security incidents are **reported to a central point** for efficient **tracking** and **response**.
-  - Specific **responses**: **Apply** consistent, specialized **actions** tailored to the nature of the incident.
-  - **Speed**: **Respond quickly** to **mitigate** the impact of the incident.
-  - **Preparation**: Ensure the incident response plan includes **key personnel** and their **contact information**, even for off-hours.
-  - **Avoid worsening** the situation: Ensure that response actions do not unintentionally escalate the problem.
-  - **Practice**: Regularly **rehearse** and update the response plan to ensure readiness.
+  - **Define the respond action**
+    - **Define actions** to take and **contacts** to reach during a security incident.
+  - **Centralized reporting**:
+    - Ensure all security incidents are **reported to a central point** for efficient **tracking** and **response**.
+  - **Define the contacts**
+  - **Preparation**
+  - **Imitegation**
+  - **Practice**:
+
+  - Specific **responses**:
+    - **Apply** consistent, specialized **actions** tailored to the nature of the incident.
+  - **Speed**:
+    - **Respond quickly** to **mitigate** the impact of the incident.
+  - **Preparation**:
+    - Ensure the incident response plan includes **key personnel** and their **contact information**, even for off-hours.
+  - **Avoid worsening** the situation:
+    - Ensure that response actions do not unintentionally escalate the problem.
+  - **Practice**:
+    - Regularly **rehearse** and update the response plan to ensure readiness.
 
 - A quick, coordinated, and effective response can help minimize damage and recover more swiftly from a security breach.
 
@@ -148,28 +170,39 @@
 
 ## Project Management
 
-- **Why is Formalized Project Management Necessary?**
+- **Why is `Formalized Project Management` Necessary?**
 
-- `Formalized project management` refers to the structured **approach** and set of **methodologies** used to **plan, execute, monitor, control, and complete** projects efficiently and effectively.
+- `Formalized project management`
 
-- `Formalized project management` is **necessary** for **large-scale projects** because it provides a **structured approach** to managing **complex tasks, resources, timelines, and risks**.
+  - the **aproach** of using **structured processes**, **methodologies**, and **tools** to plan, execute, monitor, and control **projects**.
+  - refers to the structured **approach** and set of **methodologies** used to **plan, execute, monitor, control, and complete** projects efficiently and effectively.
+
+- `Formalized project management`
+  - **necessary** for **large-scale projects**
+    - provides a **structured approach** to managing **complex tasks, resources, timelines, and risks**.
 - In **small companies**, **informal** management may suffice for **simple** projects, but for **medium** and **large** organizations, where projects are intricate, involve substantial resources, and **impact various business processes**, a formalized approach is critical.
-- It **ensures** that projects are **completed on time**, within **budget**, and to the required **quality standards**.
-- Without formalized project management, companies **risk** significant **delays**, cost **overruns**, and low team **morale**.
+- It **ensures** that projects are
+  - **completed on time**, 时间
+  - within **budget**, 钱
+  - and to the required **quality standards**.质量
+- **Without** formalized project management, companies **risk**
+  - significant **delays**,
+  - cost **overruns**,
+  - and low team **morale**.
 - Methods like `Agile`, `Scrum`, and Six Sigma offer frameworks that help **streamline** project management, ensuring effective execution and delivery.
 
 ---
 
-- **What are the Trade-Offs in Requirements, Cost, and Time? What are the Dimensions of Project Management?**
+- **What are the Trade-Offs in `Requirements`, `Cost`, and `Time`? What are the `Dimensions` of Project Management?**
 
 - In project management, **requirements**, **cost**, and **time** form a **trade-off triangle**.
 
   - **Increasing** project **requirements** (features or functionality) typically leads to **higher** **costs** and **longer schedules**.
-  - **Reducing** **cost** may limit **resources** or quality, while shortening the timeline may require cutting features or increasing cost.
+  - shortening the **timeline** may require **cutting features** or increasing **cost**.
 
 - `Dimensions of Project Management`:
 
-- refer to the **key aspects** that must be **effectively managed** to ensure a project's success.
+- refer to the **key aspects** that must be **effectively managed** to **ensure a project's success**.
 - These typically include:
   - **Scope**: Defining and controlling what is **included** in the project to meet objectives without unnecessary additions.
   - **Time**: **Planning** and managing the **project schedule** to ensure **timely completion**.
@@ -180,7 +213,7 @@
 
 ---
 
-- **How Does a Work Breakdown Structure Drive Project Management?**
+- **How Does a `Work Breakdown Structure` Drive Project Management?**
 
 - `work breakdown structure (WBS)`
 
@@ -188,8 +221,8 @@
   - The WBS for a large project is huge; it might entail hundreds or even thousands of tasks.
 
 - A `Work Breakdown Structure (WBS)` **drives** project management by using a `divide-and-conquer strategy`.
-- It **breaks** large tasks into **smaller**, **manageable** units, making it easier to **estimate** **time, cost, and resources**.
-- Each task in the WBS results in a **deliverable** (e.g., document, prototype), allowing progress to be tracked clearly using `Gantt chart`
+  - It **breaks** large tasks into **smaller**, **manageable** units, making it easier to **estimate** **time, cost, and resources**.
+  - Each task in the WBS results in a **deliverable** (e.g., document, prototype), allowing progress to be **tracked** clearly using `Gantt chart`
 
 - The WBS forms the foundation for creating the `Baseline WBS`, which includes planned **tasks**, **durations**, **dependencies**, and **resources**.
 - Tools like `Microsoft Project` use this baseline
