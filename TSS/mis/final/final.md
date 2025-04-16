@@ -221,6 +221,7 @@
   - The WBS for a large project is huge; it might entail hundreds or even thousands of tasks.
 
 - A `Work Breakdown Structure (WBS)` **drives** project management by using a `divide-and-conquer strategy`.
+
   - It **breaks** large tasks into **smaller**, **manageable** units, making it easier to **estimate** **time, cost, and resources**.
   - Each task in the WBS results in a **deliverable** (e.g., document, prototype), allowing progress to be **tracked** clearly using `Gantt chart`
 
@@ -232,10 +233,11 @@
 - **What is the Biggest Challenge for `Planning` a Systems Development Project?**
 
 - The biggest challenge is `scheduling`.
-- Large projects involve **thousands** of tasks, and **estimating time** accurately for each is **difficult**.
-- Even **small miscalculations** can **throw off** the entire plan.
-  - When **no** suitable software exists to license, companies face **uncertainty** in **development timelines**.
-  - Some **admit the uncertainty** and manage resources flexibly, while others try to estimate using **past projects** or **code metrics**, though this remains highly complex.
+- **Large** projects involve **thousands** of tasks, and **estimating time** accurately for each is **difficult**.
+  - Even **small miscalculations** can **throw off** the entire plan.
+- When **no** suitable **software exists** to license, companies face **uncertainty** in **development timelines**.
+  - Some **admit the uncertainty** and manage resources **flexibly**,
+  - others **try to estimate** using **past projects** or **code metrics**, though this remains highly complex.
 
 ---
 
@@ -260,7 +262,7 @@
 **Benefits of using Jira** include:
 
 - Streamlining the **tracking** of **customer requirements**
-- Enhancing team **collaboration** and **productivity**
+- Enhancing **team collaboration** and **productivity**
 - **Organizing** work using `epics`, `components`, `issue` types, tasks, and sub-tasks
 - **Generating** role-specific **reports**
 - Supporting **plugins** for automation testing, test management, and reporting to extend functionality.
@@ -304,7 +306,7 @@
 - Difference between `Agile` and `Waterfall` (with examples):
 
   - `Agile` is an **iterative and flexible approach** where product development is **broken into** smaller, manageable units delivered in **cycles**.
-  - For example, a team releases updates every two weeks, getting regular **feedback** and **adapting** quickly to changes.
+    - For example, a team releases updates every two weeks, getting regular **feedback** and **adapting** quickly to changes.
   - `Waterfall` is a **linear and sequential approach** where each phase (like requirements, design, implementation) must be **completed before moving to the next**.
     - For example, in **traditional** software projects, the full product is **delivered at the end** after all steps are **completed**.
 
@@ -333,11 +335,12 @@
 - `Confluence`
 
   - a **team collaboration software** developed by Atlassian that **serves as a centralized platform** for teams to **work together** and **share information** efficiently.
-    - It acts **like a wiki** with advanced content creation tools, making it ideal for **building and maintaining a knowledge repository**.
+  - It acts **like a wiki** with advanced content creation tools, making it ideal for **building and maintaining a knowledge repository**.
 
 - `Confluence` is commonly used **alongside** `Jira`—while `Jira` **tracks** project progress, `Confluence` is used to **document** the project details, plans, and decisions.
+
 - It is available in two deployment options:
-  - S`aaS (Cloud-based)`: **Subscription-based** and hosted by Atlassian.
+  - `SaaS (Cloud-based)`: **Subscription-based** and hosted by Atlassian.
   - `Self-hosted`: Installed on **in-house servers** or through `Confluence Data Centers` for enterprise needs.
 
 ---
@@ -350,11 +353,11 @@
 - **Lack of a good model** is an important **risk** to **recognize** in IT projects
 
 - IT projects are risky due to **factors** like
-  - **lack of experience** in the team,
-  - **insufficient support** from top management,
   - **unclear project requirements**,
-  - **high technical complexity**,
   - and **challenges in estimating** time, budget, and scope.
+  - **insufficient support** from top management,
+  - **lack of experience** in the team,
+  - **high technical complexity**,
 - Additionally, the **continual change in technology** and difficulty in monitoring progress contribute to the risk.
 
 ---
@@ -362,6 +365,7 @@
 - **What is SDLC, explain its phases and when it’s good to use it?**
 
 - `SDLC (Systems Development Life Cycle)`
+  - a **structured, phased approach** to **building** and **deploying** information systems.
   - a **process** used to **acquire and maintain information systems**, consisting of
 - five phases:
   - **System Definition**:
@@ -403,9 +407,10 @@
 
 ---
 
-- **What is outsourcing, and what are application service providers?**
+- **What is `outsourcing`, and what are `application service providers`?**
 
-- `Outsourcing` is the process of **hiring another organization** to perform a service.
+- `Outsourcing`
+  - the process of **hiring another organization** to perform a service.
 
   - It can be **domestic** or **international** (called `offshoring` when done overseas, e.g., in India or China).
   - It helps organizations gain **expertise**, reduce **costs**, and minimize development **risks**.
@@ -438,7 +443,7 @@
 ---
 
 **IT System Cost Estimation:**
-This involves predicting the financial resources needed for developing, implementing, and maintaining an IT system.
+This involves **predicting the financial resources needed** for developing, implementing, and maintaining an IT system.
 
 **Pros:**
 
@@ -448,8 +453,8 @@ This involves predicting the financial resources needed for developing, implemen
 
 **Cons:**
 
-- ❌ **Inaccuracy**: Estimates are often unreliable due to changing technology and unclear requirements.
-- ❌ **Time-Consuming**: Detailed estimation takes time and effort.
+- ❌ **Inaccuracy**: Estimates are often **unreliable** due to changing technology and unclear requirements.
+- ❌ **Time-Consuming**: Detailed estimation **takes time and effort**.
 - ❌ **Complexity**: Difficult for large, multi-phase or innovative projects.
 
 ---
@@ -479,6 +484,7 @@ This involves predicting the financial resources needed for developing, implemen
 - `Version Control`:
   - System that **records** and **tracks** **changes** to code/documents over time.
 - `Continuous Integration`:
+  - a software development **practice** where **code changes** are frequently **integrated** into a **central repository**, and each integration is **automatically tested** to ensure that new code **doesn't break** existing functionality. 
   - Developers frequently **integrate code** into a **shared repo** to detect and fix **errors** early.
 - `Continuous Testing`:
   - **Automated tests** run in the pipeline for **immediate feedback** on business risks.
