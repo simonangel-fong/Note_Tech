@@ -5,8 +5,14 @@
 - [HomeLab](./homelab/index.md)
 
 - Container
-  - [ ] [Docker](./Operating_System/docker/index.md)
+
+  - [ ] [Docker](./container/docker/index.md)
   - [ ] [kubernetes](./container/kubernetes/index.md)
+
+- Version Control
+  - [ ] [Git](./VCS/git/index.md)
+  - [ ] [GitHub](./VCS/github/index.md)
+  - [ ] [GitLab](./VCS/gitlab/index.md)
 
 ---
 
@@ -32,10 +38,6 @@
   - [ ] [Deep Learning](./AI/Deep_learning/index.md)
   - [ ] [Machine Learning](./AI/Machine_learning/index.md)
     - [x] [Yolo Project: VehiclePlateDetector](https://github.com/simonangel-fong/VehiclePlateDetector)
-
-- GitHub
-  - [ ] [Git](./Fundamental/git/git_index.md)
-  - [ ] [GitHub](./GitHub/index.md)
 
 ---
 

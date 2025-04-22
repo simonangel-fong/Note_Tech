@@ -88,3 +88,19 @@
 | `kubectl run app_name` | deploy an application on the cluster   |
 | `kubectl cluster-info` | view information about the cluster     |
 | `kubectl get nodes`    | list all the nodes part of the cluster |
+
+---
+
+- Rel:
+  - https://kubernetes.io/docs/concepts/overview/components/
+- https://scriptwang.github.io/blog/#/blog/2021-06-14_K8S%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E6%88%98%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89
+
+## Kubernetes
+
+- [Fundamental](./fundamental/fundamental/fundamental.md)
+
+  - [Architecture](./fundamental/architecture/architecture.md)
+
+- Setup Environment
+  - [RHEL9: `minikube` installation](./deploy/minikube_rhel9/minikube_rhel9.md)
+  - [Windows: `Docker Desktop` enable `Kubernetes`](./deploy/kube_docker_desktop_win/kube_docker_desktop_win.md)
