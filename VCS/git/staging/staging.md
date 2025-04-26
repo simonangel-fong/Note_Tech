@@ -5,6 +5,7 @@
 - [git - Staging Area](#git---staging-area)
   - [Staging Area](#staging-area)
   - [Untrack to last commited](#untrack-to-last-commited)
+  - [Compare diff](#compare-diff)
 
 ---
 
@@ -24,3 +25,17 @@
 | Command                 | Description                                                               |
 | ----------------------- | ------------------------------------------------------------------------- |
 | `git restore file_name` | Discard changes in working directory, reset to the last committed version |
+
+---
+
+## Compare diff
+
+- Sequence of states
+  - unstaged
+  - staged
+  - commited
+
+| Command                         | Current state | Description                                   |
+| ------------------------------- | ------------- | --------------------------------------------- |
+| `git diff --name-only`          | unstaged      | List the files that have not been staged      |
+| `git diff --name-only --cached` | Stage         | List the names of files that have been staged |

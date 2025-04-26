@@ -9,6 +9,10 @@
   - [ ] [Docker](./container/docker/index.md)
   - [ ] [kubernetes](./container/kubernetes/index.md)
 
+- Virtual Machine
+
+  - [ ] [Proxmox](./vm/proxmox/proxmox.md)
+
 - Version Control
   - [ ] [Git](./VCS/git/index.md)
   - [ ] [GitHub](./VCS/github/index.md)
