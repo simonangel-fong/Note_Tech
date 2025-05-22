@@ -100,7 +100,10 @@
 - [Fundamental](./fundamental/fundamental/fundamental.md)
 
   - [Architecture](./fundamental/architecture/architecture.md)
+  - [YAML File](./fundamental/yaml/yaml.md)
+  - [Pod](./fundamental/pod/pod.md)
 
 - Setup Environment
+
   - [RHEL9: `minikube` installation](./deploy/minikube_rhel9/minikube_rhel9.md)
   - [Windows: `Docker Desktop` enable `Kubernetes`](./deploy/kube_docker_desktop_win/kube_docker_desktop_win.md)

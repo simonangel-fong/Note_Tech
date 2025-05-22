@@ -7,6 +7,7 @@
   - [Create a RHEL 9 VM](#create-a-rhel-9-vm)
   - [Install `docker`](#install-docker)
   - [`minikube` Installation](#minikube-installation)
+  - [Deploy applications](#deploy-applications)
 
 ---
 
@@ -135,4 +136,48 @@ kubectl get nodes
 # minikube   Ready    control-plane   3m8s   v1.32.0
 
 minikube dashboard
+```
+
+## Deploy applications
+
+```sh
+# Create a sample deployment and expose it on port 8080
+kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+
+# confirm
+kubectl get services hello-minikube
+# NAME             TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+# hello-minikube   NodePort   10.104.173.58   <none>        8080:31213/TCP   9s
+
+# use minikube launch a web browser
+minikube service hello-minikube
+# |-----------|----------------|-------------|---------------------------|
+# | NAMESPACE |      NAME      | TARGET PORT |            URL            |
+# |-----------|----------------|-------------|---------------------------|
+# | default   | hello-minikube |        8080 | http://192.168.49.2:31213 |
+# |-----------|----------------|-------------|---------------------------|
+# 🎉  Opening service default/hello-minikube in default browser...
+
+```
+
+![pic](./pic/deployment.png)
+
+- Cleanup
+
+```sh
+kubectl delete service hello-minikube
+# service "hello-minikube" deleted
+kubectl delete deployment hello-minikube
+# deployment.apps "hello-minikube" deleted
+
+# confirm
+kubectl get services hello-minikube
+# Error from server (NotFound): services "hello-minikube" not found
+
+kubectl get deployment hello-minikube
+# Error from server (NotFound): deployments.apps "hello-minikube" not found
+
+kubectl get pods
+# No resources found in default namespace.
 ```

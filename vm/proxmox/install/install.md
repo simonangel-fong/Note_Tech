@@ -241,7 +241,7 @@ iface wlp7s0 inet static
 # Proxmox host IP on LAN
 auto vmbr0
 iface vmbr0 inet manual
-        address 192.168.100.0/24
+        address 192.168.100.1/24
         bridge-ports none
         bridge-stp off
         bridge-fd 0
@@ -289,18 +289,22 @@ iptables -t nat -F
 # clear all forwarding rules
 iptables -F FORWARD
 
-# Create NAT rule
-# allowing devices on the vLAN to access the internet through physical interface.
+# NAT rule: map internal network to the Wifi interface
 iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o wlp7s0 -j MASQUERADE
-# Outbound rule
-# allow devices on the vLAN to send traffic to the internet via physical interface.
+# Outbound rule: allow traffic from the internal network to the Wifi interface
 iptables -A FORWARD -s 192.168.100.0/24 -o wlp7s0 -j ACCEPT
-# Inboud rule
-# Allow return traffic from the internet to reach devices on the vLAN.
+# Inboud rule: allow traffic from the Wifi interface to the internal network
 iptables -A FORWARD -d 192.168.100.0/24 -m state --state ESTABLISHED,RELATED -i wlp7s0 -j ACCEPT
 
 # confirm
-iptables -t nat -L -v -n
+iptables -t nat -L POSTROUTING -v -n
+# pkts bytes target     prot opt in     out     source               destination
+  # 0     0 MASQUERADE  0    --  *      wlp7s0  192.168.100.0/24     0.0.0.0/0
+iptables -L FORWARD -v -n --line-numbers
+# num   pkts bytes target     prot opt in     out     source               destination
+# 1        0     0 ACCEPT     0    --  *      wlp7s0  192.168.100.0/24     0.0.0.0/0
+# 2        0     0 ACCEPT     0    --  wlp7s0 *       0.0.0.0/0            192.168.100.0/24     state RELATED,ESTABLISHED
+
 
 # persis the NAT
 netfilter-persistent save
@@ -315,5 +319,3 @@ ping -c3 google.com
 
 apt update
 ```
-
----
