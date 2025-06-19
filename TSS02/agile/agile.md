@@ -11,3 +11,13 @@
 - [wk 07](./wk07/wk07.md)
 - [wk 08](./wk08/wk08.md)
 - [wk 09](./wk09/wk09.md)
+
+## Sprint Cycle
+
+| Stage              | Day       | To do                                             | People            |
+| ------------------ | --------- | ------------------------------------------------- | ----------------- |
+| `Planning meeting` | first day | Goal, Sprint Backlog, (demo) date, daily          | PO                |
+| `Sprint execution` | daily     |                                                   |                   |
+| `Stand up meeting` | daily     | Task Board, Burndown Chart                        | team              |
+| `Demo`             | last day  | Potentially Shippable ,provide feedback,Revise PB | team,stakeholders |
+| `Retrospective`    | -         | Continuous Improvement, insight to improve        | team,po, SM       |
