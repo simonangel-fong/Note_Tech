@@ -8,9 +8,10 @@
 - [wk 04](./wk04/wk04.md)
 - [wk 05](./wk05/wk05.md)
 - [wk 06](./wk06/wk06.md)
-- [wk 07](./wk07/wk07.md)
-- [wk 08](./wk08/wk08.md)
-- [wk 09](./wk09/wk09.md)
+- [#wk 07](./wk07/wk07.md)
+- [#wk 08](./wk08/wk08.md)
+- [#wk 09](./wk09/wk09.md)
+- [wk 10](./wk10/wk10.md)
 
 ## Sprint Cycle
 

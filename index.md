@@ -57,7 +57,7 @@
   - [ ] Java
   - [ ] [R](./Programming_Language/r/index.md)
 
-- AWS
+- [AWS](./AWS/aws/index.md)
 
   - [x] [AWS CCP](./AWS/ccp/index.md)
   - [x] [AWS SAA](./AWS/saa/index.md)
