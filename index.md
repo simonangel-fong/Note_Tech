@@ -7,7 +7,7 @@
 - Container
 
   - [ ] [Docker](./container/docker/index.md)
-  - [ ] [kubernetes](./container/kubernetes/index.md)
+  - [ ] [Kubernetes](./container/kubernetes/index.md)
 
 - Virtual Machine
 

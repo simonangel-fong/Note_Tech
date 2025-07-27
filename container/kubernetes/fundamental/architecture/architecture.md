@@ -13,6 +13,8 @@
 
 ![kub_architecture](./pic/kub_architecture.png)
 
+![pic](./pic/master_vs_worker.png)
+
 ---
 
 ## Master Machine Components

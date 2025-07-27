@@ -1,13 +1,13 @@
 # Kubernetes - Pod
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [Kubernetes - Pod](#kubernetes---pod)
   - [Pod](#pod)
-    - [Types of Pod](#types-of-pod)
-      - [Single Container Pod](#single-container-pod)
-      - [Multi Container Pod](#multi-container-pod)
-  - [Common Commands](#common-commands)
+    - [Common Commands](#common-commands)
+  - [Types of Pod](#types-of-pod)
+    - [Single Container Pod](#single-container-pod)
+    - [Multi Container Pod](#multi-container-pod)
   - [Lab: Create a pod using CLI](#lab-create-a-pod-using-cli)
   - [Lab: Pod Creation using Yaml File](#lab-pod-creation-using-yaml-file)
 
@@ -22,7 +22,26 @@
 
 ---
 
-### Types of Pod
+### Common Commands
+
+| **Command**                                          | **Description**                                             |
+| ---------------------------------------------------- | ----------------------------------------------------------- |
+| `kubectl get pods`                                   | List all pods in the current namespace                      |
+| `kubectl get pods -A`                                | List pods across **all namespaces**                         |
+| `kubectl run pod_name --image=image_name`            | Create a pod using a specified image (for testing)          |
+| `kubectl create`                                     | Create a Pod from a YAML file or JSON.                      |
+| `kubectl apply -f yaml_file`                         | Create or update a pod from YAML manifest                   |
+| `kubectl describe pod pod_name`                      | Show detailed information about a specific pod              |
+| `kubectl get pod pod_name -o yaml`                   | View full YAML configuration of a pod                       |
+| `kubectl logs pod_name`                              | View logs from a pod's main container                       |
+| `kubectl logs pod_name -c container_name`            | View logs for a specific container in a multi-container pod |
+| `kubectl exec -it pod_name -- commands`              | Execute a command inside the pod (e.g., get a shell)        |
+| `kubectl delete pod pod_name`                        | Delete a specific pod                                       |
+| `kubectl port-forward <pod> <local-port>:<pod-port>` | Forward ports from a Pod to your local machine.             |
+
+---
+
+## Types of Pod
 
 - There are two types of Pods
   - Single container pod
@@ -30,7 +49,7 @@
 
 ---
 
-#### Single Container Pod
+### Single Container Pod
 
 - `Single Container Pod`
   - created with the `kubctl run` command, where you have **a** defined image on the Docker registry which we will pull while creating **a pod**.
@@ -64,7 +83,7 @@ kubectl create f tomcat.yml
 
 ---
 
-#### Multi Container Pod
+### Multi Container Pod
 
 - `Multi container pods` are created using **yaml mail** with the definition of the containers.
 
@@ -88,23 +107,6 @@ containerPort: 7501
 ```
 
 > create one pod with two containers inside it, one for tomcat and the other for MongoDB.
-
----
-
-## Common Commands
-
-| **Command**                               | **Description**                                             |
-| ----------------------------------------- | ----------------------------------------------------------- |
-| `kubectl get pods`                        | List all pods in the current namespace                      |
-| `kubectl get pods -A`                     | List pods across **all namespaces**                         |
-| `kubectl run pod_name --image=image_name` | Create a pod using a specified image (for testing)          |
-| `kubectl apply -f yaml_file`              | Create or update a pod from YAML manifest                   |
-| `kubectl describe pod pod_name`           | Show detailed information about a specific pod              |
-| `kubectl get pod pod_name -o yaml`        | View full YAML configuration of a pod                       |
-| `kubectl logs pod_name`                   | View logs from a pod's main container                       |
-| `kubectl logs pod_name -c container_name` | View logs for a specific container in a multi-container pod |
-| `kubectl exec -it pod_name -- commands`   | Execute a command inside the pod (e.g., get a shell)        |
-| `kubectl delete pod pod_name`             | Delete a specific pod                                       |
 
 ---
 
