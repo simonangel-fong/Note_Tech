@@ -1,0 +1,19 @@
+apiVersion: v1 # v1 supports
+kind: ReplicationController # specify the object kind is ReplicationController
+metadata: # metadata of rc
+  name: myapp-rc
+  labels:
+    app: myapp
+    type: front-end
+spec: # specification of rc
+  template: # specify template, can use the pod definition
+    metadata: # metadata of each pod provision by template
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec: # specification of each pod
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3 # specify the number of replicas, child of rc spec

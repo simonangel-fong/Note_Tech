@@ -24,3 +24,5 @@
   - [Windows: `Docker Desktop` enable `Kubernetes`](./install/kube_docker_desktop_win/kube_docker_desktop_win.md)
 
 ---
+
+- [Replica Sets](./replica/replica.md)

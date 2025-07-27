@@ -1,0 +1,22 @@
+apiVersion: apps/v1 # version support rs
+kind: ReplicaSet # specify objec kind is rs
+metadata: # metadata of rs
+  name: myapp-replicaset
+  labels:
+    app: myapp
+    type: front-end
+spec: # specification of rs
+  replicas: 3 # specify pod number
+  selector: # specify selector, required in rs
+    matchLabels:
+      type: front-end
+  template: # define template of pod
+    metadata: # metadata of pod
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec: # specification of pod
+      containers:
+        - name: nginx-controller
+          image: nginx

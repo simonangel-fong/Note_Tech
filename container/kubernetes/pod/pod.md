@@ -10,6 +10,7 @@
     - [Multi Container Pod](#multi-container-pod)
   - [Lab: Create a pod using CLI](#lab-create-a-pod-using-cli)
   - [Lab: Pod Creation using Yaml File](#lab-pod-creation-using-yaml-file)
+  - [Common Questions](#common-questions)
 
 ---
 
@@ -194,3 +195,21 @@ kubectl delete pod myapp-pod
 kubectl get pods
 # No resources found in default namespace.
 ```
+
+---
+
+## Common Questions
+
+| Q                                                                  | CMD                                                                                                        |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| how many pods are running                                          | `kubectl get pods`                                                                                         |
+| Create a new pod with nginx image                                  | `kubectl run nignx-pod --image=nignx`                                                                      |
+| What is image used to create new pods                              | `kubectl describe pod nignx-pod`                                                                           |
+| Which node is this pod running on                                  | `kubectl describe pod nignx-pod` / `kubectl get pods -o wide`                                              |
+| How many containers are part of a pod                              | `kubectl describe pod nignx-pod`, Containers                                                               |
+| What is the state of the container X in a pod Y                    | `kubectl describe pod nignx-pod`, Containers,State                                                         |
+| Why the container X in pod Y is in error                           | `kubectl describe pod nignx-pod`, Containers,State,Reason. / Events                                        |
+| What does the READY columns in kubectl get pods                    | Running Containers in pod/Total container in pod                                                           |
+| Delete a pod                                                       | `kubectl delete pod nignx-pod`                                                                             |
+| Create a pod named redis and with image redis123, output yaml file | `kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml`, `kubectl create -f redis.yaml` |
+| Change the image to redis, pod should be running                   | update yaml file, `kubectl apply -f redis.yaml`                                                            |
