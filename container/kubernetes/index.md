@@ -17,6 +17,7 @@
   - [`kubectl`](./fundamental/kubectl/kubectl.md)
 
 - [Pod](./pod/pod.md)
+- [Deployment](./deployment/deployment.md)
 
 - Setup Environment
 
