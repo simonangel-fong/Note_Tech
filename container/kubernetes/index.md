@@ -19,6 +19,9 @@
 - [Pod](./pod/pod.md)
 - [Deployment](./deployment/deployment.md)
 
+- [Networking](./networking/networking.md)
+- [Service](./service/service.md)
+
 - Setup Environment
 
   - [RHEL9: `minikube` installation](./deploy/minikube_rhel9/minikube_rhel9.md)
