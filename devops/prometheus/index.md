@@ -11,5 +11,6 @@
   - [Configuration](./fundamental/config/config.md)
 
 - [Data Collection](./data_collection/data_collection.md)
-
+- [Node Exporter](./node_exporter/node_exporter.md)
 - [Data Model](./data_model/data_model.md)
+- [PromQL](./promql/promql.md)
