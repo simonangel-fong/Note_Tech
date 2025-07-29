@@ -9,6 +9,10 @@
   - [ ] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
 
+- DevOps
+
+  - [Prometheus](./devops/prometheus/index.md)
+
 - Virtual Machine
 
   - [ ] [Proxmox](./vm/proxmox/proxmox.md)
@@ -25,6 +29,7 @@
   - [ ] [Linux](./Operating_System/linux/index.md)
   - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
   - [ ] [Airflow](./Operating_System/airflow/index.md)
+  - [ ] [WSL](./Operating_System/wsl/wsl.md)
 
 - Database
 

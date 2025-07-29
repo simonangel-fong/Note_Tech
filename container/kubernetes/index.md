@@ -17,10 +17,12 @@
   - [`kubectl`](./fundamental/kubectl/kubectl.md)
 
 - [Pod](./pod/pod.md)
+- [Replica Sets](./replica/replica.md)
 - [Deployment](./deployment/deployment.md)
 
 - [Networking](./networking/networking.md)
 - [Service](./service/service.md)
+- [Microservices](./microservices/microservices.md)
 
 - Setup Environment
 
@@ -29,4 +31,4 @@
 
 ---
 
-- [Replica Sets](./replica/replica.md)
+
