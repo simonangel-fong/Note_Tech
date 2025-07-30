@@ -8,6 +8,7 @@
     - [Client Node Configuration](#client-node-configuration)
     - [Prometheus Node Configuration](#prometheus-node-configuration)
     - [Reconfigure Client Node: Create a node export service](#reconfigure-client-node-create-a-node-export-service)
+    - [Lab: Exporter for Windows](#lab-exporter-for-windows)
 
 ---
 
@@ -171,3 +172,27 @@ sudo systemctl status prometheus_node_exporter
 - Confirm: Prometheus server UI > Status > Target health
 
 ---
+
+### Lab: Exporter for Windows
+
+- There is no official Prometheus exporter for Windows
+- `WMI(Windows Management Instrumentation)`
+  - 3rd party exporter
+  - Infrastructure for management data and operations on Windows-based operating systems.
+- Url: https://github.com/prometheus-community/windows_exporter
+
+  - release: https://github.com/prometheus-community/windows_exporter/releases
+  - Read the document for port, `:9182`
+
+- Run exe
+
+```txt
+level=INFO source=tls_config.go:347 msg="Listening on" address=[::]:9182
+```
+
+- Confirm
+  - http://ip_add:9182
+
+![pic](./pic/wmi01.png)
+
+- Update Prometheus cf

@@ -14,3 +14,6 @@
 - [Node Exporter](./node_exporter/node_exporter.md)
 - [Data Model](./data_model/data_model.md)
 - [PromQL](./promql/promql.md)
+
+- [Grafana](./grafana/grafana/grafana.md)
+  - [Install](./grafana/install/install.md)
