@@ -17,3 +17,4 @@
 
 - [Grafana](./grafana/grafana/grafana.md)
   - [Install](./grafana/install/install.md)
+  - [Loki](./grafana/loki/loki.md)
