@@ -22,3 +22,13 @@
 | `Stand up meeting` | daily     | Task Board, Burndown Chart                        | team              |
 | `Demo`             | last day  | Potentially Shippable ,provide feedback,Revise PB | team,stakeholders |
 | `Retrospective`    | -         | Continuous Improvement, insight to improve        | team,po, SM       |
+
+## Differences Between Kanban and Scrum
+
+| Kanban                                                                                      | Scrum                                                                                |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Roles are **fluid**. Project manager optional.                                              | Roles are **predefined**. Scrum master required.                                     |
+| Tasks are **shared by everyone**.                                                           | Tasks have **assigned owners**.                                                      |
+| Timelines **evolve** on an as-**needed** basis.                                             | Timelines are **timeboxed** into **sprints**.                                        |
+| Changes can be made mid-stream, allowing for iterations **before completion of a project**. | Changes can only be made upon **completion of a sprint**.                            |
+| Productivity is measured by the **cycle time of the complete project**.                     | Productivity is measured by the number of **story points completed in each sprint**. |
