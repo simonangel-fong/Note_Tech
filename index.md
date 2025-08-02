@@ -11,11 +11,11 @@
 
 - DevOps
 
-  - [Prometheus](./devops/prometheus/index.md)
+  - [x] [Prometheus](./devops/prometheus/index.md)
 
 - Virtual Machine
 
-  - [ ] [Proxmox](./vm/proxmox/proxmox.md)
+  - [x] [Proxmox](./vm/proxmox/proxmox.md)
 
 - Version Control
   - [ ] [Git](./VCS/git/index.md)
@@ -100,4 +100,5 @@
 <!-- - [F](./F/index.md) -->
 
 <!-- - [TSS](./TSS/tss.md) -->
+
 - [TSS2](./TSS02/tss2.md)
