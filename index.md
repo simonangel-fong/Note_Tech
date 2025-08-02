@@ -13,6 +13,10 @@
 
   - [x] [Prometheus](./devops/prometheus/index.md)
 
+- Cloud
+
+  - [ ] [Terraform](./cloud/terraform/index.md)
+
 - Virtual Machine
 
   - [x] [Proxmox](./vm/proxmox/proxmox.md)
@@ -70,7 +74,6 @@
   - [ ] [AWS CDA](./AWS/cda/index.md)
     - [ ] Project: [GitHub:Web hosting - S3](https://github.com/simonangel-fong/AWS_POC_Web_Hosting)
     - [x] Project: [Import VM into AMI](./AWS/Projects/vm2ami.md)
-  - [ ] [Terraform](./terraform/index.md)
 
 - Mobile
 

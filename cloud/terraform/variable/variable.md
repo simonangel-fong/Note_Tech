@@ -50,7 +50,7 @@
   - used to **customize aspects** of Terraform modules without altering the module's own source code.
   - allows to **share** modules across different Terraform configurations, making your module **composable** and **reusable**.
 
-- When variables are **declared in the root module** of the configuration, you can **set their values** using CLI options and environment variables.
+- When variables are **declared in the root module** of the configuration, you can set their values using **CLI options** and **environment variables**.
 - When you declare them **in child modules**, the **calling** module should **pass values** in the module block.
 
 ---
@@ -58,6 +58,11 @@
 ### Declaring an Input Variable
 
 - Each input variable accepted by a module must be declared using a `variable` block
+- Variable Name
+
+  - The `label` after the `variable` keyword is a **name** for the variable, which must be **unique** among all variables **in the same module**.
+  - The name of a variable can be any valid identifier except the following: source, version, providers, count, for_each, lifecycle, depends_on, locals.
+
 - Example
 
 ```conf
@@ -85,10 +90,6 @@ variable "docker_ports" {
   ]
 }
 ```
-
-- Variable Name
-  - The `label` after the `variable` keyword is a **name** for the variable, which must be **unique** among all variables **in the same module**.
-  - The name of a variable can be any valid identifier except the following: source, version, providers, count, for_each, lifecycle, depends_on, locals.
 
 ---
 
