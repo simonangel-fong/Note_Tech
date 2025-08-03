@@ -4,9 +4,18 @@
 
 ---
 
-- [Terraform Fundamental](./fundamental/fundamental.md)
+## HCL Terraform
+
+- [Fundamental](./fundamental/fundamental.md)
   - [Resource](./resource/resource.md)
-  - [Common Commands](./command/command.md)
   - [Variable](./variable/variable.md)
   - [with AWS](./aws/aws.md)
-- [Beckend](./backend/backend.md)
+  - [State & Backend](./state/state.md)
+- [Common Commands](./command/command.md)
+- [Data Sources](./data_source/data_source.md)
+
+---
+
+## AWS
+
+- [EC2](./aws/ec2/ec2.md)
