@@ -14,6 +14,7 @@
 
   - [Data Collection](./data_collection/data_collection.md)
   - [Node Exporter](./node_exporter/node_exporter.md)
+    - [!!!!!Lab: Configure Node Exporter on Ubuntu with Docker](./node_exporter/lab_node_exporter_ubuntu/lab_node_exporter_ubuntu.md)
   - [Data Model](./data_model/data_model.md)
   - [PromQL](./promql/promql.md)
 
