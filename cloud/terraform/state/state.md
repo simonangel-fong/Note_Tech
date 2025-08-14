@@ -4,6 +4,7 @@
 
 - [Terraform - State](#terraform---state)
   - [States](#states)
+    - [Lab: manipulate state](#lab-manipulate-state)
     - [Purpose](#purpose)
     - [State Storage](#state-storage)
     - [State Locking](#state-locking)
@@ -40,6 +41,27 @@
 - Format
 
   - `State` snapshots are stored in `JSON` format and new Terraform versions are generally **backward compatible** with state snapshots produced by earlier versions.
+
+
+---
+
+### Lab: manipulate state
+
+- apply
+- state list
+- state show
+- state mv
+- state rm
+- terraform import 
+
+---
+
+- Common use cases required to modify the state:
+  - upgrade the tf version
+  - rename a resource without recreating it
+  - Change a key in a for_each withou recreating the resources
+  - Change position of a resource in a list (resource[0], resource[1])
+  - Stop managing a resource without destroying it.
 
 ---
 

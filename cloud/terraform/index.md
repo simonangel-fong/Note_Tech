@@ -13,6 +13,11 @@
   - [State & Backend](./state/state.md)
 - [Common Commands](./command/command.md)
 - [Data Sources](./data_source/data_source.md)
+- [Interpolation](./Interpolation/Interpolation.md)
+- [Function](./function/function.md)
+- [Loop](./loop/loop.md)
+- [Project Structure](./structure/structure.md)
+- [Lockfile](./lockfile/lockfile.md)
 
 ---
 
