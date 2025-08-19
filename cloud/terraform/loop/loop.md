@@ -4,6 +4,7 @@
 
 - [Terraform - Fundamental: Loop](#terraform---fundamental-loop)
   - [Loop](#loop)
+  - [Dynamic block](#dynamic-block)
   - [Lab: for loop](#lab-for-loop)
   - [Lab: for\_each loop](#lab-for_each-loop)
 
@@ -121,6 +122,12 @@ variable "map1" {
 #   "5" = "apple"
 # }
 ```
+
+---
+
+## Dynamic block
+
+- can iterate over blocks
 
 ---
 

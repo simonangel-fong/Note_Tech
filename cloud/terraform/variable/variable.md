@@ -10,6 +10,7 @@
       - [Type Constraints](#type-constraints)
       - [Type Example](#type-example)
       - [Custom Validation Rules](#custom-validation-rules)
+      - [Sensitive arguement](#sensitive-arguement)
     - [Using Input Variable Values](#using-input-variable-values)
     - [Assigning Values to Root Module Variables](#assigning-values-to-root-module-variables)
       - [Variables on the Command Line](#variables-on-the-command-line)
@@ -29,17 +30,23 @@
 
   - Terraform blocks for requesting or publishing named **values**.
 
-- `Input Variables`
+- 3 Types of variables in tf:
 
-  - serve as **parameters** for a `Terraform module`, so users can **customize** behavior without editing the source.
+  - `Input Variables`
 
-- `Output Values`
+    - serve as **parameters** for a `Terraform module`, so users can **customize** behavior without editing the source.
+    - `variable "var_name" {}`
 
-  - are like **return values** for a `Terraform module`.
+  - `Output Values`
 
-- `Local Values`
-  - a convenience feature for assigning a short name to an expression.
-  - like a function's **temporary local variables**.
+    - are like **return values** for a `Terraform module`.
+    - `output "output_name" {}`
+
+  - `Local Values`
+    - a convenience feature for assigning a short name to an expression.
+    - like a function's **temporary local variables**.
+    - used for calculation, concatenations, conditionals where the result is later used within resources.
+    - `locals {}`
 
 ---
 
@@ -105,6 +112,8 @@ variable "docker_ports" {
 | `validation`       | A block to define validation rules, usually in addition to type constraints. |
 | `sensitive`        | Limits Terraform UI output when the variable is used in configuration.       |
 | `nullable`         | Specify if the variable can be null within the module.                       |
+
+---
 
 #### Type Constraints
 
@@ -186,6 +195,30 @@ variable "image_id" {
     condition     = length(var.image_id) > 4 && substr(var.image_id, 0, 4) == "ami-"
     error_message = "The image_id value must be a valid AMI id, starting with \"ami-\"."
   }
+}
+```
+
+---
+
+#### Sensitive arguement
+
+- Used to prevent from outputing the variable during the plan & apply.
+- User case:
+
+  - when handling secrets in a variable
+
+- When the sensitive imformation become the part of the id of the resource, it'll be disclosed.
+
+- Example:
+
+```terraform
+variable "password" {
+  type = string
+  sensitive = true
+}
+
+resource "resource_type" "resource_name" {
+  parameter = var.password
 }
 ```
 
@@ -283,9 +316,19 @@ terraform plan
 ## Output Values
 
 - `Output values`
+
   - make information about your infrastructure **available on the command line**
   - can **expose** information for other Terraform configurations to use.
   - are similar to **return values in programming languages**.
+
+| Argument      | desc                                                       |
+| ------------- | ---------------------------------------------------------- |
+| `value`       | Mandatory, the value of the output variable                |
+| `description` | the description of the output variable                     |
+| `sensitive`   | Whether the variable is sensitive                          |
+| `depends_on`  | Specify the another resource on which the variable depends |
+
+---
 
 #### Declaring an Output Value
 
@@ -310,6 +353,12 @@ output "instance_ip_addr" {
 - `local value`
   - assigns a name **to an expression**, so you can use the name multiple times within a module instead of repeating the expression.
 - `Local values` are like a function's **temporary local** variables.
+
+- Common use case:
+  - process the expression that is used in for/for_each
+  - concatenate variable values
+
+---
 
 ### Declaring a Local Value
 

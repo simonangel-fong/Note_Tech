@@ -8,6 +8,8 @@
     - [Command: console](#command-console)
   - [HCL](#hcl)
   - [Files and Directories](#files-and-directories)
+  - [Worksapce](#worksapce)
+  - [Debugging Mode](#debugging-mode)
 
 ---
 
@@ -144,4 +146,75 @@ terraform console
 
 ---
 
-[TOP](#terraform---fundamental)
+## Worksapce
+
+- Workspace
+
+  - By default, tf starts with a single workspace.
+  - isolate the states
+    - when creating a new workspace, an **empty** state will be created.
+    - however, still using the **same state** and **same backend configuration** (technically equivalent of **renaming** state file)
+  - isolate the resouces
+    - the command `terraform apply` in new workspace will **recreate** all resources, whose **state** will be managed in this **workspace**.
+
+- Varaible `terraform.workspace`
+
+  - used to avoid naming conllisions
+  - used to control resource creation with condition
+
+```hcl
+# avoid naming collision
+resource "aws_ssm_parameter" "my-parameter"{
+  name = "/myapp/myname-${terraform.workspace}"
+}
+
+# conditional
+resource "aws_instance" "myinstance" {
+  count = terraform.workspace == "default" ? 1 :0
+}
+```
+
+- **Not Fit**
+
+  - workspace cannot be used for a "fully isolated" setup for multiple environment (staging / testing / prod)
+
+- Common Commands
+
+| CMD                                   | DESC                   |
+| ------------------------------------- | ---------------------- |
+| `terraform workspace new wsp_name`    | Create a new workspace |
+| `terraform workspace select wsp_name` | Switch to a workspace  |
+
+- Use Case
+
+  - useful when needint to test something in the code without making changes to the existing resources.
+    - create a workspace to test app and infrastructures before implementing them on existing resources.
+
+- Real world Practises
+  - use re-usable modules + multiple remote backend with multi-account strategy
+    - staging env:
+      - S3 backend with staging AWS account
+    - prod env:
+      - S3 backend with prod AWS account
+
+---
+
+## Debugging Mode
+
+- TF just hangs
+- set `TF_LOG` environment variable to enable more loggin.
+
+```sh
+# Linux
+terraform apply -var TF_LOG=DEBUG
+
+# windows Powershell
+$Env:TF_LOG="DEBUG"
+```
+
+- Valid log levels:
+  - `TRACE`
+  - `DEBUG`
+  - `INFO`
+  - `WARN`
+  - `ERROR`

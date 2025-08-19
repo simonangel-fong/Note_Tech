@@ -52,3 +52,4 @@
 | `terraform show`                                | Show the current state                              |
 | `terraform taint resource_name`                 | Mark a resource instance as not fully funciontal    |
 | `terraform untaint resource_name`               | Remove the 'tainted' state from a resource instance |
+| `terraform untaint resource_name`               | Remove the 'tainted' state from a resource instance |
