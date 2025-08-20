@@ -9,13 +9,13 @@
   - [ ] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
 
-- DevOps
+- DevOps & Cloud
 
+  - [x] [Terraform](./cloud/terraform/index.md)
+  - [ ] [Ansible](./devops/ansible/ansible.md)
   - [x] [Prometheus](./devops/prometheus/index.md)
 
-- Cloud
 
-  - [ ] [Terraform](./cloud/terraform/index.md)
 
 - Virtual Machine
 
