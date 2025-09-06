@@ -11,20 +11,25 @@
 
 - DevOps & Cloud
 
-  - [x] [Terraform](./cloud/terraform/index.md)
-  - [ ] [Ansible](./devops/ansible/ansible.md)
+  - [x] [\*Terraform](./cloud/terraform/index.md)
+  - [ ] [\*Ansible](./devops/ansible/ansible.md)
+  - [ ] [Jenkins](./devops/jenkins/jenkins.md)
   - [x] [Prometheus](./devops/prometheus/index.md)
 
+- Testing
 
+  - [ ] [Locust](./testing/locust/index.md)
+  - [ ] [K6](./testing/k6/index.md)
+
+- Version Control
+
+  - [ ] [Git](./VCS/git/index.md)
+  - [ ] [GitHub](./VCS/github/index.md)
+  - [ ] [GitLab](./VCS/gitlab/index.md)
 
 - Virtual Machine
 
   - [x] [Proxmox](./vm/proxmox/proxmox.md)
-
-- Version Control
-  - [ ] [Git](./VCS/git/index.md)
-  - [ ] [GitHub](./VCS/github/index.md)
-  - [ ] [GitLab](./VCS/gitlab/index.md)
 
 ---
 
