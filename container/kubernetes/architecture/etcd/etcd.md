@@ -14,7 +14,7 @@
 
 - `etcd`
 
-  - a **distributed**, consistent **key-value store**
+  - A `control plane` component that is a a distributed, consistent **key-value store** to **persist** the **cluster data**.
   - acts as the **single source of truth** for the cluster.
 
 - **Everything** is created or changed in Kubernetes is **stored** in `etcd`

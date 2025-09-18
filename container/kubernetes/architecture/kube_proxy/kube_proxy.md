@@ -1,20 +1,29 @@
-# Kubernetes - Kubelet
+# Kubernetes - kube-proxy
 
 [Back](../index.md)
 
-- [Kubernetes - Kubelet](#kubernetes---kubelet)
-  - [Kube-proxy](#kube-proxy)
+- [Kubernetes - kube-proxy](#kubernetes---kube-proxy)
+  - [kube-proxy](#kube-proxy)
 
 ---
 
-## Kube-proxy
+## kube-proxy
 
-- `Kube-proxy`
-  - a network proxy that runs on each node in a Kubernetes cluster.
-  - a process that runs on each node in the k8s cluster
-    - lives only in memory
-    - monitor the service
-      - whenever a new service is created, it creates the rules on each node to forward the traffic to the target pods.
+- `kube-proxy`
+
+  - a **networking component** that runs **on every node** in a Kubernetes cluster.
+  - used to **maintain the network rules** that allow communication to `Services` and the `Pods` behind them.
+
+- Primary Roles
+  - **Service Implementation**
+    - Watches the `API Server` for `Service` and `Endpoint` objects.
+    - Ensures that **traffic** sent to a `Service` (ClusterIP, NodePort, LoadBalancer) is routed to one of its `backend Pods`.
+  - **Load Balancing**
+    - **Distributes requests** across all healthy Pods behind a Service.
+    - Uses round-robin or other mechanisms depending on the backend mode (iptables, IPVS).
+  - **Programming Network Rules**
+    - Manages `iptables` or `IPVS` rules on the node.
+    - Ensures packets destined for a Service are redirected to the correct Pod IPs.
 
 ```sh
 kubectl get pods -n kube-system

@@ -16,14 +16,15 @@
   - [`kubectl`](./fundamental/kubectl/kubectl.md)
 
 - [Architecture](./architecture/architecture/architecture.md)
-  - Master Node
-    - [etcd](./architecture/etcd/etcd.md)
+  - Master Node / Control plane
+    - [`etcd`](./architecture/etcd/etcd.md)
     - [API Server](./architecture/api_server/api_server.md)
-  - [Controller Manager](./architecture/controller_manager/controller_manager.md)
-  - [Scheduler](./architecture/scheduler/scheduler.md)
-  - [Kubelet](./architecture/kubelet/kubelet.md)
-  - [kube proxy](./architecture/kube_proxy/kube_proxy.md)
-  - [Pod](./architecture/pod/pod.md)
+    - [Controller Manager](./architecture/controller_manager/controller_manager.md)
+    - [Scheduler](./architecture/scheduler/scheduler.md)
+  - Worker Node
+    - [`kubelet`](./architecture/kubelet/kubelet.md)
+    - [`kube-proxy`](./architecture/kube_proxy/kube_proxy.md)
+    - [Pod](./architecture/pod/pod.md)
 
 ---
 
@@ -37,6 +38,7 @@
 - Setup Environment
 
   - [RHEL9: `minikube` installation](./install/minikube_rhel9/minikube_rhel9.md)
+  - [Ubuntu: `minikube` installation](./install/minikube_ubuntu/minikube_ubuntu.md)
   - [Windows: `Docker Desktop` enable `Kubernetes`](./install/kube_docker_desktop_win/kube_docker_desktop_win.md)
 
 ---

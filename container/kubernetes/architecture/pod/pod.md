@@ -1,10 +1,9 @@
 # Kubernetes - Pod
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Pod](#kubernetes---pod)
   - [Pod](#pod)
-    - [Pod YAML File](#pod-yaml-file)
     - [Common Commands](#common-commands)
   - [Types of Pod](#types-of-pod)
     - [Single Container Pod](#single-container-pod)
@@ -18,40 +17,9 @@
 ## Pod
 
 - `pod`
-  - a single instance of an application
+  - the **smallest deployable unit** in Kubernetes that represents a **single instance** of an **application**.
     - the smallest object that can be created in k8s
   - a collection of **containers** and its **storage** inside a **node** of a Kubernetes cluster.
-- It is possible to create a pod with **multiple containers** inside it.
-  - For example, keeping a database container and data container in the same pod.
-
----
-
-### Pod YAML File
-
-- Basic 4 top level fields
-
-  - apiVersion:
-  - kind:
-  - metadata:
-  - spec:
-
-- Example
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: myapp-pod
-  # user custom label
-  labels:
-    app: myapp
-    type: front-end
-spec:
-  # a list
-  containers:
-    - name: nginx-container
-      image: nginx
-```
 
 ---
 

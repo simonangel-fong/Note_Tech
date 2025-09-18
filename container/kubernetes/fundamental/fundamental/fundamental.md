@@ -7,6 +7,8 @@
   - [Kubernetes](#kubernetes)
   - [Microservices](#microservices)
     - [Example - Voting system](#example---voting-system)
+  - [Declarative vs Imperative vs Functional vs Procedural](#declarative-vs-imperative-vs-functional-vs-procedural)
+    - [K8s = Declarative](#k8s--declarative)
 
 ---
 
@@ -82,3 +84,58 @@
 - Application Architecture with deployment
 
 ![pic](./pic/microservices02.png)
+
+---
+
+## Declarative vs Imperative vs Functional vs Procedural
+
+- `Declarative Programming`
+
+  - A paradigm to **describe what the program should accomplish**, **not how to do it**.
+  - The **control flow** is abstracted away by the language or framework.
+  - **Focuses on results** rather than steps.
+  - Examples: SQL, HTML, regular expressions, Prolog.
+
+- `Imperative Programming`
+
+  - A paradigm to explicitly tell the computer **how to perform tasks, step by step**.
+  - **define the control flow** with statements that change program state.
+  - Focuses on **commands** and **state changes**.
+  - Examples: C, Python (when used with loops and assignments), Assembly.
+
+- `Functional Programming`
+
+  - A style of `declarative programming` where computation is treated as the **evaluation of mathematical functions** without changing state or mutable data.
+  - Emphasizes pure functions, immutability, and avoiding side effects.
+  - Examples: Haskell, Lisp, Scala, Python (functional features: map, lambda, etc.).
+
+- `Procedural Programming`
+
+  - A subset of `imperative programming` that organizes code into **procedures** (functions or routines).
+  - Each **procedure** performs a specific **task** and can be reused.
+  - Focuses on **procedures** (reusable blocks of code).
+  - Examples: C, Pascal, Fortran, Python (when structured into functions).
+
+- `Object-Oriented Programming (OOP)`
+
+  - A paradigm that organizes software design around `objects`
+    - bundles of data (**attributes**) and behavior (**methods**).
+  - emphasizes **encapsulation**, **inheritance**, and **polymorphism**.
+  - Focuses on **objects that model real-world entities**.
+  - Examples: Java, C++, C#, Python (when using classes/objects).
+
+- Categorization
+
+  - `Imperative` (broad category: how to do it)
+    - `Procedural`
+    - `Object-Oriented`
+  - `Declarative` (broad category: what to achieve)
+    - `Functional`
+
+---
+
+### K8s = Declarative
+
+- Kubernetes is a Declarative style
+  - describe the desired state
+  - `Kubernetes controllers` work continuously to **reconcile the actual state** with the desired state.

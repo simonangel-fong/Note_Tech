@@ -1,38 +1,31 @@
 # Kubernetes - Controller Manager
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Controller Manager](#kubernetes---controller-manager)
   - [Controller Manager](#controller-manager)
-  - [Node Controller](#node-controller)
-  - [Replication Controller](#replication-controller)
-  - [Deployment Controller](#deployment-controller)
-  - [Namespace Controller](#namespace-controller)
-  - [Endpoint Controller](#endpoint-controller)
-  - [Job Controller](#job-controller)
-  - [PV Protection Controller](#pv-protection-controller)
-  - [PV-Binder Controller](#pv-binder-controller)
-  - [Service Account Controller](#service-account-controller)
-  - [Stateful-Set](#stateful-set)
-  - [Replicaset](#replicaset)
-  - [CronJob](#cronjob)
+  - [Common Controllers](#common-controllers)
 
 ---
 
 ## Controller Manager
 
-- Responsibilities
-
-  - watch status
-  - remediate situation
-
-- controller
-
-  - a process that
-    - continuously monitors the state of various components within the system
-    - takes necessary actions to remediate the situation
-
 - `Controller Manager`
+
+  - A `control plane` component that runs `controller processes`, which continuously monitor the cluster through the `API Server` and reconcile the **actual** cluster state to match the **desired** state.
+  - act as the **automation brain**
+    - **constantly watching** the `API Server` and **taking action** to drive the system **toward the declared configuration**.
+
+- a `control plane` **service** that runs on `master node(s)`, hosting **multiple** controllers in **one process** to ensure the **cluster state** matches the **desired state**.
+
+- Roles of controllers
+
+  - **Watching resource objects** via the API Server.
+  - **Detecting differences** between **desired** state (from etcd) and **actual** state
+  - Reconciling: taking corrective action to move toward the desired state.
+
+- `Kubernetes Controller Manager (kube-controller-manager)`
+
   - a single process to manage all controllers
   - `ps -aux | grep kube-controller-manager`
 
@@ -45,14 +38,12 @@ kubectl get pods -n kube-system
 
 ---
 
-## Node Controller
+## Common Controllers
 
 - `node controller`
   - used to monitor the status of the nodes
-  - ensure to bring the whole system to the desired functioning state.
-  - watch node status via `api server`
   - default
-    - check the status of the nodes every 5 seconds
+    - check the status of the nodes every 5s
     - mark the node as `unreachable` if it cannot receive heartbeat for 40s.
     - give the `unreachable` node 5 min to come back
     - remove the `pods` running on `unreachable node`
@@ -60,30 +51,46 @@ kubectl get pods -n kube-system
 
 ---
 
-## Replication Controller
-
 - `replication controller`
   - used to monitor the status of the replica sets
-  - ensure the desired number of pods are available at all times within the set.
-    - if a pod dies, it creates another one
-  - watch node status via `api server`
+  - Ensures the specified number of pod replicas are always running.
+    - If a pod dies, it creates a replacement.
+    - If too many pods are running, it deletes extras
 
-## Deployment Controller
+---
 
-## Namespace Controller
+- `deployment controller`
+  - used to manages deployments (built on top of ReplicaSets).
+  - Handles rolling updates and rollbacks.
+  - Ensures the desired version of an application is running.
 
-## Endpoint Controller
+---
 
-## Job Controller
+- `Endpoint Controller`
+  - Populates Endpoints objects that map Services → Pod IPs.
 
-## PV Protection Controller
+---
 
-## PV-Binder Controller
+- `Stateful-Set Controller`
+  - Manages pods that need stable network identities and persistent storage.
+  - Ensures ordered deployment, scaling, and deletion.
 
-## Service Account Controller
+---
 
-## Stateful-Set
+- `DaemonSet Controller`
+  - Ensures one copy of a pod runs on every (or selected) node.
+  - Commonly used for monitoring agents (Prometheus node exporter) or networking plugins (Calico, Flannel).
 
-## Replicaset
+---
 
-## CronJob
+- `Job Controller`
+
+  - runs Pods until a task completes successfully.
+
+- `CronJob Controller`
+  - schedules Jobs based on cron expressions (periodic tasks).
+
+---
+
+- `Service Account & Token Controllers`
+  - Create default service accounts and attach API tokens to pods for authentication.
