@@ -4,6 +4,8 @@
 
 - [Kubernetes - Architecture](#kubernetes---architecture)
   - [Architecture](#architecture)
+    - [Node and Cluster](#node-and-cluster)
+    - [Components](#components)
   - [Master Machine Components](#master-machine-components)
   - [Node Components](#node-components)
 
@@ -12,6 +14,54 @@
 ## Architecture
 
 ![kub_architecture](./pic/kub_architecture.png)
+
+![pic](./pic/master_vs_worker.png)
+
+---
+
+### Node and Cluster
+
+- `Node` / `Minions`
+
+  - A machine, physical or virtual, that provides the resources required to run workloads.
+
+- `Worker Node`
+
+  - A type of `node` that runs the **application workloads** (pods) and provides compute, storage, and networking.
+
+- `Master Node` / `Control Plane Node`
+
+  - A type of `node` that runs the **control plane components** responsible for scheduling, orchestrating, and monitoring workloads across worker nodes.
+
+- `Cluster`
+
+  - A **collection** of `nodes`, master and worker, that operate together as a single system for running and managing applications.
+
+---
+
+### Components
+
+- **API Server**
+  - the front-end for kubernetes
+  - The users, management devices, Command line interfaces all talk to the API server to interact with the kubernetes cluster.
+- **ETCD service**
+  - a distributed reliable **key-value store** used by kubernetesto store all data used **to manage the cluster**.
+  - stores all that **information on all the nodes** in the cluster in a distributed manner
+  - responsible for implementing locks within the cluster to ensure there are no conflicts between the Masters.
+- **A kubelet service**
+  - agent that runs on each node in the cluster.
+  - responsible for making sure that the containers are running on the nodes as expected.
+- **A Container Runtime**
+  - the underlying software that is used to run containers.
+  - example: docker
+- **Controllers**
+
+  - responsible for noticing and responding when nodes, containers or endpoints **goes down**.
+  - The controllers makes decisions to **bring up new containers** in such cases.
+
+- **Schedulers**
+  - s responsible for **distributing** work or containers across multiple nodes.
+  - looks for newly created containers and assigns them to Nodes.
 
 ![pic](./pic/master_vs_worker.png)
 

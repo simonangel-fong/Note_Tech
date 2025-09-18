@@ -1,14 +1,14 @@
-# Kubernetes - Yaml File
+# Kubernetes - YAML File
 
 [Back](../../index.md)
 
-- [Kubernetes - Yaml File](#kubernetes---yaml-file)
+- [Kubernetes - YAML File](#kubernetes---yaml-file)
   - [YAML](#yaml)
-  - [Base Rule](#base-rule)
-  - [Basic Components](#basic-components)
-    - [Key Value Pair](#key-value-pair)
-    - [Array/List members](#arraylist-members)
-    - [Dictionary/Map](#dictionarymap)
+  - [Basic Syntax](#basic-syntax)
+  - [Common Data Structure](#common-data-structure)
+    - [scalar - Strings, numbers, boolean, ...](#scalar---strings-numbers-boolean-)
+    - [Mapping - Maps/Dictionaries](#mapping---mapsdictionaries)
+    - [Sequences - Arrays/Lists](#sequences---arrayslists)
     - [Advanced](#advanced)
   - [Yaml File in Kubernetes](#yaml-file-in-kubernetes)
 
@@ -16,93 +16,104 @@
 
 ## YAML
 
-- `YAML`
+- `YAML` / `yet another markup language` / `YAML ain't markup language`
 
-  - `yet another markup language` / `YAML ain't markup language`
-  - a human-readable **data serialization language** that is often used for writing configuration files.
-
-- `YAML` includes a **markup language** with important **construct**, to distinguish data-oriented language with the document markup.
-- Feature
-  - Matches native **data structures** of agile methodology and its languages such as Perl, Python, PHP, Ruby and JavaScript
-  - YAML data is **portable** between programming languages
-  - Includes data consistent **data model**
-  - Easily **readable** by humans
-  - Supports one-direction processing
-  - Ease of implementation and usage
+  - a human-readable **data serialization language** that is often used for **writing configuration files**.
 
 ---
 
-## Base Rule
+## Basic Syntax
 
-- YAML is **case sensitive**
-- The files should have `.yaml` as the **extension**
-- YAML does **not allow** the use of **tabs** while creating YAML files;
-  - **spaces** are allowed instead
-
----
-
-## Basic Components
-
-- **Comments**: `#`
-- **Indentation**
-
-  - use **whitespace** to denote structure.
-    - number of space indicates different structure
-  - Not use Tabs
-
-- **Multiple documents** with single streams
-
-  - separated with 3 hyphens (`---`).
+- **case sensitive**
+- extension: `.yaml` / `.yml`
+- Indentation:
+  - **whitespace**
+  - **No** tabs
+- Comments: `#`
+- start marker: 3 hyphens `---`
+  - signal the beginning of a new YAML document within a single file or stream.
 
 ```yaml
-defaults: &defaults
-  adapter: postgres
-  host: localhost
-
-development:
-  database: myapp_development
-  <<: *defaults
-
-test:
-  database: myapp_test
-  <<: *defaults
+---
+# document 1
+codename: YAML
+name: YAML ain't markup language
+release: 2001
+---
+# document 2
+uses:
+  - configuration language
+  - data persistence
+  - internet messaging
+  - cross-language data sharing
+---
+# document 3
+company: spacelift
+domain:
+  - devops
+  - devsecops
+tutorial:
+  - name: yaml
+  - type: awesome
+  - rank: 1
+  - born: 2001
+author: omkarbirade
+published: true
 ```
 
 ---
 
-### Key Value Pair
+## Common Data Structure
+
+### scalar - Strings, numbers, boolean, ...
+
+- `scalar`
+
+  - literals Unicode characters.
+  - can be strings, numbers, boolean, etc.
+
+- Folding Strings: `>`
+  - interpreted without the new line characters
+
+```yaml
+message: >
+  even though
+  it looks like
+  this is a multiline message,
+  it is actually not
+
+# ==
+message: "even though it looks like this is a multiline message,it is actually not"
+
+```
+
+- Block strings: `|`
+  - interpreted with the new lines (\n)
+
+```yaml
+message: |
+  this is
+  a real multiline
+  message
+```
+
+---
+
+### Mapping - Maps/Dictionaries
+
+- `mapping`
+
+  - an **unordered** set of **key/value** node pairs
+  - each of the **keys** is **unique**
+
+- example
 
 ```yaml
 Fruit: Apple
 Vegetable: Carrot
 Liquid: Water
 Meat: Chicken
-```
 
----
-
-### Array/List members
-
-- a leading hyphen (`-`).
-- option: enclosed in **square brackets**
-
-```yaml
-Fruits:
-  - Orange
-  - Apple
-  - Banna
-
-Vegetables:
-  - Carrot
-  - Cauliflower
-  - Tomato
-```
-
----
-
-### Dictionary/Map
-
-```yaml
 Banana:
   Calories: 105
   Fat: 0.4 g
@@ -112,6 +123,26 @@ Grapes:
   Calories: 62
   Fat: 0.3 g
   Carbs: 16 g
+```
+
+---
+
+### Sequences - Arrays/Lists
+
+- `sequences`
+
+  - an ordered series of zero or more nodes.
+  - each of the **keys** is **unique**
+  - a leading hyphen (`-`).
+  - option: enclosed in **square brackets** `[]`
+
+```yaml
+Fruits:
+  - Orange
+  - Apple
+  - Banna
+
+Vegetables: [Carrot, Cauliflower, Tomato]
 ```
 
 ---
@@ -166,3 +197,12 @@ spec:
     - name: nginx-container
       image: nginx
 ```
+
+- possible value for apiVersion field
+
+| Kind       | Version |
+| ---------- | ------- |
+| pod        | v1      |
+| Service    | v1      |
+| ReplicaSet | apps/v1 |
+| Deployment | apps/v1 |

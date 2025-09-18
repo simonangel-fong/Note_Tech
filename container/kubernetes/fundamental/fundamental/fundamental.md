@@ -3,96 +3,82 @@
 [Back](../../index.md)
 
 - [Kubernetes - Fundamental](#kubernetes---fundamental)
-  - [Container vs Orchestration](#container-vs-orchestration)
-    - [Container](#container)
+  - [Virtualization vs. Containerization vs. Orchestration](#virtualization-vs-containerization-vs-orchestration)
   - [Kubernetes](#kubernetes)
-  - [Architecture](#architecture)
-    - [Components](#components)
+  - [Microservices](#microservices)
+    - [Example - Voting system](#example---voting-system)
 
 ---
 
-## Container vs Orchestration
+## Virtualization vs. Containerization vs. Orchestration
 
-### Container
+- `Virtualization`
 
-- `Container`
+  - A **hardware-abstraction** solution that **partitions a physical machine** into multiple independent environment, called `virtual machines`, each with its own `operating system`.
+  - purpose:
+    - Run **multiple OS instances** on one physical machine
+  - tool:
+    - VMware, Hyper-V, KVM, Proxmox VE
 
-  - completely isolated environments
+- `Containerization`
 
-- Benefits
+  - An **application-abstraction** solution that packages an application and its **dependencies** into a consistent, called `container`, isolated environment running on a shared operating system.
+  - purpose:
+    - Ensure **consistent application environments** across systems
+  - tool:
+    - Docker, Podman, LXC
 
-  - Compatibility/Dependency Issue
-  - Long setup time
-  - Different Dev/Test/Prod environment
+- `Orchestration`
+  - An automation solution that coordinates the deployment, scaling, and operation of **applications** across **distributed containerized environments**.
+  - purpose:
+    - Automate and optimize containerized application lifecycle at scale
+  - tool:
+    - Kubernetes, Docker Swarm, Amazon ECS
 
-- Address by Containerizing Applications
+---
 
-  - Run each service with its own dependenciesin separate containers
-
-- `Container Orchestration`
+| Aspect                   | **Virtualization**             | **Containerization**                      | **Orchestration**         |
+| ------------------------ | ------------------------------ | ----------------------------------------- | ------------------------- |
+| **Level of Abstraction** | Hardware / OS                  | Application / runtime                     | Infrastructure management |
+| **Isolation Target**     | Operating systems              | Applications                              | Application operations    |
+| **Overhead**             | High (each VM runs its own OS) | Low (containers share the host OS kernel) | Variable                  |
 
 ---
 
 ## Kubernetes
 
 - `Kubernetes`
-  - a container management technology which helps in creating and managing containerization of application.
-  - an open source system
-  - originally developed by `Google` and now maintained by the `Cloud Native Computing Foundation (CNCF)`
+
+  - An open-source orchestration solution that **automates** the deployment, scaling, networking, and lifecycle management of applications **across clusters of containerized environments**.
+  - maintained by the `Cloud Native Computing Foundation (CNCF)`
 
 ---
 
-- It can run application **on clusters of physical and virtual machine infrastructure**.
-- It also has the capability to **run applications on cloud**.
-  - It helps in moving from **host-centric infrastructure** to **container-centric infrastructure**.
+## Microservices
+
+- `Microservices`
+
+  - a **software architecture** that structures a large application as a **collection** of small, **independent**, and **loosely coupled services**, each responsible for a specific business function.
+  - vs `monolithic architectures`
+    - services **communicate** with each other via lightweight **APIs**
+    - services can be **developed**, **deployed**, and **scaled** independently, offering benefits like enhanced agility, resilience, and easier maintenance
 
 ---
 
-## Architecture
+### Example - Voting system
 
-- `node (Minions)`
+- Basic services
 
-  - a machine, physical or virtual, on which kubernetesis installed.
-  - a worker machine where containers will be launched by kubernetes.
+| Service          | description              |
+| ---------------- | ------------------------ |
+| Voting service   | Receive votes from users |
+| Cache service    | Cache vote data          |
+| backend service  | handle vote transaction  |
+| database service | persist vote data        |
+| result service   | return vote data         |
 
-- `cluster`
+![pic](./pic/microservices01.png)
 
-  - a set of nodes grouped together.
-  - This way even if one node fails you have your application still accessible from the other nodes. -
-  - Moreover having multiple nodes helps in sharing load as well.
+- Application Architecture with deployment
 
-- `master`
-  - a node with Kubernetes installed in it, and is configured as a Master.
-  - The master **watches over** the nodes in the cluster and is responsible for the **actual orchestration** of containers on the worker nodes.
-
----
-
-### Components
-
-- Components
-
-  - **API Server**
-    - the front-end for kubernetes
-    - The users, management devices, Command line interfaces all talk to the API server to interact with the kubernetes cluster.
-  - **An ETCD service**
-    - a distributed reliable **key-value store** used by kubernetesto store all data used to manage the cluster.
-    - stores all that information on all the nodes in the cluster in a distributed manner
-    - responsible for implementing locks within the cluster to ensure there are no conflicts between the Masters.
-  - **A kubelet service**
-    - agent that runs on each node in the cluster.
-    - responsible for making sure that the containers are running on the nodes as expected.
-  - **A Container Runtime**
-    - the underlying software that is used to run containers.
-    - example: docker
-  - **Controllers**
-
-    - responsible for noticing and responding when nodes, containers or endpoints **goes down**.
-    - The controllers makes decisions to **bring up new containers** in such cases.
-
-  - **Schedulers**
-    - s responsible for **distributing** work or containers across multiple nodes.
-    - looks for newly created containers and assigns them to Nodes.
-
-![pic](./pic/master_vs_worker.png)
-
----
+![pic](./pic/microservices02.png)

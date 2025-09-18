@@ -49,6 +49,7 @@
   - [ ] [Warehouse Humber](./Database/warehouse/index.md)
   - [ ] [Neo4j](./Database/neo4j/index.md)
   - [ ] [Pandas](./Database/pandas/index.md)
+  - [ ] [Redis](./Database/redis/index.md)
 
 - AI
 

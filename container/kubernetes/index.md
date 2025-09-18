@@ -12,11 +12,21 @@
 
 - [Fundamental](./fundamental/fundamental/fundamental.md)
 
-  - [Architecture](./fundamental/architecture/architecture.md)
   - [YAML File](./fundamental/yaml/yaml.md)
   - [`kubectl`](./fundamental/kubectl/kubectl.md)
 
-- [Pod](./pod/pod.md)
+- [Architecture](./architecture/architecture/architecture.md)
+  - Master Node
+    - [etcd](./architecture/etcd/etcd.md)
+    - [API Server](./architecture/api_server/api_server.md)
+  - [Controller Manager](./architecture/controller_manager/controller_manager.md)
+  - [Scheduler](./architecture/scheduler/scheduler.md)
+  - [Kubelet](./architecture/kubelet/kubelet.md)
+  - [kube proxy](./architecture/kube_proxy/kube_proxy.md)
+  - [Pod](./architecture/pod/pod.md)
+
+---
+
 - [Replica Sets](./replica/replica.md)
 - [Deployment](./deployment/deployment.md)
 
@@ -26,9 +36,7 @@
 
 - Setup Environment
 
-  - [RHEL9: `minikube` installation](./deploy/minikube_rhel9/minikube_rhel9.md)
+  - [RHEL9: `minikube` installation](./install/minikube_rhel9/minikube_rhel9.md)
   - [Windows: `Docker Desktop` enable `Kubernetes`](./install/kube_docker_desktop_win/kube_docker_desktop_win.md)
 
 ---
-
-
