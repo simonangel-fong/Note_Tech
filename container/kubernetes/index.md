@@ -24,15 +24,18 @@
   - Worker Node
     - [`kubelet`](./architecture/kubelet/kubelet.md)
     - [`kube-proxy`](./architecture/kube_proxy/kube_proxy.md)
-    - [Pod](./architecture/pod/pod.md)
 
 ---
 
-- [Replica Sets](./replica/replica.md)
-- [Deployment](./deployment/deployment.md)
+- Basic Objects
+  - [Pod](./object/pod/pod.md)
+  - [ReplicaSet](./object/replica/replica.md)
+  - [Deployment](./object/deployment/deployment.md)
+  - [Service](./object/service/service.md)
+
+---
 
 - [Networking](./networking/networking.md)
-- [Service](./service/service.md)
 - [Microservices](./microservices/microservices.md)
 
 - Setup Environment

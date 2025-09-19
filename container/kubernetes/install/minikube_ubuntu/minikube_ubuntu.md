@@ -138,6 +138,29 @@ kubectl version
 minikube version
 # minikube version: v1.37.0
 
+# Set minikube as service
+sudo tee /etc/systemd/system/minikube.service <<EOF
+[Unit]
+Description=Minikube Kubernetes Cluster
+After=docker.service
+
+[Service]
+ExecStart=/usr/bin/minikube start --driver=docker
+ExecStop=/usr/bin/minikube stop
+Restart=on-failure
+User=${USER}
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# reload config
+sudo systemctl daemon-reload
+# enable
+sudo systemctl enable --now minikube
+
 kubectl get nodes
 # NAME       STATUS   ROLES           AGE     VERSION
 # minikube   Ready    control-plane   6m15s   v1.34.0

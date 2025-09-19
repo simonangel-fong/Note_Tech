@@ -25,20 +25,33 @@
 
 ### Common Commands
 
-| **Command**                                          | **Description**                                             |
-| ---------------------------------------------------- | ----------------------------------------------------------- |
-| `kubectl get pods`                                   | List all pods in the current namespace                      |
-| `kubectl get pods -A`                                | List pods across **all namespaces**                         |
-| `kubectl run pod_name --image=image_name`            | Create a pod using a specified image (for testing)          |
-| `kubectl create`                                     | Create a Pod from a YAML file or JSON.                      |
-| `kubectl apply -f yaml_file`                         | Create or update a pod from YAML manifest                   |
-| `kubectl describe pod pod_name`                      | Show detailed information about a specific pod              |
-| `kubectl get pod pod_name -o yaml`                   | View full YAML configuration of a pod                       |
-| `kubectl logs pod_name`                              | View logs from a pod's main container                       |
-| `kubectl logs pod_name -c container_name`            | View logs for a specific container in a multi-container pod |
-| `kubectl exec -it pod_name -- commands`              | Execute a command inside the pod (e.g., get a shell)        |
-| `kubectl delete pod pod_name`                        | Delete a specific pod                                       |
-| `kubectl port-forward <pod> <local-port>:<pod-port>` | Forward ports from a Pod to your local machine.             |
+| **Command**           | **Description**                        |
+| --------------------- | -------------------------------------- |
+| `kubectl get pods`    | List all pods in the current namespace |
+| `kubectl get pods -A` | List pods across **all namespaces**    |
+
+| `kubectl describe pod pod_name` | Show detailed information about a specific pod |
+| `kubectl logs pod_name` | View logs from a pod's main container |
+| `kubectl logs pod_name -c container_name` | View logs for a specific container in a multi-container pod |
+| `kubectl exec -it pod_name -- commands` | Execute a command inside the pod (e.g., get a shell) |
+| `kubectl delete pod pod_name` | Delete a specific pod |
+| `kubectl port-forward <pod> <local-port>:<pod-port>` | Forward ports from a Pod to your local machine. |
+
+- Create pod with CLI
+
+| CMD                                                                | DESC                                                          |
+| ------------------------------------------------------------------ | ------------------------------------------------------------- |
+| `kubectl run pod_name --image=image_name`                          | Create a pod using a specified image (for testing)            |
+| `kubectl run pod_name --image=image_name --dry-run=client`         | simulate the creation of a resource without actually applying |
+| `kubectl run pod_name --image=image_name --dry-run=client -o yaml` | View full YAML configuration of a pod                         |
+
+- Create pod with yaml
+
+| CMD                                | DESC                                      |
+| ---------------------------------- | ----------------------------------------- |
+| `kubectl create -f yaml_file`      | Create a Pod from a YAML file or JSON.    |
+| `kubectl apply -f yaml_file`       | Create or update a pod from YAML manifest |
+| `kubectl get pod pod_name -o yaml` | View full YAML configuration of a pod     |
 
 ---
 
@@ -79,7 +92,7 @@ containerPort: 7500
 ```
 
 ```sh
-kubectl create f tomcat.yml
+kubectl create -f tomcat.yml
 ```
 
 ---
@@ -138,6 +151,31 @@ kubectl describe pod nginx
 # Labels:           run=nginx
 # IP:               10.244.0.11
 # ...
+
+# output
+kubectl get pod nginx -o yaml
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   creationTimestamp: "2025-09-19T15:33:27Z"
+#   labels:
+#     run: nginx
+#   name: nginx
+#   namespace: default
+#   resourceVersion: "4279272"
+#   uid: c9de93b7-53db-43f5-869a-6efe73484cb8
+# spec:
+#   containers:
+#   - image: nginx
+#     imagePullPolicy: Always
+# ...
+
+# output to a yaml file
+kubectl get pod nginx -o yaml > nginx.yaml
+
+# remove
+kubectl delete pod nginx
+# pod "nginx" deleted
 ```
 
 ---
@@ -206,8 +244,8 @@ kubectl get pods
 | Create a new pod with nginx image                                  | `kubectl run nignx-pod --image=nignx`                                                                      |
 | What is image used to create new pods                              | `kubectl describe pod nignx-pod`                                                                           |
 | Which node is this pod running on                                  | `kubectl describe pod nignx-pod` / `kubectl get pods -o wide`                                              |
-| How many containers are part of a pod                              | `kubectl describe pod nignx-pod`, Containers                                                               |
-| What is the state of the container X in a pod Y                    | `kubectl describe pod nignx-pod`, Containers,State                                                         |
+| How many containers are part of a pod                              | `kubectl get pod nignx-pod`, Containers                                                                    |
+| What is the state of the container X in a pod Y                    | `kubectl describe pod nginx \| grep "State:"`                                                              |
 | Why the container X in pod Y is in error                           | `kubectl describe pod nignx-pod`, Containers,State,Reason. / Events                                        |
 | What does the READY columns in kubectl get pods                    | Running Containers in pod/Total container in pod                                                           |
 | Delete a pod                                                       | `kubectl delete pod nignx-pod`                                                                             |

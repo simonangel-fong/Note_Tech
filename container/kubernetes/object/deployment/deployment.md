@@ -4,10 +4,11 @@
 
 - [Kubernetes - Deployment](#kubernetes---deployment)
   - [Deployment](#deployment)
+    - [Deployment vs ReplicaSet](#deployment-vs-replicaset)
     - [Changing the Deployment](#changing-the-deployment)
-    - [Deployment Strategies](#deployment-strategies)
+  - [Deployment Strategies](#deployment-strategies)
     - [Common Commands](#common-commands)
-    - [Lab: Create Deployment](#lab-create-deployment)
+  - [Lab: Create Deployment](#lab-create-deployment)
   - [Common Commands](#common-commands-1)
   - [Updates and Rollback](#updates-and-rollback)
     - [Deployment strategy](#deployment-strategy)
@@ -23,15 +24,31 @@
 
 - `Deployments`
 
+  - an **object** that manages the **lifecycle** of an application in a declarative way to describe the desired state, including the number of replicas and the container image to use, and orchestrates updates and rollbacks for that application in a controlled manner.
   - upgraded and higher version of `replication controller`.
   - manage the **deployment** of `replica sets`.
   - have the capability to **update** the `replica set` and are also capable of **rolling back to the previous version**.
 
-- Features
-  - `matchLabels`
-  - `selectors`
-- `deployment controller`
-  - has the capability to change the deployment midway.
+- Major roles:
+
+  - **Declarative Updates**:
+    - declare the desired state with YAML (or CLI)
+  - **Scaling**
+    - Easily scale applications up or down
+  - **Rolling Updates**
+    - **Deploy new versions** of your app without downtime.
+  - **Rollback**
+    - If something goes wrong, you can roll back to a previous version
+  - **Self-healing**
+    - If a Pod crashes or a node goes down, the Deployment (via ReplicaSet) ensures new Pods are scheduled.
+
+---
+
+### Deployment vs ReplicaSet
+
+- `ReplicaSet`: Ensures a **fixed number** of Pods are running.
+- `Deployment`: Manages ReplicaSets, and adds features like `rolling updates` and `rollbacks`.
+  - Most of the time, you won’t create ReplicaSets directly — you use a Deployment.
 
 ---
 
@@ -53,7 +70,7 @@
 
 ---
 
-### Deployment Strategies
+## Deployment Strategies
 
 - `Deployment strategies`
 
@@ -61,7 +78,7 @@
 
 - **Recreate**
 
-  - **kill all the existing RC** and then bring up the new ones.
+  - **kill all the existing RC** and then **bring up the new ones**.
   - This results in **quick deployment** however it will result in **downtime** when the old pods are down and the new pods have not come up.
 
 - **Rolling Update**
@@ -73,14 +90,16 @@
 
 ### Common Commands
 
-| Command                                                    | Description                                                   |
-| ---------------------------------------------------------- | ------------------------------------------------------------- |
-| `kubectl get deployments`                                  | List all Deployments in the current namespace.                |
-| `kubectl describe deployment <deployment>`                 | Show detailed information about a specific Deployment.        |
-| `kubectl create -f <file.yaml>`                            | Create a Deployment from a YAML file.                         |
-| `kubectl apply -f <file.yaml>`                             | Apply changes to a Deployment configuration from a YAML file. |
-| `kubectl delete deployment <deployment>`                   | Delete a Deployment by name.                                  |
-| `kubectl scale deployment <deployment> --replicas=<count>` | Scale the number of replicas for a Deployment.                |
+| Command                                                                           | Description                                                   |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `kubectl get deployments`                                                         | List all Deployments in the current namespace.                |
+| `kubectl describe deployment <deployment>`                                        | Show detailed information about a specific Deployment.        |
+| `kubectl create -f <file.yaml>`                                                   | Create a Deployment from a YAML file.                         |
+| `kubectl apply -f <file.yaml>`                                                    | Apply changes to a Deployment configuration from a YAML file. |
+| `kubectl delete deployment <deployment>`                                          | Delete a Deployment by name.                                  |
+| `kubectl scale deployment <deployment> --replicas=<count>`                        | Scale the number of replicas for a Deployment.                |
+| `kubectl explain deploy`                                                          | show deployment documentation                                 |
+| `kubectl create deploy nginx --image=nginx --dry-run=client --replicas=4 -o yaml` | Show the deployemnt in yaml file                              |
 
 - Rollout
 
@@ -92,7 +111,7 @@
 
 ---
 
-### Lab: Create Deployment
+## Lab: Create Deployment
 
 - deployment-def.yaml
 
@@ -124,42 +143,43 @@ spec:
 ```sh
 # create deployment
 kubectl create -f deployment-def.yaml
+# deployment.apps/mydeploy created
 
-kubectl get deployments
+kubectl get deploy
 # NAME       READY   UP-TO-DATE   AVAILABLE   AGE
-# mydeploy   3/3     3            3           32s
+# mydeploy   3/3     3            3           15s
 
 # also create rs
 kubectl get rs
 # NAME                  DESIRED   CURRENT   READY   AGE
-# mydeploy-8544bc744c   3         3         3       117s
+# mydeploy-5bbcbccdcd   3         3         3       30s
 
 kubectl get pods
 # NAME                        READY   STATUS    RESTARTS   AGE
-# mydeploy-8544bc744c-k2scs   1/1     Running   0          2m24s
-# mydeploy-8544bc744c-pzvgf   1/1     Running   0          2m24s
-# mydeploy-8544bc744c-wssrt   1/1     Running   0          2m24s
+# mydeploy-5bbcbccdcd-dtb2t   1/1     Running   0          57s
+# mydeploy-5bbcbccdcd-w6gnj   1/1     Running   0          57s
+# mydeploy-5bbcbccdcd-xtddv   1/1     Running   0          57s
 
 kubectl get all
 # NAME                            READY   STATUS    RESTARTS   AGE
-# pod/mydeploy-8544bc744c-k2scs   1/1     Running   0          3m19s
-# pod/mydeploy-8544bc744c-pzvgf   1/1     Running   0          3m19s
-# pod/mydeploy-8544bc744c-wssrt   1/1     Running   0          3m19s
+# pod/mydeploy-5bbcbccdcd-dtb2t   1/1     Running   0          69s
+# pod/mydeploy-5bbcbccdcd-w6gnj   1/1     Running   0          69s
+# pod/mydeploy-5bbcbccdcd-xtddv   1/1     Running   0          69s
 
 # NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-# service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   95d
+# service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   3h21m
 
 # NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-# deployment.apps/mydeploy   3/3     3            3           3m19s
+# deployment.apps/mydeploy   3/3     3            3           69s
 
 # NAME                                  DESIRED   CURRENT   READY   AGE
-# replicaset.apps/mydeploy-8544bc744c   3         3         3       3m19s
+# replicaset.apps/mydeploy-5bbcbccdcd   3         3         3       69s
 
 # get details
-kubectl describe deployment mydeploy
+kubectl describe deploy mydeploy
 # Name:                   mydeploy
 # Namespace:              default
-# CreationTimestamp:      Sun, 27 Jul 2025 14:14:37 -0400
+# CreationTimestamp:      Fri, 19 Sep 2025 15:21:01 -0400
 # Labels:                 app=myapp
 #                         type=front-end
 # Annotations:            deployment.kubernetes.io/revision: 1
@@ -187,11 +207,11 @@ kubectl describe deployment mydeploy
 #   Available      True    MinimumReplicasAvailable
 #   Progressing    True    NewReplicaSetAvailable
 # OldReplicaSets:  <none>
-# NewReplicaSet:   mydeploy-8544bc744c (3/3 replicas created)
+# NewReplicaSet:   mydeploy-5bbcbccdcd (3/3 replicas created)
 # Events:
-#   Type    Reason             Age    From                   Message
-#   ----    ------             ----   ----                   -------
-#   Normal  ScalingReplicaSet  7m58s  deployment-controller  Scaled up replica set mydeploy-8544bc744c from 0 to 3
+#   Type    Reason             Age   From                   Message
+#   ----    ------             ----  ----                   -------
+#   Normal  ScalingReplicaSet  96s   deployment-controller  Scaled up replica set mydeploy-5bbcbccdcd from 0 to 3
 ```
 
 ---
@@ -527,7 +547,7 @@ kubectl rollout undo deployment/mydeploy
 # deployment.apps/mydeploy rolled back
 
 kubectl rollout history deployment/mydeploy
-# deployment.apps/mydeploy 
+# deployment.apps/mydeploy
 # REVISION  CHANGE-CAUSE
 # 1         kubectl create --filename=deployment-def.yaml --record=true
 # 2         kubectl create --filename=deployment-def.yaml --record=true
@@ -541,7 +561,7 @@ kubectl rollout history deployment/mydeploy
 - Update yaml file
 
 ```yaml
-          image: nginx:1.28.0-error
+image: nginx:1.28.0-error
 ```
 
 ```sh
@@ -601,11 +621,12 @@ kubectl rollout history deployment/mydeploy
   - `kubectl describe deploy deploy_name`
   - StrategyType
 - Update the image
+
   - `kubectl set image deploy deploy_name container_name=image_name`
 
 - How many PODs can be down fo upgrade at a time. Consider the number of pods is 4
   - `kubectl describe deploy deploy_name`
-  - RollingUpdateStrategy:  25% max unavailable, 25% max surge
+  - RollingUpdateStrategy: 25% max unavailable, 25% max surge
     - only 1/4 can be taken down at a time.
     - Answer is 1
 - Change the deployment strategy to **Recreate**
