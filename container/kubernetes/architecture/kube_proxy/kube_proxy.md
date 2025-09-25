@@ -1,6 +1,6 @@
 # Kubernetes - kube-proxy
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - kube-proxy](#kubernetes---kube-proxy)
   - [kube-proxy](#kube-proxy)

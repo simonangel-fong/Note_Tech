@@ -33,6 +33,12 @@
   - [Deployment](./object/deployment/deployment.md)
   - [Service](./object/service/service.md)
 
+- [Service](./service/service/service.md)
+  - [NodePort](./service/nodeport/nodeport.md)
+  - [ClusterIP](./service/clusterip/clusterip.md)
+  - [LoadBalancer](./service/loadbalancer/loadbalancer.md)
+  - 
+
 ---
 
 - [Networking](./networking/networking.md)
