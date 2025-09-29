@@ -37,6 +37,7 @@
   - [NodePort](./service/nodeport/nodeport.md)
   - [ClusterIP](./service/clusterip/clusterip.md)
   - [LoadBalancer](./service/loadbalancer/loadbalancer.md)
+  - [LoadBalancer](./namespace/namespace.md)
   - 
 
 ---
