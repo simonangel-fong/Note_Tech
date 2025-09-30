@@ -5,6 +5,7 @@
 - [Kubernetes Service - ClusterIP](#kubernetes-service---clusterip)
   - [ClusterIP](#clusterip)
     - [How It Works](#how-it-works)
+    - [Imperative Command](#imperative-command)
   - [Lab: Explore default ClusterIP](#lab-explore-default-clusterip)
   - [Lab: Create ClusterIP](#lab-create-clusterip)
 
@@ -70,10 +71,21 @@ spec:
 
 ---
 
+### Imperative Command
+
+| Command                                                                                            | DESC                                 |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `kubectl create svc clusterip svc_name --tcp=port`                                                 | Create a ClusterIP service           |
+| `kubectl expose deploy deploy_name --name=svc_name --type=ClusterIP --port=80 --target-port=8080 ` | Expose a deploy                      |
+| `kubectl expose pod pod_name --name=svc_name --type=ClusterIP --port=80 --target-port=8080 `       | Expose a pod                         |
+| `kubectl run nginx --image=nginx --port=80 --expose=true`                                          | Create a pod and a ClusterIP service |
+
+---
+
 ## Lab: Explore default ClusterIP
 
 ```sh
-kubectl get svc    
+kubectl get svc
 # NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 # kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   18h
 
@@ -122,7 +134,6 @@ spec:
       containers:
         - name: nginx-con
           image: nginx
-
 ```
 
 - `service-clusterip.yaml`
@@ -143,7 +154,7 @@ spec:
 
 ```sh
 # create
-kubectl create -f . 
+kubectl create -f .
 # deployment.apps/deploy-nginx created
 # service/service-clusterip created
 
@@ -165,7 +176,7 @@ kubectl get all
 # replicaset.apps/deploy-nginx-5f9767d954   3         3         3       2m21s
 
 # get info
-kubectl describe svc service-clusterip  
+kubectl describe svc service-clusterip
 # Name:                     service-clusterip
 # Namespace:                default
 # Labels:                   <none>

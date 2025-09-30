@@ -28,17 +28,23 @@
 ---
 
 - Basic Objects
+
+  - [Node](./object/node/node.md)
   - [Pod](./object/pod/pod.md)
+  - [Label and Selector](./object/lbl_slt/lbl_slt.md)
   - [ReplicaSet](./object/replica/replica.md)
   - [Deployment](./object/deployment/deployment.md)
   - [Service](./object/service/service.md)
+  - [Namespace](./object/namespace/namespace.md)
 
 - [Service](./service/service/service.md)
+
   - [NodePort](./service/nodeport/nodeport.md)
   - [ClusterIP](./service/clusterip/clusterip.md)
   - [LoadBalancer](./service/loadbalancer/loadbalancer.md)
-  - [LoadBalancer](./namespace/namespace.md)
-  - 
+
+- [Scheduler](./scheduler/scheduler/scheduler.md)
+  - [Manual Scheduler](./scheduler/man_scheduler/man_scheduler.md)
 
 ---
 

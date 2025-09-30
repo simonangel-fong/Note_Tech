@@ -9,6 +9,8 @@
     - [Example - Voting system](#example---voting-system)
   - [Declarative vs Imperative vs Functional vs Procedural](#declarative-vs-imperative-vs-functional-vs-procedural)
     - [K8s = Declarative](#k8s--declarative)
+    - [K8s: Imperative vs Declarative](#k8s-imperative-vs-declarative)
+  - [kubectl apply](#kubectl-apply)
 
 ---
 
@@ -139,3 +141,63 @@
 - Kubernetes is a Declarative style
   - describe the desired state
   - `Kubernetes controllers` work continuously to **reconcile the actual state** with the desired state.
+
+---
+
+### K8s: Imperative vs Declarative
+
+- Imperative Approach in k8s
+
+  - tell Kubernetes what action **to do right now** using direct commands.
+  - e.g.,
+    - `kubectl run`
+    - `kubectl create`
+    - `kubectl expose`
+    - `kubectl edit`
+    - ...
+
+- Categories:
+  - create objects:
+    - run, create, expose
+  - update object:
+    - edit, scale, set image
+
+---
+
+- Declarative Approach in k8s
+
+  - declare the **desired state** in a manifest file (YAML/JSON), and Kubernetes continuously works to **match** the **actual state** to that **desired state**.
+  - e.g., kubectl apply -f deployment.yaml
+
+- Create object:
+  - the object must not exist; Otherwise error
+  - yaml + create
+- Update object:
+  - the object must exist; Otherwise error
+  - edit + yaml
+  - yaml + replace
+- Create/update object:
+  - yaml + apply
+
+---
+
+## kubectl apply
+
+- kubectl apply
+
+  - the local yaml file will also convert to a json file in the `last applied configuration`
+  - the local yaml file will convert to a yaml file in the `live object configuration` in the control plane
+
+- e.g., the image of a pod get changed in the local yaml
+
+  - then API server compares and update `last applied configuration` and update it
+  - API server compares with `live object configuration` and update the image
+
+- `live object configuration`
+  - reside in the k8s memory
+  - the actual object status
+- `last applied configuration`
+  - reside in the `live object configuration` as annotation
+  - helps compare with the local yaml file to identify the changes
+  - only apply to `kubectl apply` command
+    - not to `kubectl create/replace` (not store last applied config)

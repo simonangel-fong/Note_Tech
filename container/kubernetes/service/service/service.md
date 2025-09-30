@@ -4,7 +4,8 @@
 
 - [Kubernetes - Service](#kubernetes---service)
   - [Service](#service)
-    - [Common Commands](#common-commands)
+    - [Imperative Commands](#imperative-commands)
+    - [Declarative Commands](#declarative-commands)
 
 ---
 
@@ -42,16 +43,22 @@
   - e.g., `nginx-service.default.svc.cluster.local`
   - Other Pods can talk to it **using this name** instead of IP.
 
-### Common Commands
+### Imperative Commands
 
-| Command                             | Description                                                                          |
-| ----------------------------------- | ------------------------------------------------------------------------------------ |
-| `kubectl create -f yaml_file`       | Create a Service from a YAML file.                                                   |
-| `kubectl apply -f yaml_file`        | Apply changes to a Service configuration from a YAML file.                           |
-| `kubectl get svc`                   | List all Services in the current namespace.                                          |
-| `kubectl describe svc service_name` | Show detailed information about a specific Service.                                  |
-| `kubectl delete svc service_name`   | Delete a Service by name.                                                            |
-| `kubectl expose`                    | Expose a Service using a specific type such as NodePort, LoadBalancer, or ClusterIP. |
+| Command                                             | Description                                         |
+| --------------------------------------------------- | --------------------------------------------------- |
+| `kubectl get svc`                                   | List all Services in the current namespace.         |
+| `kubectl describe svc service_name`                 | Show detailed information about a specific Service. |
+| `kubectl create svc clusterip svc_name --tcp=80`    | Create a ClusterIP service                          |
+| `kubectl create svc nodeport svc_name --tcp=80`     | Create a NodePort service                           |
+| `kubectl create svc loadbalancer svc_name --tcp=80` | Create a LoadBalancer service                       |
+| `kubectl delete svc svc_name`                       | Delete a Service by name.                           |
+
+### Declarative Commands
+
+| Command                       | Description                                                |
+| ----------------------------- | ---------------------------------------------------------- |
+| `kubectl create -f yaml_file` | Create a Service from a YAML file.                         |
+| `kubectl apply -f yaml_file`  | Apply changes to a Service configuration from a YAML file. |
 
 ---
-

@@ -7,9 +7,10 @@
     - [Deployment vs ReplicaSet](#deployment-vs-replicaset)
     - [Changing the Deployment](#changing-the-deployment)
   - [Deployment Strategies](#deployment-strategies)
-    - [Common Commands](#common-commands)
+    - [Imperative Command](#imperative-command)
+    - [Declarative Command](#declarative-command)
   - [Lab: Create Deployment](#lab-create-deployment)
-  - [Common Commands](#common-commands-1)
+  - [Common Commands](#common-commands)
   - [Updates and Rollback](#updates-and-rollback)
     - [Deployment strategy](#deployment-strategy)
     - [Rollback](#rollback)
@@ -88,26 +89,35 @@
 
 ---
 
-### Common Commands
+### Imperative Command
 
-| Command                                                                           | Description                                                   |
-| --------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `kubectl get deployments`                                                         | List all Deployments in the current namespace.                |
-| `kubectl describe deployment <deployment>`                                        | Show detailed information about a specific Deployment.        |
-| `kubectl create -f <file.yaml>`                                                   | Create a Deployment from a YAML file.                         |
-| `kubectl apply -f <file.yaml>`                                                    | Apply changes to a Deployment configuration from a YAML file. |
-| `kubectl delete deployment <deployment>`                                          | Delete a Deployment by name.                                  |
-| `kubectl scale deployment <deployment> --replicas=<count>`                        | Scale the number of replicas for a Deployment.                |
-| `kubectl explain deploy`                                                          | show deployment documentation                                 |
-| `kubectl create deploy nginx --image=nginx --dry-run=client --replicas=4 -o yaml` | Show the deployemnt in yaml file                              |
+| Command                                                                           | Description                                            |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `kubectl get deploy`                                                              | List all Deployments in the current namespace.         |
+| `kubectl describe deploy deploy_name`                                             | Show detailed information about a specific Deployment. |
+| `kubectl create deploy deploy_name --image=img_name`                              | Create a deployment using image                        |
+| `kubectl create deploy nginx --image=nginx --dry-run=client --replicas=4 -o yaml` | Show the deployemnt in yaml file                       |
+| `kubectl set image deploy_name nginx=nginx:1.25`                                  | Update the container image in a deployment             |
+| `kubectl delete deploy deploy_name`                                               | Delete a Deployment by name.                           |
+| `kubectl scale deploy deploy_name --replicas=count-num`                           | Scale the number of replicas for a Deployment.         |
+| `kubectl explain deploy`                                                          | show deployment documentation                          |
 
 - Rollout
 
-| Command                                           | Description                                            |
-| ------------------------------------------------- | ------------------------------------------------------ |
-| `kubectl rollout status deployment/<deployment>`  | Check the status of a rollout for the Deployment.      |
-| `kubectl rollout history deployment/<deployment>` | View the rollout history of changes to the Deployment. |
-| `kubectl rollout undo deployment/<deployment>`    | Rollback to the previous version of the Deployment.    |
+| Command                                          | Description                                            |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| `kubectl rollout status deployment/deploy_name`  | Check the status of a rollout for the Deployment.      |
+| `kubectl rollout history deployment/deploy_name` | View the rollout history of changes to the Deployment. |
+| `kubectl rollout undo deployment/deploy_name`    | Rollback to the previous version of the Deployment.    |
+
+---
+
+### Declarative Command
+
+| Command                       | Description                                                   |
+| ----------------------------- | ------------------------------------------------------------- |
+| `kubectl create -f yaml_file` | Create a Deployment from a YAML file.                         |
+| `kubectl apply -f yaml_file`  | Apply changes to a Deployment configuration from a YAML file. |
 
 ---
 

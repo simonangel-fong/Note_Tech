@@ -1,6 +1,6 @@
 # Kubernetes Namespace
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes Namespace](#kubernetes-namespace)
   - [Namespace](#namespace)

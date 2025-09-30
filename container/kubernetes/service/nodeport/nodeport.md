@@ -5,6 +5,7 @@
 - [Kubernetes Service - NodePort](#kubernetes-service---nodeport)
   - [NodePort](#nodeport)
     - [How It Works](#how-it-works)
+    - [Imperative Command](#imperative-command)
     - [Lifecycle](#lifecycle)
   - [Lab: Create NodePort with a single pod](#lab-create-nodeport-with-a-single-pod)
   - [Lab: Create NodePort with Deployment](#lab-create-nodeport-with-deployment)
@@ -49,6 +50,16 @@
   - Quick **testing** or **development**.
   - **Small** clusters where cloud load balancers **aren’t available**.
     - Exposes Pods to outside traffic **without** needing a cloud load balancer.
+
+---
+
+### Imperative Command
+
+| Command                                                                                          | DESC                                |
+| ------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| `kubectl create svc nodeport svc_name --tcp=port:targetPort`                                     | Create a NodePort service           |
+| `kubectl expose deploy deploy_name --name=svc_name --type=NodePort --port=80 --target-port=8080` | Create a NodePort and expose deploy |
+| `kubectl expose pod pod_name --name=svc_name --type=NodePort --port=80 --target-port=8080 `      | Create a NodePort and expose pod    |
 
 ---
 

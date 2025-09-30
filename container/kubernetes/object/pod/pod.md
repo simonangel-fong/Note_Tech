@@ -4,7 +4,8 @@
 
 - [Kubernetes - Pod](#kubernetes---pod)
   - [Pod](#pod)
-    - [Common Commands](#common-commands)
+    - [Imperative Commands](#imperative-commands)
+    - [Declarative Commands](#declarative-commands)
   - [Types of Pod](#types-of-pod)
     - [Single Container Pod](#single-container-pod)
     - [Multi Container Pod](#multi-container-pod)
@@ -23,29 +24,32 @@
 
 ---
 
-### Common Commands
+### Imperative Commands
 
-| **Command**           | **Description**                        |
-| --------------------- | -------------------------------------- |
-| `kubectl get pods`    | List all pods in the current namespace |
-| `kubectl get pods -A` | List pods across **all namespaces**    |
+| **Command**                                          | **Description**                                             |
+| ---------------------------------------------------- | ----------------------------------------------------------- |
+| `kubectl get pods`                                   | List all pods in the current namespace                      |
+| `kubectl get pods -A`                                | List pods across **all namespaces**                         |
+| `kubectl get pods -o wide`                           | List pods with extra details                                |
+| `kubectl get pods --watch`                           | Streams updates as Pod states change.                       |
+| `kubectl describe pod pod_name`                      | Show detailed information about a specific pod              |
+| `kubectl logs pod_name`                              | View logs from a pod's main container                       |
+| `kubectl logs pod_name -c container_name`            | View logs for a specific container in a multi-container pod |
+| `kubectl exec -it pod_name -- commands`              | Execute a command inside the pod (e.g., get a shell)        |
+| `kubectl delete pod pod_name`                        | Delete a specific pod                                       |
+| `kubectl port-forward <pod> <local-port>:<pod-port>` | Forward ports from a Pod to your local machine.             |
 
-| `kubectl describe pod pod_name` | Show detailed information about a specific pod |
-| `kubectl logs pod_name` | View logs from a pod's main container |
-| `kubectl logs pod_name -c container_name` | View logs for a specific container in a multi-container pod |
-| `kubectl exec -it pod_name -- commands` | Execute a command inside the pod (e.g., get a shell) |
-| `kubectl delete pod pod_name` | Delete a specific pod |
-| `kubectl port-forward <pod> <local-port>:<pod-port>` | Forward ports from a Pod to your local machine. |
+- Run
 
-- Create pod with CLI
+| CMD                                                                      | DESC                                                          |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| `kubectl run pod_name --image=image_name`                                | Create a pod using a specified image (for testing)            |
+| `kubectl run pod_name --image=image_name --labels="key1=val1,key2=val2"` | Create pod with labels                                        |
+| `kubectl run pod_name --image=image_name --port=8080`                    | Create pod with port                                          |
+| `kubectl run pod_name --image=image_name --dry-run=client`               | simulate the creation of a resource without actually applying |
+| `kubectl run pod_name --image=image_name --dry-run=client -o yaml`       | View full YAML configuration of a pod                         |
 
-| CMD                                                                | DESC                                                          |
-| ------------------------------------------------------------------ | ------------------------------------------------------------- |
-| `kubectl run pod_name --image=image_name`                          | Create a pod using a specified image (for testing)            |
-| `kubectl run pod_name --image=image_name --dry-run=client`         | simulate the creation of a resource without actually applying |
-| `kubectl run pod_name --image=image_name --dry-run=client -o yaml` | View full YAML configuration of a pod                         |
-
-- Create pod with yaml
+### Declarative Commands
 
 | CMD                                | DESC                                      |
 | ---------------------------------- | ----------------------------------------- |
