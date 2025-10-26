@@ -8,6 +8,7 @@
   - [Configure Samba Server](#configure-samba-server)
   - [Access: Windows Clients](#access-windows-clients)
   - [Access: Linux Clients](#access-linux-clients)
+  - [Setup Samba](#setup-samba)
 
 ---
 
@@ -145,3 +146,20 @@ firewall-cmd --list-service
 | `sudo mount -t cifs //samba_server_ip/shared /mnt/samba -o username=username,password=password` | Mount a Samba share:              |
 
 ---
+
+## Setup Samba
+
+```sh
+sudo dnf install samba
+
+systemctl enable --now smb
+systemctl enable --now nmb
+
+sudo systemctl enable --now firewalld
+sudo firewall-cmd --add-service samba
+
+# Configure Samba
+sudo mkdir /sambashare
+# change the SELinux context
+sudo chcon -t samba_share_t /sambashare/
+```

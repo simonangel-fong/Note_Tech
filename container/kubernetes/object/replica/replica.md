@@ -1,6 +1,6 @@
 # Kubernetes - Replica
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Replica](#kubernetes---replica)
   - [ReplicaSet](#replicaset)

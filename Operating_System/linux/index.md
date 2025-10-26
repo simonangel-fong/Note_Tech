@@ -17,6 +17,7 @@
   - [Tune System Performance](./system/tune_perform/tune_perform.md)
   - [Utility `cockpit`](./system/cockpit/cockpit.md)
   - [Log and Support](./system/log/log.md)
+  - [System Setting](./system/setting/setting.md)
 
 - [Storage Fundamental](./storage/storage_fun/storage_fun.md)
 

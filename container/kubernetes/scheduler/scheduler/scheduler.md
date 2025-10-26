@@ -4,7 +4,9 @@
 
 - [Kubernetes - Scheduler](#kubernetes---scheduler)
   - [Scheduler](#scheduler)
-    - [How it works](#how-it-works)
+    - [How it works - From API to Kubelet](#how-it-works---from-api-to-kubelet)
+    - [!!!How it works - Phases](#how-it-works---phases)
+      - [Scheduling Queue](#scheduling-queue)
     - [Scheduling Process](#scheduling-process)
     - [Scheduler Policies \& Features](#scheduler-policies--features)
   - [Imperative Command](#imperative-command)
@@ -30,7 +32,7 @@
 
 ---
 
-### How it works
+### How it works - From API to Kubelet
 
 - When a Pod is created:
 
@@ -49,6 +51,45 @@
 7. `Scheduler` selects the **highest-scoring** `node` as the placement target.
 8. `Scheduler` **updates** the `Pod object` in the `API server` by setting the `nodeName` field.
 9. `Kubelet` on the chosen node sees the updated `Pod assignment` and **starts the container(s)** by pulling the image and running it.
+
+---
+
+### !!!How it works - Phases
+
+- ref:
+  - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduling_code_hierarchy_overview.md
+  - https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/
+
+- Example
+
+- Multiple nodes are avaialable with vary cpu and memory.
+- Multiple pods are waiting for being scheduled.
+- Pod defined to be scheduled.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+spec:
+  priorityClassName: high-priority
+  container: data-processor
+  - name: webapp
+    image: webapp
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: 10
+```
+
+---
+
+#### Scheduling Queue
+
+- `Scheduling Queue`:
+  - a schedule phase where pods **are sorted based on the priority** defined on the pods.
+  - pods with **higher priority** gets to the **beginning of the queue** to be scheduled **first**.
+
 
 ---
 
@@ -191,3 +232,5 @@ kubectl logs kube-scheduler-controlplane -n kube-system
 # I0929 14:19:12.594132       1 shared_informer.go:320] Caches are synced for client-ca::kube-system::extension-apiserver-authentication::client-ca-file
 # I0929 14:19:28.061242       1 leaderelection.go:271] successfully acquired lease kube-system/kube-scheduler
 ```
+
+---

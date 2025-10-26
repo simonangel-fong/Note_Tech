@@ -6,6 +6,7 @@
   - [Node](#node)
   - [Imperative Command](#imperative-command)
   - [Lab: Node info](#lab-node-info)
+  - [Label a node and Node Selector](#label-a-node-and-node-selector)
 
 ---
 
@@ -60,8 +61,8 @@ kubectl describe node docker-desktop
 #   ----             ------  -----------------                 ------------------                ------                       -------
 #   MemoryPressure   False   Tue, 30 Sep 2025 07:40:10 -0400   Wed, 24 Sep 2025 22:21:50 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
 #   DiskPressure     False   Tue, 30 Sep 2025 07:40:10 -0400   Wed, 24 Sep 2025 22:21:50 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
-#   PIDPressure      False   Tue, 30 Sep 2025 07:40:10 -0400   Wed, 24 Sep 2025 22:21:50 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available   
-#   Ready            True    Tue, 30 Sep 2025 07:40:10 -0400   Wed, 24 Sep 2025 22:21:52 -0400   KubeletReady                 kubelet is posting ready status        
+#   PIDPressure      False   Tue, 30 Sep 2025 07:40:10 -0400   Wed, 24 Sep 2025 22:21:50 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+#   Ready            True    Tue, 30 Sep 2025 07:40:10 -0400   Wed, 24 Sep 2025 22:21:52 -0400   KubeletReady                 kubelet is posting ready status
 # Addresses:
 #   InternalIP:  192.168.65.3
 #   Hostname:    docker-desktop
@@ -113,4 +114,23 @@ kubectl describe node docker-desktop
 #   hugepages-1Gi      0 (0%)      0 (0%)
 #   hugepages-2Mi      0 (0%)      0 (0%)
 # Events:              <none>
+```
+
+---
+
+## Label a node and Node Selector
+
+- Label a node
+
+| CMD                                       | DESC                            |
+| ----------------------------------------- | ------------------------------- |
+| `kubectl label node node_name size=large` | Add or update a label on a node |
+| `kubectl label node node_name size-`      | Remove a label from a node      |
+
+- Use Node selector for a pod
+
+```yaml
+spec:
+  nodeSelector:
+    size: large
 ```

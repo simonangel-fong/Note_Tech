@@ -4,7 +4,13 @@
 
 - [Kubernetes - Controller Manager](#kubernetes---controller-manager)
   - [Controller Manager](#controller-manager)
+  - [Controllers](#controllers)
   - [Common Controllers](#common-controllers)
+    - [Workload controllers](#workload-controllers)
+    - [Node \& service discovery](#node--service-discovery)
+    - [Config \& security](#config--security)
+    - [Storage](#storage)
+    - [Autoscaling \& disruption](#autoscaling--disruption)
 
 ---
 
@@ -38,59 +44,66 @@ kubectl get pods -n kube-system
 
 ---
 
+## Controllers
+
+- `controllers`
+  - a **control loops** that **watch the state** of cluster, then make or request changes where needed.
+
+---
+
 ## Common Controllers
 
-- `node controller`
-  - used to monitor the status of the nodes
-  - default
-    - check the status of the nodes every 5s
-    - mark the node as `unreachable` if it cannot receive heartbeat for 40s.
-    - give the `unreachable` node 5 min to come back
-    - remove the `pods` running on `unreachable node`
-      - provision the removed `pods` on a healthy ones.
+### Workload controllers
+
+| Controller               | Description                                                                |
+| ------------------------ | -------------------------------------------------------------------------- |
+| `ReplicaSet Controller`  | Keeps an exact number of identical Pods running.                           |
+| `Deployment Controller`  | Manages stateless apps via ReplicaSets; handles rolling updates/rollbacks. |
+| `StatefulSet Controller` | Stable Pod IDs and storage; ordered rollout/scale for stateful apps.       |
+| `DaemonSet Controller`   | Ensures one Pod per (matching) node (agents, CNIs, CSI nodes).             |
+| `Job Controller`         | Runs Pods to completion with retries/backoff.                              |
+| `CronJob Controller`     | Schedules Jobs on a cron timetable.                                        |
 
 ---
 
-- `replication controller`
-  - used to monitor the status of the replica sets
-  - Ensures the specified number of pod replicas are always running.
-    - If a pod dies, it creates a replacement.
-    - If too many pods are running, it deletes extras
+### Node & service discovery
+
+| Controller                             | Description                                                       |
+| -------------------------------------- | ----------------------------------------------------------------- |
+| `Node controller Controller`           | Tracks node health; taints/evicts from NotReady nodes.            |
+| `Endpoints / EndpointSlice Controller` | Maintains Service → Pod endpoint lists for traffic routing.       |
+| `Service controller` (cloud)           | Creates/updates external load balancers for `type: LoadBalancer`. |
 
 ---
 
-- `deployment controller`
-  - used to manages deployments (built on top of ReplicaSets).
-  - Handles rolling updates and rollbacks.
-  - Ensures the desired version of an application is running.
+### Config & security
+
+| Controller                                   | Description                                                  |
+| -------------------------------------------- | ------------------------------------------------------------ |
+| `ServiceAccount Controller`                  | Creates default ServiceAccounts in namespaces.               |
+| `Token Controller`                           | Manages projected service account tokens for Pods.           |
+| `ResourceQuota Controller`                   | Enforces per-namespace quotas (CPU/mem/PVCs, etc.).          |
+| `LimitRange Controller`                      | Sets default/max/min resource requests/limits per namespace. |
+| `Namespace Controller`                       | Finalizes resources during namespace deletion.               |
+| `Garbage Collector Controller`               | Cleans up dependents via ownerReferences/finalizers.         |
+| `TTLAfterFinished Controller`                | Deletes completed Jobs/Pods after a set TTL.                 |
+| `CertificateSigningRequest (CSR) Controller` | Approves/signs node/user certs per policy (if enabled).      |
 
 ---
 
-- `Endpoint Controller`
-  - Populates Endpoints objects that map Services → Pod IPs.
+### Storage
+
+| Controller                                | Description                                        |
+| ----------------------------------------- | -------------------------------------------------- |
+| `PersistentVolume (PV) binder Controller` | Binds PVCs to PVs per StorageClass & access modes. |
+| `Attach/Detach Controller`                | Safely attaches/detaches volumes to nodes.         |
+| `Volume expansion Controller`             | Handles PVC resize (online if driver supports it). |
 
 ---
 
-- `Stateful-Set Controller`
-  - Manages pods that need stable network identities and persistent storage.
-  - Ensures ordered deployment, scaling, and deletion.
+### Autoscaling & disruption
 
----
-
-- `DaemonSet Controller`
-  - Ensures one copy of a pod runs on every (or selected) node.
-  - Commonly used for monitoring agents (Prometheus node exporter) or networking plugins (Calico, Flannel).
-
----
-
-- `Job Controller`
-
-  - runs Pods until a task completes successfully.
-
-- `CronJob Controller`
-  - schedules Jobs based on cron expressions (periodic tasks).
-
----
-
-- `Service Account & Token Controllers`
-  - Create default service accounts and attach API tokens to pods for authentication.
+| Controller                                 | Description                                                  |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| `HorizontalPodAutoscaler (HPA) Controller` | Scales replicas based on metrics (CPU/memory/custom).        |
+| `PodDisruptionBudget (PDB) Controller`     | Limits voluntary disruptions to keep minimum Pods available. |

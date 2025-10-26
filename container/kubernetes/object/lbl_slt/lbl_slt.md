@@ -42,10 +42,24 @@
 
 ### Imperative Command
 
+- manage label on object
+
+| CMD                                                   | DESC                              |
+| ----------------------------------------------------- | --------------------------------- |
+| `kubectl label node node_name size=large`             | Add or update a label on a node   |
+| `kubectl label pod mypod env=prod`                    | Add a label on a pod              |
+| `kubectl label pod mypod app=web tier=frontend`       | Add multiple labels on a pod      |
+| `kubectl label pod mypod env=dev app=api --overwrite` | Update multiple labels on a pod   |
+| `kubectl label pod mypod env-`                        | Remove a label from a pod         |
+| `kubectl label pod mypod tier- app-`                  | Remove multiple labels from a pod |
+
 - Filter
 
 | CMD                                                     | DESC                                     |
 | ------------------------------------------------------- | ---------------------------------------- |
+| `kubectl get pods --show-labels`                        | Show all pods with all labels            |
+| `kubectl get pods -l env=prod --no-headers \| wc -l`    | Count number of pods with a given label  |
+| `kubectl get all -l 'env'`                              | Filter all if have a label               |
 | `kubectl get all -l '!env'`                             | Filter all if not have a label           |
 | `kubectl get pods -l '!env'`                            | Filter pod if not have a label           |
 | `kubectl get pods -l env=production`                    | Filter pod if label equal to a value     |
@@ -54,8 +68,6 @@
 | `kubectl get pods -l 'env notin (dev)'`                 | Filter pod if label not in a set.        |
 | `kubectl run nginx --image=nginx -l "app=web,env=prod"` | Create pod with label                    |
 | `kubectl delete pod -l "app=web,env=prod"`              | Delete pod with label                    |
-| `kubectl label pod mypod env=production`                | Add or update a label                    |
-| `kubectl label pod mypod env-`                          | Remove a label                           |
 
 ---
 

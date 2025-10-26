@@ -44,9 +44,31 @@
   - [LoadBalancer](./service/loadbalancer/loadbalancer.md)
 
 - [Scheduler](./scheduler/scheduler/scheduler.md)
+
   - [Manual Scheduler](./scheduler/man_scheduler/man_scheduler.md)
+  - [Taints and Tolerations](./scheduler/taint_toleration/taint_toleration.md)
+  - [Node Selector](./scheduler/node_sel/node_sel.md)
+  - [Node Affinity](./scheduler/node_aff/node_aff.md)
+  - [Resources Limit](./scheduler/res_limit/res_limit.md)
+  - [DaemonSets](./scheduler/daemon_set/daemon_set.md)
+
+- Cluster-object
+  - [PriorityClass](./priority_class/priority_class.md)
 
 ---
+
+- [Monitor & Logging](./monitoring_logging/monitoring_logging.md)
+
+---
+
+- Node
+  - [Static Pod](./node/static_pod/static_pod.md)
+
+---
+
+- Security
+
+  - [Admission Controller](./security/admission_controller/admission_controller.md)
 
 - [Networking](./networking/networking.md)
 - [Microservices](./microservices/microservices.md)

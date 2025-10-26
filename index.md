@@ -35,6 +35,7 @@
 
 - OS
 
+  - [ ] [Computer Architecture](./Operating_System/computer_architecture/index.md)
   - [ ] [Linux](./Operating_System/linux/index.md)
   - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
   - [ ] [Airflow](./Operating_System/airflow/index.md)

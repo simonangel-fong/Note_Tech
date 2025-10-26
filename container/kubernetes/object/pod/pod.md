@@ -41,13 +41,15 @@
 
 - Run
 
-| CMD                                                                      | DESC                                                          |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| `kubectl run pod_name --image=image_name`                                | Create a pod using a specified image (for testing)            |
-| `kubectl run pod_name --image=image_name --labels="key1=val1,key2=val2"` | Create pod with labels                                        |
-| `kubectl run pod_name --image=image_name --port=8080`                    | Create pod with port                                          |
-| `kubectl run pod_name --image=image_name --dry-run=client`               | simulate the creation of a resource without actually applying |
-| `kubectl run pod_name --image=image_name --dry-run=client -o yaml`       | View full YAML configuration of a pod                         |
+| CMD                                                                                                   | DESC                                                          |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `kubectl run pod_name --image=image_name`                                                             | Create a pod using a specified image (for testing)            |
+| `kubectl run pod_name --image=image_name --labels="key1=val1,key2=val2"`                              | Create pod with labels                                        |
+| `kubectl run pod_name --image=image_name --port=8080`                                                 | Create pod with port                                          |
+| `kubectl run pod_name --image=image_name --command -- sleep 1000`                                     | Create a pod with command                                     |
+| `kubectl run pod_name --image=image_name --dry-run=client`                                            | simulate the creation of a resource without actually applying |
+| `kubectl run pod_name --image=image_name --dry-run=client -o yaml`                                    | View full YAML configuration of a pod                         |
+| `kubectl run pod_name --image=image_name --dry-run=client -o yaml -command -- sleep 1000 > yaml_file` | View full YAML configuration of a pod with command            |
 
 ### Declarative Commands
 
