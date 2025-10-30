@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-conf-bulk
+spec:
+  containers:
+  - name: myapp
+    command: ["sh", "-c", "env | grep -E 'APP_MODE|LOG_LEVEL' && sleep 2000"]
+    image: busybox:latest
+    envFrom:
+    - configMapRef:
+        name: app-config

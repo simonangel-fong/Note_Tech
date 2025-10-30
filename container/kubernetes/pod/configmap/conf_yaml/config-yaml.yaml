@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: config-yaml
+data:
+  APP_MODE: "dev"
+  LOG_LEVEL: "info"
+
+  # file-like keys
+  application.yml: |
+    server:
+      port: 8080

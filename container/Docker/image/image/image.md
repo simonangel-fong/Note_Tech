@@ -1,9 +1,10 @@
 # Docker - Image
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Docker - Image](#docker---image)
   - [Docker Image](#docker-image)
+  - [Dockerfile Instructions](#dockerfile-instructions)
   - [Example](#example)
   - [Example: Create Container manually](#example-create-container-manually)
 
@@ -30,10 +31,6 @@
 
   - = file system snapshot + startup command
 
-- `Docker File`:
-
-  - a plain text file containing configuration to define how container should behave.
-
 - Steps:
 
   - create docker file
@@ -45,6 +42,82 @@
   - specify base image
   - run commands to install additional programs
   - specify startup commands.
+
+---
+
+## Dockerfile Instructions
+
+- `Docker File`:
+
+  - a **text document** that contains all instructions to **automatically** assemble an **image**.
+
+- Dockerfile Instructions
+
+  - not case-sensitive
+    - convention is for them to be **UPPERCASE**
+  - run in a `Dockerfile` **in order**.
+  - Comment: `#`
+
+- Leading whitespace is ignored.
+  - Whitespace in instruction **arguments**, however, **isn't ignored**.
+
+```Dockerfile
+          # this is a comment-line
+    RUN echo hello
+RUN echo world
+
+# equivalent
+# this is a comment-line
+RUN echo hello
+RUN echo world
+
+# not ignored
+RUN echo "\
+     hello\
+     world"
+
+```
+
+- `FROM` instruction
+  - specifies the **base image**
+  - must begin with a `FROM` instruction
+    - may only be **preceded** by one or more `ARG` instructions, which declare arguments that are used in `FROM` lines in the `Dockerfile`.
+
+---
+
+| Instruction   | Description                                                 |
+| ------------- | ----------------------------------------------------------- |
+| `FROM`        | Create a new build stage from a base image.                 |
+| `MAINTAINER`  | Specify the author of an image.                             |
+| `SHELL`       | Set the default shell of an image.                          |
+| `LABEL`       | Add metadata to an image.                                   |
+| `EXPOSE`      | Describe which ports your application is listening on.      |
+| `USER`        | Set user and group ID.                                      |
+| `HEALTHCHECK` | Check a container's health on startup.                      |
+| `ONBUILD`     | Specify instructions for when the image is used in a build. |
+| `STOPSIGNAL`  | Specify the system call signal for exiting a container.     |
+
+- ENV, var, command
+
+| Instruction  | Description                 |
+| ------------ | --------------------------- |
+| `ARG`        | Use build-time variables.   |
+| `ENV`        | Set environment variables.  |
+| `RUN`        | Execute build commands.     |
+| `CMD`        | Specify default commands.   |
+| `ENTRYPOINT` | Specify default executable. |
+
+- File, volume
+
+| Instruction | Description                                |
+| ----------- | ------------------------------------------ |
+| `WORKDIR`   | Change working directory.                  |
+| `COPY`      | Copy files and directories.                |
+| `ADD`       | Add local or remote files and directories. |
+| `VOLUME`    | Create volume mounts.                      |
+
+- format of the Dockerfile
+  - `INSTRUCTION arguments`
 
 ---
 
@@ -110,5 +183,3 @@ docker run image_hash
 ```
 
 ---
-
-[TOP](#docker-image)

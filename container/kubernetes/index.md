@@ -62,7 +62,13 @@
 ---
 
 - Node
+
   - [Static Pod](./node/static_pod/static_pod.md)
+
+- Pod
+  - [Command, Argument](./pod/cmd_arg/cmd_arg.md)
+  - [ConfigMap](./pod/configmap/configmap.md)
+  - [Secret](./pod/secret/secret.md)
 
 ---
 
@@ -80,3 +86,12 @@
   - [Windows: `Docker Desktop` enable `Kubernetes`](./install/kube_docker_desktop_win/kube_docker_desktop_win.md)
 
 ---
+
+- Application Lifecycle
+  - [Rolling update and roll back](./app/rolling/rolling.md)
+
+---
+
+```yaml
+
+```

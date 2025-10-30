@@ -2,7 +2,8 @@
 
 [Back](../../index.md)
 
-- [Docker Image](./image/image.md)
+- [Docker Image](./image/image/image.md)
+  - [Entrypoint](./image/entrypoint/entrypoint.md)
 
 ---
 

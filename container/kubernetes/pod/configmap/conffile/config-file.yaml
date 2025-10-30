@@ -1,0 +1,5 @@
+APP_MODE: "prod"
+LOG_LEVEL: "info"
+application.yml: |
+  server:
+    port: 8080
