@@ -3,7 +3,7 @@
 [Back](../../index.md)
 
 - [Docker Image](./image/image/image.md)
-  - [Entrypoint](./image/entrypoint/entrypoint.md)
+  - [`ENTRYPOINT` vs `CMD` vs `RUN`](./image/entrypoint_cmd_run/entrypoint_cmd_run.md)
 
 ---
 

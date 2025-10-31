@@ -16,12 +16,12 @@
 | `docker build -t dockerID/ProjectName:Version .` | Build and tag an image from a Dockerfile              |
 | `docker image ls`                                | List images                                           |
 | `docker image rm`                                | Remove one or more images                             |
-| `docker image prune`                             | Remove unused images                                  |
-| `docker image history`                           | Show the history of an image                          |
-| `docker image pull`                              | Download an image from a registry                     |
-| `docker image push`                              | Upload an image to a registry                         |
-| `docker image tag`                               | Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE |
-| `docker container commit`                        | Create a new image from a container's changes         |
+| `docker image prune -f`                          | Remove unused images                                  |
+| `docker image history img_id`                    | Show the history of an image                          |
+| `docker image pull img_tag`                      | Download an image from a registry                     |
+| `docker image push img_tag`                      | Upload an image to a registry                         |
+| `docker image tag old_tag new_tag`               | Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE |
+| `docker container commit con_name img_tag`       | Create a new image from a container's changes         |
 
 ## Docker Image
 
