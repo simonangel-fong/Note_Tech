@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-containers-demo
+spec:
+  containers:
+  - name: main-app
+    image: redis
+  initContainers:
+  - name: 1st-check
+    image: nginx
+    restartPolicy: Always 
+  - name: 2nd-check
+    image: busybox
+    command: ['sh','-c', 'echo 2nd-check starts. && sleep 10 && echo 2nd-check completed.']

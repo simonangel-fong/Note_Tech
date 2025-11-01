@@ -66,9 +66,18 @@
   - [Static Pod](./node/static_pod/static_pod.md)
 
 - Pod
+
   - [Command, Argument](./pod/cmd_arg/cmd_arg.md)
   - [ConfigMap](./pod/configmap/configmap.md)
   - [Secret](./pod/secret/secret.md)
+  - [Multi-containers](./pod/multi_container/multi_container.md)
+  - [Scaling](./pod/scaling/scaling.md)
+    - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
+    - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
+
+- Cluster
+  - Encrypting Confidential Data at Rest
+    - ref: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/
 
 ---
 
