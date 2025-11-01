@@ -1,8 +1,8 @@
-# Kubernetes - Deployment
+# Kubernetes - Pod: Deployment
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Kubernetes - Deployment](#kubernetes---deployment)
+- [Kubernetes - Pod: Deployment](#kubernetes---pod-deployment)
   - [Deployment](#deployment)
     - [Deployment vs ReplicaSet](#deployment-vs-replicaset)
     - [Changing the Deployment](#changing-the-deployment)

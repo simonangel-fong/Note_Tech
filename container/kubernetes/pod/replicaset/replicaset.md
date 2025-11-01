@@ -1,8 +1,8 @@
-# Kubernetes - Replica
+# Kubernetes - Pod: ReplicaSet
 
 [Back](../../index.md)
 
-- [Kubernetes - Replica](#kubernetes---replica)
+- [Kubernetes - Pod: ReplicaSet](#kubernetes---pod-replicaset)
   - [ReplicaSet](#replicaset)
     - [vs Deployment](#vs-deployment)
     - [Common Commands - `ReplicaSets`](#common-commands---replicasets)

@@ -1,8 +1,8 @@
-# Kubernetes - Node: Static Pod
+# Kubernetes - Pod: Static Pod
 
 [Back](../../index.md)
 
-- [Kubernetes - Node: Static Pod](#kubernetes---node-static-pod)
+- [Kubernetes - Pod: Static Pod](#kubernetes---pod-static-pod)
   - [Static Pod](#static-pod)
     - [vs DaemonSets](#vs-daemonsets)
     - [Designated Directory for manifest file](#designated-directory-for-manifest-file)

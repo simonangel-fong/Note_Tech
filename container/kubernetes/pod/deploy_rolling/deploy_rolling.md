@@ -1,8 +1,8 @@
-# Kubernetes - Application: Rolling update & Rollback
+# Kubernetes - Pod: Deployment Rolling update & Rollback
 
 [Back](../../index.md)
 
-- [Kubernetes - Application: Rolling update \& Rollback](#kubernetes---application-rolling-update--rollback)
+- [Kubernetes - Pod: Deployment Rolling update \& Rollback](#kubernetes---pod-deployment-rolling-update--rollback)
   - [Rollout \& Rollback](#rollout--rollback)
     - [How it works](#how-it-works)
     - [Deployment Strategy](#deployment-strategy)

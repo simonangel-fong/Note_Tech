@@ -1,6 +1,11 @@
 # Kubernetes - Monitoring & Logging
 
-[Back](../index.md)
+[Back](../../index.md)
+
+- [Kubernetes - Monitoring \& Logging](#kubernetes---monitoring--logging)
+  - [Metric](#metric)
+  - [Metrics Server](#metrics-server)
+  - [Lab: Enable Metric Server](#lab-enable-metric-server)
 
 ---
 

@@ -4,10 +4,6 @@
 
 ---
 
-- Rel:
-  - https://kubernetes.io/docs/concepts/overview/components/
-- https://scriptwang.github.io/blog/#/blog/2021-06-14_K8S%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E6%88%98%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89
-
 ## Kubernetes
 
 - [Fundamental](./fundamental/fundamental/fundamental.md)
@@ -27,21 +23,13 @@
 
 ---
 
-- Basic Objects
+- Management
 
-  - [Node](./object/node/node.md)
-  - [Pod](./object/pod/pod.md)
-  - [Label and Selector](./object/lbl_slt/lbl_slt.md)
-  - [ReplicaSet](./object/replica/replica.md)
-  - [Deployment](./object/deployment/deployment.md)
-  - [Service](./object/service/service.md)
-  - [Namespace](./object/namespace/namespace.md)
+  - [Namespace](./management/namespace/namespace.md)
+  - [Label and Selector](./management/label_selector/label_selector.md)
+  - [Monitor & Logging](./management/monitoring/monitoring.md)
 
-- [Service](./service/service/service.md)
-
-  - [NodePort](./service/nodeport/nodeport.md)
-  - [ClusterIP](./service/clusterip/clusterip.md)
-  - [LoadBalancer](./service/loadbalancer/loadbalancer.md)
+---
 
 - [Scheduler](./scheduler/scheduler/scheduler.md)
 
@@ -52,32 +40,34 @@
   - [Resources Limit](./scheduler/res_limit/res_limit.md)
   - [DaemonSets](./scheduler/daemon_set/daemon_set.md)
 
-- Cluster-object
-  - [PriorityClass](./priority_class/priority_class.md)
+---
+
+- Networking
+  - [Service](./networking/service/service.md)
+    - [NodePort](./networking/svr_nodeport/svr_nodeport.md)
+    - [ClusterIP](./networking/svr_clusterip/svr_clusterip.md)
+    - [LoadBalancer](./networking/svr_loadbalancer/svr_loadbalancer.md)
 
 ---
 
-- [Monitor & Logging](./monitoring_logging/monitoring_logging.md)
+- [Node](./node/node/node.md)
 
 ---
 
-- Node
+- [Pod](./pod/pod/pod.md)
 
-  - [Static Pod](./node/static_pod/static_pod.md)
-
-- Pod
-
-  - [Command, Argument](./pod/cmd_arg/cmd_arg.md)
-  - [ConfigMap](./pod/configmap/configmap.md)
-  - [Secret](./pod/secret/secret.md)
-  - [Multi-containers](./pod/multi_container/multi_container.md)
+  - [Container Management](./pod/container/container.md)
+    - [ConfigMap](./pod/container_configmap/container_configmap.md)
+    - [Secret](./pod/container_secret/container_secret.md)
+    - [Multi-containers](./pod/container_multi/container_multi.md)
+  - [Static Pod](./pod/static_pod/static_pod.md)
+  - [ReplicaSet](./pod/replicaset/replicaset.md)
+  - [Deployment](./pod/deploy/deploy.md)
+    - [Rolling update and roll back](./pod/deploy_rolling/deploy_rolling.md)
   - [Scaling](./pod/scaling/scaling.md)
     - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
     - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
-
-- Cluster
-  - Encrypting Confidential Data at Rest
-    - ref: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/
+  - [!PriorityClass](./pod/pod_priorityclass/pod_priorityclass.md)
 
 ---
 
@@ -85,10 +75,9 @@
 
   - [Admission Controller](./security/admission_controller/admission_controller.md)
 
-- [Networking](./networking/networking.md)
-- [Microservices](./microservices/microservices.md)
+---
 
-- Setup Environment
+- Installation
 
   - [RHEL9: `minikube` installation](./install/minikube_rhel9/minikube_rhel9.md)
   - [Ubuntu: `minikube` installation](./install/minikube_ubuntu/minikube_ubuntu.md)
@@ -96,11 +85,11 @@
 
 ---
 
-- Application Lifecycle
-  - [Rolling update and roll back](./app/rolling/rolling.md)
+todo list:
 
----
-
-```yaml
-
-```
+- Cluster
+  - Encrypting Confidential Data at Rest
+    - ref: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/
+- Rel:
+  - https://kubernetes.io/docs/concepts/overview/components/
+- https://scriptwang.github.io/blog/#/blog/2021-06-14_K8S%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E6%88%98%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89
