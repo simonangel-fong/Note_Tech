@@ -1,8 +1,8 @@
-# Kubernetes - Taints and Tolerations
+# Kubernetes - Node: Taints and Tolerations
 
 [Back](../../index.md)
 
-- [Kubernetes - Taints and Tolerations](#kubernetes---taints-and-tolerations)
+- [Kubernetes - Node: Taints and Tolerations](#kubernetes---node-taints-and-tolerations)
   - [Taints \& Tolerations](#taints--tolerations)
   - [Use Cases](#use-cases)
   - [Imperative Commands](#imperative-commands)

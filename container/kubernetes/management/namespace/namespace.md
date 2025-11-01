@@ -6,15 +6,15 @@
   - [Namespace](#namespace)
     - [In DNS](#in-dns)
     - [Built-in Namespaces](#built-in-namespaces)
-    - [Define in Yaml](#define-in-yaml)
-    - [Common Commands](#common-commands)
+    - [Declarative Method](#declarative-method)
+    - [Imperative Commands](#imperative-commands)
   - [Lab: Built-in Namespace](#lab-built-in-namespace)
-    - [Default](#default)
-    - [kube-system](#kube-system)
-    - [kube-public](#kube-public)
-    - [kube-node-lease](#kube-node-lease)
-  - [Lab: Create Namespace and pod using CLI](#lab-create-namespace-and-pod-using-cli)
-  - [Lab: Create namespace using yaml](#lab-create-namespace-using-yaml)
+    - [`default` Namespace](#default-namespace)
+    - [`kube-system` Namespace](#kube-system-namespace)
+    - [`kube-public` Namespace](#kube-public-namespace)
+    - [`kube-node-lease` Namespace](#kube-node-lease-namespace)
+  - [Lab: Create Namespace(Imperative Method)](#lab-create-namespaceimperative-method)
+  - [Lab: Create namespace(Declarative Method)](#lab-create-namespacedeclarative-method)
   - [Lab: Set default for a context](#lab-set-default-for-a-context)
 
 ---
@@ -108,7 +108,7 @@ kubectl describe pod nginx | grep "Namespace"
 
 ---
 
-### Define in Yaml
+### Declarative Method
 
 - Create a ns
 
@@ -125,21 +125,18 @@ metadata:
 kubectl create -f ns-dev.yaml
 ```
 
----
-
-- Define a ns for a resource
+- Specify namespace to resource
 
 ```yaml
-apiVersion:
-kind:
+apiVersion: v1
+kind: Pod
 metadata:
-  namespace: ns_name
-spec:
+  namespace: dev
 ```
 
 ---
 
-### Common Commands
+### Imperative Commands
 
 - Manage namespace
 
@@ -177,7 +174,9 @@ kubectl get ns
 # kube-system       Active   4d12h
 ```
 
-### Default
+---
+
+### `default` Namespace
 
 ```sh
 kubectl describe ns default
@@ -193,7 +192,7 @@ kubectl get all -n default
 
 ---
 
-### kube-system
+### `kube-system` Namespace
 
 ```sh
 kubectl describe ns kube-system
@@ -233,7 +232,7 @@ kubectl get all -n kube-system
 
 ---
 
-### kube-public
+### `kube-public` Namespace
 
 ```sh
 kubectl describe ns kube-public
@@ -252,7 +251,7 @@ kubectl get all -n kube-public
 
 ---
 
-### kube-node-lease
+### `kube-node-lease` Namespace
 
 ```sh
 kubectl describe ns kube-node-lease
@@ -271,7 +270,7 @@ kubectl get all -n kube-node-lease
 
 ---
 
-## Lab: Create Namespace and pod using CLI
+## Lab: Create Namespace(Imperative Method)
 
 ```sh
 kubectl create ns myns
@@ -354,7 +353,7 @@ kubectl get pod --all-namespaces
 
 ---
 
-## Lab: Create namespace using yaml
+## Lab: Create namespace(Declarative Method)
 
 - `ns-dev.yaml`
 

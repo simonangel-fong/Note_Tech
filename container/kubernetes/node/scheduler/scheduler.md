@@ -1,8 +1,8 @@
-# Kubernetes - Scheduler
+# Kubernetes - Node: Scheduler
 
 [Back](../../index.md)
 
-- [Kubernetes - Scheduler](#kubernetes---scheduler)
+- [Kubernetes - Node: Scheduler](#kubernetes---node-scheduler)
   - [Scheduler](#scheduler)
     - [How it works - From API to Kubelet](#how-it-works---from-api-to-kubelet)
     - [!!!How it works - Phases](#how-it-works---phases)

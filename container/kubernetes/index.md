@@ -4,8 +4,6 @@
 
 ---
 
-## Kubernetes
-
 - [Fundamental](./fundamental/fundamental/fundamental.md)
 
   - [YAML File](./fundamental/yaml/yaml.md)
@@ -31,14 +29,12 @@
 
 ---
 
-- [Scheduler](./scheduler/scheduler/scheduler.md)
-
-  - [Manual Scheduler](./scheduler/man_scheduler/man_scheduler.md)
-  - [Taints and Tolerations](./scheduler/taint_toleration/taint_toleration.md)
-  - [Node Selector](./scheduler/node_sel/node_sel.md)
-  - [Node Affinity](./scheduler/node_aff/node_aff.md)
-  - [Resources Limit](./scheduler/res_limit/res_limit.md)
-  - [DaemonSets](./scheduler/daemon_set/daemon_set.md)
+- [Node](./node/node/node.md)
+  - [Scheduler](./node/scheduler/scheduler.md)
+    - [Manual Scheduler](./node/scheduler_manual/scheduler_manual.md)
+  - [Taints and Tolerations](./node/taint_toleration/taint_toleration.md)
+  - [Node Selector](./node/node_selector/node_selector.md)
+  - [Node Affinity](./node/node_affinity/node_affinity.md)
 
 ---
 
@@ -50,24 +46,22 @@
 
 ---
 
-- [Node](./node/node/node.md)
-
----
-
 - [Pod](./pod/pod/pod.md)
 
   - [Container Management](./pod/container/container.md)
     - [ConfigMap](./pod/container_configmap/container_configmap.md)
     - [Secret](./pod/container_secret/container_secret.md)
     - [Multi-containers](./pod/container_multi/container_multi.md)
-  - [Static Pod](./pod/static_pod/static_pod.md)
   - [ReplicaSet](./pod/replicaset/replicaset.md)
   - [Deployment](./pod/deploy/deploy.md)
     - [Rolling update and roll back](./pod/deploy_rolling/deploy_rolling.md)
+  - [DaemonSets](./pod/daemonset/daemonset.md)
+  - [Static Pod](./pod/static_pod/static_pod.md)
   - [Scaling](./pod/scaling/scaling.md)
     - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
     - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
   - [!PriorityClass](./pod/pod_priorityclass/pod_priorityclass.md)
+  - [Resources Limit](./pod/pod_resource_limit/pod_resource_limit.md)
 
 ---
 

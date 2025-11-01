@@ -1,8 +1,8 @@
-# Kubernetes - Resources Limit
+# Kubernetes - Pod: Resources Limit
 
 [Back](../../index.md)
 
-- [Kubernetes - Resources Limit](#kubernetes---resources-limit)
+- [Kubernetes - Pod: Resources Limit](#kubernetes---pod-resources-limit)
   - [Pod resource](#pod-resource)
   - [Resource Request](#resource-request)
   - [Resource](#resource)

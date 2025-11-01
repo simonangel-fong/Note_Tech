@@ -1,8 +1,8 @@
-# Kubernetes - Manual Scheduler
+# Kubernetes - Node: Manual Scheduler
 
 [Back](../../index.md)
 
-- [Kubernetes - Manual Scheduler](#kubernetes---manual-scheduler)
+- [Kubernetes - Node: Manual Scheduler](#kubernetes---node-manual-scheduler)
   - [Manual Scheduler](#manual-scheduler)
     - [Pod spec Method](#pod-spec-method)
     - [Binding object Method](#binding-object-method)

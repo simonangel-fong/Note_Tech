@@ -63,17 +63,18 @@
 ## Imperatives Commands
 
 - CRUD
-  | Command | Description |
-  | -------------------------------------------- | ----------------------------------------------------------- |
-  | `kubectl explain ds` | See field docs (`spec`, `updateStrategy`, etc.). |
-  | `kubectl get ds -A` | List all DaemonSets across namespaces. |
-  | `kubectl get ds` | List all DaemonSets in current namespaces. |
-  | `kubectl get ds ds_name -n ns_name` | Show a DaemonSet. |
-  | `kubectl get ds ds_name -n ns_name -o wide` | Show a DaemonSet with node, images, and selectors. |
-  | `kubectl describe ds ds_name -n ns_name` | Detailed spec, events (great for scheduling/taints issues). |
-  | `kubectl apply -f ds.yaml` | Create/update from a manifest file. |
-  | `kubectl edit ds ds_name -n ns_name` | Edit the DaemonSet live (opens your editor). |
-  | `kubectl delete ds ds_name -n ns_name` | Delete the DaemonSet (Pods will be removed). |
+
+| Command                                     | Description                                                 |
+| ------------------------------------------- | ----------------------------------------------------------- |
+| `kubectl explain ds`                        | See field docs (`spec`, `updateStrategy`, etc.).            |
+| `kubectl get ds -A`                         | List all DaemonSets across namespaces.                      |
+| `kubectl get ds`                            | List all DaemonSets in current namespaces.                  |
+| `kubectl get ds ds_name -n ns_name`         | Show a DaemonSet.                                           |
+| `kubectl get ds ds_name -n ns_name -o wide` | Show a DaemonSet with node, images, and selectors.          |
+| `kubectl describe ds ds_name -n ns_name`    | Detailed spec, events (great for scheduling/taints issues). |
+| `kubectl apply -f ds.yaml`                  | Create/update from a manifest file.                         |
+| `kubectl edit ds ds_name -n ns_name`        | Edit the DaemonSet live (opens your editor).                |
+| `kubectl delete ds ds_name -n ns_name`      | Delete the DaemonSet (Pods will be removed).                |
 
 - Manage
 
@@ -106,7 +107,6 @@ spec:
     matchLabels:
       app: monitoring-agent
   template:
-
     spec:
       containers:
         - name: monitoring-agent
