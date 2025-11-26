@@ -21,6 +21,13 @@
 
 ---
 
+Cluster
+  - [Release](./release/release.md)
+  - [Upgrade](./release/release.md)
+  - [Backup](./backup/backup.md)
+  - [Install Master](./install_master/install_master.md)
+  - [Install Worker](./install_worker/install_worker.md)
+
 - Management
 
   - [Namespace](./management/namespace/namespace.md)
@@ -35,6 +42,7 @@
   - [Taints and Tolerations](./node/taint_toleration/taint_toleration.md)
   - [Node Selector](./node/node_selector/node_selector.md)
   - [Node Affinity](./node/node_affinity/node_affinity.md)
+  - [Node Cordon](./node/node_cordon/node_cordon.md)
 
 ---
 
