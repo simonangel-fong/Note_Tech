@@ -22,11 +22,18 @@
 ---
 
 Cluster
-  - [Release](./release/release.md)
-  - [Upgrade](./release/release.md)
-  - [Backup](./backup/backup.md)
-  - [Install Master](./install_master/install_master.md)
-  - [Install Worker](./install_worker/install_worker.md)
+
+- [Release](./release/release.md)
+- [Upgrade](./release/release.md)
+- [Backup](./backup/backup.md)
+- [Install Master](./install_master/install_master.md)
+- [Install Worker](./install_worker/install_worker.md)
+
+- [Security]
+
+  - [AUthentication](./authentication/authentication.md)
+  - [KubeConfig](./kube_config/kube_config.md)
+  - [Authorization](./authorization/authorization.md)
 
 - Management
 
