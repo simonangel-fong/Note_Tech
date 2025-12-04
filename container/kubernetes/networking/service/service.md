@@ -9,9 +9,10 @@
   - [ClusterIP](#clusterip)
   - [Load Balancer](#load-balancer)
   - [Common Commands](#common-commands)
+  - [Service Networking](#service-networking)
+  - [Lab: Get network info](#lab-get-network-info)
 
 ---
-
 
 ## Service
 
@@ -66,7 +67,6 @@
 | `kubectl apply -f yaml_file`  | Apply changes to a Service configuration from a YAML file. |
 
 ---
-
 
 - Service Types
 
@@ -157,3 +157,77 @@ spec:
   - `kubectl describe svc kubernetes`, labels
 - how many endpoint are attached on the default `kubernetes` service
   - `kubectl describe svc kubernetes`, Endpoints
+
+---
+
+## Service Networking
+
+- `kubelet`, the agent on each node, monitor the change on API Server for pod
+  - create pod
+  - invoke CNI plugin to configure networking for the pod
+- `kube proxy`, the agent on each node, monitor the change on API server for services.
+  - get the predeined IP address for updated service object
+    - `kubectl-api-server --service-cluster-ip-range ipNet`
+  - manage forwarding rules to the predefined IP address on each node
+    - once the rule created, the request for the service get forwarded to the predefined IP address and port.
+    - 3 method to manage the routing rules:
+      - userspace
+      - iptables
+      - ipvs
+      - can modify by `kube-proxy --proxy-mode userspace|iptables|ipvs`
+
+---
+
+## Lab: Get network info
+
+- ge the primary network range
+
+```sh
+# get master node ip
+kubectl get node -o wide
+# NAME           STATUS   ROLES           AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
+# controlplane   Ready    control-plane   39m   v1.34.0   192.168.81.31    <none>        Ubuntu 22.04.5 LTS   5.15.0-1083-gcp   containerd://1.6.26
+
+# get master node ip range
+ip a
+# 4: eth0@if22929: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1410 qdisc noqueue state UP group default 
+#     link/ether 22:8d:d9:de:30:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0
+#     inet 192.168.81.31/32 scope global eth0
+#        valid_lft forever preferred_lft forever
+#     inet6 fe80::208d:d9ff:fede:300b/64 scope link 
+#        valid_lft forever preferred_lft forever
+```
+
+- get ip range for pods
+
+```sh
+# get the cidr from controller manager conf
+cat /etc/kubernetes/manifests/kube-controller-manager.yaml | grep cluster-cidr
+# - --cluster-cidr=172.17.0.0/16
+```
+
+- Get the ip range for services
+
+```sh
+# get the service config from the aip server
+cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep service-cluster-ip-range
+# - --service-cluster-ip-range=172.20.0.0/16
+```
+
+- Get the proxy on the node
+
+```sh
+kubectl get pod -A | grep proxy
+# kube-system   kube-proxy-6c4gt                           1/1     Running   0          59m
+# kube-system   kube-proxy-sjt5p                           1/1     Running   0          59m
+
+# get the type of proxy
+k logs kube-proxy-sjt5p    -n kube-system
+# I1203 18:43:42.896019       1 server_linux.go:132] "Using iptables Proxier"
+
+# get how the proxy is deployed
+kubectl get all -A | grep kube-proxy  # use daemonset
+# kube-system   pod/kube-proxy-6c4gt                           1/1     Running   0          66m
+# kube-system   pod/kube-proxy-sjt5p                           1/1     Running   0          65m
+# kube-system   daemonset.apps/kube-proxy   2         2         2       2            2           kubernetes.io/os=linux   66m
+```

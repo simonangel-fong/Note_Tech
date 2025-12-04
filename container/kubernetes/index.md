@@ -34,6 +34,12 @@ Cluster
   - [AUthentication](./authentication/authentication.md)
   - [KubeConfig](./kube_config/kube_config.md)
   - [Authorization](./authorization/authorization.md)
+  - [ClusterRole](./cluster_role/cluster_role.md)
+  - [ServiceAccount](./svc_account/svc_account.md)
+  - [Secure Image](./image/image.md)
+  - [Security Context](./security_context/security_context.md)
+  - [Network Policy](./network_policy/network_policy.md)
+  - [Custom Resource Definition(CRD)](./crd/crd.md)
 
 - Management
 
@@ -53,11 +59,23 @@ Cluster
 
 ---
 
-- Networking
+- [Storage](./storage/storage/storage.md)
+
+---
+
+- [Networking](./networking/networking.md)
+
   - [Service](./networking/service/service.md)
+
     - [NodePort](./networking/svr_nodeport/svr_nodeport.md)
     - [ClusterIP](./networking/svr_clusterip/svr_clusterip.md)
     - [LoadBalancer](./networking/svr_loadbalancer/svr_loadbalancer.md)
+
+  - [Pod Networking](./networking/pod/pod.md)
+  - [Service Networking](./networking/service/service.md)
+  - [Cluster DNS](./networking/dns/dns.md)
+  - [Ingress](./networking/ingress/ingress.md)
+  - [Gateway API](./networking/gw_api/gw_api.md)
 
 ---
 
