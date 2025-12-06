@@ -79,6 +79,11 @@ Cluster
 
 ---
 
+- [HELM](./helm/helm.md)
+- [Kustomize](./kustomize/kustomize.md)
+
+---
+
 - [Pod](./pod/pod/pod.md)
 
   - [Container Management](./pod/container/container.md)
@@ -95,6 +100,8 @@ Cluster
     - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
   - [!PriorityClass](./pod/pod_priorityclass/pod_priorityclass.md)
   - [Resources Limit](./pod/pod_resource_limit/pod_resource_limit.md)
+
+- [Troubleshooting](./debuging/debuging.md)
 
 ---
 
