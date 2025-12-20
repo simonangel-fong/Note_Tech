@@ -1,9 +1,11 @@
-# Kubernetes - Pod
+# Kubernetes - Application: Pod
 
 [Back](../../index.md)
 
-- [Kubernetes - Pod](#kubernetes---pod)
+- [Kubernetes - Application: Pod](#kubernetes---application-pod)
   - [Pod](#pod)
+    - [Lifecycle](#lifecycle)
+    - [How it works](#how-it-works)
     - [Imperative Commands](#imperative-commands)
     - [Declarative Commands](#declarative-commands)
   - [Types of Pod](#types-of-pod)
@@ -21,6 +23,97 @@
   - the **smallest deployable unit** in Kubernetes that represents a **single instance** of an **application**.
     - the smallest object that can be created in k8s
   - a collection of **containers** and its **storage** inside a **node** of a Kubernetes cluster.
+
+### Lifecycle
+
+- Pod Phases
+
+  - `Pending`: The pod is **accepted** by Kubernetes, but containers **aren't created** or are **waiting for resources**.
+  - `Running`: The pod is **bound to a node**, all containers are created, and **at least one** is running.
+  - `Succeeded`: All containers **finished successfully** and **won't restart**.
+  - `Failed`: All containers **terminated**, with at **least one failing**.
+  - `Unknown`: The pod's state couldn't be **retrieved**.
+
+- container states:
+  - `Waiting`:
+    - still running the operations it requires in order to complete start up
+      - e.g.,
+      - pulling the container image
+      - applying Secret data
+  - `Running`:
+    - executing without issues.
+  - `Terminated`:
+    - have begun execution and then either ran to **completion** or **failed** for some reason.
+
+---
+
+### How it works
+
+- command: `kubectl run mynginx --image=nginx`
+  - `kubectl` CLI create pod object in API server via POST /api/pod
+  - etcd
+  - scheduler
+  - kubelet
+  - container runtime pull image and run container
+  -
+
+1. `kubectl` (client)
+
+   - Reads `kubeconfig` (cluster endpoint + credentials).
+   - Builds a Pod `manifest` (name mynginx, image nginx, default namespace, restartPolicy depending on version/flags).
+   - Sends an HTTPS request to the API server via `POST .../api/v1/namespaces/<ns>/pods` with the Pod JSON/YAML.
+
+2. `API Server` (kube-apiserver)
+
+   - **Authenticates** you (TLS client cert / token / OIDC).
+   - **Authorizes** the request (RBAC).
+   - Runs admission control:
+     - **Mutating** (e.g., default fields, inject sidecars if configured)
+     - **Validating** (schema, policies, quota checks, PodSecurity, etc.)
+
+3. `etcd`
+
+   - **Stores** the Pod object (desired state + metadata).
+   - Now the Pod exists but is typically **Pending** (no node assigned yet).
+
+4. `Scheduler` (kube-scheduler)
+
+   - Watches for Pods with:
+     - `spec.nodeName` empty (unscheduled).
+   - Runs **scheduling algorithm**:
+     - **Filter nodes** (CPU/memory available, taints/tolerations, node selectors/affinity, required ports, etc.)
+     - **Score** remaining nodes (spread, balance, affinity preferences, etc.)
+   - **Chooses a node** and “binds” the Pod by updating it:
+     - Sets `spec.nodeName = <chosen-node>`
+
+5. `kubelet` (on the chosen node)
+
+   - **Watches** the `API server` for Pods assigned to this node.
+   - Sees `mynginx` and begins to make reality match desired state:
+     - Prepares directories, volumes, secrets/configmaps (if any).
+     - **Calls** the `container runtime` via `CRI`.
+
+6. `Container runtime` (containerd / CRI-O)
+
+   - **Pulls** the image (nginx) from a registry:
+     - Handles image layers, caching, authentication (if private registry).
+     - Creates the Pod sandbox (pause container) and networking.
+     - Creates and starts the nginx container.
+
+7. **CNI plugin** (networking)
+
+   - Sets up Pod networking:
+     - **Attaches** Pod to **cluster network**, assigns `Pod IP`.
+     - Programs **routes/iptables/eBPF rules** depending on the `CNI` (Calico, Cilium, Flannel, etc.)
+
+8. `kube-proxy` (service networking)
+
+   - Programs node-level **forwarding rules** for `Services`.
+
+9. Status updates back to API server
+   - `kubelet` **reports** Pod status (via API server):
+     - Pending → ContainerCreating → Running
+   - Events are recorded (image pull, started container, etc.)
 
 ---
 
@@ -51,6 +144,33 @@
 | `kubectl run pod_name --image=image_name --dry-run=client -o yaml`                                    | View full YAML configuration of a pod                         |
 | `kubectl run pod_name --image=image_name --dry-run=client -o yaml -command -- sleep 1000 > yaml_file` | View full YAML configuration of a pod with command            |
 
+- List Pod: `kubectl list pod`
+
+  - NAME:
+    - e.g., kiada-9d785b578-58vhc
+  - READY
+    - e.g., 1/1
+    - the number of ready containers/the desired of containers
+  - STATUS
+    - e.g., Running
+    - status of the pod
+  - RESTARTS
+    - e.g., 0
+    - how many times the pod is restarted
+    - indicate instability
+  - AGE
+    - e.g., 17s
+    - Time since the **Deployment** object was created
+
+- Common pod status:
+  - `running`: pod is created and running
+  - `Pending`: waiting for scheduling or image pull
+  - `CrashLoopBackOff`: container keeps crashing
+  - `ImagePullBackOff`: image pull failed
+  - `Terminating`: Pod being replaced or deleted
+
+---
+
 ### Declarative Commands
 
 | CMD                                | DESC                                      |
@@ -58,6 +178,22 @@
 | `kubectl create -f yaml_file`      | Create a Pod from a YAML file or JSON.    |
 | `kubectl apply -f yaml_file`       | Create or update a pod from YAML manifest |
 | `kubectl get pod pod_name -o yaml` | View full YAML configuration of a pod     |
+
+- yaml
+
+```yaml
+# nginx.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+        containerPort: 7500
+```
 
 ---
 
@@ -93,7 +229,7 @@ spec:
    - name: Tomcat
     image: tomcat: 8.0
     ports:
-containerPort: 7500
+  containerPort: 7500
    imagePullPolicy: Always
 ```
 
@@ -106,6 +242,9 @@ kubectl create -f tomcat.yml
 ### Multi Container Pod
 
 - `Multi container pods` are created using **yaml mail** with the definition of the containers.
+  - use the same network and UTS namespaces
+    - see the same system hostname
+    - use the same network interfaces, share the same IP address and port space
 
 ```yaml
 apiVersion: v1

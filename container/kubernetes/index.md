@@ -21,7 +21,36 @@
 
 ---
 
-Cluster
+## Application
+
+- [Pod](./app/pod/pod.md)
+- [Deployment](./app/deploy/deploy.md)
+  - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
+
+---
+
+- [Container Management](./pod/container/container.md)
+  - [ConfigMap](./pod/container_configmap/container_configmap.md)
+  - [Secret](./pod/container_secret/container_secret.md)
+  - [Multi-containers](./pod/container_multi/container_multi.md)
+- [ReplicaSet](./pod/replicaset/replicaset.md)
+- [DaemonSets](./pod/daemonset/daemonset.md)
+- [Static Pod](./pod/static_pod/static_pod.md)
+- [Scaling](./pod/scaling/scaling.md)
+  - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
+  - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
+- [!PriorityClass](./pod/pod_priorityclass/pod_priorityclass.md)
+- [Resources Limit](./pod/pod_resource_limit/pod_resource_limit.md)
+
+- [Troubleshooting](./debuging/debuging.md)
+
+---
+
+- [Admission Controller](./adm_ctl/adm_ctl.md)
+
+---
+
+- [Cluster](./cluster/cluster.md)
 
 - [Release](./release/release.md)
 - [Upgrade](./release/release.md)
@@ -84,25 +113,6 @@ Cluster
 
 ---
 
-- [Pod](./pod/pod/pod.md)
-
-  - [Container Management](./pod/container/container.md)
-    - [ConfigMap](./pod/container_configmap/container_configmap.md)
-    - [Secret](./pod/container_secret/container_secret.md)
-    - [Multi-containers](./pod/container_multi/container_multi.md)
-  - [ReplicaSet](./pod/replicaset/replicaset.md)
-  - [Deployment](./pod/deploy/deploy.md)
-    - [Rolling update and roll back](./pod/deploy_rolling/deploy_rolling.md)
-  - [DaemonSets](./pod/daemonset/daemonset.md)
-  - [Static Pod](./pod/static_pod/static_pod.md)
-  - [Scaling](./pod/scaling/scaling.md)
-    - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
-    - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
-  - [!PriorityClass](./pod/pod_priorityclass/pod_priorityclass.md)
-  - [Resources Limit](./pod/pod_resource_limit/pod_resource_limit.md)
-
-- [Troubleshooting](./debuging/debuging.md)
-
 ---
 
 - Security
@@ -127,3 +137,84 @@ todo list:
 - Rel:
   - https://kubernetes.io/docs/concepts/overview/components/
 - https://scriptwang.github.io/blog/#/blog/2021-06-14_K8S%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E6%88%98%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89
+
+| CMD                                         | DESC                          |
+| ------------------------------------------- | ----------------------------- |
+| `kubectl api-resources`                     | List all resources in k8s     |
+| `kubectl explain resource_name`             | Show manual of a resource     |
+| `kubectl explain resource_name --recursive` | Show all fields of a resource |
+| `kubectl explain resource_name.field`       | Show a field of a resource    |
+
+# JSON Path
+
+- used to fileter info retrieved from API server
+
+```sh
+# output in json
+kubectl get node -o json > node.json
+
+
+# get image
+kubectl get pods -o=jsonpath="{.items[0].spec.containers[0].image}"
+
+# get metadata: name
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'
+
+# get cpu
+kubectl get nodes -o=jsonpath='{.items[*].status.capacity.cpu}'
+
+# gen a report
+kubectl get nodes -o=jsonpath='{.items[*].metadata.name} {.items[*].status.capacity.cpu}'
+# master  node01
+# 4 4
+
+# loop
+kubectl get nodes -o=jsonpath'{range .items[*]} {.metadata.name} {"\t"} {.status.capacity.cpu} {"\n"} {end}'
+
+# custom columns
+kubectl get nodes -o=custom-columns=NODE:.metadata.name,CPU:.status.capacity.cpu
+# NODE             CPU
+# docker-desktop   12
+
+# sort
+kubectl get nodes --sort-by=.metadata.name
+
+kubectl get nodes --sort-by=.status.capacity.cpu
+```
+
+https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
+
+
+```sh
+kubectl create deploy nginx --image=nginx --port=80
+kubectl expose deploy nginx --type=LoadBalancer --name=nginx --port=8080 --target-port=80
+kubectl get svc
+# NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+# nginx        LoadBalancer   10.103.65.211   localhost     8080:31490/TCP   22s
+
+kubectl port-forward service/nginx 8080:8080
+curl http://localhost:8080/
+# <!DOCTYPE html>
+# <html>
+# <head>
+# <title>Welcome to nginx!</title>
+# <style>
+# html { color-scheme: light dark; }
+# body { width: 35em; margin: 0 auto;
+# font-family: Tahoma, Verdana, Arial, sans-serif; }
+# </style>
+# </head>
+# <body>
+# <h1>Welcome to nginx!</h1>
+# <p>If you see this page, the nginx web server is successfully installed and
+# working. Further configuration is required.</p>
+
+# <p>For online documentation and support please refer to
+# <a href="http://nginx.org/">nginx.org</a>.<br/>
+# Commercial support is available at
+# <a href="http://nginx.com/">nginx.com</a>.</p>
+
+# <p><em>Thank you for using nginx.</em></p>
+# </body>
+# </html>
+```

@@ -1,8 +1,8 @@
-# Kubernetes - Pod: Deployment
+# Kubernetes - Application: Deployment
 
 [Back](../../index.md)
 
-- [Kubernetes - Pod: Deployment](#kubernetes---pod-deployment)
+- [Kubernetes - Application: Deployment](#kubernetes---application-deployment)
   - [Deployment](#deployment)
     - [Deployment vs ReplicaSet](#deployment-vs-replicaset)
     - [Changing the Deployment](#changing-the-deployment)
@@ -29,6 +29,25 @@
   - upgraded and higher version of `replication controller`.
   - manage the **deployment** of `replica sets`.
   - have the capability to **update** the `replica set` and are also capable of **rolling back to the previous version**.
+
+- Deployment status
+
+  - `Progressing`;
+    - `Deployment` **creates** a new `ReplicaSet`.
+    - `Deployment` is **scaling up** its newest `ReplicaSet`.
+    - `Deployment` is **scaling down** its older `ReplicaSet(s)`.
+    - New `Pods` become **ready or available** (ready for at least MinReadySeconds).
+  - `complete`:
+    - All of the `replicas` associated with the Deployment ha**ve been updated to the latest version**
+    - All of the `replicas` associated with the Deployment are **available**.
+    - **No old** `replicas` for the Deployment are running.
+  - `Failed`
+    - Insufficient **quota**
+    - Readiness **probe** failures
+    - **Image pull** errors
+    - Insufficient **permissions**
+    - Limit **ranges**
+    - Application runtime **misconfiguration**
 
 - Major roles:
 
@@ -109,6 +128,29 @@
 | `kubectl rollout status deployment/deploy_name`  | Check the status of a rollout for the Deployment.      |
 | `kubectl rollout history deployment/deploy_name` | View the rollout history of changes to the Deployment. |
 | `kubectl rollout undo deployment/deploy_name`    | Rollback to the previous version of the Deployment.    |
+
+- List Deploy: `kubectl list deploy`
+  - `NAME`:
+    - Deployment name
+    - nignx
+  - `READY`:
+    - e.g.,3/3
+    - the number of running **pod**/the desired number of **pods**
+  - `UP-TO-DATE`
+    - e.g.,3
+    - the number of Pods that runs the current version
+    - used to indicate whether rollout is still in progress.
+  - `AVAILABLE`
+    - e.g.,3
+    - the number of pods that both are ready and have been ready for `spec.minReadySeconds`
+    - used for rolling updates and zero-downtime guarantees.
+  - `AGE`
+    - e.g., 18m
+    - Time since the **Deployment** object was created
+    - Get updated when
+      - cluster restarted
+      - rolled out a new version
+      - Pod crashed and was recreated
 
 ---
 
