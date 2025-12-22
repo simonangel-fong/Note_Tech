@@ -5,7 +5,7 @@
 ---
 
 - [Fundamental](./fundamental/fundamental/fundamental.md)
-
+  - [API Object](./fundamental/api_object/api_object.md)
   - [YAML File](./fundamental/yaml/yaml.md)
   - [`kubectl`](./fundamental/kubectl/kubectl.md)
 
@@ -24,15 +24,17 @@
 ## Application
 
 - [Pod](./app/pod/pod.md)
+  - [Container](./app/container/container.md)
+  - [Sidecar containers](./app/sidecar_container/sidecar_container.md)
+  - [Init containers](./app/init_container/init_container.md)
+  - [Sidecar containers](./app/container_multi/container_multi.md)
 - [Deployment](./app/deploy/deploy.md)
   - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
 
 ---
 
-- [Container Management](./pod/container/container.md)
   - [ConfigMap](./pod/container_configmap/container_configmap.md)
   - [Secret](./pod/container_secret/container_secret.md)
-  - [Multi-containers](./pod/container_multi/container_multi.md)
 - [ReplicaSet](./pod/replicaset/replicaset.md)
 - [DaemonSets](./pod/daemonset/daemonset.md)
 - [Static Pod](./pod/static_pod/static_pod.md)
@@ -138,49 +140,8 @@ todo list:
   - https://kubernetes.io/docs/concepts/overview/components/
 - https://scriptwang.github.io/blog/#/blog/2021-06-14_K8S%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E6%88%98%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89
 
-| CMD                                         | DESC                          |
-| ------------------------------------------- | ----------------------------- |
-| `kubectl api-resources`                     | List all resources in k8s     |
-| `kubectl explain resource_name`             | Show manual of a resource     |
-| `kubectl explain resource_name --recursive` | Show all fields of a resource |
-| `kubectl explain resource_name.field`       | Show a field of a resource    |
-
-# JSON Path
-
-- used to fileter info retrieved from API server
-
-```sh
-# output in json
-kubectl get node -o json > node.json
 
 
-# get image
-kubectl get pods -o=jsonpath="{.items[0].spec.containers[0].image}"
-
-# get metadata: name
-kubectl get nodes -o=jsonpath='{.items[*].metadata.name}'
-
-# get cpu
-kubectl get nodes -o=jsonpath='{.items[*].status.capacity.cpu}'
-
-# gen a report
-kubectl get nodes -o=jsonpath='{.items[*].metadata.name} {.items[*].status.capacity.cpu}'
-# master  node01
-# 4 4
-
-# loop
-kubectl get nodes -o=jsonpath'{range .items[*]} {.metadata.name} {"\t"} {.status.capacity.cpu} {"\n"} {end}'
-
-# custom columns
-kubectl get nodes -o=custom-columns=NODE:.metadata.name,CPU:.status.capacity.cpu
-# NODE             CPU
-# docker-desktop   12
-
-# sort
-kubectl get nodes --sort-by=.metadata.name
-
-kubectl get nodes --sort-by=.status.capacity.cpu
-```
 
 https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 
