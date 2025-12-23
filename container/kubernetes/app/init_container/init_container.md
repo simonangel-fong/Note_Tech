@@ -4,6 +4,8 @@
 
 - [Kubernetes - Pod: Multiple Container - Init Container](#kubernetes---pod-multiple-container---init-container)
   - [Init containers](#init-containers)
+    - [idempotent](#idempotent)
+    - [Common Commands:](#common-commands)
     - [Lab: Init Containers](#lab-init-containers)
 
 ---
@@ -45,7 +47,18 @@
   - `Pod` never starts its regular containers.
   - `Pod` stays in `Init:CrashLoopBackOff` (effectively failed until the init succeeds).
 
-- Common Commands:
+---
+
+### idempotent
+
+- `Init containers` are normally **only executed once**.
+  - Even if one of the pod’s `main containers` is **terminated** later, the pod’s `init containers` are not reexecuted.
+- if it requires to **restart** the entire `pod`, the pod’s `init containers` might be **executed again**.
+  - `init containers` must be **idempotent**.
+
+---
+
+### Common Commands:
 
 | CMD                                                       | DESC                                 |
 | --------------------------------------------------------- | ------------------------------------ |

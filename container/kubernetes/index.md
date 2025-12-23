@@ -25,6 +25,7 @@
 
 - [Pod](./app/pod/pod.md)
   - [Container](./app/container/container.md)
+  - [Lifecycle](./app/lifecycle/lifecycle.md)
   - [Sidecar containers](./app/sidecar_container/sidecar_container.md)
   - [Init containers](./app/init_container/init_container.md)
   - [Sidecar containers](./app/container_multi/container_multi.md)
