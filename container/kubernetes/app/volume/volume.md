@@ -5,6 +5,7 @@
 - [Kubernetes - Application: Storage](#kubernetes---application-storage)
   - [Container storage](#container-storage)
   - [Volume](#volume)
+    - [Persisting files across container restarts](#persisting-files-across-container-restarts)
     - [Lab: without volume vs with volume](#lab-without-volume-vs-with-volume)
       - [no volume](#no-volume)
       - [Pod volume](#pod-volume)
@@ -14,9 +15,6 @@
     - [Lab: emptyDir - share file](#lab-emptydir---share-file)
   - [hostPath volume](#hostpath-volume)
     - [Lab: hostPath volume - Security Risk demo](#lab-hostpath-volume---security-risk-demo)
-  - [Persistent Volume (PV)](#persistent-volume-pv)
-    - [Persisting files across container restarts](#persisting-files-across-container-restarts)
-    - [volume types](#volume-types-1)
   - [Docker Storage](#docker-storage)
     - [Storage Drivers](#storage-drivers)
     - [Volumes](#volumes)
@@ -31,9 +29,6 @@
     - [Persistent Volume Claims](#persistent-volume-claims)
     - [Declarative](#declarative)
     - [Imperative Command](#imperative-command-1)
-  - [Storage Class](#storage-class)
-    - [Declarative Method](#declarative-method-1)
-    - [Imperative Commands](#imperative-commands)
 
 ---
 
@@ -76,6 +71,17 @@
 - A `volume` can be **mounted** in **more than one** `container` to share files.
 
 ---
+
+### Persisting files across container restarts
+
+- **Without** the `volume` mounted in the container, the **entire filesystem** of the `container` is **ephemeral**.
+- Volumes can **persist data** across `container` **restarts**.
+  - All `volumes` in a `pod` are created **when the `pod` is set up**
+    - before any of its `containers` are **started**.
+  - `Volumes` are **torn down** when the pod is **shut down**.
+  - The **lifecycle** of a `volume` is **tied to** the **lifecycle** of the entire `pod`
+    - **independent** of the **lifecycle** of the `container` in which it is mounted.
+  - the new restrart container can access the same data in the mounted volume.
 
 ### Lab: without volume vs with volume
 
@@ -463,6 +469,7 @@ curl localhost:8080
     - also can be a security risk
 
 - `hostPath` volume types
+
   - `<empty>`: no checks before it mounts the volume.
   - `Directory`: checks if a directory exists
   - `DirectoryOrCreate`: create directory if not exists
@@ -490,7 +497,7 @@ kubectl explain pod.spec.volumes.hostPath
 #     https://kubernetes.io/docs/concepts/storage/volumes#hostpath
 #     Represents a host path mapped into a pod. Host path volumes do not support
 #     ownership management or SELinux relabeling.
-    
+
 # FIELDS:
 #   path  <string> -required-
 #     path of the directory on the host. If the path is a symlink, it will follow
@@ -516,7 +523,6 @@ kubectl explain pod.spec.volumes.hostPath
 #     ownership with Kubelet.
 #      - `"Socket"` A UNIX socket must exist at the given path
 ```
-
 
 ---
 
@@ -560,47 +566,6 @@ dev    home   lib    mnt    proc   run    srv    tmp    var
 / # ls -dl /var/test
 drwxr-xr-x    2 root     root          4096 Dec 24 05:09 /var/test
 ```
-
----
-
-## Persistent Volume (PV)
-
-- `Persistent Volume (PV)`
-
-  - an API object that represents a piece of **storage** in the cluster, provisioned by an administrator or dynamically via `Storage Classes`.
-  - **lifecycle**:
-    - **Independent** of the **pod's existence**
-  - **Data Persistence**
-    - Data is **retained** even after the consuming pod is **deleted**.
-  - **Scope**
-    - A **cluster**-wide resource
-
-- `external storage volume`
-
-  - a **network-attached storage volume (NAS)** whose lifecycle isn’t tied to any pod.
-  - can be attached to **multiple** `pods` simultaneously,
-
-- if it is a **local directory** on the **worker node’s** filesystem
-  - can share files for pods running on the same node
-- if it is a **network-attached storage volume**,
-  - can support pods **across worker nodes**.
-
----
-
-### Persisting files across container restarts
-
-- **Without** the `volume` mounted in the container, the **entire filesystem** of the `container` is **ephemeral**.
-- Volumes can **persist data** across `container` **restarts**.
-  - All `volumes` in a `pod` are created **when the `pod` is set up**
-    - before any of its `containers` are **started**.
-  - `Volumes` are **torn down** when the pod is **shut down**.
-  - The **lifecycle** of a `volume` is **tied to** the **lifecycle** of the entire `pod`
-    - **independent** of the **lifecycle** of the `container` in which it is mounted.
-  - the new restrart container can access the same data in the mounted volume.
-
----
-
-### volume types
 
 ---
 
@@ -883,81 +848,3 @@ spec:
 ```
 
 ---
-
-## Storage Class
-
-- Static Provisioning
-
-  - a volume must be created before a pv creates.
-
-- Dynamic Provisioning
-  - the volume automatically is created
-  - implemented by storageClass
-
----
-
-### Declarative Method
-
-- create a storage class with `google cloud engine`
-  - pc is not required
-
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: google-storage
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-standard
-  replication-type: none
-```
-
-- Create a pvc with storage class
-
-```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: myclaim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: google-storage # refer storage class
-  resources:
-    requests:
-      storage: 500Mi
-```
-
-- Apply PVC to a pod
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: my-pod
-spec:
-  containers:
-    - image: alpine
-      name: alpine
-      command: ["/bin/sh", "-c"]
-      args: ["shuf -i 0-100 -n 1 >> /opt/number.out;"]
-      volumeMounts:
-        - mountPath: /opt
-          name: data-volume
-
-  volumes:
-    - name: data-volume
-      persistentVolumeClaim:
-        claimName: myclaim # refer pvc
-```
-
----
-
-### Imperative Commands
-
-| Command                                       | Description                                                                       |
-| --------------------------------------------- | --------------------------------------------------------------------------------- |
-| `kubectl get storageclass` / `kubectl get sc` | List all StorageClasses in the cluster.                                           |
-| `kubectl get sc <name>`                       | Show basic info for a specific StorageClass.                                      |
-| `kubectl describe sc <name>`                  | Show detailed configuration, reclaim policy, parameters, and provisioner details. |
-| `kubectl delete sc <name>`                    | Delete a specific StorageClass.                                                   |

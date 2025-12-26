@@ -5,6 +5,7 @@
 ---
 
 - [Fundamental](./fundamental/fundamental/fundamental.md)
+
   - [API Object](./fundamental/api_object/api_object.md)
   - [YAML File](./fundamental/yaml/yaml.md)
   - [`kubectl`](./fundamental/kubectl/kubectl.md)
@@ -23,6 +24,8 @@
 
 ## Application
 
+- Container
+
 - [Pod](./app/pod/pod.md)
   - [Container](./app/container/container.md)
   - [Lifecycle](./app/lifecycle/lifecycle.md)
@@ -30,12 +33,20 @@
   - [Init containers](./app/init_container/init_container.md)
   - [Sidecar containers](./app/container_multi/container_multi.md)
 - [Deployment](./app/deploy/deploy.md)
+
   - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
+
+- Storage
+  - [Volume](./app/volume/volume.md)
+  - [PV & PVC](./app/persist_volume/persist_volume.md)
+  - [Dynamic Provisioned Persistent Volumes](./app/dynamic_pv/dynamic_pv.md)
+  - [Node Local Persistent Volume](./app/node_local_pv/node_local_pv.md)
+  - [Install `rancher`](./storage/install_/install.md)
 
 ---
 
-  - [ConfigMap](./pod/container_configmap/container_configmap.md)
-  - [Secret](./pod/container_secret/container_secret.md)
+- [ConfigMap](./pod/container_configmap/container_configmap.md)
+- [Secret](./pod/container_secret/container_secret.md)
 - [ReplicaSet](./pod/replicaset/replicaset.md)
 - [DaemonSets](./pod/daemonset/daemonset.md)
 - [Static Pod](./pod/static_pod/static_pod.md)
@@ -91,8 +102,6 @@
 
 ---
 
-- [Storage](./storage/storage/storage.md)
-
 ---
 
 - [Networking](./networking/networking.md)
@@ -141,11 +150,7 @@ todo list:
   - https://kubernetes.io/docs/concepts/overview/components/
 - https://scriptwang.github.io/blog/#/blog/2021-06-14_K8S%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E6%88%98%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89
 
-
-
-
 https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
-
 
 ```sh
 kubectl create deploy nginx --image=nginx --port=80
