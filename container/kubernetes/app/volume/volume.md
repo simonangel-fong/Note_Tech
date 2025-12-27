@@ -5,6 +5,7 @@
 - [Kubernetes - Application: Storage](#kubernetes---application-storage)
   - [Container storage](#container-storage)
   - [Volume](#volume)
+    - [Inject data as file using volume](#inject-data-as-file-using-volume)
     - [Persisting files across container restarts](#persisting-files-across-container-restarts)
     - [Lab: without volume vs with volume](#lab-without-volume-vs-with-volume)
       - [no volume](#no-volume)
@@ -40,6 +41,9 @@
 
   - the act of **attaching the filesystem** of the `storage device` or `volume` into a specific **location** in the operating system’s **file tree**
 
+- **Note**: When any volume is mounted to a directory in the container’s filesystem, the files that are in the `container image` in that directory can **no longer be accessed**.
+  - That is why `subPath` can be used.
+
 ---
 
 ## Volume
@@ -69,6 +73,15 @@
 - A `container` can **mount zero or more** of these `volumes` in **different locations**
 - A `pod` can have **multiple** `volumes`
 - A `volume` can be **mounted** in **more than one** `container` to share files.
+
+---
+
+### Inject data as file using volume
+
+- inject data from:
+  - `configMap` object: `spec.volumes.configMap`
+  - `secret` object: `spec.volumes.secret`
+  - `downwardAPI` object: `spec.volumes.downwardAPI`
 
 ---
 
