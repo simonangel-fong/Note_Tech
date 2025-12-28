@@ -23,6 +23,7 @@
   - [Event objects](#event-objects)
     - [Common Commands](#common-commands-2)
     - [Lab: Get events object](#lab-get-events-object)
+  - [Nampspaced Objects vs cluster-scoped Objects](#nampspaced-objects-vs-cluster-scoped-objects)
 
 ---
 
@@ -806,3 +807,14 @@ kubectl delete event --all
 kubectl get event
 # No resources found in default namespace.
 ```
+
+---
+
+## Nampspaced Objects vs cluster-scoped Objects
+
+- `namespaced objects`
+  - esources that are tied to a **specific namespace**.
+  - e.g., `Pods`, `ConfigMaps`, `Secrets`, `PersistentVolumeClaims`,`Events`
+- `cluster-scoped objects`
+  - resources that **exist across the entire cluster** and are **not** tied to a **specific namespace**.
+  - e.g., `Nodes`, `PersistentVolumes`, `StorageClasses`, `Namespaces`

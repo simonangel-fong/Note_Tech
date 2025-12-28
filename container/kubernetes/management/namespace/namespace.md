@@ -4,6 +4,7 @@
 
 - [Kubernetes Namespace](#kubernetes-namespace)
   - [Namespace](#namespace)
+    - [Switch namespace in context](#switch-namespace-in-context)
     - [In DNS](#in-dns)
     - [Built-in Namespaces](#built-in-namespaces)
     - [Declarative Method](#declarative-method)
@@ -26,6 +27,25 @@
   - a **mechanism** used to **partition** a single `physical cluster` into multiple **isolated** `virtual clusters`.
   - a **logical partition** of the cluster that **groups resources** (like `Pods`, `Services`, `Deployments`)
   - helps divide cluster resources between multiple users, teams, or applications.
+
+- `Namespaces` **prefixed** with `kube-` are **reserved** for **Kubernetes system namespaces**.
+
+- **runtime isolation**
+
+  - `Pods` from different `namespaces` may run on the **same** `cluster node`.
+    - an application that breaks out of its container or consumes too much of the node’s **resources** can **affect** the operation of the other application.
+
+- **network isolatio**
+
+  - By default, there is **no network isolation** between `namespaces`.
+    - An application running in one `namespace` can communicate with applications running in **other** `namespaces`.
+  - can use the `NetworkPolicy` object to configure which applications in which namespaces **can connect** to which applications in other namespaces.
+
+- Environment Isolation
+
+  - **should not** use namespace to **split a single physical Kubernetes cluster** into the `production`, `staging`, and `development` environments
+    - Because `namespaces` **don’t provide true isolation**
+    - Hosting each environment on a separate `physical cluster` is a **much safer approach**.
 
 - **Role** of a Namespace
 
@@ -55,6 +75,30 @@
   - **Resource Management**:
     - **Quotas** (ResourceQuota), limits (LimitRange) can be applied per namespace.
   - **DNS Naming**: Services get names using namespace
+
+---
+
+- Namespace deletion:
+
+  - The deletion command **blocks** until everything in the `namespace` and the `namespace`
+    itself are **deleted**.
+
+    - But, if interrupt the command and list the namespaces before the deletion is complete, you’ll see that the namespace’s status is `Terminating`
+
+  - why namespace termination is stuck?
+    - commonly, because the objects created in it can’t be deleted.
+      - `kubectl get all` doesn't return everything, like `secret`
+    - the problem was caused by a `custom object` and its `custom controller` not processing the object’s deletion and removing a `finalizer` from the object.
+  - debug:
+    - `kubectl get ns NAMESPACE -o yaml` for status; commonly look for the `finalizer`
+
+---
+
+### Switch namespace in context
+
+- shortcut:
+  - setting `alias kns='kubectl config set-context --current --namespace`
+  - switch: `kns some-namespace`
 
 ---
 

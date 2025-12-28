@@ -22,6 +22,12 @@
 
 ---
 
+- [Cluster](./cluster/cluster.md)
+  - [Namespace](./management/namespace/namespace.md)
+  - [Label and Selector](./management/label_selector/label_selector.md)
+  - [Annotation](./object/annotation/annotation.md)
+---
+
 ## Application
 
 - [Container](./app/container/container.md)
@@ -48,6 +54,9 @@
   - [Node Local Persistent Volume](./app/node_local_pv/node_local_pv.md)
   - [Install `rancher`](./storage/install_/install.md)
 
+
+
+
 ---
 
 - [ReplicaSet](./pod/replicaset/replicaset.md)
@@ -67,7 +76,7 @@
 
 ---
 
-- [Cluster](./cluster/cluster.md)
+
 
 - [Release](./release/release.md)
 - [Upgrade](./release/release.md)
@@ -89,8 +98,8 @@
 
 - Management
 
-  - [Namespace](./management/namespace/namespace.md)
-  - [Label and Selector](./management/label_selector/label_selector.md)
+
+
   - [Monitor & Logging](./management/monitoring/monitoring.md)
 
 ---
