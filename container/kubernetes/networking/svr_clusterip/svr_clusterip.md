@@ -8,18 +8,41 @@
     - [Imperative Command](#imperative-command)
   - [Lab: Explore default ClusterIP](#lab-explore-default-clusterip)
   - [Lab: Create ClusterIP](#lab-create-clusterip)
+  - [Lab: Create ClusterIP for nginx](#lab-create-clusterip-for-nginx)
+    - [Use ClusterIP as Env var](#use-clusterip-as-env-var)
+  - [Pod `dnsPolicy` Field](#pod-dnspolicy-field)
+  - [Pod `enableServiceLinks` field](#pod-enableservicelinks-field)
+    - [Service Discovery](#service-discovery)
 
 ---
 
 ## ClusterIP
 
 - `ClusterIP`
+
   - the **default** service type
   - a Kubernetes Service type that **exposes** a group of `Pods` on an **internal**, **stable** IP address **inside** the `cluster`.
   - The IP is **virtual** (not bound to a specific Node interface).
   - provides a stable IP + DNS name inside the cluster.
   - only **reachable within** the cluster’s network (Pods, Nodes, other Services).
     - Not accessible directly from the outside world.
+
+- Cannot access externally
+  - `kubectl port-forward` does not work.
+
+---
+
+- Use ClusterIP in the pod
+  - can create env var in the pod which refers to the service by ip/dns
+
+```yaml
+sep:
+  env:
+    - name: QUOTE_URL
+      value: http://quote/quote
+    - name: QUIZ_URL
+      value: http://quiz
+```
 
 ---
 
@@ -79,6 +102,7 @@ spec:
 | `kubectl expose deploy deploy_name --name=svc_name --type=ClusterIP --port=80 --target-port=8080 ` | Expose a deploy                      |
 | `kubectl expose pod pod_name --name=svc_name --type=ClusterIP --port=80 --target-port=8080 `       | Expose a pod                         |
 | `kubectl run nginx --image=nginx --port=80 --expose=true`                                          | Create a pod and a ClusterIP service |
+| `kubectl set selector service SERVICE KEY=VALUE`                                                   | Update service selector              |
 
 ---
 
@@ -206,4 +230,346 @@ exit
 kubectl delete -f .
 # deployment.apps "deploy-nginx" deleted
 # service "service-clusterip" deleted
+```
+
+---
+
+## Lab: Create ClusterIP for nginx
+
+- Create index and configmap
+
+```sh
+# create index.html
+tee index.html<<EOF
+<html>
+<title>Home</title>
+
+<body>
+    <h1>Home</h1>
+    <p>this is the home page</p>
+</body>
+
+</html>
+EOF
+
+# create cm with index.html
+kubectl create configmap nginx-file --from-file=index.html -o yaml
+# configmap/nginx-file created
+
+# confirm
+kubectl describe cm nginx-file
+# Name:         nginx-file
+# Namespace:    default
+# Labels:       <none>
+# Annotations:  <none>
+
+# Data
+# ====
+# index.html:
+# ----
+# <html>\r
+# <title>Home</title>\r
+# \r
+# <body>\r
+#     <h1>Home</h1>\r
+#     <p>this is the home page</p>\r
+# </body>\r
+# \r
+# </html>
+
+```
+
+- Create nginx pod
+
+```sh
+tee nginx-pod.yaml<<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  volumes:
+    - name: nginx-file
+      configMap:
+        name: nginx-file
+        optional: true
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - name: nginx-file
+          mountPath: /usr/share/nginx/html
+EOF
+
+kubectl apply -f nginx-pod.yaml
+# pod/nginx configured
+
+kubectl get pod -o wide -L app
+# NAME    READY   STATUS    RESTARTS   AGE   IP         NODE             NOMINATED NODE   READINESS GATES   APP
+# nginx   1/1     Running   0          14m   10.1.3.1   docker-desktop   <none>           <none>            nginx
+
+# confirm home page
+kubectl port-forward nginx 8080:80
+curl localhost:8080
+# <html>
+# <title>Home</title>
+
+# <body>
+#     <h1>Home</h1>
+#     <p>this is the home page</p>
+# </body>
+
+# </html>
+```
+
+- Create service
+
+```sh
+tee nginx-svc.yaml<<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 80
+EOF
+
+kubectl apply -f nginx-svc.yaml
+# service/nginx-svc created
+
+# confirm
+kubectl get svc -o wide
+# NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+# nginx-svc    ClusterIP   10.111.110.150   <none>        8080/TCP   9m11s   app=nginx
+
+kubectl describe svc nginx-svc
+# Name:                     nginx-svc
+# Namespace:                default
+# Labels:                   <none>
+# Annotations:              <none>
+# Selector:                 app=nginx
+# Type:                     ClusterIP
+# IP Family Policy:         SingleStack
+# IP Families:              IPv4
+# IP:                       10.111.110.150
+# IPs:                      10.111.110.150
+# Port:                     http  8080/TCP
+# TargetPort:               80/TCP
+# Endpoints:                10.1.3.1:80
+# Session Affinity:         None
+# Internal Traffic Policy:  Cluster
+# Events:                   <none>
+
+# update selector
+kubectl set selector service nginx-svc app=nginx,backend=none
+# service/nginx-svc selector updated
+
+kubectl get svc -o wide
+# NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+# kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP    6d17h   <none>
+# nginx-svc    ClusterIP   10.111.110.150   <none>        8080/TCP   10m     app=nginx,backend=none
+
+# update selector
+kubectl set selector service nginx-svc app=nginx
+# service/nginx-svc selector updated
+
+kubectl get svc -o wide
+# NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+# kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP    6d17h   <none>
+# nginx-svc    ClusterIP   10.111.110.150   <none>        8080/TCP   11m     app=ngin
+```
+
+- confirm only within the cluster
+
+```sh
+# with ip
+kubectl exec -it nginx -- curl 10.111.110.150:8080
+# <html>
+# <title>Home</title>
+
+# <body>
+#     <h1>Home</h1>
+#     <p>this is the home page</p>
+# </body>
+
+# </html>
+
+# with dns: all the same
+kubectl exec -it nginx -- curl nginx-svc:8080
+kubectl exec -it nginx -- curl nginx-svc.default:8080
+kubectl exec -it nginx -- curl nginx-svc.default.svc:8080
+kubectl exec -it nginx -- curl nginx-svc.default.svc.cluster.local:8080
+# <html>
+# <title>Home</title>
+
+# <body>
+#     <h1>Home</h1>
+#     <p>this is the home page</p>
+# </body>
+
+# </html>
+```
+
+- Confirm DNS config in the pod
+
+```sh
+# dns resolve point to nameserver
+kubectl exec -it nginx -- cat /etc/resolv.conf
+# nameserver 10.96.0.10
+# search default.svc.cluster.local svc.cluster.local cluster.local
+# options ndots:5
+
+# confirm: pod dns point to 10.96.0.10 which is kube-dns
+kubectl get svc -A
+# NAMESPACE              NAME                                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                  AGE
+# default                kubernetes                             ClusterIP   10.96.0.1        <none>        443/TCP                  6d18h
+# default                nginx-svc                              ClusterIP   10.111.110.150   <none>        8080/TCP                 43m
+# kube-system            kube-dns                               ClusterIP   10.96.0.10       <none>        53/UDP,53/TCP,9153/TCP   52d
+# kubernetes-dashboard   dashboard-metrics-scraper              ClusterIP   10.100.98.62     <none>        8000/TCP                 8d
+# kubernetes-dashboard   kubernetes-dashboard                   ClusterIP   10.103.84.253    <none>        443/TCP                  8d
+# kubernetes-dashboard   kubernetes-dashboard-api               ClusterIP   10.101.197.91    <none>        8000/TCP                 8d
+# kubernetes-dashboard   kubernetes-dashboard-auth              ClusterIP   10.111.54.247    <none>        8000/TCP                 8d
+# kubernetes-dashboard   kubernetes-dashboard-kong-proxy        ClusterIP   10.108.33.61     <none>        443/TCP                  8d
+# kubernetes-dashboard   kubernetes-dashboard-metrics-scraper   ClusterIP   10.105.46.123    <none>        8000/TCP                 8d
+# kubernetes-dashboard   kubernetes-dashboard-web               ClusterIP   10.107.83.59     <none>        8000/TCP                 8d
+```
+
+- Explore env var
+
+```sh
+kubectl exec -it nginx -- env | sort
+# NGINX_SVC_PORT_8080_TCP_ADDR=10.111.110.150
+# NGINX_SVC_PORT_8080_TCP_PORT=8080
+# NGINX_SVC_PORT_8080_TCP_PROTO=tcp
+# NGINX_SVC_PORT_8080_TCP=tcp://10.111.110.150:8080
+# NGINX_SVC_PORT=tcp://10.111.110.150:8080
+# NGINX_SVC_SERVICE_HOST=10.111.110.150
+# NGINX_SVC_SERVICE_PORT_HTTP=8080
+# NGINX_SVC_SERVICE_PORT=8080
+```
+
+---
+
+### Use ClusterIP as Env var
+
+```sh
+tee ping-pod.yaml<<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ping-pod
+spec:
+  env:
+    - name: NGINX_SVC_URL
+      value: http://nginx-svc:8080
+  containers:
+    - name: busybox
+      image: busybox
+      command:
+        - "sh"
+      args:
+        - "-c"
+        - |
+         echo "ping-pod"
+         wget $NGINX_SVC_URL
+
+         sleep 500
+EOF
+
+kubectl apply -f ping-pod.yaml
+# pod/ping-pod created
+
+# confirm log
+kubectl logs pod/ping-pod
+# ping-pod
+# Connecting to nginx-svc:8080 (10.111.110.150:8080)
+# writing to stdout
+# -                    100% |********************************|   110  0:00:00 ETA
+# written to stdout
+# <html>
+# <title>Home</title>
+
+# <body>
+#     <h1>Home</h1>
+#     <p>this is the home page</p>
+# </body>
+```
+
+
+---
+
+## Pod `dnsPolicy` Field
+
+- `spec.dnsPolicy` field
+  - update the `resolv.conf` file within the pod, affect pod's DNS behavior
+  - `ClusterFirst`:
+    - default
+    - uses the `internal DNS` `first` and then the `DNS configured` for the cluster node.
+  - `Default`:
+    - uses the DNS configured for the node
+  - `None`:
+    - no DNS configuration is provided by Kubernetes
+    - use configuration in the using the `dnsConfig` field
+  - `ClusterFirstWithHostNet`:
+    - special pods that use the host’s network instead of their own
+
+---
+
+## Pod `enableServiceLinks` field
+
+- Whether enable the injection of service information into the environment
+- `false`: **disable** the injection of service information
+
+---
+
+### Service Discovery
+
+- `service discovery`
+
+  - use `Services` and an `internal DNS system` (typically CoreDNS).
+  - allows applications (pods) to **find and communicate with each other** using **stable names** rather than dynamic, ephemeral IP addresses.
+
+- Legacy: use Env var used to identify service
+
+```sh
+# service ip: 10.111.110.150
+kubectl get svc -A
+# NAMESPACE              NAME                                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                  AGE
+# default                nginx-svc                              ClusterIP   10.111.110.150   <none>        8080/TCP                 43m
+
+# env var: set the service ip
+kubectl exec -it nginx -- env | sort
+# NGINX_SVC_PORT_8080_TCP_ADDR=10.111.110.150
+# NGINX_SVC_PORT_8080_TCP_PORT=8080
+# NGINX_SVC_PORT_8080_TCP_PROTO=tcp
+# NGINX_SVC_PORT_8080_TCP=tcp://10.111.110.150:8080
+# NGINX_SVC_PORT=tcp://10.111.110.150:8080
+# NGINX_SVC_SERVICE_HOST=10.111.110.150
+# NGINX_SVC_SERVICE_PORT_HTTP=8080
+# NGINX_SVC_SERVICE_PORT=8080
+```
+
+- specify `nameserver` in `resolve.conf` in pod for dns
+  - container in `pod` use dns to discover the `service`
+
+```sh
+# kube-dns ip: 10.96.0.10
+kubectl get svc -A
+# NAMESPACE              NAME                                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                  AGE
+# kube-system            kube-dns                               ClusterIP   10.96.0.10       <none>        53/UDP,53/TCP,9153/TCP   52d
+
+# resolve sets nameserver==dns
+kubectl exec -it nginx -- cat /etc/resolv.conf
+# nameserver 10.96.0.10
+# search default.svc.cluster.local svc.cluster.local cluster.local
+# options ndots:5
 ```

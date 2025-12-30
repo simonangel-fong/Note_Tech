@@ -1,0 +1,14 @@
+# demo-readiness-probe-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-readiness-probe-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: readiness
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 80

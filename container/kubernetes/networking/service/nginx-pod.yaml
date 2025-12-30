@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  volumes:
+    - name: nginx-file
+      configMap:
+        name: nginx-file
+        optional: true
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - name: nginx-file
+          mountPath: /usr/share/nginx/html

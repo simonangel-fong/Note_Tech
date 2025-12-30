@@ -1,0 +1,12 @@
+# demo-headless-noselector-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-headless-svc
+spec:
+  clusterIP: None # headless
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 80

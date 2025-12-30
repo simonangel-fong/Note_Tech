@@ -4,11 +4,13 @@
 
 - [Kubernetes Service - NodePort](#kubernetes-service---nodeport)
   - [NodePort](#nodeport)
+    - [Declarative](#declarative)
     - [How It Works](#how-it-works)
     - [Imperative Command](#imperative-command)
     - [Lifecycle](#lifecycle)
   - [Lab: Create NodePort with a single pod](#lab-create-nodeport-with-a-single-pod)
   - [Lab: Create NodePort with Deployment](#lab-create-nodeport-with-deployment)
+  - [Lab: Create NodePort with multiple nodes](#lab-create-nodeport-with-multiple-nodes)
 
 ---
 
@@ -30,6 +32,22 @@
   - default: the same as the `targetPort`
   - the port on service that forwarding traffic
 - `targetPort`: the port on a pod
+
+- a `NodePort service` is **accessible through** both
+
+  - its **internal cluster IP**
+  - the `node port` on each of the cluster nodes.
+
+- It doesn’t matter which `node` a **client connects** to
+  - because **all** the `nodes` will **forward the connection** to a `pod` that belongs to the `service`, **regardless of** which `node` is running the pod.
+
+---
+
+### Declarative
+
+- `nodePort` field
+  - specify the port expored on each node
+  - if blank, k8s assign a port to prevent from port conflict.
 
 ---
 
@@ -324,3 +342,156 @@ kubectl delete -f .
 ```
 
 ---
+
+## Lab: Create NodePort with multiple nodes
+
+```yaml
+# demo-nodeport-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+      containers:
+        - name: nginx
+          image: nginx
+          volumeMounts:
+            - name: shared-data
+              mountPath: /usr/share/nginx/html
+          ports:
+            - containerPort: 80
+        - name: busybox
+          image: busybox
+          volumeMounts:
+            - name: shared-data
+              mountPath: /html
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          command:
+            - "/bin/sh"
+          args:
+            - "-c"
+            - |
+             while true; do
+              echo "<h1>$NODE_NAME:$POD_NAME - $(date)</h1>" > /html/index.html; 
+             
+              sleep 1
+             done
+
+```   
+
+```sh
+kubectl apply -f demo-nodeport-deploy.yaml
+# deployment.apps/nginx created
+
+kubectl get deploy -o wide
+# NAME    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS      IMAGES          SELECTOR
+# nginx   2/2     2            2           31s   nginx,busybox   nginx,busybox   app=nginx
+
+kubectl get pod -o wide
+# NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+# nginx-546c7dd8cf-rts7p   2/2     Running   0          62s   10.244.2.18   node02   <none>           <none>
+# nginx-546c7dd8cf-t5kws   2/2     Running   0          62s   10.244.1.12   node01   <none>           <none>
+```
+
+- Create nodeport
+
+```yaml
+# demo-nodeport-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-nodeport-svc
+spec:
+  type: NodePort
+  selector:
+    app: nginx
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 80
+```
+
+```sh
+kubectl apply -f demo-nodeport-svc.yaml
+# service/demo-nodeport-svc created
+
+# confirm
+kubectl get svc -o wide
+# NAME                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE   SELECTOR
+# demo-nodeport-svc   NodePort    10.106.98.10   <none>        8080:30506/TCP   28s   app=nginx
+
+kubectl describe svc demo-nodeport-svc
+# Name:                     demo-nodeport-svc
+# Namespace:                default
+# Labels:                   <none>
+# Annotations:              <none>
+# Selector:                 app=nginx
+# Type:                     NodePort
+# IP Family Policy:         SingleStack
+# IP Families:              IPv4
+# IP:                       10.106.98.10
+# IPs:                      10.106.98.10
+# Port:                     http  8080/TCP
+# TargetPort:               80/TCP
+# NodePort:                 http  30506/TCP
+# Endpoints:                10.244.1.12:80,10.244.2.18:80
+# Session Affinity:         None
+# External Traffic Policy:  Cluster
+# Internal Traffic Policy:  Cluster
+# Events:                   <none>
+```
+
+- confirm node IP+port
+```sh
+kubectl get node -o wide
+# NAME           STATUS   ROLES           AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+# controlplane   Ready    control-plane   32d   v1.33.6   192.168.10.150   <none>        Ubuntu 24.04.3 LTS   6.14.0-36-generic   containerd://1.7.28
+# node01         Ready    <none>          32d   v1.33.6   192.168.10.151   <none>        Ubuntu 24.04.3 LTS   6.14.0-36-generic   containerd://1.7.28
+# node02         Ready    <none>          32d   v1.33.6   192.168.10.152   <none>        Ubuntu 24.04.3 LTS   6.14.0-36-generic   containerd://1.7.28
+
+# access from control-plane
+curl 192.168.10.150:30506
+# <h1>node01:nginx-546c7dd8cf-t5kws - Sun Dec 28 20:53:16 UTC 2025</h1>
+
+# access from node01
+curl 192.168.10.151:30506
+# <h1>node02:nginx-546c7dd8cf-rts7p - Sun Dec 28 20:53:51 UTC 2025</h1>
+
+# access from node02
+curl 192.168.10.152:30506
+# <h1>node02:nginx-546c7dd8cf-rts7p - Sun Dec 28 20:54:19 UTC 2025</h1>
+```
+
+- Confirm a internal cluster IP
+
+```sh
+# access from internal container
+kubectl exec -it nginx-546c7dd8cf-rts7p -c busybox -- wget -O - http://10.106.98.10:8080
+# Connecting to 10.106.98.10:8080 (10.106.98.10:8080)
+# writing to stdout
+# <h1>node02:nginx-546c7dd8cf-rts7p - Sun Dec 28 21:02:35 UTC 2025</h1>
+# -                    100% |**************************************************|    70  0:00:00 ETA
+# written to stdout
+
+```

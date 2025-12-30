@@ -26,6 +26,7 @@
   - [Namespace](./management/namespace/namespace.md)
   - [Label and Selector](./management/label_selector/label_selector.md)
   - [Annotation](./object/annotation/annotation.md)
+
 ---
 
 ## Application
@@ -54,9 +55,6 @@
   - [Node Local Persistent Volume](./app/node_local_pv/node_local_pv.md)
   - [Install `rancher`](./storage/install_/install.md)
 
-
-
-
 ---
 
 - [ReplicaSet](./pod/replicaset/replicaset.md)
@@ -75,8 +73,6 @@
 - [Admission Controller](./adm_ctl/adm_ctl.md)
 
 ---
-
-
 
 - [Release](./release/release.md)
 - [Upgrade](./release/release.md)
@@ -98,8 +94,6 @@
 
 - Management
 
-
-
   - [Monitor & Logging](./management/monitoring/monitoring.md)
 
 ---
@@ -120,10 +114,11 @@
 
   - [Service](./networking/service/service.md)
 
-    - [NodePort](./networking/svr_nodeport/svr_nodeport.md)
     - [ClusterIP](./networking/svr_clusterip/svr_clusterip.md)
+    - [NodePort](./networking/svr_nodeport/svr_nodeport.md)
     - [LoadBalancer](./networking/svr_loadbalancer/svr_loadbalancer.md)
-
+  
+  - [Endpoint](./networking/endpoint/endpoint.md)
   - [Pod Networking](./networking/pod/pod.md)
   - [Service Networking](./networking/service/service.md)
   - [Cluster DNS](./networking/dns/dns.md)

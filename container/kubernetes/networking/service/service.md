@@ -3,6 +3,7 @@
 [Back](../../index.md)
 
 - [Kubernetes - Services](#kubernetes---services)
+  - [Pod Communication](#pod-communication)
   - [Service](#service)
     - [Imperative Commands](#imperative-commands)
     - [Declarative Commands](#declarative-commands)
@@ -14,15 +15,27 @@
 
 ---
 
+## Pod Communication
+
+- Pods are linked via a flat network that requires no NAT
+
+  - packets exchange between pods only needs the source IP and port, and the destination IP and port,
+
+- constraint
+  - `Pods` are **ephemeral**.
+  - A `pod` gets its **IP address** only when it’s **assigned** to a node.
+  - A simgle IP / DNS to is required; but Each of replicas pod has its own IP address.
+
+---
+
 ## Service
 
 - `Service`
 
-  - an **object** to **map network traffic** to the `Pods` in the `cluster`.
-    - Since `Pods` are **ephemeral** (they can die, restart, change IPs), `Services` provide a **stable network identity** and a **consistent** way to reach them.
-      - provides a **fixed** `DNS name` + `virtual IP`.
-      - **Load balances traffic** across **healthy** `Pods`.
-    - `Services` use **labels** and **selectors** to find the right `Pods`.
+  - an object to **provide a single, stable access point** to **a set of pods** that provide the same service.
+    - Each `service` has a **stable IP address** that **doesn’t change** for as long as the `service` **exists**.
+    - A `service` acts as a `load balancer` in front of those pods.
+  - `Services` use **labels** and **selectors** to find the right `Pods`.
 
 - Types of Services
 
@@ -44,9 +57,15 @@
     - No selector, just returns a `CNAME`.
 
 - `Service Discovery`
+
   - **Inside** the `cluster`, `Services` are **automatically registered** with `DNS`.
   - e.g., `nginx-service.default.svc.cluster.local`
   - Other Pods can talk to it **using this name** instead of IP.
+
+- Cannot ping a serivce:
+  - because svc is virtual.
+
+---
 
 ### Imperative Commands
 
@@ -65,6 +84,29 @@
 | ----------------------------- | ---------------------------------------------------------- |
 | `kubectl create -f yaml_file` | Create a Service from a YAML file.                         |
 | `kubectl apply -f yaml_file`  | Apply changes to a Service configuration from a YAML file. |
+
+- basic fields
+
+| Field       | Description                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| `clusterIP` | The internal IP address within the cluster. blank:k8s assign; `None`:headless service.                              |
+| `type`      | the type of Service object: `ClusterIP`(default), `NodePort`, `LoadBalancer`, and `ExternalName`.                   |
+| `selector`  | the label keys and values                                                                                           |
+| `ports`     | List of ports exposed by this service. can specify the name, protocol, appProtocol, port, nodePort, and targetPort. |
+
+- `spec.sessionAffinity` field
+  - whether it should forward all connections from the **same client** to the **same pod**.
+  - `None`:
+    - default
+    - no guarantee to which pod each connection will be forwarded
+  - `ClientIP`:
+    - all connections **originating from the same IP** will be forwarded to the **same pod**.
+- `spec.sessionAffinityConfig.clientIP.timeoutSeconds` field:
+
+  - specify how long the session will persist.
+  - default: 3 hours
+
+- `service` **doesn’t** provide **cookie-based session affinity**
 
 ---
 
@@ -190,11 +232,11 @@ kubectl get node -o wide
 
 # get master node ip range
 ip a
-# 4: eth0@if22929: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1410 qdisc noqueue state UP group default 
+# 4: eth0@if22929: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1410 qdisc noqueue state UP group default
 #     link/ether 22:8d:d9:de:30:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0
 #     inet 192.168.81.31/32 scope global eth0
 #        valid_lft forever preferred_lft forever
-#     inet6 fe80::208d:d9ff:fede:300b/64 scope link 
+#     inet6 fe80::208d:d9ff:fede:300b/64 scope link
 #        valid_lft forever preferred_lft forever
 ```
 
@@ -231,3 +273,5 @@ kubectl get all -A | grep kube-proxy  # use daemonset
 # kube-system   pod/kube-proxy-sjt5p                           1/1     Running   0          65m
 # kube-system   daemonset.apps/kube-proxy   2         2         2       2            2           kubernetes.io/os=linux   66m
 ```
+
+---

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ping-pod
+spec:
+
+  containers:
+    - name: busybox
+      image: busybox
+      env:
+        - name: NGINX_SVC_URL
+          value: http://nginx-svc:8080
+      command:
+        - "sh"
+      args:
+        - "-c"
+        - |
+         echo "ping-pod"
+         wget -O - $NGINX_SVC_URL
+
+         sleep 500
