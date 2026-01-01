@@ -1,0 +1,24 @@
+# demo-rollingout-minreadyseconds-faulty.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-rollingout-minreadyseconds-faulty
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  minReadySeconds: 60
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx

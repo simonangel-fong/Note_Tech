@@ -1,0 +1,5 @@
+# demo-sts-update-partition-patch.yaml
+spec:
+  updateStrategy:
+    rollingUpdate:
+      partition: 0

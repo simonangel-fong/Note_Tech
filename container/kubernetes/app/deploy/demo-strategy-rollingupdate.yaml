@@ -1,0 +1,24 @@
+# demo-strategy-rollingupdate.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-strategy-rollingupdate
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: demo-rollingupdate
+  template:
+    metadata:
+      labels:
+        app: demo-rollingupdate
+    spec:
+      containers:
+        - image: nginx
+          name: web

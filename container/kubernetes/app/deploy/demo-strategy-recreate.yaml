@@ -1,0 +1,20 @@
+# demo-strategy-recreate.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-strategy-recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate 
+  selector:
+    matchLabels:
+      app: demo-recreate
+  template:
+    metadata:
+      labels:
+        app: demo-recreate
+    spec:
+      containers:
+        - name: web
+          image: nginx 

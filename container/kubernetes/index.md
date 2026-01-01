@@ -44,7 +44,9 @@
   - [Sidecar containers](./app/sidecar_container/sidecar_container.md)
   - [Init containers](./app/init_container/init_container.md)
   - [Sidecar containers](./app/container_multi/container_multi.md)
+- [ReplicaSet](./app/replicaset/replicaset.md)
 - [Deployment](./app/deploy/deploy.md)
+- [StatefulSets](./app/statefulset/statefulset.md)
 
   - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
 
@@ -57,7 +59,6 @@
 
 ---
 
-- [ReplicaSet](./pod/replicaset/replicaset.md)
 - [DaemonSets](./pod/daemonset/daemonset.md)
 - [Static Pod](./pod/static_pod/static_pod.md)
 - [Scaling](./pod/scaling/scaling.md)
@@ -117,7 +118,7 @@
     - [ClusterIP](./networking/svr_clusterip/svr_clusterip.md)
     - [NodePort](./networking/svr_nodeport/svr_nodeport.md)
     - [LoadBalancer](./networking/svr_loadbalancer/svr_loadbalancer.md)
-  
+
   - [Endpoint](./networking/endpoint/endpoint.md)
   - [Pod Networking](./networking/pod/pod.md)
   - [Service Networking](./networking/service/service.md)

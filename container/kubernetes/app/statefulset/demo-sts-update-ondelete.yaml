@@ -1,0 +1,35 @@
+# demo-sts-update-ondelete.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: demo-sts-update-ondelete
+spec:
+  serviceName: mongodb-svc # headless svc
+  replicas: 3
+  minReadySeconds: 30 # wait for 30s for readiness
+  updateStrategy:
+    type: OnDelete # OnDelete strategy
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:8
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+  volumeClaimTemplates: # a unique PVC for each pod
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
