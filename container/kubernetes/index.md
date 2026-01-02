@@ -47,8 +47,11 @@
 - [ReplicaSet](./app/replicaset/replicaset.md)
 - [Deployment](./app/deploy/deploy.md)
 - [StatefulSets](./app/statefulset/statefulset.md)
-
+- [DaemonSets](./app/daemonset/daemonset.md)
   - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
+
+
+
 
 - Storage
   - [Volume](./app/volume/volume.md)
@@ -59,12 +62,12 @@
 
 ---
 
-- [DaemonSets](./pod/daemonset/daemonset.md)
+
 - [Static Pod](./pod/static_pod/static_pod.md)
 - [Scaling](./pod/scaling/scaling.md)
   - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
   - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
-- [!PriorityClass](./pod/pod_priorityclass/pod_priorityclass.md)
+- [!PriorityClass](./app/pod_priorityclass/pod_priorityclass.md)
 - [Resources Limit](./pod/pod_resource_limit/pod_resource_limit.md)
 
 - [Troubleshooting](./debuging/debuging.md)

@@ -1,0 +1,20 @@
+# demo-ds.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: demo-ds
+spec:
+  selector:
+    matchLabels:
+      app: monitor
+  template:
+    metadata:
+      labels:
+        app: monitor
+    spec:
+      containers:
+        - name: monitor
+          image: busybox
+          command:
+            - sleep
+            - infinity
