@@ -1,0 +1,16 @@
+# demo-job-fails-default-limit.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-fails-default-limit
+spec:
+  completions: 10
+  parallelism: 3
+  template:
+    spec:
+      restartPolicy: OnFailure # pod level
+      containers:
+        - name: busybox
+          image: busybox
+          command:
+            - "false"

@@ -1,0 +1,19 @@
+# demo-job-comm.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-comm
+spec:
+  completionMode: Indexed # enable communication
+  completions: 2
+  parallelism: 2  # 2 pods exists at a time
+  template:
+    spec:
+      subdomain: demo-job-comm-svc  # specify svc
+      restartPolicy: Never
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+        - sleep
+        - "600"

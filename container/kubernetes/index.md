@@ -52,6 +52,10 @@
 
 
 
+- [Job](./app/job/job.md)
+- [CronJob](./app/cronjob/cronjob.md)
+
+
 
 - Storage
   - [Volume](./app/volume/volume.md)

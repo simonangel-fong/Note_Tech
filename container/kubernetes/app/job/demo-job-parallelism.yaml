@@ -1,0 +1,43 @@
+# demo-job-parallelism.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-parallelism
+spec:
+  parallelism: 5    # # of parallelism
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: local-storage
+          hostPath:
+            path: /tmp/data
+            type: DirectoryOrCreate
+      initContainers:
+        - name: init
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command:
+            - "/bin/sh"
+            - "-c"
+          args:
+            - |
+              echo "$(date) Init container message";
+              echo "$(date) Init container message" >> /data/message.txt;
+              sleep 10;
+      containers:
+        - name: writer
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command:
+            - "/bin/sh"
+            - "-c"
+          args:
+            - |
+              echo "$(date) Container message";
+              echo "$(date) Container message" >> /data/message.txt;
+              sleep 30;

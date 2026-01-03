@@ -1,0 +1,18 @@
+# demo-job-fail-deadline.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-fail-deadline
+spec:
+  completions: 2
+  parallelism: 1
+  activeDeadlineSeconds: 90     # deadline 90s
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: demo-suspend
+        image: busybox
+        command:
+        - sleep
+        - "60"

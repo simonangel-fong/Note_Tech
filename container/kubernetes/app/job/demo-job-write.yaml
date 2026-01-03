@@ -1,0 +1,25 @@
+# demo-job-write.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-write
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: local-storage
+          hostPath:
+            path: /tmp/data
+            type: DirectoryOrCreate
+      containers:
+        - name: writer
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "$(date) Demo Job writer";
+              echo "$(date) Demo Job writer" > /data/message.txt;
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data

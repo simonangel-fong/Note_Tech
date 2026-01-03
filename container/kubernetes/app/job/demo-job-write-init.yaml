@@ -1,0 +1,68 @@
+# demo-job-write-init.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-write-init
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: local-storage
+          hostPath:
+            path: /tmp/data
+            type: DirectoryOrCreate
+      initContainers:
+        - name: init01
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command:
+            - sh
+            - -c
+          args:
+            - |
+              echo "$(date) Init container 01 message";
+              echo "$(date) Init container 02 message" > /data/message.txt;
+              sleep 5
+        - name: init02
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command:
+            - sh
+            - -c
+          args:
+            - |
+              echo "$(date) Init container 02 message";
+              echo "$(date) Init container 03 message" >> /data/message.txt;
+              sleep 10
+      containers:
+        - name: writer01
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "$(date) Container writer01 message";
+              echo "$(date) Container writer01 message" >> /data/message.txt;
+              sleep 5; 
+              echo "$(date) Container writer01 message";
+              echo "$(date) Container writer01 message" >> /data/message.txt;
+        - name: writer02
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "$(date) Container writer02 message";
+              echo "$(date) Container writer02 message" >> /data/message.txt;
+              sleep 10; 
+              echo "$(date) Container writer02 message";
+              echo "$(date) Container writer02 message" >> /data/message.txt;

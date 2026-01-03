@@ -1,0 +1,30 @@
+# demo-job-completion-lg-parallelism.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-completion-lg-parallelism
+spec:
+  completions: 5 # completion > parallelism
+  parallelism: 2
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: local-storage
+          hostPath:
+            path: /tmp/data
+            type: DirectoryOrCreate
+      containers:
+        - name: writer
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command:
+            - "/bin/sh"
+            - "-c"
+          args:
+            - |
+              echo "$(date) Container message";
+              echo "$(date) Container message" >> /data/message.txt;
+              sleep 30;

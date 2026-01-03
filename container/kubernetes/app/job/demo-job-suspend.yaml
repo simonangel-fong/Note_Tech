@@ -1,0 +1,16 @@
+# demo-job-suspend.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-suspend
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: busybox
+          image: busybox
+          command:
+            - sleep
+            - "60"

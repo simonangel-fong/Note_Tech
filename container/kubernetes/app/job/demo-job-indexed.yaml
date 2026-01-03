@@ -1,0 +1,29 @@
+# demo-job-indexed.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-indexed
+spec:
+  completions: 12
+  parallelism: 3
+  completionMode: Indexed # Indexed completionMode
+  template:
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+        - name: local-storage
+          hostPath:
+            path: /tmp/data
+            type: DirectoryOrCreate
+      containers:
+        - name: busybox
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          command:
+            - "sh"
+            - "-c"
+          args:
+            - |
+             echo "$(date) Container Index: $JOB_COMPLETION_INDEX" >> /data/message.txt

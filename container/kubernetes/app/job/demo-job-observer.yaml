@@ -1,0 +1,20 @@
+# demo-job-observer.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+    name: observer
+spec:
+    volumes:
+      - name: local-storage
+        hostPath:
+          path: /tmp/data
+          type: DirectoryOrCreate
+    containers:
+     - name: busybox
+       image: busybox
+       command: 
+        - sleep
+        - infinity
+       volumeMounts:
+          - name: local-storage
+            mountPath: /data

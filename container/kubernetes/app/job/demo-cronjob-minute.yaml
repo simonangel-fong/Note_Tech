@@ -1,0 +1,37 @@
+# demo-cronjob-minute.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: demo-cronjob-minute
+spec:
+  schedule: "*/10 * * * *"  # per 10 minutes
+  jobTemplate:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      template:
+        metadata:
+          labels:
+            app: busybox
+        spec:
+          restartPolicy: OnFailure
+          volumes:
+          - name: local-storage
+            hostPath:
+              path: /tmp/data
+              type: DirectoryOrCreate
+          containers:
+            - name: busybox
+              image: busybox
+              volumeMounts:
+                - name: local-storage
+                  mountPath: /data
+              command:
+                - "/bin/sh"
+                - "-c"
+              args:
+                - |
+                  echo "$(date) CronJob message";
+                  echo "$(date) CronJob message" >> /data/message.txt;
+                  sleep 30;

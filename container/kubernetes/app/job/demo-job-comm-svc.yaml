@@ -1,0 +1,12 @@
+# demo-job-comm-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-job-comm-svc
+spec:
+  clusterIP: None # headless svc
+  selector:
+    job-name: demo-job-comm # use the job-name label
+  ports:
+    - name: http
+      port: 80

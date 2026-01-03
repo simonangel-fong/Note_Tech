@@ -1,0 +1,34 @@
+# demo-job-indexed-annotation.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: demo-job-indexed
+spec:
+  completions: 12
+  parallelism: 1
+  completionMode: Indexed # Indexed completionMode
+  template:
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+        - name: local-storage
+          hostPath:
+            path: /tmp/data
+            type: DirectoryOrCreate
+      containers:
+        - name: busybox
+          image: busybox
+          volumeMounts:
+            - name: local-storage
+              mountPath: /data
+          env:        
+          - name: INDEX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index'] # get value from annotation
+          command:
+            - "sh"
+            - "-c"
+          args:
+            - |
+              echo "$(date) Container Index: $INDEX" >> /data/message.txt
