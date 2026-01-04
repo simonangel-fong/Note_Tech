@@ -27,8 +27,10 @@
     - [emptyDir](./storage/empty_dir/empty_dir.md)
     - [hostPath](./storage/host_path/host_path.md)
     - [Persistent Volume & Persistent Volume Claim](./storage/pv_pvc/pv_pvc.md)
-  - Injected Data
-    - 
+- Injected Data
+  - [`ConfigMap`](./storage/configmap/configmap.md)
+    - [Use `ConfigMap` as Environment Variable](./storage/configmap_env/configmap_env.md)
+    - [Use `ConfigMap` as Volume](./storage/configmap_volume/configmap_volume.md)
 
 ---
 
@@ -79,7 +81,6 @@
 
 ---
 
-- [ConfigMap](./app/container_configmap/container_configmap.md)
 - [Secret](./app/container_secret/container_secret.md)
 - [Downward API](./app/downward_api/downward_api.md)
 - [projected volumes](./app/projected_volume/projected_volume.md)
