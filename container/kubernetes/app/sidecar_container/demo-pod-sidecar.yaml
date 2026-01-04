@@ -1,0 +1,33 @@
+# demo-pod-sidecar.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod-sidecar
+spec:
+  containers:
+    - name: main
+      image: nginx
+  initContainers:
+    - name: sidecar # sidecar
+      image: busybox
+      command:
+        - "sh"
+        - "-c"
+      args:
+        - |
+         echo "Sidecar starts.";
+         while true; do
+          echo "Sidecar running";
+          sleep 1;
+         done
+      restartPolicy: Always     # side car
+    - name: init # init container
+      image: busybox
+      command:
+        - "sh"
+        - "-c"
+      args:
+        - |
+         echo "init container starts.";
+         sleep 10;
+         echo "init container completed";
