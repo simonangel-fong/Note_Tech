@@ -1,8 +1,8 @@
-# Kubernetes - Pod: Container - Command, Arg, and Env
+# Kubernetes: Container - Command, Arg, and Env
 
 [Back](../../index.md)
 
-- [Kubernetes - Pod: Container - Command, Arg, and Env](#kubernetes---pod-container---command-arg-and-env)
+- [Kubernetes: Container - Command, Arg, and Env](#kubernetes-container---command-arg-and-env)
   - [Command and Arg](#command-and-arg)
     - [Lab: Container `command`](#lab-container-command)
     - [Lab: Container `command` \& `args`](#lab-container-command--args)

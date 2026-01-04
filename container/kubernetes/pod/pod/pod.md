@@ -7,10 +7,9 @@
     - [Lifecycle](#lifecycle)
     - [How it works](#how-it-works)
     - [Imperative Commands](#imperative-commands)
+      - [Lab: Create a pod using CLI](#lab-create-a-pod-using-cli)
     - [Declarative Commands](#declarative-commands)
-    - [Lab: Create a pod using CLI](#lab-create-a-pod-using-cli)
-    - [Lab: Pod Creation using Yaml File](#lab-pod-creation-using-yaml-file)
-  - [Common Questions](#common-questions)
+      - [Lab: Pod Creation using Yaml File](#lab-pod-creation-using-yaml-file)
   - [Pod Network](#pod-network)
     - [Lab: testing pod-to-pod connectivity: one-off pod](#lab-testing-pod-to-pod-connectivity-one-off-pod)
     - [Lab: testing pod connectivity: port-forward](#lab-testing-pod-connectivity-port-forward)
@@ -29,9 +28,34 @@
 ## Pod
 
 - `pod`
+
   - the **smallest deployable unit** in Kubernetes that represents a **single instance** of an **application**.
     - the smallest object that can be created in k8s
   - a collection of **containers** and its **storage** inside a **node** of a Kubernetes cluster.
+
+    - a **single** `pod` instance **never spans** **multiple** `nodes`.
+
+  - a design to **run related processes** together even when divided into multiple containers.
+    - workload needs **multiple** `processes`; However, a **single** `container` should not have multiple `processes`.
+    - `processces` in **multiple** `containers` within the **same** `pod` can **conmunicate** with each other and share resources.
+  - A `pod` makes these **interconnected** `containers` manageable as one unit.
+
+- All `containers` in a `pod` **share**:
+
+  - the **same** `Network namespace` and thus the `network interfaces`, `IP address(es)` and `port space`
+    - 2 `containers` cannot bind to the same `port`
+    - Inter-container communication is enbled through the loopback device.
+    - External communication is enbled by the shared network interfaces and ports.
+  - the same **system hostname**, because sharing the `UTS namespace`
+  - the same single **process tree**, because using the single `PID namespace`.
+
+- each `container` always has its **own** `Mount namespace`
+
+  - container has its own file system.
+  - if **sharing file system** is required, can mount a **shared volumes** with individual `mount namespace`
+
+- one service each pod
+  - the pod serves as the basic unit of **horizontal scaling**.
 
 ---
 
@@ -182,33 +206,7 @@
 
 ---
 
-### Declarative Commands
-
-| CMD                                | DESC                                      |
-| ---------------------------------- | ----------------------------------------- |
-| `kubectl create -f yaml_file`      | Create a Pod from a YAML file or JSON.    |
-| `kubectl apply -f yaml_file`       | Create or update a pod from YAML manifest |
-| `kubectl get pod pod_name -o yaml` | View full YAML configuration of a pod     |
-
-- yaml
-
-```yaml
-# nginx.yml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx
-spec:
-  containers:
-    - name: nginx
-      image: nginx:latest
-      ports:
-        containerPort: 7500
-```
-
----
-
-### Lab: Create a pod using CLI
+#### Lab: Create a pod using CLI
 
 ```sh
 # create
@@ -264,7 +262,33 @@ kubectl delete pod nginx
 
 ---
 
-### Lab: Pod Creation using Yaml File
+### Declarative Commands
+
+| CMD                                | DESC                                      |
+| ---------------------------------- | ----------------------------------------- |
+| `kubectl create -f yaml_file`      | Create a Pod from a YAML file or JSON.    |
+| `kubectl apply -f yaml_file`       | Create or update a pod from YAML manifest |
+| `kubectl get pod pod_name -o yaml` | View full YAML configuration of a pod     |
+
+- yaml
+
+```yaml
+# nginx.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+        containerPort: 7500
+```
+
+---
+
+#### Lab: Pod Creation using Yaml File
 
 - Define `pod-def.yaml`
 
@@ -317,24 +341,6 @@ kubectl delete pod myapp-pod
 kubectl get pods
 # No resources found in default namespace.
 ```
-
----
-
-## Common Questions
-
-| Q                                                                  | CMD                                                                                                        |
-| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| how many pods are running                                          | `kubectl get pods`                                                                                         |
-| Create a new pod with nginx image                                  | `kubectl run nignx-pod --image=nignx`                                                                      |
-| What is image used to create new pods                              | `kubectl describe pod nignx-pod`                                                                           |
-| Which node is this pod running on                                  | `kubectl describe pod nignx-pod` / `kubectl get pods -o wide`                                              |
-| How many containers are part of a pod                              | `kubectl get pod nignx-pod`, Containers                                                                    |
-| What is the state of the container X in a pod Y                    | `kubectl describe pod nginx \| grep "State:"`                                                              |
-| Why the container X in pod Y is in error                           | `kubectl describe pod nignx-pod`, Containers,State,Reason. / Events                                        |
-| What does the READY columns in kubectl get pods                    | Running Containers in pod/Total container in pod                                                           |
-| Delete a pod                                                       | `kubectl delete pod nignx-pod`                                                                             |
-| Create a pod named redis and with image redis123, output yaml file | `kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml`, `kubectl create -f redis.yaml` |
-| Change the image to redis, pod should be running                   | update yaml file, `kubectl apply -f redis.yaml`                                                            |
 
 ---
 

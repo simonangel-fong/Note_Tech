@@ -1,21 +1,26 @@
-# Kubernetes - Application: Persistent Storage
+# Kubernetes: Storage - `Persistent Volume` & `Persistent Volume Claim`
 
 [Back](../../index.md)
 
-- [Kubernetes - Application: Persistent Storage](#kubernetes---application-persistent-storage)
+- [Kubernetes: Storage - `Persistent Volume` \& `Persistent Volume Claim`](#kubernetes-storage---persistent-volume--persistent-volume-claim)
   - [Persistent Volume (PV)](#persistent-volume-pv)
+    - [Declarative Manifest](#declarative-manifest)
+    - [Imperative Command](#imperative-command)
     - [Lab: Create a Persistent Volume](#lab-create-a-persistent-volume)
-  - [persistent volume claims(PVC)](#persistent-volume-claimspvc)
-  - [Liftcycle: PV \& PVC](#liftcycle-pv--pvc)
-    - [Lab: Create PVC](#lab-create-pvc)
-    - [Lab: mount to a pod](#lab-mount-to-a-pod)
-      - [Survive from pod restart](#survive-from-pod-restart)
-    - [Lab: Delete PVC](#lab-delete-pvc)
-    - [Lab: Recreate PV, PVC, and pod](#lab-recreate-pv-pvc-and-pod)
-    - [Lab: Delete PVC in use](#lab-delete-pvc-in-use)
-    - [Lab: Delete PV in use](#lab-delete-pv-in-use)
-    - [Lab: Share PV with multiple pods](#lab-share-pv-with-multiple-pods)
-    - [Lab: Create Custom SC with parameters(skip)](#lab-create-custom-sc-with-parametersskip)
+  - [Persistent Volume Claims (PVC)](#persistent-volume-claims-pvc)
+    - [Declarative Manifest](#declarative-manifest-1)
+    - [Imperative Command](#imperative-command-1)
+    - [Lab: Explain `PersistentVolumeClaim`](#lab-explain-persistentvolumeclaim)
+    - [Lab: Persistent Volume Claim](#lab-persistent-volume-claim)
+      - [Create PVC](#create-pvc)
+      - [Mount PVC](#mount-pvc)
+      - [Survive from Pod Restart](#survive-from-pod-restart)
+      - [Delete PVC](#delete-pvc)
+      - [Recreate PV, PVC, and pod](#recreate-pv-pvc-and-pod)
+      - [Delete PVC in use](#delete-pvc-in-use)
+      - [Delete PV in use](#delete-pv-in-use)
+    - [Lab: Share PV with Multiple pods](#lab-share-pv-with-multiple-pods)
+  - [Liftcycle: `Persistent Volume` \& `Persistent Volume Claim`](#liftcycle-persistent-volume--persistent-volume-claim)
   - [Node Local Persistent Volume](#node-local-persistent-volume)
     - [Lab: Node Local PV](#lab-node-local-pv)
 
@@ -59,6 +64,8 @@
 
 ---
 
+### Declarative Manifest
+
 - `accessModes` field:
 
   - determines how many nodes, not pods, can attach the volume at a time
@@ -87,7 +94,14 @@
 
 ---
 
-- ## `volumeMode` field:
+### Imperative Command
+
+| Command                                           | Description                                                             |
+| ------------------------------------------------- | ----------------------------------------------------------------------- |
+| `kubectl get persistentvolume` / `kubectl get pv` | List all PersistentVolumes in the cluster.                              |
+| `kubectl get pv <name>`                           | Show a specific PV (basic info).                                        |
+| `kubectl describe pv <name>`                      | Show detailed status, events, and spec of a specific PV.                |
+| `kubectl delete pv <name>`                        | Delete a specific PV object (actual storage depends on reclaim policy). |
 
 ---
 
@@ -192,7 +206,7 @@ kubectl describe pv demo-pv
 
 ---
 
-## persistent volume claims(PVC)
+## Persistent Volume Claims (PVC)
 
 - `persistent volume claims(PVC)`
 
@@ -227,6 +241,8 @@ kubectl describe pv demo-pv
 
 ---
 
+### Declarative Manifest
+
 - `volumeName` field:
   - the name of persistent volume
   - if empty, k8s **randomly choose one** of the persistent volumes whose capacity and access modes match the claim
@@ -236,33 +252,18 @@ kubectl describe pv demo-pv
 
 ---
 
-## Liftcycle: PV & PVC
+### Imperative Command
 
-![pic](./pic/lifecycle.png)
-
-- `underlying volume`
-
-  - created beforehand
-  - e.g., device, nfs
-
-- Mannually provisioned `PV` status
-
-  - `Available`: Created/Recreated
-  - `Bound`: a PVC created
-  - `Released`: PVC deleted
-  - manually provisioned `persistent volumes` is **decoupled** with `underlying volume`
-
-- `PVC`:
-
-  - `Pending`: When created, befor bound to a PV
-  - `Bound`: Bound to a PV
-
-- If the PVC policy == `Delete`:
-  - PVC, PV, and underlying volumes are deleted.
+| Command                                                 | Description                                               |
+| ------------------------------------------------------- | --------------------------------------------------------- |
+| `kubectl get persistentvolumeclaim` / `kubectl get pvc` | List all PersistentVolumeClaims in the current namespace. |
+| `kubectl get pvc -n <namespace>`                        | List PVCs in a specific namespace.                        |
+| `kubectl describe pvc <name>`                           | Show detailed status, events, and spec of a specific PVC. |
+| `kubectl delete pvc <name>`                             | Delete a specific PVC.                                    |
 
 ---
 
-### Lab: Create PVC
+### Lab: Explain `PersistentVolumeClaim`
 
 ```sh
 kubectl explain pvc.spec
@@ -367,6 +368,12 @@ kubectl explain pvc.spec
 
 ```
 
+---
+
+### Lab: Persistent Volume Claim
+
+#### Create PVC
+
 ```yaml
 # demo-pvc.yaml
 apiVersion: v1
@@ -421,9 +428,7 @@ kubectl get pv
 # demo-pv   1Gi        RWO,ROX        Retain           Bound    default/demo-pvc                  <unset>                          76m
 ```
 
----
-
-### Lab: mount to a pod
+#### Mount PVC
 
 - Mount a pod
 
@@ -491,7 +496,7 @@ kubectl exec -it demo-pod-pvc -c mongo -- mongosh -eval "db.telemetry.find()"
 
 ---
 
-#### Survive from pod restart
+#### Survive from Pod Restart
 
 ```sh
 # Delete Pod
@@ -519,7 +524,7 @@ kubectl exec -it demo-pod-pvc -c mongo -- mongosh -eval "db.telemetry.find()"
 
 ---
 
-### Lab: Delete PVC
+#### Delete PVC
 
 ```sh
 kubectl delete pod demo-pod-pvc
@@ -558,7 +563,7 @@ kubectl delete pv demo-pv
 
 ---
 
-### Lab: Recreate PV, PVC, and pod
+#### Recreate PV, PVC, and pod
 
 ```sh
 kubectl apply -f demo-pv.yaml
@@ -596,7 +601,7 @@ kubectl exec -it demo-pod-pvc -c mongo -- mongosh -eval "db.telemetry.find()"
 
 ---
 
-### Lab: Delete PVC in use
+#### Delete PVC in use
 
 ```sh
 kubectl get pv
@@ -637,7 +642,7 @@ kubectl get pv
 
 ---
 
-### Lab: Delete PV in use
+#### Delete PV in use
 
 ```sh
 # recreate pvc
@@ -674,7 +679,7 @@ kubectl get pv
 
 ---
 
-### Lab: Share PV with multiple pods
+### Lab: Share PV with Multiple pods
 
 ```yaml
 # demo-share-pv.yaml
@@ -687,7 +692,7 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
-    - ReadOnlyMany
+    - ReadOnlyMany # share
   hostPath:
     path: /var/demo-share-pv # directory in the worker node’s filesystem
 ```
@@ -794,8 +799,29 @@ curl http://localhost:8080/
 
 ---
 
+## Liftcycle: `Persistent Volume` & `Persistent Volume Claim`
 
-### Lab: Create Custom SC with parameters(skip)
+![pic](./pic/lifecycle.png)
+
+- `underlying volume`
+
+  - created beforehand
+  - e.g., device, nfs
+
+- Mannually provisioned `PV` status
+
+  - `Available`: Created/Recreated
+  - `Bound`: a PVC created
+  - `Released`: PVC deleted
+  - manually provisioned `persistent volumes` is **decoupled** with `underlying volume`
+
+- `PVC`:
+
+  - `Pending`: When created, befor bound to a PV
+  - `Bound`: Bound to a PV
+
+- If the PVC policy == `Delete`:
+  - PVC, PV, and underlying volumes are deleted.
 
 ---
 
@@ -809,8 +835,7 @@ curl http://localhost:8080/
 
 ---
 
----
-
+- Example
 
 ```sh
 tee pv-std.yaml<<EOF
@@ -1065,7 +1090,7 @@ kubectl get pod -o wide | grep pod-local-writer
 
 kubectl get pv
 # NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
-# pv-local   1Gi        RWO            Retain           Bound    default/pvc-local   sc-local       <unset>     
+# pv-local   1Gi        RWO            Retain           Bound    default/pvc-local   sc-local       <unset>
 kubectl get pvc
 # NAME        STATUS   VOLUME     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
 # pvc-local   Bound    pv-local   1Gi        RWO            sc-local       <unset>                 19m

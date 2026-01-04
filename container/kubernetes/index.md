@@ -12,11 +12,23 @@
   - [Liveness Probe](./container/liveness_probe/liveness_probe.md)
   - [Startup Probe](./container/startup_probe/startup_probe.md)
   - [Lifecycle Hook](./container/lifecycle_hook/lifecycle_hook.md)
+  - [Command & Arg & ENV](./container/cmd_arg_env/cmd_arg_env.md)
 
-  - Multiple Containers:
-    - [Co-located Containers](./container/colocated/colocated.md)
-    - [Init Containers](./container/init/init.md)
-    - [Sidecar Containers](./container/sidecar/sidecar.md)
+- Multiple Containers:
+
+  - [Co-located Containers](./container/colocated/colocated.md)
+  - [Init Containers](./container/init/init.md)
+  - [Sidecar Containers](./container/sidecar/sidecar.md)
+
+- Storage:
+  - [Docker Storage](./storage/docker_storage/docker_storage.md)
+  - [Pod Volume](./storage/volume/volume.md)
+  - [Common Volume Types](./storage/volume_type/volume_type.md)
+    - [emptyDir](./storage/empty_dir/empty_dir.md)
+    - [hostPath](./storage/host_path/host_path.md)
+    - [Persistent Volume & Persistent Volume Claim](./storage/pv_pvc/pv_pvc.md)
+  - Injected Data
+    - 
 
 ---
 
@@ -67,22 +79,17 @@
 
 ---
 
-- [Container](./app/container/container.md)
-
-  - [Command & Arg & ENV](./app/cmd_arg_env/cmd_arg_env.md)
-  - [ConfigMap](./app/container_configmap/container_configmap.md)
-  - [Secret](./app/container_secret/container_secret.md)
-  - [Downward API](./app/downward_api/downward_api.md)
-  - [projected volumes](./app/projected_volume/projected_volume.md)
+- [ConfigMap](./app/container_configmap/container_configmap.md)
+- [Secret](./app/container_secret/container_secret.md)
+- [Downward API](./app/downward_api/downward_api.md)
+- [projected volumes](./app/projected_volume/projected_volume.md)
 
 ---
 
 ## Workload
 
-- [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
-
 - Storage
-  - [Volume](./app/volume/volume.md)
+
   - [PV & PVC](./app/persist_volume/persist_volume.md)
   - [Dynamic Provisioned Persistent Volumes](./app/dynamic_pv/dynamic_pv.md)
   - [Node Local Persistent Volume](./app/node_local_pv/node_local_pv.md)
