@@ -1,0 +1,31 @@
+# demo-container-colocated.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-container-colocated
+spec:
+  containers:
+    - name: main-01
+      image: busybox
+      command: 
+        - "sh"
+        - "-c"
+      args:
+        - |
+         echo "$(date) main-01 start."
+         while true; do
+            echo "$(date) main-01 running...";
+            sleep 1;
+         done
+    - name: main-02
+      image: busybox
+      command: 
+        - "sh"
+        - "-c"
+      args:
+        - |
+         echo "$(date) main-02 start."
+         while true; do
+            echo "$(date) main-02 running...";
+            sleep 1;
+         done
