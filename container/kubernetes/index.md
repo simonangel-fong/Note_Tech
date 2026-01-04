@@ -32,8 +32,8 @@
   - [StatefulSets Rollout & Rollback](./statefulset/rollout_rollback.md)
 - [DaemonSets](./daemonset/daemonset.md)
   - [DaemonSets Rollout & Rollback](./daemonset/rollout_rollback.md)
-- [Job](./app/job/job.md)
-- [CronJob](./app/cronjob/cronjob.md)
+- [Job](./job/job.md)
+- [CronJob](./cronjob/cronjob.md)
 
 ---
 

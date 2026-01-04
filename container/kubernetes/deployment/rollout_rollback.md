@@ -29,12 +29,14 @@
 
 - Rollout
 
-| Command                               | Description                                            |
-| ------------------------------------- | ------------------------------------------------------ |
-| `kubectl rollout status deploy NAME`  | Check the status of a rollout for the Deployment.      |
-| `kubectl rollout history deploy NAME` | View the rollout history of changes to the Deployment. |
-| `kubectl rollout undo deploy NAME`    | Rollback to the previous version of the Deployment.    |
-| `kubectl rollout restart deploy NAME` | Restart the Deployment.                                |
+| Command                                                    | Description                          |
+| ---------------------------------------------------------- | ------------------------------------ |
+| `kubectl rollout status deploy NAME`                       | Show the status of the rollout       |
+| `kubectl rollout history deploy NAME`                      | View rollout history                 |
+| `kubectl rollout restart deploy NAME --selector=app=nginx` | Restart a resource with label        |
+| `kubectl rollout resume deploy NAME`                       | Resume a paused resource             |
+| `kubectl rollout pause deploy NAME`                        | Mark the provided resource as paused |
+| `kubectl rollout undo deploy NAME`                         | Rollback to the previous version     |
 
 ---
 

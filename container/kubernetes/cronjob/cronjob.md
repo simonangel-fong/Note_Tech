@@ -1,16 +1,16 @@
 # Kubernetes - CronJob
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [Kubernetes - CronJob](#kubernetes---cronjob)
   - [CronJobs](#cronjobs)
-    - [schedule](#schedule)
+    - [Schedule](#schedule)
     - [Suspending and resuming](#suspending-and-resuming)
     - [Automatically removing finished Jobs](#automatically-removing-finished-jobs)
-    - [start deadline](#start-deadline)
-  - [Job concurrency](#job-concurrency)
+    - [Specify Start Deadline](#specify-start-deadline)
+    - [Job concurrency](#job-concurrency)
     - [Imperative Command](#imperative-command)
-  - [Lab: CronJob](#lab-cronjob)
+    - [Lab: CronJob](#lab-cronjob)
 
 ---
 
@@ -37,7 +37,7 @@
 
 ---
 
-### schedule
+### Schedule
 
 - Format: `Minute Hour Day-of-Month Month Day-of-week `
 - Expression:
@@ -95,7 +95,7 @@ spec:
 
 ---
 
-### start deadline
+### Specify Start Deadline
 
 - if the cluster’s `Control Plane` is **overloaded** or if the `Controller Manager` component running the CronJob controller is **offline**, the delay of creating `Job` may be longer.
 
@@ -121,7 +121,7 @@ spec:
 
 ---
 
-## Job concurrency
+### Job concurrency
 
 - `Job concurrency`
 
@@ -166,7 +166,7 @@ spec:
 
 ---
 
-## Lab: CronJob
+### Lab: CronJob
 
 ```yaml
 # demo-cronjob-minute.yaml
