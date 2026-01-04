@@ -1,6 +1,6 @@
 # Kubernetes - StatefulSet
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [Kubernetes - StatefulSet](#kubernetes---statefulset)
   - [StatefulSet Object](#statefulset-object)

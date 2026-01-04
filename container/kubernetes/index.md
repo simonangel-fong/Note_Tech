@@ -28,13 +28,16 @@
 - [Deployment](./deployment/deployment.md)
   - [Deployment Rollout & Rollback](./deployment/rollout_rollback.md)
   - [Common Deployment Strategies](./deployment/strategy.md)
-- [StatefulSets](./app/statefulset/statefulset.md)
+- [StatefulSets](./statefulset/statefulset.md)
   - [StatefulSets Rollout & Rollback](./statefulset/rollout_rollback.md)
+- [DaemonSets](./daemonset/daemonset.md)
+  - [DaemonSets Rollout & Rollback](./daemonset/rollout_rollback.md)
+- [Job](./app/job/job.md)
+- [CronJob](./app/cronjob/cronjob.md)
 
 ---
 
 - [Operator](./operator/operator.md)
-
 
 ---
 
@@ -76,10 +79,7 @@
 
 ## Workload
 
-- [DaemonSets](./app/daemonset/daemonset.md)
-  - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
-- [Job](./app/job/job.md)
-- [CronJob](./app/cronjob/cronjob.md)
+- [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
 
 - Storage
   - [Volume](./app/volume/volume.md)

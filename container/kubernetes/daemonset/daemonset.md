@@ -1,6 +1,6 @@
 # Kubernetes - DaemonSets
 
-[Back](../../index.md)
+[Back](../index.md)
 
 - [Kubernetes - DaemonSets](#kubernetes---daemonsets)
   - [DaemonSet](#daemonset)
@@ -9,21 +9,17 @@
     - [DaemonSet vs ReplicaSet vs Deployment](#daemonset-vs-replicaset-vs-deployment)
     - [Additional Label](#additional-label)
     - [Scheduling](#scheduling)
-    - [Lab: node selector](#lab-node-selector)
-  - [Updating a DaemonSet](#updating-a-daemonset)
-    - [update strategy](#update-strategy)
-    - [Lab: update strategy](#lab-update-strategy)
-    - [Lab: OnDelete strategy](#lab-ondelete-strategy)
-  - [Imperatives Commands](#imperatives-commands)
-  - [Declarative File](#declarative-file)
-  - [Lab: DaemonSet](#lab-daemonset)
-    - [Default DS](#default-ds)
-    - [Create ds](#create-ds)
-  - [node agents and daemons](#node-agents-and-daemons)
+    - [Specify Priority Classes](#specify-priority-classes)
+    - [Imperatives Commands](#imperatives-commands)
+    - [Declarative Manifest](#declarative-manifest)
+    - [Lab: DaemonSet](#lab-daemonset)
+      - [Default DS](#default-ds)
+      - [Create ds](#create-ds)
+    - [Lab: DaemonSet with Node Selector](#lab-daemonset-with-node-selector)
+  - [DaemonSet with Privileged Access](#daemonset-with-privileged-access)
     - [Grant containers access to the OS kernel](#grant-containers-access-to-the-os-kernel)
     - [Gran access to the node’s filesystem](#gran-access-to-the-nodes-filesystem)
     - [Access to the node’s network and other namespaces](#access-to-the-nodes-network-and-other-namespaces)
-  - [Priority Classes of DaemonSet](#priority-classes-of-daemonset)
   - [Connect with the local daemon Pod](#connect-with-the-local-daemon-pod)
     - [`hostPort` method](#hostport-method)
     - [`hostNetwork` method](#hostnetwork-method)
@@ -136,298 +132,27 @@
 
 ---
 
-### Lab: node selector
+### Specify Priority Classes
+
+- By default, Pods deployed via a `DaemonSet` are **no** more important than Pods deployed via `Deployments` or `StatefulSets`.
+- priority is represented by the `PriorityClass` object
+
+- `priorityClassName` field
+
+  - specify which `priority class` a Pod belongs to
+
+- Example
 
 ```yaml
-# demo-ds-nodeselector.yaml
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: demo-ds
 spec:
-  selector:
-    matchLabels:
-      app: monitor
   template:
-    metadata:
-      labels:
-        app: monitor
     spec:
-      nodeSelector:
-        node-role: front-end
-      containers:
-        - name: monitor
-          image: busybox
-          command:
-            - sleep
-            - infinity
-```
-
-```sh
-kubectl apply -f demo-ds-nodeselector.yaml
-# daemonset.apps/demo-ds created
-
-kubectl get node -L node-role
-# NAME           STATUS   ROLES           AGE   VERSION   NODE-ROLE
-# controlplane   Ready    control-plane   37d   v1.33.6
-# node01         Ready    <none>          37d   v1.33.6   front-end
-# node02         Ready    <none>          37d   v1.33.6
-
-kubectl get ds
-# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR         AGE
-# demo-ds   1         1         1       1            1           node-role=front-end   30s
-
-kubectl get pod -o wide
-# NAME            READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
-# demo-ds-gj4hj   1/1     Running   0          2m36s   10.244.1.18   node01   <none>           <none>
-```
-
-- Update node label
-
-```sh
-kubectl label node node02 node-role=front-end
-# node/node02 labeled
-
-# confirm ds add 1
-kubectl get ds
-# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR         AGE
-# demo-ds   2         2         2       2            2           node-role=front-end   8m38s
-
-# confirm pod
-kubectl get pod -o wide
-# NAME            READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
-# demo-ds-gj4hj   1/1     Running   0          9m13s   10.244.1.18   node01   <none>           <none>
-# demo-ds-r8pqz   1/1     Running   0          61s     10.244.2.20   node02   <none>           <none>
-```
-
-- Remove node label
-
-```sh
-kubectl label node node01 node-role-
-# node/node01 unlabeled
-
-# confirm ds -1
-kubectl get ds
-# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR         AGE
-# demo-ds   1         1         1       1            1           node-role=front-end   10m
-
-# confirm pod
-kubectl get pod -o wide
-# NAME            READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
-# demo-ds-r8pqz   1/1     Running   0          2m22s   10.244.2.20   node02   <none>           <none>
+      priorityClassName: system-node-critical
 ```
 
 ---
 
-- update node selector
-  - Use standard k8s label
-  - monitor os=linux
-
-```sh
-# update:
-#     spec:
-#       nodeSelector:
-#         kubernetes.io/os: linux
-kubectl apply -f demo-ds-nodeselector.yaml
-# daemonset.apps/demo-ds configured
-
-kubectl get ds
-# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
-# demo-ds   2         2         2       1            2           kubernetes.io/os=linux   18m
-
- kubectl get pod -o wide
-# NAME            READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
-# demo-ds-fgqkh   1/1     Running   0          24s   10.244.2.21   node02   <none>           <none>
-# demo-ds-wqqvw   1/1     Running   0          59s   10.244.1.19   node01   <none>           <none>
-
-```
-
----
-
-- delete nodeSelector
-
-```sh
-kubectl patch ds demo-ds --type='json' -p='[{ "op": "remove", "path": "/spec/template/spec/nodeSelector"}]'
-# daemonset.apps/demo-ds patched
-
-kubectl get ds
-# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-# demo-ds   2         2         2       0            2           <none>          26m
-```
-
----
-
-## Updating a DaemonSet
-
-- When `pod template` gets updated, `ds controller` automatically deletes the old `Pods` and creates the new `pods`
-
-### update strategy
-
-- `spec.updateStrategy` field
-  - `RollingUpdate`:
-    - default
-    - Pods are replaced one by one.
-    - the controller waits until the new Pod is ready before updating the Pods on the other Nodes.
-    - parameters:
-      - `maxSurge: 0`
-        - should be zero
-        - when it > 0, it allow more than one ds running on a node, which is not supported, resulting in dead lock.
-      - `maxUnavailable`
-        - recommended `1`;
-        - only one Node is affected if the ds pod does not start.
-      - `maxSurge:0;maxUnavailable>node_number`
-        - act like `Recreate`; replace all ds
-        - if the ds pod template has readiness probe but it fails, these parameters are ignored.
-  - `OnDelete`:
-    - performs the update in a semiautomatic way
-    - `ds controller` waits for **manual Pod deletion**, and then replaces it with a new Pod
-      - can replace Pods at your own pace.
-    - used to update cluster-critical Pods with much more control
-
----
-
-### Lab: update strategy
-
-```yaml
-# demo-ds-rollingupdate.yaml
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: demo-ds-rollingupdate
-spec:
-  minReadySeconds: 30
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
-  selector:
-    matchLabels:
-      app: monitor
-  template:
-    metadata:
-      labels:
-        app: monitor
-    spec:
-      containers:
-        - name: monitor
-          image: busybox
-          command:
-            - sleep
-            - infinity
-```
-
-```sh
-kubectl apply -f demo-ds-rollingupdate.yaml
-# daemonset.apps/demo-ds-rollingupdate created
-
-# update image
-kubectl set image ds demo-ds-rollingupdate monitor=busybox:1.36
-# daemonset.apps/demo-ds-rollingupdate image updated
-
-# confirm:
-#   update one by one
-#   avaiable every 30s
-kubectl get ds -w
-# NAME                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-# demo-ds-rollingupdate   2         2         2       2            2           <none>          86s
-# demo-ds-rollingupdate   2         2         2       2            2           <none>          102s
-# demo-ds-rollingupdate   2         2         2       0            2           <none>          102s
-# demo-ds-rollingupdate   2         2         1       1            1           <none>          2m12s
-# demo-ds-rollingupdate   2         2         2       1            1           <none>          2m15s
-# demo-ds-rollingupdate   2         2         2       1            2           <none>          2m45s
-# demo-ds-rollingupdate   2         1         1       1            1           <none>          3m16s
-# demo-ds-rollingupdate   2         2         1       2            1           <none>          3m16s
-# demo-ds-rollingupdate   2         2         2       2            1           <none>          3m20s
-# demo-ds-rollingupdate   2         2         2       2            2           <none>          3m50s
-
-```
-
----
-
-### Lab: OnDelete strategy
-
-```yaml
-# demo-ds-ondelete.yaml
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: demo-ds-ondelete
-spec:
-  minReadySeconds: 30
-  updateStrategy:
-    type: OnDelete # strategy
-  selector:
-    matchLabels:
-      app: monitor
-  template:
-    metadata:
-      labels:
-        app: monitor
-    spec:
-      containers:
-        - name: monitor
-          image: busybox
-          command:
-            - sleep
-            - infinity
-```
-
-```sh
-kubectl apply -f demo-ds-ondelete.yaml
-# daemonset.apps/demo-ds-ondelete created
-
-kubectl get ds
-# NAME               DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-# demo-ds-ondelete   2         2         2       2            2           <none>          41s
-
-kubectl set image ds demo-ds-ondelete monitor=busybox:1.36
-# daemonset.apps/demo-ds-ondelete image updated
-```
-
-> no ds get updated unless manually gets deleted
-
-```sh
-kubectl get pod
-# NAME                     READY   STATUS    RESTARTS   AGE
-# demo-ds-ondelete-4qvl6   1/1     Running   0          99s
-# demo-ds-ondelete-wxlnm   1/1     Running   0          99s
-
-# manually delete
-kubectl delete po demo-ds-ondelete-4qvl6 --wait=false
-# pod "demo-ds-ondelete-4qvl6" deleted
-
-# confirm
-kubectl get ds -w
-# NAME               DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-# demo-ds-ondelete   2         2         2       2            2           <none>          96s
-# demo-ds-ondelete   2         2         2       2            2           <none>          108s
-# demo-ds-ondelete   2         2         2       0            2           <none>          108s
-# demo-ds-ondelete   2         2         1       1            1           <none>          3m44s
-# demo-ds-ondelete   2         2         2       1            1           <none>          3m48s
-# demo-ds-ondelete   2         2         2       1            2           <none>          4m18s
-
-# confirm
-kubectl get pod
-# NAME                     READY   STATUS    RESTARTS   AGE
-# demo-ds-ondelete-bd9lg   1/1     Running   0          99s
-# demo-ds-ondelete-wxlnm   1/1     Running   0          5m23s
-
-# manually delete another one
-kubectl delete po demo-ds-ondelete-wxlnm --wait=false
-# pod "demo-ds-ondelete-wxlnm" deleted
-
-# confirm
-kubectl get ds -w
-# NAME               DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-# demo-ds-ondelete   2         2         1       2            1           <none>          7m17s
-# demo-ds-ondelete   2         2         2       2            1           <none>          7m21s
-# demo-ds-ondelete   2         2         2       2            2           <none>          7m51s
-```
-
----
-
-## Imperatives Commands
+### Imperatives Commands
 
 - CRUD
 
@@ -462,7 +187,7 @@ kubectl get ds -w
 
 ---
 
-## Declarative File
+### Declarative Manifest
 
 ```yaml
 apiVersion: apps/v1
@@ -482,9 +207,9 @@ spec:
 
 ---
 
-## Lab: DaemonSet
+### Lab: DaemonSet
 
-### Default DS
+#### Default DS
 
 ```sh
 # list all ds
@@ -526,7 +251,7 @@ kubectl get ds kube-proxy -n kube-system -o yaml
 #       - operator: Exists
 ```
 
-### Create ds
+#### Create ds
 
 ```yaml
 # demo-ds.yaml
@@ -678,7 +403,128 @@ kubectl get pod demo-ds-rqgbp -o yaml
 
 ---
 
-## node agents and daemons
+### Lab: DaemonSet with Node Selector
+
+```yaml
+# demo-ds-nodeselector.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: demo-ds
+spec:
+  selector:
+    matchLabels:
+      app: monitor
+  template:
+    metadata:
+      labels:
+        app: monitor
+    spec:
+      nodeSelector:
+        node-role: front-end
+      containers:
+        - name: monitor
+          image: busybox
+          command:
+            - sleep
+            - infinity
+```
+
+```sh
+kubectl apply -f demo-ds-nodeselector.yaml
+# daemonset.apps/demo-ds created
+
+kubectl get node -L node-role
+# NAME           STATUS   ROLES           AGE   VERSION   NODE-ROLE
+# controlplane   Ready    control-plane   37d   v1.33.6
+# node01         Ready    <none>          37d   v1.33.6   front-end
+# node02         Ready    <none>          37d   v1.33.6
+
+kubectl get ds
+# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR         AGE
+# demo-ds   1         1         1       1            1           node-role=front-end   30s
+
+kubectl get pod -o wide
+# NAME            READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+# demo-ds-gj4hj   1/1     Running   0          2m36s   10.244.1.18   node01   <none>           <none>
+```
+
+- Update node label
+
+```sh
+kubectl label node node02 node-role=front-end
+# node/node02 labeled
+
+# confirm ds add 1
+kubectl get ds
+# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR         AGE
+# demo-ds   2         2         2       2            2           node-role=front-end   8m38s
+
+# confirm pod
+kubectl get pod -o wide
+# NAME            READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+# demo-ds-gj4hj   1/1     Running   0          9m13s   10.244.1.18   node01   <none>           <none>
+# demo-ds-r8pqz   1/1     Running   0          61s     10.244.2.20   node02   <none>           <none>
+```
+
+- Remove node label
+
+```sh
+kubectl label node node01 node-role-
+# node/node01 unlabeled
+
+# confirm ds -1
+kubectl get ds
+# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR         AGE
+# demo-ds   1         1         1       1            1           node-role=front-end   10m
+
+# confirm pod
+kubectl get pod -o wide
+# NAME            READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+# demo-ds-r8pqz   1/1     Running   0          2m22s   10.244.2.20   node02   <none>           <none>
+```
+
+---
+
+- update node selector
+  - Use standard k8s label
+  - monitor os=linux
+
+```sh
+# update:
+#     spec:
+#       nodeSelector:
+#         kubernetes.io/os: linux
+kubectl apply -f demo-ds-nodeselector.yaml
+# daemonset.apps/demo-ds configured
+
+kubectl get ds
+# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+# demo-ds   2         2         2       1            2           kubernetes.io/os=linux   18m
+
+ kubectl get pod -o wide
+# NAME            READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+# demo-ds-fgqkh   1/1     Running   0          24s   10.244.2.21   node02   <none>           <none>
+# demo-ds-wqqvw   1/1     Running   0          59s   10.244.1.19   node01   <none>           <none>
+
+```
+
+---
+
+- delete nodeSelector
+
+```sh
+kubectl patch ds demo-ds --type='json' -p='[{ "op": "remove", "path": "/spec/template/spec/nodeSelector"}]'
+# daemonset.apps/demo-ds patched
+
+kubectl get ds
+# NAME      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+# demo-ds   2         2         2       0            2           <none>          26m
+```
+
+---
+
+## DaemonSet with Privileged Access
 
 - node agents and daemons typically require greater access to the node
 
@@ -817,26 +663,6 @@ kubectl -n kube-system get po -o wide
 # NAME                                   READY   STATUS    RESTARTS       AGE   IP               NODE           NOMINATED NODE   READINESS GATES
 # kube-proxy-8rr2r                       1/1     Running   5 (4d3h ago)   37d   192.168.10.150   controlplane   <none>           <none>
 
-```
-
----
-
-## Priority Classes of DaemonSet
-
-- By default, Pods deployed via a `DaemonSet` are **no** more important than Pods deployed via `Deployments` or `StatefulSets`.
-- priority is represented by the `PriorityClass` object
-
-- `priorityClassName` field
-
-  - specify which `priority class` a Pod belongs to
-
-- Example
-
-```yaml
-spec:
-  template:
-    spec:
-      priorityClassName: system-node-critical
 ```
 
 ---
