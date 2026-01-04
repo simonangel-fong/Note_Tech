@@ -26,7 +26,7 @@
   - [Lifecycle](./pod/lifecycle/lifecycle.md)
 
 - [ReplicaSet](./replicaset/replicaset.md)
-
+- [Deployment](./app/deploy/deploy.md)
 
 ---
 
@@ -69,7 +69,7 @@
 ## Workload
 
 
-- [Deployment](./app/deploy/deploy.md)
+
 - [StatefulSets](./app/statefulset/statefulset.md)
 - [DaemonSets](./app/daemonset/daemonset.md)
   - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)

@@ -4,13 +4,15 @@
 
 - [Kubernetes - ReplicaSet](#kubernetes---replicaset)
   - [ReplicaSet](#replicaset)
+  - [Replicaset Controller](#replicaset-controller)
+    - [Reconciliation Loop](#reconciliation-loop)
+    - [With `Liveness Probe`](#with-liveness-probe)
+    - [With `Readiness Probe`](#with-readiness-probe)
+    - [Preserve Pods in Deletion](#preserve-pods-in-deletion)
+  - [Imperarive Commands](#imperarive-commands)
+  - [Declarative Manifest](#declarative-manifest)
     - [Key Fiedls](#key-fiedls)
-    - [Replicaset Controller](#replicaset-controller)
-    - [With Liveness probe and Readiness probe](#with-liveness-probe-and-readiness-probe)
-    - [To preserve the Pods when you delete the ReplicaSet object](#to-preserve-the-pods-when-you-delete-the-replicaset-object)
-    - [vs Deployment](#vs-deployment)
-    - [Common Commands - `ReplicaSets`](#common-commands---replicasets)
-    - [Method to scale number of pods in rs](#method-to-scale-number-of-pods-in-rs)
+    - [Update Replicas Number](#update-replicas-number)
   - [Lab: ReplicaSets](#lab-replicasets)
     - [Explain](#explain)
     - [Default replicas value](#default-replicas-value)
@@ -20,100 +22,58 @@
     - [Create new pod manually to test rs](#create-new-pod-manually-to-test-rs)
     - [Change replica number in temp file](#change-replica-number-in-temp-file)
     - [Delete RS](#delete-rs)
-  - [ReplcationController](#replcationcontroller)
-    - [Common Commands - `ReplicationControllers`](#common-commands---replicationcontrollers)
-  - [Lab: ReplicationController](#lab-replicationcontroller)
-    - [Create RC](#create-rc)
-    - [Scale Replicas](#scale-replicas)
-    - [Delete RC](#delete-rc)
-  - [Common Questions](#common-questions)
 
 ---
-
-- ref:
-  - https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 
 ## ReplicaSet
 
 - `ReplicaSet`
 
-  - represents a group of **identical Pods** to be managed **as a unit**.
+  - the API Object that represents a group of **identical Pods** to be managed **as a unit**.
   - used to replce the old technology `Replication Controller`
-  - a workload **controller** that ensures a **specified number** of **identical** `Pods` are always running.
-  - defined declaratively in a **YAML manifest** and continuously watches the cluster state through the Kubernetes `Control Plane`.
 
-- A `ReplicaSet` keeps your app **highly available**.
+- Enable **highly available**.
 
   - If a `Pod` **fails**, is **deleted**, or a node **crashes**, `ReplicaSet` **creates a replacement** Pod.
   - If there are **too many** Pods, `ReplicaSet` removes extra ones.
 
-- Primary roles:
-
-  - **Scaling**:
-    - ensures **the desired number** of **replicas** (Pods) are running.
-    - can increase/decrease replicas dynamically (`kubectl scale`).
-  - **Self-healing**:
-    - if a Pod **crashes**, the `ReplicaSet` automatically **recreates** it.
-  - **Pod Management**:
-    - tracks Pods using **label selectors**.
-    - Any Pod with **matching** labels is **managed** by the RS.
-  - **Foundation for `Deployments`**:
-    - rarely use `ReplicaSets` directly.
-    - Instead, `Deployments` manage `ReplicaSets` for **rolling updates** and **rollback**.
-
 ---
 
-- pod name convention of a rs
+- **Naming**
 
   - rs name + **five random alphanumeric** characters
 
-- pod ownership:
+- **Pod ownership**:
   - stand alone pod: has no "controlled by"
   - pod matches label selector of rs
     - become the `dependent` of the rs
       - has "controlled by RS_NAME"
       - owned by RS
-  - `garbage collector`
-    - automatically **deletes** `dependent` objects when their `owner` is **deleted**.
+- `garbage collector`
 
----
+  - automatically **deletes** `dependent` objects when their `owner` is **deleted**.
 
-### Key Fiedls
-
-- `spec.selector`:
-  - required; **immutable**
-  - the label selector
-  - the label selector, can include the label created before the rs.
-  - the matchLables must match **at least one** of the labels defined in metadata; Otherwise, cannot create rs.
-  - `spec.selector.matchLabels`: a map of labels
-  - `spec.selector.matchExpressions`: a list of label selector requirements
-- `spec.template`:
-  - required
-  - the template to define pod
-- `spec.replicas`:
-
-  - optional;
-  - the desired number of pod
-  - default = 1;
-
-- Updating field:
-  - the update won't apply automatically
-  - only affect the new created pod.
+- the **update won't apply** automatically
+  - only **affect the new** created pod.
     - e.g., adding new label to the template; the labels within the existing pods remain the same; only the new created pod has the new lable.
 
 ---
 
-### Replicaset Controller
+## Replicaset Controller
 
 - `Replicaset Controller`
 
-  - the Kubernetes **controller** that **detects and processes** `Replicaset` objects
+  - the **controller** that **detects and processes** `Replicaset` objects
     - e.g., Create and delete when scaling the `ReplicaSet`
     - create associated `Event` objects
 
+---
+
+### Reconciliation Loop
+
 - `reconciliation loop`
   - a process of **observe, compare, and update**
-    - a `controller` **observes** the **state** of both the `owner` and the `dependent` objects.
+    - The `controller` **observes** the **state** of both the `owner` and the `dependent` objects.
     - After each **change** in this **state**, the `controller` **compares the state** of the `dependent` objects with the **desired state** specified in the `owning` object.
     - If these two states **differ**, the `controller` **makes changes** to the `dependent` object(s) to reconcile the two states.
       - actual state ==> desired state
@@ -125,68 +85,43 @@
 
 ---
 
-### With Liveness probe and Readiness probe
+### With `Liveness Probe`
 
 - `Replicaset Controller` ensure the **actual** replica number match the **desired** replica number
 
   - it **does not guarantee** always has the desired number of **healthy** pod
 
 - If a container’s `liveness probe` fails, the container is **restarted**.
-  - If the `probe` **fails multiple times**, the `exponential backoff mechanism` leads to a significant **time delay** before the container is **restarted**.
-- If the container **fails** the `readiness rather`, the container keep waiting instead of **restarting**.
-  - `ReplicaSet controller` doesn’t delete and replace the pod.
+  - If the `probe` **fails multiple times**, the `exponential backoff mechanism` leads to a significant **time delay** before the `container` is **restarted**.
+
+---
+
+### With `Readiness Probe`
+
+- If the container **fails** the `readiness rather`, the `container` keep waiting instead of **restarting**.
+  - `ReplicaSet controller` **doesn’t** delete and replace the pod.
   - showing the `DESIRED` and `CURRENT` numbers that match the desired nuber; but the `READY` < desired number
-  - fix:
-    - option 1: scale up and scale down back
-    - option 2:
-      - identify the faulty pod, and change the label; Controller automatically create a new pod;
-      - figure out the problem with the faulty pod;
-      - confirm `ReplicaSet` object is removed from the Pod’s `ownerReferences` field before deletion
-      - delete the faulty pod
+- **FIX**:
+  - option 1: scale **up** and **scale** down back
+  - option 2:
+    - identify the faulty pod, and **change the label**; Controller automatically create a new pod;
+    - figure out the problem with the faulty pod;
+    - confirm `ReplicaSet` object is removed from the Pod’s `ownerReferences` field before deletion
+    - delete the faulty pod
 
 ---
 
-### To preserve the Pods when you delete the ReplicaSet object
+### Preserve Pods in Deletion
 
-- Garbage deletion ensure the dependent pods are delete when rs object is removed.
-- the method to keep the pod while deleting the rs and creating a new rs with updated labels(because labels selector is immutable)
-  - `kubectl delete rs kiada --cascade=orphan`: the old pods become orphan
-  - then recreate the rs with the updated labels.
-  - label the orphan pods with the updated labels
-    - the orphan pods become the pod of new rs, because the new labels match the updated labels.
-
----
-
-### vs Deployment
-
-- Troubleshoting - Confuse with deploy and rs
-
-```sh
-# when get rs, it might return rs with random suffix
-kubectl get rs
-# NAME               DESIRED   CURRENT   READY   AGE
-# nginx-5bb7d64fc4   3         3         3       41s
-
-# it is caused by deployment,not rs.
-# the commond kubectl delete rs rs_name wouldn't help
-# it should be remove by
-kubectl get deploy
-# NAME    READY   UP-TO-DATE   AVAILABLE   AGE
-# nginx   3/3     3            3           145m
-
-kubectl delete deploy
-# deployment.apps "nginx" deletedD
-
-kubectl get deploy
-# No resources found in default namespace.
-
-kubectl get rs
-# No resources found in default namespace.
-```
+- `Garbage collection` ensure the `dependent pods` are **delete** when `rs` object is **removed**.
+- `kubectl delete rs kiada --cascade=orphan`: Preserve old pods
+  - then recreate the `rs` with the **updated labels**.
+  - label the `orphan pods` with the **updated labels**
+    - the orphan pods become the pod of new rs, because the new labels **match** the updated labels.
 
 ---
 
-### Common Commands - `ReplicaSets`
+## Imperarive Commands
 
 | Command                                               | Description                                              |
 | ----------------------------------------------------- | -------------------------------------------------------- |
@@ -208,7 +143,28 @@ kubectl get rs
 
 ---
 
-### Method to scale number of pods in rs
+## Declarative Manifest
+
+### Key Fiedls
+
+- `spec.selector`:
+  - required; **immutable**
+  - the label selector
+    - can include the label created **before** the rs.
+  - the `matchLables` must match **at least one** of the labels defined in metadata; Otherwise, cannot create rs.
+  - `spec.selector.matchLabels`: a map of labels
+  - `spec.selector.matchExpressions`: a list of label selector requirements
+- `spec.template`:
+  - **required**
+  - the template to define pod
+- `spec.replicas`:
+  - optional;
+  - default = 1;
+  - the desired number of pod
+
+---
+
+### Update Replicas Number
 
 - opt1:
   - update the `replicas` in yaml file
@@ -477,6 +433,8 @@ kubectl get pod --show-labels
 # No resources found in default namespace.
 ```
 
+---
+
 ### Scale ReplicaSet
 
 ```yaml
@@ -543,6 +501,8 @@ kubectl get pod
 # No resources found in default namespace.
 ```
 
+---
+
 ### Delete a pod to test pod auto creation
 
 ```sh
@@ -599,6 +559,8 @@ kubectl describe rs myapp-replicaset
 #   Normal  SuccessfulCreate  4m2s  replicaset-controller  Created pod: myapp-replicaset-gj8sd
 #   Normal  SuccessfulCreate  107s  replicaset-controller  Created pod: myapp-replicaset-hrkpg
 ```
+
+---
 
 ### Create new pod manually to test rs
 
@@ -662,6 +624,8 @@ kubectl describe rs myapp-replicaset
 #   Normal  SuccessfulDelete  54s    replicaset-controller  Deleted pod: myapp-pod
 ```
 
+---
+
 ### Change replica number in temp file
 
 - the original yaml file remain unchanged
@@ -681,6 +645,8 @@ kubectl get pods
 # myapp-replicaset-n44vm   1/1     Running   0          15m
 ```
 
+---
+
 ### Delete RS
 
 ```sh
@@ -692,214 +658,3 @@ kubectl get rs
 ```
 
 ---
-
-## ReplcationController
-
-- `ReplcationController`
-  - the original controller (predecessor of `ReplicaSet`) that **ensures a specified number** of `Pod` replicas are running at any given time.
-  - watches Pods in the cluster.
-    - If a `Pod` **dies**, `ReplcationController` creates a new one.
-    - If **extra** `Pods` appear, it removes them.
-  - uses **label selectors** (just like ReplicaSet) to decide which Pods it manages.
-- It does the **same** core job as `ReplicaSet`: maintaining a stable set of running Pods.
-
-- Role
-
-  - **High Availability**: keeps the application alive by ensuring the desired number of Pods.
-  - **Scaling**: you can increase or decrease the replica count.
-  - **Pod Replacement**: self-heals Pods that fail or are deleted.
-
----
-
-- `spec.template`: the template used to define pod
-- `spec.template.metadata.labels`: the label selector used to manage pods
-- `spec.replicas`: the desired number of pods
-- `spec.spec`: the specification of each pod
-
----
-
-### Common Commands - `ReplicationControllers`
-
-| Command                                      | Description                                                       |
-| -------------------------------------------- | ----------------------------------------------------------------- |
-| `kubectl get rc`                             | List all ReplicationControllers in the current namespace.         |
-| `kubectl create -f yaml_file`                | Create a ReplicationController from a YAML file.                  |
-| `kubectl describe rc rc_name`                | Show detailed information about a specific ReplicationController. |
-| `kubectl edit rc rc_name`                    | Live edit resources                                               |
-| `kubectl delete rc rc_name`                  | Delete a ReplicationController by name.                           |
-| `kubectl scale rc rc_name --replicas=rc_num` | Scale the number of replicas for a ReplicationController.         |
-| `kubectl rollout status rc/rc_name`          | Check the status of a rollout for the ReplicationController.      |
-| `kubectl rollout history rc/rc_name`         | View the rollout history of changes to the ReplicationController. |
-| `kubectl rollout undo rc/rc_name`            | Rollback to the previous version of the ReplicationController.    |
-| `kubectl replace -f yaml_file`               | Replace a ReplicationController with a new one from a YAML file.  |
-| `kubectl explain rc`                         | Show document of rc                                               |
-
----
-
-## Lab: ReplicationController
-
-### Create RC
-
-- Create yaml file
-- `rc-definition.yaml`
-
-```yaml
-apiVersion: v1 # v1 supports
-kind: ReplicationController # specify the object kind is ReplicationController
-metadata: # metadata of rc
-  name: myapp-rc
-  labels:
-    app: myapp
-    type: front-end
-spec: # specification of rc
-  template: # specify template, can use the pod definition
-    metadata: # metadata of each pod provision by template
-      name: myapp-pod
-      labels:
-        app: myapp
-        type: front-end
-    spec: # specification of each pod
-      containers:
-        - name: nginx-container
-          image: nginx
-  replicas: 3 # specify the number of replicas, child of rc spec
-```
-
-- Create pods
-
-```sh
-# create pod
-kubectl create -f rc-definition.yaml
-# replicationcontroller/myapp-rc created
-
-# confirm rc
-kubectl get rc
-# NAME       DESIRED   CURRENT   READY   AGE
-# myapp-rc   3         3         3       87s
-
-# confirm
-kubectl get pods
-# NAME             READY   STATUS    RESTARTS      AGE
-# myapp-rc-2cjhx   1/1     Running   0             16s
-# myapp-rc-b2rt2   1/1     Running   0             16s
-# myapp-rc-kngzb   1/1     Running   0             16s
-
-# get details
-kubectl describe rc myapp-rc
-# Name:         myapp-rc
-# Namespace:    default
-# Selector:     app=myapp,type=front-end
-# Labels:       app=myapp
-#               type=front-end
-# Annotations:  <none>
-# Replicas:     3 current / 3 desired
-# Pods Status:  3 Running / 0 Waiting / 0 Succeeded / 0 Failed
-# Pod Template:
-#   Labels:  app=myapp
-#            type=front-end
-#   Containers:
-#    nginx-container:
-#     Image:         nginx
-#     Port:          <none>
-#     Host Port:     <none>
-#     Environment:   <none>
-#     Mounts:        <none>
-#   Volumes:         <none>
-#   Node-Selectors:  <none>
-#   Tolerations:     <none>
-# Events:
-#   Type    Reason            Age   From                    Message
-#   ----    ------            ----  ----                    -------
-#   Normal  SuccessfulCreate  14m   replication-controller  Created pod: myapp-rc-b2rt2
-#   Normal  SuccessfulCreate  14m   replication-controller  Created pod: myapp-rc-kngzb
-#   Normal  SuccessfulCreate  14m   replication-controller  Created pod: myapp-rc-2cjhx
-```
-
----
-
-### Scale Replicas
-
-```yaml
-apiVersion: v1
-kin
-```
-
-```sh
-# scale up
-kubectl scale rc myapp-rc --replicas=5
-# replicationcontroller/myapp-rc scaled
-
-# confirm
-kubectl get rc
-# NAME       DESIRED   CURRENT   READY   AGE
-# myapp-rc   5         5         5       16m
-
-# scale down
-kubectl scale rc myapp-rc --replicas=1
-# replicationcontroller/myapp-rc scaled
-
-kubectl get rc
-# NAME       DESIRED   CURRENT   READY   AGE
-# myapp-rc   1         1         1       17m35s
-
-# confirm
-kubectl get pods
-# NAME             READY   STATUS    RESTARTS      AGE
-# myapp-rc-kngzb   1/1     Running   0             18m
-```
-
----
-
-### Delete RC
-
-```sh
-# remove
-kubectl delete rc myapp-rc
-# replicationcontroller "myapp-rc" deleted from default namespace
-
-# confirm
-kubectl get rc
-# No resources found in default namespace.
-
-kubectl get pods
-# No resources found in default namespace.
-```
-
----
-
-## Common Questions
-
-- How many RS exits in default namespace
-  - `kubectl get rs`
-- How many pods are desired in the specific rs
-  - `kubectl get rs`
-- What is the image used in the specific rs
-  - `kubectl describe rs rs_name | grep Image`
-- How many pods are ready in a rs
-  - `kubectl get rs`
-- Why the pods are not ready
-  - `kubectl describe pod pod_name`
-- Delete any one of the pod
-  - `kubectl delete pod pod_name`
-- How many pods exist after deletion?
-  - `kubectl get pods`
-- Why are there still 4 pods after deletion?
-  - ReplicaSet ensure the desired number of PODs always run
-- Create a rs using yaml file
-  - `kubectl create -f yaml_file`
-  - correct the version if error.
-  - use command for information `kubectl explain replicaset`
-  ```yaml
-  GROUP: apps
-  KIND: ReplicaSet
-  VERSION: v1
-  ```
-- Fix error in a yaml file and create rs
-  - check whether the `selector`'s `matchLabels` matches with `template`'s `metadata` `labels`
-- Delete specific rs
-  - `kubectl delete rs rs_name`
-- Update the rs using a specific image
-  - `kubectl edit rs rs_name`: update temp file
-  - `kubectl delete pod pod_name`: delete the old pod, rs will create new pods apply new temp file
-- Scale number of pods in a rs
-  - `kubectl scale rs rs_name --replicas=5`
