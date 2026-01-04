@@ -31,6 +31,9 @@
   - [`ConfigMap`](./storage/configmap/configmap.md)
     - [Use `ConfigMap` as Environment Variable](./storage/configmap_env/configmap_env.md)
     - [Use `ConfigMap` as Volume](./storage/configmap_volume/configmap_volume.md)
+  - [`Secret`](./storage/secret/secret.md)
+    - [Use `Secret` as Environment variables](./storage/secret_env/secret_env.md)
+    - [Use `Secret` as Volume](./storage/secret_volume/secret_volume.md)
 
 ---
 
@@ -81,7 +84,6 @@
 
 ---
 
-- [Secret](./app/container_secret/container_secret.md)
 - [Downward API](./app/downward_api/downward_api.md)
 - [projected volumes](./app/projected_volume/projected_volume.md)
 

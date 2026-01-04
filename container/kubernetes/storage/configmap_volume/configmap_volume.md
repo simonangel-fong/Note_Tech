@@ -3,7 +3,7 @@
 [Back](../../index.md)
 
 - [Kubernetes: Storage - Use `ConfigMap` as Volume](#kubernetes-storage---use-configmap-as-volume)
-  - [Use as `ConfigMap Volume`](#use-as-configmap-volume)
+  - [Use `ConfigMap Volume`](#use-configmap-volume)
   - [Lab: using `configMap` volume](#lab-using-configmap-volume)
     - [Create html files](#create-html-files)
     - [Error: Create pod without optional](#error-create-pod-without-optional)
@@ -14,7 +14,7 @@
 
 ---
 
-## Use as `ConfigMap Volume`
+## Use `ConfigMap Volume`
 
 - file permission
   - default:
