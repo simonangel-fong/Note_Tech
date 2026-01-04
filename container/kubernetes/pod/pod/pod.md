@@ -1,8 +1,8 @@
-# Kubernetes - Application: Pod
+# Kubernetes - Pod
 
 [Back](../../index.md)
 
-- [Kubernetes - Application: Pod](#kubernetes---application-pod)
+- [Kubernetes - Pod](#kubernetes---pod)
   - [Pod](#pod)
     - [Lifecycle](#lifecycle)
     - [How it works](#how-it-works)

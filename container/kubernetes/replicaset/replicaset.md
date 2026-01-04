@@ -1,8 +1,8 @@
-# Kubernetes - Pod: ReplicaSet
+# Kubernetes - ReplicaSet
 
-[Back](../../index.md)
+[Back](../index.md)
 
-- [Kubernetes - Pod: ReplicaSet](#kubernetes---pod-replicaset)
+- [Kubernetes - ReplicaSet](#kubernetes---replicaset)
   - [ReplicaSet](#replicaset)
     - [Key Fiedls](#key-fiedls)
     - [Replicaset Controller](#replicaset-controller)

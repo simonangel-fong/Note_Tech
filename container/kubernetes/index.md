@@ -22,8 +22,11 @@
 
 ## Workload
 
-- [Pod](./workload/pod/pod.md)
-  - [Lifecycle](./workload/pod_lifecycle/pod_lifecycle.md)
+- [Pod](./pod/pod/pod.md)
+  - [Lifecycle](./pod/lifecycle/lifecycle.md)
+
+- [ReplicaSet](./replicaset/replicaset.md)
+
 
 ---
 
@@ -65,8 +68,7 @@
 
 ## Workload
 
-- [Sidecar containers](./app/container_multi/container_multi.md)
-- [ReplicaSet](./app/replicaset/replicaset.md)
+
 - [Deployment](./app/deploy/deploy.md)
 - [StatefulSets](./app/statefulset/statefulset.md)
 - [DaemonSets](./app/daemonset/daemonset.md)

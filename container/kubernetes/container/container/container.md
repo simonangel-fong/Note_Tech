@@ -1,18 +1,9 @@
-
-
-
-
-
 ## container Status and state
 
 - `Waiting`: waiting to be started
 - `Running`: the `container` has been **created** and `processes` are **running** in it
 - `Terminated`: the `processes` that had been **running** in the container have **terminated**.
 - `Unknown`: The state of the container **couldn’t be determined**
-
-### Init Container Status
-
-- In the `status.initContainerStatuses` field
 
 ---
 
