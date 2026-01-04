@@ -22,6 +22,7 @@
     - [Lab: Execute Command](#lab-execute-command)
     - [Lab: Multiple Container - log and exec](#lab-multiple-container---log-and-exec)
     - [Muli-container Pod vs Multiple pod](#muli-container-pod-vs-multiple-pod)
+  - [Multi-containers Pod](#multi-containers-pod)
 
 ---
 
@@ -706,5 +707,26 @@ kubectl exec -it multi-container-log-demo -c redis -- redis-cli -v
   - Do they form a **unified whole** instead of being independent components?
   - Do they have to be **scaled** together?
   - Can a single node meet their combined **resource** needs?
+
+---
+
+## Multi-containers Pod
+
+- `multi-containers pod`
+
+  - the pod that runs multiple containers to compose a single, tightly-coupled workload.
+
+- features:
+
+  - share the same network (IP address)
+  - share volumes (files/directories)
+  - have coordinated Pod lifecycle
+    - scheduled together
+    - if the Pod dies, all containers go down
+
+- Common multi-containers patterns:
+  - `Co-located containers`
+  - `Init containers`
+  - `Sidecar containers`
 
 ---

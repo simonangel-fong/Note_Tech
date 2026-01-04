@@ -1,8 +1,8 @@
-# Kubernetes - Pod: Multiple Container - Sidecar Container
+# Kubernetes: Container - Sidecar
 
 [Back](../../index.md)
 
-- [Kubernetes - Pod: Multiple Container - Sidecar Container](#kubernetes---pod-multiple-container---sidecar-container)
+- [Kubernetes: Container - Sidecar](#kubernetes-container---sidecar)
   - [Sidecar container](#sidecar-container)
   - [Init Container vs Sidecar Container](#init-container-vs-sidecar-container)
     - [Lab: Sidecar Container](#lab-sidecar-container)
@@ -135,7 +135,7 @@ kubectl describe pod demo-pod-sidecar
 # Events:
 #   Type    Reason     Age   From               Message
 #   ----    ------     ----  ----               -------
-#   Normal  Scheduled  94s   default-scheduler  Successfully assigned default/demo-pod-sidecar to docker-desktop      
+#   Normal  Scheduled  94s   default-scheduler  Successfully assigned default/demo-pod-sidecar to docker-desktop
 #   Normal  Pulling    94s   kubelet            Pulling image "busybox"
 #   Normal  Pulled     93s   kubelet            Successfully pulled image "busybox" in 1.155s (1.155s including waiting). Image size: 2224358 bytes.
 #   Normal  Created    93s   kubelet            Created container: sidecar

@@ -7,13 +7,16 @@
 ## Container
 
 - [Container](./container/container/container.md)
+
   - [Back-off Mechanism & Restart Policy](./container/backoff_restart/backoff_restart.md)
   - [Liveness Probe](./container/liveness_probe/liveness_probe.md)
   - [Startup Probe](./container/startup_probe/startup_probe.md)
   - [Lifecycle Hook](./container/lifecycle_hook/lifecycle_hook.md)
 
-  - Multiple Containers: 
-    - [Sidecar Containers](./app/sidecar_container/sidecar_container.md)
+  - Multiple Containers:
+    - [Co-located Containers](./container/colocated/colocated.md)
+    - [Init Containers](./container/init/init.md)
+    - [Sidecar Containers](./container/sidecar/sidecar.md)
 
 ---
 
@@ -21,7 +24,6 @@
 
 - [Pod](./workload/pod/pod.md)
   - [Lifecycle](./workload/pod_lifecycle/pod_lifecycle.md)
-
 
 ---
 
@@ -63,7 +65,6 @@
 
 ## Workload
 
-- [Init containers](./app/init_container/init_container.md)
 - [Sidecar containers](./app/container_multi/container_multi.md)
 - [ReplicaSet](./app/replicaset/replicaset.md)
 - [Deployment](./app/deploy/deploy.md)

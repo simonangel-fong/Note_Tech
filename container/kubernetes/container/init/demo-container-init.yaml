@@ -1,0 +1,40 @@
+# demo-container-init.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-container-init
+spec:
+  initContainers:
+    - name: 1st-init
+      image: busybox
+      command:
+        - "sh"
+        - "-c"
+      args:
+        - |
+          echo "$(date) 1st-init starts."
+          sleep 10
+          echo "$(date) 1st-init completed."
+    - name: 2nd-init
+      image: busybox
+      command:
+        - "sh"
+        - "-c"
+      args:
+        - |
+          echo "$(date) 2nd-init starts."
+          sleep 10
+          echo "$(date) 2nd-init completed."
+  containers:
+    - name: main
+      image: busybox
+      command:
+        - "sh"
+        - "-c"
+      args:
+        - |
+          echo "$(date) main starts."
+          while true; do
+            echo "$(date) main running";
+            sleep 1;
+          done
