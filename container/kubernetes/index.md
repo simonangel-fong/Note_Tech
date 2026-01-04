@@ -4,11 +4,33 @@
 
 ---
 
+## Container
+
+- [Container](./container/container/container.md)
+  - [Back-off Mechanism & Restart Policy](./container/backoff_restart/backoff_restart.md)
+  - [Liveness Probe](./container/liveness_probe/liveness_probe.md)
+  - [Startup Probe](./container/startup_probe/startup_probe.md)
+  - [Lifecycle Hook](./container/lifecycle_hook/lifecycle_hook.md)
+
+  - Multiple Containers: 
+    - [Sidecar Containers](./app/sidecar_container/sidecar_container.md)
+
+---
+
+## Workload
+
+- [Pod](./workload/pod/pod.md)
+  - [Lifecycle](./workload/pod_lifecycle/pod_lifecycle.md)
+
+
+---
+
 - [Fundamental](./fundamental/fundamental/fundamental.md)
 
   - [API Object](./fundamental/api_object/api_object.md)
   - [YAML File](./fundamental/yaml/yaml.md)
   - [`kubectl`](./fundamental/kubectl/kubectl.md)
+  - [`Minikube`](./fundamental/minikube/minikube.md)
 
 - [Architecture](./architecture/architecture/architecture.md)
   - Master Node / Control plane
@@ -29,8 +51,6 @@
 
 ---
 
-## Application
-
 - [Container](./app/container/container.md)
 
   - [Command & Arg & ENV](./app/cmd_arg_env/cmd_arg_env.md)
@@ -39,23 +59,19 @@
   - [Downward API](./app/downward_api/downward_api.md)
   - [projected volumes](./app/projected_volume/projected_volume.md)
 
-- [Pod](./app/pod/pod.md)
-  - [Lifecycle](./app/lifecycle/lifecycle.md)
-  - [Sidecar containers](./app/sidecar_container/sidecar_container.md)
-  - [Init containers](./app/init_container/init_container.md)
-  - [Sidecar containers](./app/container_multi/container_multi.md)
+---
+
+## Workload
+
+- [Init containers](./app/init_container/init_container.md)
+- [Sidecar containers](./app/container_multi/container_multi.md)
 - [ReplicaSet](./app/replicaset/replicaset.md)
 - [Deployment](./app/deploy/deploy.md)
 - [StatefulSets](./app/statefulset/statefulset.md)
 - [DaemonSets](./app/daemonset/daemonset.md)
   - [Rolling update and roll back](./app/deploy_rolling/deploy_rolling.md)
-
-
-
 - [Job](./app/job/job.md)
 - [CronJob](./app/cronjob/cronjob.md)
-
-
 
 - Storage
   - [Volume](./app/volume/volume.md)
@@ -66,8 +82,7 @@
 
 ---
 
-
-- [Static Pod](./pod/static_pod/static_pod.md)
+- [Static Pod](./app/static_pod/static_pod.md)
 - [Scaling](./pod/scaling/scaling.md)
   - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
   - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
@@ -116,8 +131,6 @@
 
 ---
 
----
-
 - [Networking](./networking/networking.md)
 
   - [Service](./networking/service/service.md)
@@ -137,8 +150,6 @@
 
 - [HELM](./helm/helm.md)
 - [Kustomize](./kustomize/kustomize.md)
-
----
 
 ---
 
@@ -166,37 +177,3 @@ todo list:
 - https://scriptwang.github.io/blog/#/blog/2021-06-14_K8S%E5%8E%9F%E7%90%86%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E6%88%98%EF%BC%88%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%89
 
 https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
-
-```sh
-kubectl create deploy nginx --image=nginx --port=80
-kubectl expose deploy nginx --type=LoadBalancer --name=nginx --port=8080 --target-port=80
-kubectl get svc
-# NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-# nginx        LoadBalancer   10.103.65.211   localhost     8080:31490/TCP   22s
-
-kubectl port-forward service/nginx 8080:8080
-curl http://localhost:8080/
-# <!DOCTYPE html>
-# <html>
-# <head>
-# <title>Welcome to nginx!</title>
-# <style>
-# html { color-scheme: light dark; }
-# body { width: 35em; margin: 0 auto;
-# font-family: Tahoma, Verdana, Arial, sans-serif; }
-# </style>
-# </head>
-# <body>
-# <h1>Welcome to nginx!</h1>
-# <p>If you see this page, the nginx web server is successfully installed and
-# working. Further configuration is required.</p>
-
-# <p>For online documentation and support please refer to
-# <a href="http://nginx.org/">nginx.org</a>.<br/>
-# Commercial support is available at
-# <a href="http://nginx.com/">nginx.com</a>.</p>
-
-# <p><em>Thank you for using nginx.</em></p>
-# </body>
-# </html>
-```

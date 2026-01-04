@@ -45,11 +45,6 @@
 
 ---
 
-- Everything in Kubernetes is represented by an `object`.
-  - These objects are usually defined in one or more **manifest files** in either `YAML` or `JSON` format.
-
----
-
 the process of deploying the application:
 
 1. submit the **application manifest** to the Kubernetes `API`. The `API Server` **writes** the objects defined in the **manifest** to `etcd`.

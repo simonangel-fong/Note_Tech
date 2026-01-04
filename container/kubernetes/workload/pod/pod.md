@@ -21,7 +21,7 @@
   - [Execute Command on Container](#execute-command-on-container)
     - [Lab: Execute Command](#lab-execute-command)
     - [Lab: Multiple Container - log and exec](#lab-multiple-container---log-and-exec)
-    - [Lab:](#lab)
+    - [Muli-container Pod vs Multiple pod](#muli-container-pod-vs-multiple-pod)
 
 ---
 
@@ -698,4 +698,13 @@ kubectl exec -it multi-container-log-demo -c redis -- redis-cli -v
 
 ---
 
-### Lab: 
+### Muli-container Pod vs Multiple pod
+
+- Multi-container pod is required when:
+  - Do these containers have to run on the **same host**?
+  - Do I want to **manage** them as a **single unit**?
+  - Do they form a **unified whole** instead of being independent components?
+  - Do they have to be **scaled** together?
+  - Can a single node meet their combined **resource** needs?
+
+---

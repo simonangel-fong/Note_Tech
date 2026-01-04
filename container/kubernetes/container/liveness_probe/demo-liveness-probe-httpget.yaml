@@ -1,0 +1,21 @@
+# demo-liveness-probe-httpget.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-liveness-probe-httpget
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - name: http
+          containerPort: 80
+      livenessProbe:
+        # HTTP GET probe
+        httpGet:
+          path: /
+          port: http # use the port name define int ports
+        initialDelaySeconds: 10
+        periodSeconds: 5
+        timeoutSeconds: 2
+        failureThreshold: 3

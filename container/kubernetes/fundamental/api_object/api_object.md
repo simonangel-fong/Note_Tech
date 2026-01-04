@@ -36,7 +36,8 @@
 
 - `API Object`
   - then entity **stored** in the `etcd` and are managed via the `Kubernetes API`.
-
+  - **Everything** in Kubernetes is represented by an `object`.
+    - These objects are usually defined in one or more **manifest files** in either `YAML` or `JSON` format.
 ---
 
 ### Resource vs object
