@@ -34,6 +34,10 @@
   - [`Secret`](./storage/secret/secret.md)
     - [Use `Secret` as Environment variables](./storage/secret_env/secret_env.md)
     - [Use `Secret` as Volume](./storage/secret_volume/secret_volume.md)
+  - [Downward API](./storage/downward_api/downward_api.md)
+    - [Use Downward API as Environment Variables](./storage/downward_api_env/downward_api_env.md)
+    - [Use Downward API as Volume](./storage/downward_api_volume/downward_api_volume.md)
+  - [Projected Volumes](./storage/projected_volume/projected_volume.md)
 
 ---
 
@@ -84,8 +88,6 @@
 
 ---
 
-- [Downward API](./app/downward_api/downward_api.md)
-- [projected volumes](./app/projected_volume/projected_volume.md)
 
 ---
 

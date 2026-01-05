@@ -1,8 +1,8 @@
-# Kubernetes - Pod: Projected Volumes
+# Kubernetes: Storage - Projected Volumes
 
 [Back](../../index.md)
 
-- [Kubernetes - Pod: Projected Volumes](#kubernetes---pod-projected-volumes)
+- [Kubernetes: Storage - Projected Volumes](#kubernetes-storage---projected-volumes)
   - [Projected Volumes](#projected-volumes)
   - [Lab: Prodjected Volume](#lab-prodjected-volume)
 
