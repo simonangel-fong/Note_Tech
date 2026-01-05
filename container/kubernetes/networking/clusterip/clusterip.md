@@ -1,8 +1,8 @@
-# Kubernetes: Networking - ClusterIP Service
+# Kubernetes Networking: Service - ClusterIP
 
 [Back](../../index.md)
 
-- [Kubernetes: Networking - ClusterIP Service](#kubernetes-networking---clusterip-service)
+- [Kubernetes Networking: Service - ClusterIP](#kubernetes-networking-service---clusterip)
   - [ClusterIP](#clusterip)
     - [How It Works](#how-it-works)
     - [Service Discovery](#service-discovery)

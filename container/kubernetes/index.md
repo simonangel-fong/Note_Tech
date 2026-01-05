@@ -79,8 +79,8 @@
   - [`Service`](./networking/service/service.md)
 
     - [`ClusterIP`](./networking/clusterip/clusterip.md)
-    - [NodePort](./networking/svr_nodeport/svr_nodeport.md)
-    - [LoadBalancer](./networking/svr_loadbalancer/svr_loadbalancer.md)
+    - [`NodePort`](./networking/nodeport/nodeport.md)
+    - [`LoadBalancer`](./networking/loadbalancer/loadbalancer.md)
 
   - [Endpoint](./networking/endpoint/endpoint.md)
   - [Pod Networking](./networking/pod/pod.md)

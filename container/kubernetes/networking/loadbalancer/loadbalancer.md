@@ -1,8 +1,8 @@
-# Kubernetes Service - LoadBalancer
+# Kubernetes Networking: Service - LoadBalancer
 
 [Back](../../index.md)
 
-- [Kubernetes Service - LoadBalancer](#kubernetes-service---loadbalancer)
+- [Kubernetes Networking: Service - LoadBalancer](#kubernetes-networking-service---loadbalancer)
   - [LoadBalancer](#loadbalancer)
   - [Install MetalLB](#install-metallb)
 
@@ -39,7 +39,7 @@ spec:
 
 1. Service Creation
    - cmd: `kubectl apply -f nginx-loadbalancer.yaml`
-   - `API server` store Service into `etcd`
+   - `API server` store `Service` into `etcd`
    - `cloud-controller-manager` call AWS API to create AWS ELB with
      - public IP address
      - DNS name
@@ -47,7 +47,7 @@ spec:
    - automatically create a `ClusterIP` for nginx
 
 - 2. Client request
-  - Client (Internet) → `AWS ELB` (3.120.45.67:80) → `NodeIP`:31234 → `ClusterIP` (10.96.0.20:80) → `Pod` IP (10.244.x.x:80)
+  - Client (Internet) → `AWS ELB` (3.120.45.67:80) → `NodeIP:31234` → `ClusterIP` (10.96.0.20:80) → `Pod` IP (10.244.x.x:80)
   - kube-proxy Handles Pod Selection
     - Traffic hitting `NodePort` 31234 is **forwarded** to Service `ClusterIP` 10.96.0.20.
     - `ClusterIP` is mapped to the `Endpoints` list (your Nginx Pods).
@@ -68,8 +68,6 @@ spec:
 
 - ref: https://metallb.io/
 
-
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.3/config/manifests/metallb-frr.yaml
 ```
-

@@ -1,10 +1,10 @@
-# Kubernetes Service - NodePort
+# Kubernetes Networking: Service - NodePort
 
 [Back](../../index.md)
 
-- [Kubernetes Service - NodePort](#kubernetes-service---nodeport)
+- [Kubernetes Networking: Service - NodePort](#kubernetes-networking-service---nodeport)
   - [NodePort](#nodeport)
-    - [Declarative](#declarative)
+    - [Declarative Manifest](#declarative-manifest)
     - [How It Works](#how-it-works)
     - [Imperative Command](#imperative-command)
     - [Lifecycle](#lifecycle)
@@ -25,7 +25,7 @@
 
 - `nodePort`:
   - optional
-  - default: random port in the range between 30000 and 32767
+  - default: random port in the range between `30000` and `32767`
   - the port on a node to which service is listening
 - `port`:
   - optional
@@ -43,7 +43,7 @@
 
 ---
 
-### Declarative
+### Declarative Manifest
 
 - `nodePort` field
   - specify the port expored on each node
@@ -54,9 +54,9 @@
 ### How It Works
 
 - You define a `Service` with type: `NodePort`.
-- Kubernetes **allocates** (or you specify) a **port** in the 30000–32767 range.
+- Kubernetes **allocates** (or you specify) a **port** in the `30000–32767` range.
 - That **port is opened** on **every** `Node` in the cluster.
-- External clients can access the app using http://NodeIP:NodePort.
+- External clients can access the app using `http://NodeIP:NodePort`.
 - Traffic Flow
 
   - Client → `NodeIP:NodePort` → `Service` → `Pod`(s) (load balanced)
@@ -78,6 +78,7 @@
 | `kubectl create svc nodeport svc_name --tcp=port:targetPort`                                     | Create a NodePort service           |
 | `kubectl expose deploy deploy_name --name=svc_name --type=NodePort --port=80 --target-port=8080` | Create a NodePort and expose deploy |
 | `kubectl expose pod pod_name --name=svc_name --type=NodePort --port=80 --target-port=8080 `      | Create a NodePort and expose pod    |
+| `kubectl set selector service SERVICE KEY=VALUE`                                                 | Update service selector             |
 
 ---
 
@@ -105,8 +106,8 @@ spec:
 1. Service Creation
    - cmd: `kubectl apply -f nginx-nodeport.yaml`
    - `API Server` **registers** a new `Service` **object** named `nginx-nodeport`.
-   - `kube-proxy` (running on each Node) programs the necessary **iptables or IPVS rules** so that traffic to :30080 is forwarded to the Service.
-   - Service’s **selector**: `app=nginx` **matches** `Pods` that have the label app=nginx.
+   - `kube-proxy` (running on each Node) programs the necessary **iptables or IPVS rules** so that traffic to :30080 is **forwarded** to the `Service`.
+   - `Service’s` **selector**: `app=nginx` **matches** `Pods` that have the label app=nginx.
    - **nodePort** (30080): **open** on **every** Node externally.
    - **port** (80): the Service’s **virtual port** inside the cluster.
    - **targetPort** (80): the container port on **each Pod**.
@@ -391,13 +392,12 @@ spec:
           args:
             - "-c"
             - |
-             while true; do
-              echo "<h1>$NODE_NAME:$POD_NAME - $(date)</h1>" > /html/index.html; 
-             
-              sleep 1
-             done
+              while true; do
+               echo "<h1>$NODE_NAME:$POD_NAME - $(date)</h1>" > /html/index.html; 
 
-```   
+               sleep 1
+              done
+```
 
 ```sh
 kubectl apply -f demo-nodeport-deploy.yaml
@@ -426,10 +426,10 @@ spec:
   selector:
     app: nginx
   ports:
-  - name: http
-    protocol: TCP
-    port: 8080
-    targetPort: 80
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 80
 ```
 
 ```sh
@@ -463,6 +463,7 @@ kubectl describe svc demo-nodeport-svc
 ```
 
 - confirm node IP+port
+
 ```sh
 kubectl get node -o wide
 # NAME           STATUS   ROLES           AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
