@@ -1,49 +1,79 @@
+# Kubernetes: Networking Fundamental
 
-[Back](../index.md)
+[Back](../../index.md)
 
-Fundamental
+- [Kubernetes: Networking Fundamental](#kubernetes-networking-fundamental)
+  - [Networking Fundamental](#networking-fundamental)
+    - [Terminology](#terminology)
+    - [Common Commands](#common-commands)
+  - [Domain Name System(DNS)](#domain-name-systemdns)
+    - [DNS Type](#dns-type)
+    - [Common Commands](#common-commands-1)
+  - [Network Namespaces](#network-namespaces)
+    - [Common Commands](#common-commands-2)
+    - [Lab: Connection between Network Namespace](#lab-connection-between-network-namespace)
+    - [Lab: Create virtual switch network in a host](#lab-create-virtual-switch-network-in-a-host)
+    - [Lab: Enable access from a network namespace to a remote host](#lab-enable-access-from-a-network-namespace-to-a-remote-host)
+  - [Docker Networking](#docker-networking)
+    - [Bridge Network](#bridge-network)
+    - [None Network](#none-network)
+    - [Host Network](#host-network)
+    - [Lab: obervation on how docker bridge network](#lab-obervation-on-how-docker-bridge-network)
+  - [Kubernetes Networking](#kubernetes-networking)
+    - [Cluster Node Networking](#cluster-node-networking)
+    - [Container Networking Interface(CNI)](#container-networking-interfacecni)
+
+---
+
+## Networking Fundamental
+
+### Terminology
 
 - `Switching`
 
-  - the process of transferring data packets from one device to another within the **same network** by using a network switch
+  - the process of **transferring** data packets from one **device** to another within the **same network** by using a `network switch`
   - Connects devices within a **single network** (LAN)
-  - OSI Layer: layer 2
-  - Uses MAC addresses
+  - OSI Layer: `layer 2`
+  - Uses `MAC addresses`
 
 - `Routing`
 
-  - the process of selecting a path for data packets to travel across one or more networks from a source to a destination.
+  - the process of **selecting a path** for data packets to travel across **one or more networks** from a source to a destination.
   - Connects devices within **different network** (LAN)
-  - OSI Layer: layer 3
-  - Uses IP addresses
+  - OSI Layer: `layer 3`
+  - Uses `IP addresses`
 
 - `gateway`
 
-  - a hardware device or software program that **connects two different networks** with **different protocols**, acting as an **entry and exit point** for data.
+  - a **hardware device** or **software program** that **connects two different networks** with **different protocols**, acting as an **entry and exit point** for data.
 
 - `forwarding`
   - **directing data packets** to their **destination**
   - can be:
-    - at the network layer, like a router using a forwarding table
-    - at the application layer, like "port forwarding," which redirects traffic through a gateway
+    - at the `network layer`, like a `router` using a **forwarding table**
+    - at the `application layer`, like "port forwarding," which redirects traffic through a gateway
   - get the value:
     - `cat /proc/sys/net/ipv4/ip_forward`
     - default 0
   - modify value:
     - `/etc/sysctl.conf`:`net.ipv4.ip_forward = 1`
 
-| Command                            | Description                |
-| ---------------------------------- | -------------------------- |
-| `ip link`                          | manage interface           |
-| `ip a`                             | manage ip                  |
-| `ip a add ip_cidr dev if_name`     | Add ip                     |
-| `ip r`                             | List route table           |
-| `ip r add default via gw_cidr`     | Set a default gateway      |
-| `ip r add subnet_cidr via gw_cidr` | Set a gateway for a subnet |
+---
+
+### Common Commands
+
+| Command                            | Description                    |
+| ---------------------------------- | ------------------------------ |
+| `ip link`                          | manage **interface**           |
+| `ip a`                             | manage **ip**                  |
+| `ip a add ip_cidr dev if_name`     | Add ip                         |
+| `ip r`                             | List route table               |
+| `ip r add default via gw_cidr`     | Set a **default gateway**      |
+| `ip r add subnet_cidr via gw_cidr` | Set a **gateway** for a subnet |
 
 ---
 
-## DNS
+## Domain Name System(DNS)
 
 - `Name Resolution`
 
@@ -71,34 +101,40 @@ Fundamental
     - `google`: domain
     - `www`: sub-domain
 
-- Process of identify a domain name: `apps.googlecom`
-  - query local hosts file
-  - query organization DNS server
-  - query root DNS server
-  - query .com DNS server
-  - query Google DNS
-  - return the IP
-  - cache the ip locally
+- Process of identify a domain name: `apps.google.com`
 
----
+| Step | Entity               | Action                                                                |
+| ---- | -------------------- | --------------------------------------------------------------------- |
+| 1    | Browser/OS           | **Checks local** `hosts` file and **local** `DNS cache`.              |
+| 2    | Resolver             | `ISP server` receives the request and starts the lookup.              |
+| 3    | `Root Server`        | Directs the Resolver to the `.com` `TLD(Top Level Domain) servers`.   |
+| 4    | `TLD Server`         | Directs the Resolver to Google's specific `Name Servers`.             |
+| 5    | Authoritative Server | Provides the specific `IP address` for apps.google.com.               |
+| 6    | Client               | Receives IP, caches it, and initiates the connection (TCP Handshake). |
 
-- Search within the organization DNS server
+- Search **within the organization DNS server**
   - `/etc/resolv.conf`
     - `search intermal_domain subdomain_domain`
 
+---
+
+### DNS Type
+
 | Record Type | Description                                                                                                                        |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `A`         | Maps a hostname to an IPv4 address.                                                                                                |
-| `AAAA`      | Maps a hostname to an IPv6 address.                                                                                                |
+| `A`         | Maps a hostname to an **IPv4** address.                                                                                            |
+| `AAAA`      | Maps a hostname to an **IPv6** address.                                                                                            |
 | `CNAME`     | Creates an **alias**, pointing one domain name to another.                                                                         |
 | `MX`        | Specifies the **mail servers** responsible for receiving email for a domain.                                                       |
-| `NS`        | Points to the authoritative name servers for a domain.                                                                             |
-| `PTR`       | Used for reverse **DNS lookups**, resolving an IP address back to a hostname.                                                      |
+| `NS`        | Points to the `authoritative name servers` for a domain.                                                                           |
+| `PTR`       | Used for reverse **DNS lookups**, resolving an `IP address` back to a `hostname`.                                                  |
 | `SOA`       | Stores **administrative information** about the `DNS zone`, such as the primary name server and email of the domain administrator. |
 | `SRV`       | Specifies the **location** (hostname and port) of a **service**, like a VoIP or instant messaging server.                          |
 | `TXT`       | used for verification or email security policies like SPF.                                                                         |
 
 ---
+
+### Common Commands
 
 | Commoand             | Description                          |
 | -------------------- | ------------------------------------ |
@@ -107,7 +143,7 @@ Fundamental
 
 ---
 
-Lab:
+- Example: install coredens
 
 - Configurate a server dedicated as the DNS server within in large environments with many hostnames and Ips
   - Solution: `CoreDNS`
@@ -155,8 +191,13 @@ tar -zxf coredns_1.12.4_linux_amd64.tgz
 
 - `Network namespaces`
 
-  - used to isolate a system's networking resources, such as network interfaces, IP addresses, routing tables, and firewall rules
-  - a `container` within a namespace only can see the `network interfaces`, `routing table`, `ARP tables` within the **same namespace**.
+  - used to **isolate** a system's **networking resources**
+    - e.g., `network interfaces`, `IP addresses`, `routing tables`, and `firewall rules`
+  - a `container` within a `namespace` only can see the `network interfaces`, `routing table`, `ARP tables` within the **same namespace**.
+
+---
+
+### Common Commands
 
 - Interfaces
 
@@ -302,56 +343,66 @@ iptables -t nat -A PREROUTING --dport 80 -to-destination 192.168.10.2:80 -j DNAT
 
 ## Docker Networking
 
-- Environment Setting
-  - host
-    - eth0(192.168.1.10)
+### Bridge Network
+
+- **default** network type
+- It creates a `virtual bridge (docker0)` on the host, connecting containers and allowing them to **communicate with each other and the host**.
+- Containers get their own IP addresses **within** the `bridge network`
+  - by default
+    - ip range: `172.17.0.0/16`
+    - **network namespace**
+      - start with `b3165`
+      - **isolate** the containers in the `bridge network` from the host
+    - **interface** on host:
+      - name: `docker0`
+      - ip: `172.17.0.1`
+      - type: bridge
+      - use `virtual cable` to connect with the `host interface` to enable communication.
+- External access to containers on a `bridge network` **requires explicit port mapping** (publishing ports).
+- Use case:
+  - Suitable for single-host container communication and small deployments.
 
 ---
 
-### Docker network type
+- Common command
 
-- **Bridge Network:**
+| Command                                                          | Description                            |
+| ---------------------------------------------------------------- | -------------------------------------- |
+| `docker network create -d bridge net_bridge`                     | Create a bridge network                |
+| `docker run -d --name web --network=net_bridge -p 8080:80 nginx` | Run a container using a bridge network |
 
-  - default network type
-  - It creates a `virtual bridge (docker0)` on the host, connecting containers and allowing them to **communicate with each other and the host**.
-  - Containers get their own IP addresses **within** the `bridge network`
-    - by default
-      - ip range: `172.17.0.0/16`
-      - network namespace
-        - start with `b3165`
-        - isolate the containers in the bridge network from the host
-      - interface on host:
-        - name: `docker0`
-        - ip: `172.17.0.1`
-        - type: bridge
-        - use virtual cable to connect with the host interface to enable communication.
-  - External access to containers on a bridge network **requires explicit port mapping** (publishing ports).
-  - Use case:
-    - Suitable for single-host container communication and small deployments.
-  - command:
-    - `docker run nginx`
+---
 
-- **None Network:**
+### None Network
 
-  - Provides **complete network isolation** for the container.
-  - have **no** network interfaces and **cannot communicate** with other containers or the host.
-  - Use case:
-    - highly secure workloads
-    - testing containers that do not require any network connectivity.
-  - command:
-    - `docker run --network none nginx`
+- Provides **complete network isolation** for the container.
+- have **no** network interfaces and **cannot communicate** with other containers or the host.
+- Use case:
+  - highly secure workloads
+  - testing containers that do not require any network connectivity.
 
-- **Host Network:**
-  - **share the host's network** stack directly,
-    - **no** network isolation between the `container` and the `host`.
-  - The container uses the **same** `IP` address **as the host**
-  - any ports exposed by the `container` are bound directly to the **host**'s network.
-    - if the existing contianer in the host network already took up a port, no addional contianer in the host network can take the same port.
-  - better **performance** due to the **lack** of a `virtual network layer`, but sacrifices isolation and security.
-  - use case:
-    - specific cases where direct access to the host network is required.
-  - command:
-    - `docker run --network host nginx`
+---
+
+- Common command
+
+| Command                                                         | Description                          |
+| --------------------------------------------------------------- | ------------------------------------ |
+| `docker run -d --name busybox --network=none busybox sleep 600` | Run a container using a none network |
+
+---
+
+### Host Network
+
+- **share the host's network** stack directly,
+  - **no** network isolation between the `container` and the `host`.
+- The container uses the **same** `IP` address **as the host**
+- any ports exposed by the `container` are bound directly to the **host**'s network.
+  - if the existing contianer in the host network already took up a port, no addional contianer in the host network can take the same port.
+- better **performance** due to the **lack** of a `virtual network layer`, but sacrifices isolation and security.
+- use case:
+  - specific cases where direct access to the host network is required.
+- command:
+  - `docker run -d --name busybox --network host busybox sleep 600`
 
 ---
 
@@ -449,15 +500,98 @@ sudo iptables -nvL -t nat
 
 ---
 
-## Container Networking Interface(CNI)
+## Kubernetes Networking
 
-- CNI
+- Each `Node` has **IP address**
+- Each `Pod` has its **internal IP address**
+
+  - default range: `10.244.0.0/16`
+
+- `Cluster Networking`:
+
+  - **Pod-to-Pod Communication**:
+
+    - `Pods` can communicate with each other **directly via IP addresses**.
+    - Each `Pod` gets **its IP address**, and communication between `Pods` within the **same cluster** is efficient and fast.
+
+  - **Service Abstraction**:
+    - Kubernetes **abstracts `Pods` behind a `Service`**, which provides a **stable** **IP address** and **DNS name** for a set of `Pods`.
+    - `Services` enable **load balancing** and **discovery** within the cluster.
+
+---
+
+- Example:
+
+  - Node A:
+
+    - IP: `192.168.1.2`
+    - Internal Network: `10.244.0.0/16`
+      - Pod: `10.244.0.2`
+
+  - Node B:
+    - IP: `192.168.1.3`
+    - Internal Network: `10.244.0.0/16`
+      - Pod: `10.244.0.2`
+
+- Need networking routing to enable communication between node/pod **without NAT**.
+
+---
+
+### Cluster Node Networking
+
+- Both `master` and `worker` nodes must
+
+  - have **at least one** `interface` with **unique** `ip` and `mac addresses`
+  - have **unique** `hostname`
+
+- Port:
+  - Master node:
+    - `6443` for API server
+    - `2379` for etcd
+    - `10250` for kubelet if applied
+    - `10257`: for controller
+    - `10259`: for scheduler
+    - `23780`: for etcd client if multiple master nodes applied
+  - Worker node:
+    - `10250` for kubelet
+    - `30,000`~`32,767` for external access
+
+```sh
+# command to show the bridge interface which is default interface used by a container runtime
+ip a show type bridge
+# 6: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1360 qdisc noqueue state UP group default qlen 1000
+#     link/ether 62:f0:a2:97:23:27 brd ff:ff:ff:ff:ff:ff
+#     inet 172.17.0.1/24 brd 172.17.0.255 scope global cni0
+#        valid_lft forever preferred_lft forever
+#     inet6 fe80::60f0:a2ff:fe97:2327/64 scope link
+#        valid_lft forever preferred_lft forever
+
+# identify what port is listen on
+# schduler
+netstat -npl | grep -i scheduler
+# tcp        0      0 127.0.0.1:10259         0.0.0.0:*               LISTEN      2878/kube-scheduler
+
+ss -tulp | grep -i scheduler
+# tcp   LISTEN 0      4096         127.0.0.1:10259         0.0.0.0:*    users:(("kube-scheduler",pid=2878,fd=3))
+
+# count all etcd connection with a specific port
+netstat -npa | grep -i etcd | grep -i 2379 | wc -l
+# 64
+netstat -npa | grep -i etcd | grep -i 2380 | wc -l
+# 1
+```
+
+---
+
+### Container Networking Interface(CNI)
+
+- `Container Networking Interface(CNI)`
 
   - a **standard** that specifies how to **configure network interfaces** for containers.
   - responsibility:
-    - The container runtime must create **network namespace**
+    - The `container runtime` must create **network namespace**
     - identify the **network** to which the container attach
-    - invoke Network Plugin(bridge) when container is added/deleted
+    - invoke `Network Plugin(bridge)` when container is added/deleted
     - assign ip address to the container
     - output netowork configuration
   - common supported runtime:
@@ -472,48 +606,3 @@ sudo iptables -nvL -t nat
     - `bridge add con_id /var/run/netns/con_id`
 
 ---
-
-## Cluster Node Networking
-
-- Both master and worker nodes must
-
-  - have at least one interface with unique ip and mac addresses
-  - have unique hostname
-
-- Port:
-  - Master node:
-    - `6443` for API server
-    - `2379` for etcd
-    - `10250` for kubelet if applied
-    - `10257`: for controller
-    - `10259`: for scheduler
-    - `23780`: for etcd client if multiple master nodes applied
-  - Worker node:
-    - `10250` for kubelet
-    - `30,000`~`32,767` for external access
-
-
-```sh
-# command to show the bridge interface which is default interface used by a container runtime
-ip a show type bridge
-# 6: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1360 qdisc noqueue state UP group default qlen 1000
-#     link/ether 62:f0:a2:97:23:27 brd ff:ff:ff:ff:ff:ff
-#     inet 172.17.0.1/24 brd 172.17.0.255 scope global cni0
-#        valid_lft forever preferred_lft forever
-#     inet6 fe80::60f0:a2ff:fe97:2327/64 scope link 
-#        valid_lft forever preferred_lft forever
-
-# identify what port is listen on
-# schduler
-netstat -npl | grep -i scheduler
-# tcp        0      0 127.0.0.1:10259         0.0.0.0:*               LISTEN      2878/kube-scheduler
-
-ss -tulp | grep -i scheduler
-# tcp   LISTEN 0      4096         127.0.0.1:10259         0.0.0.0:*    users:(("kube-scheduler",pid=2878,fd=3)) 
-
-# count all etcd connection with a specific port
-netstat -npa | grep -i etcd | grep -i 2379 | wc -l
-# 64
-netstat -npa | grep -i etcd | grep -i 2380 | wc -l
-# 1
-```

@@ -1,18 +1,17 @@
-# Kubernetes Service - ClusterIP
+# Kubernetes: Networking - ClusterIP Service
 
 [Back](../../index.md)
 
-- [Kubernetes Service - ClusterIP](#kubernetes-service---clusterip)
+- [Kubernetes: Networking - ClusterIP Service](#kubernetes-networking---clusterip-service)
   - [ClusterIP](#clusterip)
     - [How It Works](#how-it-works)
+    - [Service Discovery](#service-discovery)
+    - [Declarative Manifest](#declarative-manifest)
     - [Imperative Command](#imperative-command)
   - [Lab: Explore default ClusterIP](#lab-explore-default-clusterip)
   - [Lab: Create ClusterIP](#lab-create-clusterip)
   - [Lab: Create ClusterIP for nginx](#lab-create-clusterip-for-nginx)
-    - [Use ClusterIP as Env var](#use-clusterip-as-env-var)
-  - [Pod `dnsPolicy` Field](#pod-dnspolicy-field)
-  - [Pod `enableServiceLinks` field](#pod-enableservicelinks-field)
-    - [Service Discovery](#service-discovery)
+  - [Lab: Use ClusterIP as Env var](#lab-use-clusterip-as-env-var)
 
 ---
 
@@ -23,9 +22,9 @@
   - the **default** service type
   - a Kubernetes Service type that **exposes** a group of `Pods` on an **internal**, **stable** IP address **inside** the `cluster`.
   - The IP is **virtual** (not bound to a specific Node interface).
-  - provides a stable IP + DNS name inside the cluster.
+  - provides a `stable IP` + `DNS` name **inside** the cluster.
   - only **reachable within** the cluster’s network (Pods, Nodes, other Services).
-    - Not accessible directly from the outside world.
+    - **Not** accessible directly **from the outside** world.
 
 - Cannot access externally
   - `kubectl port-forward` does not work.
@@ -38,10 +37,8 @@
 ```yaml
 sep:
   env:
-    - name: QUOTE_URL
-      value: http://quote/quote
-    - name: QUIZ_URL
-      value: http://quiz
+    - name: SVC_DNS
+      value: http://svc_name
 ```
 
 ---
@@ -56,41 +53,77 @@ kind: Service
 metadata:
   name: nginx-clusterip
 spec:
-  selector:
+  type: ClusterIP # Default service type
+  selector: # selector to match pod with labels
     app: nginx
   ports:
     - protocol: TCP
       port: 80 # Service port (ClusterIP virtual port)
       targetPort: 80 # Pod’s container port
-  type: ClusterIP # Default service type
 ```
 
-1. Service Creation
+1. **Service Creation**
    - cmd: `kubectl apply -f nginx-clusterip.yaml`
    - The `API Server`
      - assigns a virtual IP (ClusterIP) to each `pod`
-     - **stores** the Service in `etcd`, including the `ClusterIP`, a
-     - push update to `kube-proxy` on each node
+     - **stores** the Service in `etcd`, including the `ClusterIP`
+     - push update to `kube-proxy` on **each node**
    - `kube-proxy` Configures Rules
-     - installs iptables/IPVS rules
-2. Service Discovery
-   - CoreDNS registers the Service with a DNS name
+     - **installs** `iptables/IPVS rules`
+2. **Service Discovery**
+   - `CoreDNS` registers the `Service` with a DNS name
      - `nginx-clusterip.default.svc.cluster.local`
-3. Client request Inside the cluster
+3. **Client request** Inside the cluster
    - cmd: `curl http://nginx-clusterip:80`
 
-- `ClusterIP`: a virtual IP used to represent a collection of pods
-- `Endpoints object`: the ip+port for each pod
+- `ClusterIP`: a **virtual IP** used to represent a collection of pods
+- `Endpoints object`: the `ip`+`port` for each pod
 
 ---
 
-- DNS Resolution: `curl http://nginx-clusterip:80`
+- **DNS Resolution**:
+  - `curl http://nginx-clusterip:80`
   - a pod within the cluster sends a DNS query `nginx-clusterip`
-  - `CoreDNS`, the DNS server within the cluster, looks up Services in the API Server and finds:
+  - `CoreDNS`, the DNS server within the cluster, looks up `Services` in the API Server and finds:
     - `Service`: nginx-clusterip
     - `ClusterIP`: 10.96.0.15
   - `CoreDNS` sends back the `ClusterIP` 10.96.0.15:80
-  - `kube-proxy` looks up the Service rule and randomly/round-robin forward traffic to the `Endpoints object`, a specific pod
+  - `kube-proxy` looks up the `Service` rule and randomly/round-robin forward traffic to the `Endpoints object`, a specific `pod`
+
+---
+
+### Service Discovery
+
+- `service discovery`
+
+  - use `Services` and an `internal DNS system` (typically CoreDNS).
+  - allows applications (pods) to **find and communicate with each other** using **stable names** rather than dynamic, ephemeral IP addresses.
+
+- Legacy: use Env var used to identify service
+
+---
+
+### Declarative Manifest
+
+- `spec.dnsPolicy` field
+  - update the `resolv.conf` file within the pod, affect pod's DNS behavior
+  - `ClusterFirst`:
+    - default
+    - uses the `internal DNS` `first` and then the `DNS configured` for the cluster node.
+  - `Default`:
+    - uses the DNS configured for the node
+  - `None`:
+    - no DNS configuration is provided by Kubernetes
+    - use configuration in the using the `dnsConfig` field
+  - `ClusterFirstWithHostNet`:
+    - special pods that use the host’s network instead of their own
+
+---
+
+- Pod `enableServiceLinks` field
+  - Whether enable the **injection** of `service` information into the **environment**
+  - `true`: default
+  - `false`: **disable** the injection of service information
 
 ---
 
@@ -431,16 +464,7 @@ kubectl exec -it nginx -- cat /etc/resolv.conf
 # confirm: pod dns point to 10.96.0.10 which is kube-dns
 kubectl get svc -A
 # NAMESPACE              NAME                                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                  AGE
-# default                kubernetes                             ClusterIP   10.96.0.1        <none>        443/TCP                  6d18h
-# default                nginx-svc                              ClusterIP   10.111.110.150   <none>        8080/TCP                 43m
 # kube-system            kube-dns                               ClusterIP   10.96.0.10       <none>        53/UDP,53/TCP,9153/TCP   52d
-# kubernetes-dashboard   dashboard-metrics-scraper              ClusterIP   10.100.98.62     <none>        8000/TCP                 8d
-# kubernetes-dashboard   kubernetes-dashboard                   ClusterIP   10.103.84.253    <none>        443/TCP                  8d
-# kubernetes-dashboard   kubernetes-dashboard-api               ClusterIP   10.101.197.91    <none>        8000/TCP                 8d
-# kubernetes-dashboard   kubernetes-dashboard-auth              ClusterIP   10.111.54.247    <none>        8000/TCP                 8d
-# kubernetes-dashboard   kubernetes-dashboard-kong-proxy        ClusterIP   10.108.33.61     <none>        443/TCP                  8d
-# kubernetes-dashboard   kubernetes-dashboard-metrics-scraper   ClusterIP   10.105.46.123    <none>        8000/TCP                 8d
-# kubernetes-dashboard   kubernetes-dashboard-web               ClusterIP   10.107.83.59     <none>        8000/TCP                 8d
 ```
 
 - Explore env var
@@ -459,7 +483,7 @@ kubectl exec -it nginx -- env | sort
 
 ---
 
-### Use ClusterIP as Env var
+## Lab: Use ClusterIP as Env var
 
 ```sh
 tee ping-pod.yaml<<EOF
@@ -504,41 +528,9 @@ kubectl logs pod/ping-pod
 # </body>
 ```
 
-
 ---
 
-## Pod `dnsPolicy` Field
-
-- `spec.dnsPolicy` field
-  - update the `resolv.conf` file within the pod, affect pod's DNS behavior
-  - `ClusterFirst`:
-    - default
-    - uses the `internal DNS` `first` and then the `DNS configured` for the cluster node.
-  - `Default`:
-    - uses the DNS configured for the node
-  - `None`:
-    - no DNS configuration is provided by Kubernetes
-    - use configuration in the using the `dnsConfig` field
-  - `ClusterFirstWithHostNet`:
-    - special pods that use the host’s network instead of their own
-
----
-
-## Pod `enableServiceLinks` field
-
-- Whether enable the injection of service information into the environment
-- `false`: **disable** the injection of service information
-
----
-
-### Service Discovery
-
-- `service discovery`
-
-  - use `Services` and an `internal DNS system` (typically CoreDNS).
-  - allows applications (pods) to **find and communicate with each other** using **stable names** rather than dynamic, ephemeral IP addresses.
-
-- Legacy: use Env var used to identify service
+- Explore Env var
 
 ```sh
 # service ip: 10.111.110.150

@@ -22,6 +22,7 @@
     - [Lab: Multiple Container - log and exec](#lab-multiple-container---log-and-exec)
     - [Muli-container Pod vs Multiple pod](#muli-container-pod-vs-multiple-pod)
   - [Multi-containers Pod](#multi-containers-pod)
+  - [Node Selector](#node-selector)
 
 ---
 
@@ -736,3 +737,19 @@ kubectl exec -it multi-container-log-demo -c redis -- redis-cli -v
   - `Sidecar containers`
 
 ---
+
+## Node Selector
+
+- Label a node
+
+```sh
+kubectl label node node_name size=Large
+```
+
+- Use Node selector for a pod
+
+```yaml
+spec:
+  nodeSelector:
+    size: Large # refer to the node label
+```

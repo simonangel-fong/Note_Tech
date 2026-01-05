@@ -5,8 +5,9 @@
 - [Kubernetes - Services](#kubernetes---services)
   - [Pod Communication](#pod-communication)
   - [Service](#service)
+    - [Types of Services](#types-of-services)
     - [Imperative Commands](#imperative-commands)
-    - [Declarative Commands](#declarative-commands)
+    - [Declarative Manifest](#declarative-manifest)
   - [ClusterIP](#clusterip)
   - [Load Balancer](#load-balancer)
   - [Common Commands](#common-commands)
@@ -17,14 +18,14 @@
 
 ## Pod Communication
 
-- Pods are linked via a flat network that requires no NAT
+- `Pods` are linked via **a flat network** that requires **no** `NAT`
 
-  - packets exchange between pods only needs the source IP and port, and the destination IP and port,
+  - packets exchange between `Pods` only needs the **source** `IP` and `port`, and the **destination** `IP` and `port`,
 
 - constraint
   - `Pods` are **ephemeral**.
   - A `pod` gets its **IP address** only when it’s **assigned** to a node.
-  - A simgle IP / DNS to is required; but Each of replicas pod has its own IP address.
+  - A simgle IP / DNS to is required; but Each of replicas `Pod` has its own IP address.
 
 ---
 
@@ -34,27 +35,30 @@
 
   - an object to **provide a single, stable access point** to **a set of pods** that provide the same service.
     - Each `service` has a **stable IP address** that **doesn’t change** for as long as the `service` **exists**.
-    - A `service` acts as a `load balancer` in front of those pods.
+    - A `service` acts as a `load balancer` in front of those `pods`.
   - `Services` use **labels** and **selectors** to find the right `Pods`.
 
-- Types of Services
+---
 
-  - `ClusterIP`
-    - default
-    - Exposes Pods on a `virtual internal IP`.
-    - Accessible **only within** the `cluster`.
-      - e.g. backend services for microservices.
-  - `NodePort`
-    - **Exposes the Service** on a **static port** (30000–32767) on **each** `Node`’s IP.
-    - Accessible from **outside** the `cluster` using `NodeIP:NodePort`.
-    - Good for **testing**, not ideal for production.
-  - `LoadBalancer`
-    - **Integrates** with cloud provider `load balancers` (`AWS ELB`, `GCP LB`, `Azure LB`).
-    - **Exposes** the Service to the `internet`.
-    - `Cloud provider` assigns a `public IP`.
-  - `ExternalName`
-    - **Maps** the `Service` to an **external** `DNS` name (like api.example.com).
-    - No selector, just returns a `CNAME`.
+### Types of Services
+
+- `ClusterIP`
+  - **default**
+  - Exposes Pods on a `virtual internal IP`.
+  - Accessible **only within** the `cluster`.
+    - e.g. backend services for microservices.
+- `NodePort`
+  - **Exposes the Service** on a **static port** (30000–32767) on **each** `Node`’s IP.
+  - Accessible from **outside** the `cluster` using `NodeIP:NodePort`.
+  - Good for **testing**, not ideal for production.
+- `LoadBalancer`
+  - **Integrates** with cloud provider `load balancers` (`AWS ELB`, `GCP LB`, `Azure LB`).
+  - **Exposes** the Service to the `internet`.
+  - `Cloud provider` assigns a `public IP`.
+- `ExternalName`
+
+  - **Maps** the `Service` to an **external** `DNS` name (like api.example.com).
+  - No selector, just returns a `CNAME`.
 
 - `Service Discovery`
 
@@ -62,7 +66,7 @@
   - e.g., `nginx-service.default.svc.cluster.local`
   - Other Pods can talk to it **using this name** instead of IP.
 
-- Cannot ping a serivce:
+- **Cannot** `ping` a serivce:
   - because svc is virtual.
 
 ---
@@ -78,12 +82,7 @@
 | `kubectl create svc loadbalancer svc_name --tcp=80` | Create a LoadBalancer service                       |
 | `kubectl delete svc svc_name`                       | Delete a Service by name.                           |
 
-### Declarative Commands
-
-| Command                       | Description                                                |
-| ----------------------------- | ---------------------------------------------------------- |
-| `kubectl create -f yaml_file` | Create a Service from a YAML file.                         |
-| `kubectl apply -f yaml_file`  | Apply changes to a Service configuration from a YAML file. |
+### Declarative Manifest
 
 - basic fields
 
@@ -107,16 +106,6 @@
   - default: 3 hours
 
 - `service` **doesn’t** provide **cookie-based session affinity**
-
----
-
-- Service Types
-
-  - `NodePort`
-  - `ClusterIP`
-  - `Load Balancer`
-
----
 
 ---
 

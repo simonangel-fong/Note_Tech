@@ -1,0 +1,21 @@
+# demo-priorityclass-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: low-priority-pod
+spec:
+  priorityClassName: low-priority # specify priority
+  containers:
+    - image: nginx
+      name: nginx
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: high-prio-pod
+spec:
+  priorityClassName: high-priority # specify priority
+  containers:
+    - image: nginx
+      name: nginx

@@ -1,10 +1,10 @@
-# Kubernetes - Node
+# Kubernetes: Node
 
 [Back](../../index.md)
 
-- [Kubernetes - Node](#kubernetes---node)
+- [Kubernetes: Node](#kubernetes-node)
   - [Node](#node)
-  - [Imperative Command](#imperative-command)
+    - [Imperative Command](#imperative-command)
   - [Lab: Node info](#lab-node-info)
   - [Label a node and Node Selector](#label-a-node-and-node-selector)
 
@@ -12,7 +12,7 @@
 
 ## Node
 
-## Imperative Command
+### Imperative Command
 
 | Command                                                              | Description                                            |
 | -------------------------------------------------------------------- | ------------------------------------------------------ |

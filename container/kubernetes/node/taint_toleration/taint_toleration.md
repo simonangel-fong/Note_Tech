@@ -4,8 +4,11 @@
 
 - [Kubernetes - Node: Taints and Tolerations](#kubernetes---node-taints-and-tolerations)
   - [Taints \& Tolerations](#taints--tolerations)
-  - [Use Cases](#use-cases)
-  - [Imperative Commands](#imperative-commands)
+    - [Effects options](#effects-options)
+  - [Tolerations](#tolerations)
+    - [Use Cases](#use-cases)
+    - [Imperative Commands](#imperative-commands)
+  - [Lab: Control Plane Default Taint](#lab-control-plane-default-taint)
   - [Lab: Taint NoSchedule Effect](#lab-taint-noschedule-effect)
   - [Lab: Taint NoExecute Effect](#lab-taint-noexecute-effect)
 
@@ -15,32 +18,39 @@
 
 - `taint`
 
-  - a **restriction** applied to a `node` that prevent `pods` from being **scheduled** onto the Node unless allowed.
-    - set on the node
+  - a **restriction** applied to a `node` that prevent `pods` from being **scheduled** onto the `Node` unless allowed.
+    - **set on** the `node`
   - format: `key=value:effect`
     - key/value pair to identify the toleration that is allowed.
-  - By default in Kubernetes, the `control-plane` / `master Node` is **tainted** so that regular Pods are not scheduled onto it.
 
-- By default, master node usually gets taints to prevent pod other than control-plane.
+- By default the `control-plane` / `master Node` is **tainted** so that regular `Pods` are not scheduled onto it.
 
-  - `kubectl describe node kubemaster | grep Taint`
-
-- Effects options:
-  - `NoSchedule`
-    - **New** Pods without matching `toleration` are **not scheduled**.
-  - `PreferNoSchedule`:
-    - Scheduler tries to avoid placing Pods, but not strictly enforced.
-  - `NoExecute`
-    - Prevents **scheduling** and **evicts** **existing** non-tolerating Pods.
+- **NOTE**:
+  - `taint` works with `scheduler`; However, `Scheduler` **skips** the `Pod` with `pod.spec.nodeSelector`, can schedule directly on the specific `node`.
 
 ---
+
+### Effects options
+
+- `NoSchedule`
+  - **New** Pods without matching `toleration` are **not scheduled**.
+- `PreferNoSchedule`:
+  - Scheduler tries to avoid placing Pods, but not strictly enforced.
+- `NoExecute`
+  - Prevents **scheduling** and **evicts** **existing** non-tolerating Pods.
+
+---
+
+## Tolerations
 
 - `Tolerations`
 
   - a **exceptions** applied to a `pod` that **allow pods to be scheduled** even if a `taint` **exists** on a node.
-  - set on the pod, allowing a pod to be scheduled
-    - key/value pair identifys toleration that is allowed
-      - e.g., taint: `app=web:NoSchedule` == toleration `app=web`
+  - set on the `Pod`, allowing a pod to be scheduled
+  - key/value pair identifys toleration that is allowed
+    - e.g.,
+      - taint: `app=web:NoSchedule`
+      - toleration `app=web`
 
 - With `taint`
 
@@ -53,6 +63,7 @@
 - e.g.:
 
 ```yaml
+kind: Pod
 spec:
   tolerations:
     - key: "key"
@@ -63,20 +74,21 @@ spec:
 
 ---
 
-## Use Cases
+### Use Cases
 
 - **Dedicated nodes**
-  - Ensure that **only specific workloads** (e.g., databases, monitoring agents) run on **certain nodes**.
+  - Ensure that **only specific workloads** run on **certain nodes**.
+  - e.g., databases, monitoring agents
 - **Node maintenance / cordon**
   - Temporarily taint nodes so no new Pods are scheduled.
 - **Special hardware** (e.g., GPU nodes)
   - Taint GPU nodes; only GPU workloads with tolerations can land there.
 - **Critical system Pods**
-  - Nodes can be tainted `NoExecute` so only Pods with tolerations (like kube-dns) survive.
+  - Nodes can be tainted `NoExecute` so only Pods with tolerations (like `kube-dns`) survive.
 
 ---
 
-## Imperative Commands
+### Imperative Commands
 
 | **CMD**                                                    | **DESC**                                                                    |
 | ---------------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -89,19 +101,43 @@ spec:
 
 ---
 
+## Lab: Control Plane Default Taint
+
+```sh
+kubectl get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   37d   v1.33.6
+# node01         Ready    <none>          37d   v1.33.6
+# node02         Ready    <none>          37d   v1.33.6
+
+kubectl describe node controlplane
+# Taints:             node-role.kubernetes.io/control-plane:NoSchedule
+```
+
+---
+
 ## Lab: Taint NoSchedule Effect
 
 ```sh
-# get the taint info
-kubectl describe node minikube | grep Taint
+kubectl get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   37d   v1.33.6
+# node01         Ready    <none>          37d   v1.33.6
+# node02         Ready    <none>          37d   v1.33.6
+
+kubectl describe node node01 | grep Taints
+# Taints:             <none>
+
+kubectl describe node node02 | grep Taints
 # Taints:             <none>
 
 # add taint
-kubectl taint node minikube app=web:NoSchedule
-# node/minikube tainted
+kubectl taint node node02 app=database:NoSchedule
+# node/node02 tainted
 
-kubectl describe node minikube | grep Taint
-# Taints:             app=web:NoSchedule
+# confirm
+kubectl describe node node02 | grep Taints
+# Taints:             app=database:NoSchedule
 ```
 
 ---
@@ -109,141 +145,193 @@ kubectl describe node minikube | grep Taint
 - Create pod without toleration
 
 ```sh
-kubectl run nginx --image=nginx
-# pod/nginx created
+kubectl run mongo01 --image=mongo
+# pod/mongo01 created
+kubectl run mongo02 --image=mongo
+# pod/mongo02 created
 
-kubectl get pod
-# NAME        READY   STATUS    RESTARTS   AGE
-# nginx       0/1     Pending   0          3s
+# confirm: all schedule on node
+kubectl get pod -o wide
+# NAME      READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+# mongo01   1/1     Running   0          11s   10.244.1.31   node01   <none>           <none>
+# mongo02   1/1     Running   0          6s    10.244.1.32   node01   <none>           <none>
 ```
+
+---
 
 - Create pod with toleration
 
-```sh
-tee pod-toleration.yaml<<EOF
+```yaml
+# demo-taint-noschedule-pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-pod
+  name: demo-taint-noschedule-pod
 spec:
-  containers:
-  - name: nginx-con
-    image: nginx
   tolerations:
-  - key: "app"
-    operator: "Equal"
-    value: "web"
-    effect: "NoSchedule"
-EOF
+    - key: "app"
+      operator: "Equal"
+      value: "database"
+      effect: "NoSchedule"
+  containers:
+    - name: mongo
+      image: mongo
+```
 
-kubectl apply -f pod-toleration.yaml
-# pod/nginx-pod created
+```sh
+kubectl apply -f demo-taint-noschedule-pod.yaml
+# pod/demo-taint-noschedule-pod created
 
-kubectl get pod
-# NAME        READY   STATUS    RESTARTS   AGE
-# nginx       0/1     Pending   0          46s
-# nginx-pod   1/1     Running   0          4s
+# pod can be scheduled on node02
+kubectl get pod -o wide
+# NAME                        READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+# demo-taint-noschedule-pod   1/1     Running   0          7s      10.244.2.34   node02   <none>           <none>
+# mongo01                     1/1     Running   0          7m18s   10.244.1.36   node01   <none>           <none>
+# mongo02                     1/1     Running   0          7m7s    10.244.1.37   node01   <none>           <none>
 ```
 
 - Delete taint
 
 ```sh
-kubectl taint node minikube app=web:NoSchedule-
-# node/minikube untainted
+kubectl taint node node02 app=database:NoSchedule-
+# node/node02 untainted
 
-kubectl describe node minikube | grep Taint
+kubectl describe node node02 | grep Taints
 # Taints:             <none>
 
-kubectl get pod
-# NAME        READY   STATUS    RESTARTS   AGE
-# nginx       1/1     Running   0          110s
-# nginx-pod   1/1     Running   0          68s
+kubectl run mongo03 --image=mongo
+# pod/mongo03 created
+
+# Confirm
+kubectl get pod mongo03 -o wide
+# NAME      READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+# mongo03   1/1     Running   0          29s   10.244.2.35   node02   <none>           <none>
 ```
 
 ---
 
 ## Lab: Taint NoExecute Effect
 
-- Create pod before tainting
+- Change Env, leave only one node
 
 ```sh
-# get the taint info
-kubectl describe node minikube | grep Taint
-# Taints:             <none>
-
-kubectl run nginx --image=nginx
-# pod/nginx created
-
-kubectl get pod
-# NAME    READY   STATUS    RESTARTS   AGE
-# nginx   1/1     Running   0          9s
+kubectl get node
+# NAME           STATUS     ROLES           AGE   VERSION
+# controlplane   Ready      control-plane   40d   v1.33.6
+# node01         Ready      <none>          40d   v1.33.6
+# node02         NotReady   <none>          40d   v1.33.6
 ```
 
-- taint node
-
-```sh
-# tain a node
-kubectl taint node minikube app=web:NoExecute
-# node/minikube tainted
-
-# confirm
-kubectl describe node minikube | grep Taint
-# Taints:             app=web:NoExecute
-
-# get existing pod
-kubectl get pod
-# No resources found in default namespace.
-```
-
-- Create pod with toleration
-
-```sh
-tee pod-toleration.yaml<<EOF
+```yaml
+# demo-taint-noexecute-existing-pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-pod
+  name: demo-old-mongo-notoleration
 spec:
   containers:
-  - name: nginx-con
-    image: nginx
+    - name: mongo
+      image: mongo
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-old-mongo-toleration
+spec:
   tolerations:
-  - key: "app"
-    operator: "Equal"
-    value: "web"
-    effect: "NoExecute"
-EOF
-
-kubectl apply -f pod-toleration.yaml
-# pod/nginx-pod created
-
-kubectl get pod
-# NAME        READY   STATUS    RESTARTS   AGE
-# nginx-pod   1/1     Running   0          5s
+    - key: "app"
+      operator: "Equal"
+      value: "database"
+      effect: "NoExecute"
+  containers:
+    - name: mongo
+      image: mongo
 ```
 
-- Remove taint and create pod wihtout toleration
+```sh
+kubectl apply -f demo-taint-noexecute-existing-pod.yaml
+# pod/demo-old-mongo-notoleration created
+# pod/demo-old-mongo-toleration created
+
+kubectl get pod -o wide
+# NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+# demo-old-mongo-notoleration   1/1     Running   0          77s   10.244.1.42   node01   <none>           <none>
+# demo-old-mongo-toleration     1/1     Running   0          77s   10.244.1.41   node01   <none>           <none>
+```
+
+- Add taints
 
 ```sh
-kubectl taint node minikube app=web:NoExecute-
-# node/minikube untainted
+kubectl taint node node01 app=database:NoExecute
+# node/node01 tainted
 
-kubectl describe node minikube | grep Taints
+# confirm
+kubectl describe node node01 | grep Taints
+# Taints:             app=database:NoExecute
+
+# confirm: only the toleration pod
+kubectl get pod -o wide
+# NAME                        READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+# demo-old-mongo-toleration   1/1     Running   0          27s   10.244.1.48   node01   <none>           <none>
+```
+
+---
+
+```yaml
+# demo-taint-noexecute-new-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-new-mongo-notoleration
+spec:
+  containers:
+    - name: mongo
+      image: mongo
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-new-mongo-toleration
+spec:
+  tolerations:
+    - key: "app"
+      operator: "Equal"
+      value: "database"
+      effect: "NoExecute"
+  containers:
+    - name: mongo
+      image: mongo
+```
+
+```sh
+kubectl apply -f demo-taint-noexecute-new-pod.yaml
+# pod/demo-new-mongo-notoleration created
+# pod/demo-new-mongo-toleration created
+
+# confirm: 1 pending; 1 running
+kubectl get pod
+# NAME                          READY   STATUS    RESTARTS   AGE
+# demo-new-mongo-notoleration   0/1     Pending   0          40s
+# demo-new-mongo-toleration     1/1     Running   0          40s
+# demo-old-mongo-toleration     1/1     Running   0          3m22s
+```
+
+- Delete taints
+
+```sh
+kubectl taint node node01 app=database:NoExecute-
+# node/node01 untainted
+
+# confirm
+kubectl describe node node01 | grep Taints
 # Taints:             <none>
 
-kubectl run ngin --image=nginx
-# pod/ngin created
-
+# confirm: all running
 kubectl get pod
-# NAME        READY   STATUS    RESTARTS   AGE
-# ngin        1/1     Running   0          17s
-# nginx-pod   1/1     Running   0          3m3s
-```
-
-- Clean up
-
-```sh
-kubectl delete pod ngin nginx-pod
-# pod "ngin" deleted from default namespace
-# pod "nginx-pod" deleted from default namespace
+# NAME                          READY   STATUS    RESTARTS   AGE
+# demo-new-mongo-notoleration   1/1     Running   0          2m15s
+# demo-new-mongo-toleration     1/1     Running   0          2m15s
+# demo-old-mongo-toleration     1/1     Running   0          4m57s
 ```
