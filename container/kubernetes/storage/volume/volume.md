@@ -1,8 +1,8 @@
-# Kubernetes - Storage: Volume
+# Kubernetes - Storage: Pod Volume
 
 [Back](../../index.md)
 
-- [Kubernetes - Storage: Volume](#kubernetes---storage-volume)
+- [Kubernetes - Storage: Pod Volume](#kubernetes---storage-pod-volume)
   - [Container storage](#container-storage)
     - [Container Storage Interface](#container-storage-interface)
     - [Container Volume](#container-volume)

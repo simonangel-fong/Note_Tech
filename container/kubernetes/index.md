@@ -9,24 +9,26 @@
 - [Container](./container/container/container.md)
 
   - [Back-off Mechanism & Restart Policy](./container/backoff_restart/backoff_restart.md)
-  - [Liveness Probe](./container/liveness_probe/liveness_probe.md)
-  - [Startup Probe](./container/startup_probe/startup_probe.md)
-  - [Lifecycle Hook](./container/lifecycle_hook/lifecycle_hook.md)
+  - [`Liveness Probe`](./container/liveness_probe/liveness_probe.md)
+  - [`Startup Probe`](./container/startup_probe/startup_probe.md)
+  - [`Lifecycle Hook`](./container/lifecycle_hook/lifecycle_hook.md)
   - [Command & Arg & ENV](./container/cmd_arg_env/cmd_arg_env.md)
 
 - Multiple Containers:
 
-  - [Co-located Containers](./container/colocated/colocated.md)
-  - [Init Containers](./container/init/init.md)
-  - [Sidecar Containers](./container/sidecar/sidecar.md)
+  - [`Co-located Containers`](./container/colocated/colocated.md)
+  - [`Init Containers`](./container/init/init.md)
+  - [`Sidecar Containers`](./container/sidecar/sidecar.md)
 
 - Storage:
   - [Docker Storage](./storage/docker_storage/docker_storage.md)
-  - [Pod Volume](./storage/volume/volume.md)
+  - [`Pod Volume`](./storage/volume/volume.md)
   - [Common Volume Types](./storage/volume_type/volume_type.md)
-    - [emptyDir](./storage/empty_dir/empty_dir.md)
-    - [hostPath](./storage/host_path/host_path.md)
-    - [Persistent Volume & Persistent Volume Claim](./storage/pv_pvc/pv_pvc.md)
+    - [`emptyDir`](./storage/empty_dir/empty_dir.md)
+    - [`hostPath`](./storage/host_path/host_path.md)
+    - [`Persistent Volume` & `Persistent Volume Claim`](./storage/pv_pvc/pv_pvc.md)
+    - [`Node Local Persistent Volume`](./storage/node_local_pv/node_local_pv.md)
+    - [Dynamic Volume Provisioning & `StorageClass`](./storage/dynamic_pv_storageclass/dynamic_pv_storageclass.md)
 - Injected Data
   - [`ConfigMap`](./storage/configmap/configmap.md)
     - [Use `ConfigMap` as Environment Variable](./storage/configmap_env/configmap_env.md)
@@ -34,27 +36,27 @@
   - [`Secret`](./storage/secret/secret.md)
     - [Use `Secret` as Environment variables](./storage/secret_env/secret_env.md)
     - [Use `Secret` as Volume](./storage/secret_volume/secret_volume.md)
-  - [Downward API](./storage/downward_api/downward_api.md)
-    - [Use Downward API as Environment Variables](./storage/downward_api_env/downward_api_env.md)
-    - [Use Downward API as Volume](./storage/downward_api_volume/downward_api_volume.md)
-  - [Projected Volumes](./storage/projected_volume/projected_volume.md)
+  - [`Downward API`](./storage/downward_api/downward_api.md)
+    - [Use `Downward API` as Environment Variables](./storage/downward_api_env/downward_api_env.md)
+    - [Use `Downward API` as Volume](./storage/downward_api_volume/downward_api_volume.md)
+  - [`Projected Volumes`](./storage/projected_volume/projected_volume.md)
 
 ---
 
 ## Workload
 
-- [Pod](./pod/pod/pod.md)
+- [`Pod`](./pod/pod/pod.md)
   - [Lifecycle](./pod/lifecycle/lifecycle.md)
-- [ReplicaSet](./replicaset/replicaset.md)
-- [Deployment](./deployment/deployment.md)
+- [`ReplicaSet`](./replicaset/replicaset.md)
+- [`Deployment`](./deployment/deployment.md)
   - [Deployment Rollout & Rollback](./deployment/rollout_rollback.md)
   - [Common Deployment Strategies](./deployment/strategy.md)
-- [StatefulSets](./statefulset/statefulset.md)
+- [`StatefulSets`](./statefulset/statefulset.md)
   - [StatefulSets Rollout & Rollback](./statefulset/rollout_rollback.md)
-- [DaemonSets](./daemonset/daemonset.md)
+- [`DaemonSets`](./daemonset/daemonset.md)
   - [DaemonSets Rollout & Rollback](./daemonset/rollout_rollback.md)
-- [Job](./job/job.md)
-- [CronJob](./cronjob/cronjob.md)
+- [`Job`](./job/job.md)
+- [`CronJob`](./cronjob/cronjob.md)
 
 ---
 
@@ -85,20 +87,6 @@
   - [Namespace](./management/namespace/namespace.md)
   - [Label and Selector](./management/label_selector/label_selector.md)
   - [Annotation](./object/annotation/annotation.md)
-
----
-
-
----
-
-## Workload
-
-- Storage
-
-  - [PV & PVC](./app/persist_volume/persist_volume.md)
-  - [Dynamic Provisioned Persistent Volumes](./app/dynamic_pv/dynamic_pv.md)
-  - [Node Local Persistent Volume](./app/node_local_pv/node_local_pv.md)
-  - [Install `rancher`](./storage/install_/install.md)
 
 ---
 

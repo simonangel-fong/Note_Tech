@@ -1,19 +1,20 @@
-# Kubernetes - Storage: Dynamic Provisioned Persistent Volumes
+# Kubernetes - Storage: Dynamic Volume Provisioning & StorageClass
 
 [Back](../../index.md)
 
-- [Kubernetes - Storage: Dynamic Provisioned Persistent Volumes](#kubernetes---storage-dynamic-provisioned-persistent-volumes)
-  - [Dynamic provisioned Persistent Volumes](#dynamic-provisioned-persistent-volumes)
-    - [StorageClass object](#storageclass-object)
-    - [Declarative Method](#declarative-method)
+- [Kubernetes - Storage: Dynamic Volume Provisioning \& StorageClass](#kubernetes---storage-dynamic-volume-provisioning--storageclass)
+  - [Dynamic Volume Provisioning](#dynamic-volume-provisioning)
+  - [StorageClass Object](#storageclass-object)
+    - [Binding Mode](#binding-mode)
+    - [Declarative Manifest](#declarative-manifest)
     - [Imperative Commands](#imperative-commands)
-  - [Lab: StorageClass](#lab-storageclass)
+    - [Lab: StorageClass](#lab-storageclass)
     - [Lab: Create PVC with Default SC](#lab-create-pvc-with-default-sc)
     - [Lab: Expand PVC size 1G to 10G](#lab-expand-pvc-size-1g-to-10g)
 
 ---
 
-## Dynamic provisioned Persistent Volumes
+## Dynamic Volume Provisioning
 
 - `Dynamic volume provisioning`
   - **automates storage creation on-demand** when a user requests it via a `PersistentVolumeClaim (PVC)`, eliminating manual admin setup;
@@ -24,7 +25,7 @@
 
 ---
 
-### StorageClass object
+## StorageClass Object
 
 - Static Provisioning vs Dynamic Provisioning
 
@@ -46,23 +47,30 @@
 
   - the `volume` is deleted when it gets released by deleting the `claim`.
 
-- binding mode:
+### Binding Mode
+
+- `StorageClass.volumeBindingMode` field:
+
+  - controls when volume binding and dynamic provisioning should occur.
 
   - `Immediate`:
+    - default
     - The provision and binding of the `persistent volume` **takes place immediately** after the `claim` is created.
     - only applicable to `volumes` that are can be **accessed** from any `cluster node`.
   - `WaitForFirstConsumer`:
     - The `volume` is provisioned and bound to the `claim` when the **first** `pod` that uses this claim is created.
     - This mode is used for **topology-constrained** `volume` types.
-  - Depends on the storage provisioners, the status of the PVC using SC might be `Pending` and turns to `Bound` after the pod is created.
-    - especially for the provisioners use "local" in **multiple** `nodes`.
+
+- Depends on the storage provisioners, the status of the PVC using SC might be `Pending` and turns to `Bound` after the pod is created.
+
+  - especially for the provisioners use "local" in **multiple** `nodes`.
 
 - If a `persistent volume claim` refers to a **non-existent** `storage class`, the `claim` **remains** `Pending` until the `storage class` is **created**.
   - Kubernetes attempts to bind the `claim` at regular intervals, generating a `ProvisioningFailed` event each time.
 
 ---
 
-### Declarative Method
+### Declarative Manifest
 
 - create a storage class with `google cloud engine`
   - pc is not required
@@ -73,6 +81,7 @@ kind: StorageClass
 metadata:
   name: google-storage
 provisioner: kubernetes.io/gce-pd
+volumeBindingMode: WaitForFirstConsumer # Binding Mode
 parameters:
   type: pd-standard
   replication-type: none
@@ -130,7 +139,7 @@ spec:
 
 ---
 
-## Lab: StorageClass
+### Lab: StorageClass
 
 - Get default sc
 
