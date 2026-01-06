@@ -1,4 +1,28 @@
-[Back](../index.md)
+# Kubernetes Security: Authentication
+
+[Back](../../index.md)
+
+- [Kubernetes Security: Authentication](#kubernetes-security-authentication)
+  - [Authentication](#authentication)
+  - [State Token File](#state-token-file)
+  - [TLS Cerfificates](#tls-cerfificates)
+  - [Asymmetric Encryption](#asymmetric-encryption)
+    - [Server Certificate](#server-certificate)
+    - [Client Cerficates](#client-cerficates)
+    - [TLS example: SSH](#tls-example-ssh)
+    - [TLS example: Openssl](#tls-example-openssl)
+  - [TLS in k8s](#tls-in-k8s)
+    - [Certificates in K8s](#certificates-in-k8s)
+    - [Certificate Creation](#certificate-creation)
+  - [Lab: Generate Cert and Key with Openssl](#lab-generate-cert-and-key-with-openssl)
+    - [Cerfiticate Authority(CA) Certificate](#cerfiticate-authorityca-certificate)
+    - [Client Certificates](#client-certificates)
+    - [Server Certificate](#server-certificate-1)
+    - [Kubelet](#kubelet)
+    - [View the certificate](#view-the-certificate)
+  - [Troubleshooting `kubeadm` TLS cert](#troubleshooting-kubeadm-tls-cert)
+  - [Certificate Management](#certificate-management)
+  - [Lab: CertificateSigninRequest](#lab-certificatesigninrequest)
 
 ## Authentication
 

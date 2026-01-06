@@ -5,10 +5,12 @@
 - [Kubernetes](#kubernetes)
   - [Cluster](#cluster)
   - [Node](#node)
+  - [Master Node / Control plane](#master-node--control-plane)
+  - [Worker Node](#worker-node)
   - [Container](#container)
   - [Workload](#workload)
   - [Security](#security)
-  - [Tools](#tools)
+  - [Configuration](#configuration)
   - [Installation](#installation)
 
 ---
@@ -20,31 +22,17 @@
   - [Architecture](./cluster/architecture/architecture.md)
   - [YAML File](./cluster/yaml/yaml.md)
   - [`kubectl`](./cluster/kubectl/kubectl.md)
+    - [KubeConfig](./cluster/kube_config/kube_config.md)
 
-- Master Node / Control plane
-
-  - [API Server](./cluster/api_server/api_server.md)
-  - [`etcd`](./cluster/etcd/etcd.md)
-  - [Controller Manager](./cluster/controller_manager/controller_manager.md)
-  - [Scheduler](./cluster/scheduler/scheduler.md)
-    - [Manual Scheduler](./cluster/scheduler_manual/scheduler_manual.md)
-
-- Worker Node
-
-  - [`kubelet`](./cluster/kubelet/kubelet.md)
-    - [`Static Pod`](./cluster/kubelet/static_pod.md)
-  - [`kube-proxy`](./cluster/kube_proxy/kube_proxy.md)
-
-- Cluster
-
-  - [Upgrade](./cluster/upgrade/upgrade.md)
-  - [Backup](./cluster/backup/backup.md)
-  - [Logging](./cluster/logging/logging.md)
+- [Upgrade](./cluster/upgrade/upgrade.md)
+- [Backup](./cluster/backup/backup.md)
+- [Logging](./cluster/logging/logging.md)
 
 - [API Object](./api_object/api_object/api_object.md)
   - [Namespace](./api_object/namespace/namespace.md)
   - [Label and Selector](./api_object/label_selector/label_selector.md)
   - [Annotation](./api_object/annotation/annotation.md)
+  - [Custom Resource Definition(CRD)](./api_object/crd/crd.md)
 
 ---
 
@@ -56,10 +44,30 @@
 
 ---
 
+## Master Node / Control plane
+
+- [API Server](./node_master/api_server/api_server.md)
+- [`etcd`](./node_master/etcd/etcd.md)
+- [Controller Manager](./node_master/controller_manager/controller_manager.md)
+- [Scheduler](./node_master/scheduler/scheduler.md)
+  - [Manual Scheduler](./node_master/scheduler_manual/scheduler_manual.md)
+- [Install Master Node](./node_master/install_master/install_master.md)
+
+---
+
+## Worker Node
+
+- [`kubelet`](./node_worker/kubelet/kubelet.md)
+  - [`Static Pod`](./node_worker/kubelet/static_pod.md)
+- [`kube-proxy`](./node_worker/kube_proxy/kube_proxy.md)
+
+---
+
 ## Container
 
 - [Container](./container/container/container.md)
 
+  - [Image](./container/image/image.md)
   - [Back-off Mechanism & Restart Policy](./container/backoff_restart/backoff_restart.md)
   - [`Liveness Probe`](./container/liveness_probe/liveness_probe.md)
   - [`Startup Probe`](./container/startup_probe/startup_probe.md)
@@ -144,40 +152,32 @@
   - [Horizontal Pod Autoscaler (HPA)](./scaling/hpa/hpa.md)
   - [Vertical Pod Autoscaling (VPA)](./scaling/vpa/vpa.md)
 
-
 ---
 
 ## Security
 
 - [Admission Controller](./security/admission_controller/admission_controller.md)
-- [Admission Controller](./adm_ctl/adm_ctl.md)
-
-  - [AUthentication](./authentication/authentication.md)
-  - [KubeConfig](./kube_config/kube_config.md)
-  - [Authorization](./authorization/authorization.md)
-  - [ClusterRole](./cluster_role/cluster_role.md)
-  - [ServiceAccount](./svc_account/svc_account.md)
-  - [Secure Image](./image/image.md)
-  - [Security Context](./security_context/security_context.md)
-  - [Network Policy](./network_policy/network_policy.md)
-  - [Custom Resource Definition(CRD)](./crd/crd.md)
+- [Authentication](./security/authentication/authentication.md)
+- [Authorization](./security/authorization/authorization.md)
+- [ClusterRole](./security/cluster_role/cluster_role.md)
+- [ServiceAccount](./security/svc_account/svc_account.md)
+- [Security Context](./security/security_context/security_context.md)
+- [Network Policy](./security/network_policy/network_policy.md)
 
 ---
 
-## Tools
+## Configuration
 
-- [HELM](./tool/helm/helm.md)
-- [Kustomize](./tool/kustomize/kustomize.md)
-- [Minikube](./tool/minikube/minikube.md)
+- [`Helm Charts`](./config/helm/helm.md)
+- [`Kustomize`](./config/kustomize/kustomize.md)
 
 ---
 
 ## Installation
 
-- [Install Master](./install_master/install_master.md)
-- [Install Worker](./install_worker/install_worker.md)
-- [RHEL9: `minikube` installation](./install/minikube_rhel9/minikube_rhel9.md)
-- [Ubuntu: `minikube` installation](./install/minikube_ubuntu/minikube_ubuntu.md)
+- [`minikube`](./install/minikube/minikube.md)
+- [`minikube` Installation: RHEL9](./install/minikube_rhel9/minikube_rhel9.md)
+- [`minikube` Installation: Ubuntu](./install/minikube_ubuntu/minikube_ubuntu.md)
 - [Windows: `Docker Desktop` enable `Kubernetes`](./install/kube_docker_desktop_win/kube_docker_desktop_win.md)
 
 ---

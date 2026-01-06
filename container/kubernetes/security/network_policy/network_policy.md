@@ -1,6 +1,6 @@
 # Kubernetes - Network Policy
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Network Policy](#kubernetes---network-policy)
   - [Network Policy](#network-policy)

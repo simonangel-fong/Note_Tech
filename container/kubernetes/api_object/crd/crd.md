@@ -1,6 +1,6 @@
 # Kubernetes - Custom Resource Definition(CRD)
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Custom Resource Definition(CRD)](#kubernetes---custom-resource-definitioncrd)
   - [Custom Resource Definition(CRD)](#custom-resource-definitioncrd)

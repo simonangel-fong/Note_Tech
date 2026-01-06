@@ -1,6 +1,6 @@
 # Kubernetes - Authorization
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Authorization](#kubernetes---authorization)
   - [API Groups](#api-groups)
@@ -10,69 +10,6 @@
   - [Authorization](#authorization)
   - [`Role-based access control`(`RBAC`)](#role-based-access-controlrbac)
   - [Lab: Authorization](#lab-authorization)
-- [get the api server authorization mode](#get-the-api-server-authorization-mode)
-- [--authorization-mode=Node,RBAC](#--authorization-modenoderbac)
-- [get the authorization mode by process](#get-the-authorization-mode-by-process)
-- [list role](#list-role)
-- [get a role](#get-a-role)
-- [NAME         CREATED AT](#name---------created-at)
-- [kube-proxy   2025-11-28T02:05:01Z](#kube-proxy---2025-11-28t020501z)
-- [get detail](#get-detail)
-- [Name:         kube-proxy](#name---------kube-proxy)
-- [Labels:       ](#labels-------)
-- [Annotations:  ](#annotations--)
-- [PolicyRule:](#policyrule)
-- [Resources   Non-Resource URLs  Resource Names  Verbs](#resources---non-resource-urls--resource-names--verbs)
-- [---------   -----------------  --------------  -----](#----------------------------------------------------)
-- [configmaps  \[\]                 \[kube-proxy\]    \[get\]](#configmaps-------------------kube-proxy----get)
-- [get the related rolebinding](#get-the-related-rolebinding)
-- [NAMESPACE     NAME                                                ROLE                                                  AGE](#namespace-----name------------------------------------------------role--------------------------------------------------age)
-- [proxy         kube-proxy                                          Role/kube-proxy                                       27m](#proxy---------kube-proxy------------------------------------------rolekube-proxy---------------------------------------27m)
-- [get the related group](#get-the-related-group)
-- [stem](#stem)
-- [Name:         kube-proxy](#name---------kube-proxy-1)
-- [Labels:       ](#labels--------1)
-- [Annotations:  ](#annotations---1)
-- [Role:](#role)
-- [Kind:  Role](#kind--role)
-- [Name:  kube-proxy](#name--kube-proxy)
-- [Subjects:](#subjects)
-- [Kind   Name                                             Namespace](#kind---name---------------------------------------------namespace)
-- [----   ----                                             ---------](#-----------------------------------------------------------------)
-- [Group  system:bootstrappers:kubeadm:default-node-token](#group--systembootstrapperskubeadmdefault-node-token)
-- [check a user's access](#check-a-users-access)
-- [create a role in default ns for dev-user to list pod](#create-a-role-in-default-ns-for-dev-user-to-list-pod)
-- [apiVersion: rbac.authorization.k8s.io/v1](#apiversion-rbacauthorizationk8siov1)
-- [kind: Role](#kind-role)
-- [metadata:](#metadata)
-- [name: developer](#name-developer)
-- [rules:](#rules)
-- [- apiGroups:](#--apigroups)
-- [- ""](#--)
-- [resources:](#resources)
-- [- pods](#--pods)
-- [verbs:](#verbs)
-- [- list](#--list)
-- [- create](#--create)
-- [- delete](#--delete)
-- [create role](#create-role)
-- [role.rbac.authorization.k8s.io/developer created](#rolerbacauthorizationk8siodeveloper-created)
-- [create role binding](#create-role-binding)
-- [apiVersion: rbac.authorization.k8s.io/v1](#apiversion-rbacauthorizationk8siov1-1)
-- [kind: RoleBinding](#kind-rolebinding)
-- [metadata:](#metadata-1)
-- [name: dev-user-binding](#name-dev-user-binding)
-- [roleRef:](#roleref)
-- [apiGroup: rbac.authorization.k8s.io](#apigroup-rbacauthorizationk8sio)
-- [kind: Role](#kind-role-1)
-- [name: developer](#name-developer-1)
-- [subjects:](#subjects-1)
-- [- apiGroup: rbac.authorization.k8s.io](#--apigroup-rbacauthorizationk8sio)
-- [kind: User](#kind-user)
-- [name: dev-user](#name-dev-user)
-- [create rolebinding](#create-rolebinding)
-- [rolebinding.rbac.authorization.k8s.io/dev-user-binding created](#rolebindingrbacauthorizationk8siodev-user-binding-created)
-- [confirm](#confirm)
 
 ---
 
@@ -440,8 +377,8 @@ kubectl get rolebinding -n kube-system| grep kube-proxy
 # proxy         kube-proxy                                          Role/kube-proxy                                       27m
 
 # get the related group
-kubectl describe rolebinding kube-proxy -n kube-system 
-# stem 
+kubectl describe rolebinding kube-proxy -n kube-system
+# stem
 # Name:         kube-proxy
 # Labels:       <none>
 # Annotations:  <none>
@@ -451,7 +388,7 @@ kubectl describe rolebinding kube-proxy -n kube-system
 # Subjects:
   # Kind   Name                                             Namespace
   # ----   ----                                             ---------
-  # Group  system:bootstrappers:kubeadm:default-node-token  
+  # Group  system:bootstrappers:kubeadm:default-node-token
 
 # check a user's access
 kubectl auth can-i list pod --as dev-user
@@ -504,3 +441,4 @@ kubectl edit role developer -n blue
 
 # confirm
 kubectl auth can-i list pod --as dev-user
+```

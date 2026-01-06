@@ -1,8 +1,8 @@
-# Kubernetes - Node01
+# Kubernetes: Worker Node - Installation
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Kubernetes - Node01](#kubernetes---node01)
+- [Kubernetes: Worker Node - Installation](#kubernetes-worker-node---installation)
   - [Node01](#node01)
     - [VM: Node01](#vm-node01)
     - [Install `containerd`](#install-containerd)

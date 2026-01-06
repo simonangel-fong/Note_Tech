@@ -1,8 +1,8 @@
-# Kubernetes - Image
+# Kubernetes: Container - Image
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Kubernetes - Image](#kubernetes---image)
+- [Kubernetes: Container - Image](#kubernetes-container---image)
   - [Image](#image)
     - [Lab: pull image from private repo](#lab-pull-image-from-private-repo)
 
@@ -55,8 +55,8 @@ metadata:
   name: private-reg
 spec:
   containers:
-  - name: private-reg-container
-    image: <your-private-image>
+    - name: private-reg-container
+      image: <your-private-image>
   imagePullSecrets:
-  - name: regcred
+    - name: regcred
 ```

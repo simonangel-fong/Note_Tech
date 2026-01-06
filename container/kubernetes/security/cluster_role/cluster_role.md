@@ -1,6 +1,6 @@
 # Kubernetes - CluterRole & ClusterRoleBinding
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - CluterRole \& ClusterRoleBinding](#kubernetes---cluterrole--clusterrolebinding)
   - [ClusterRole](#clusterrole)
