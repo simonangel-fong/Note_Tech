@@ -1,42 +1,40 @@
-# K8s - Endpoint
+# Kubernetes Networking: `Endpoint` & `EndpointSlice`
 
 [Back](../../index.md)
 
-- [K8s - Endpoint](#k8s---endpoint)
-  - [endpoints object](#endpoints-object)
-  - [Imperative Commands](#imperative-commands)
-  - [Lab: Get Endpoint](#lab-get-endpoint)
+- [Kubernetes Networking: `Endpoint` \& `EndpointSlice`](#kubernetes-networking-endpoint--endpointslice)
+  - [Endpoints object](#endpoints-object)
+    - [Imperative Commands](#imperative-commands)
+    - [Lab: Get Endpoint](#lab-get-endpoint)
   - [EndpointSlice object](#endpointslice-object)
     - [Imperative Command](#imperative-command)
-  - [Lab: Get EndpointSlices](#lab-get-endpointslices)
+    - [Lab: Get EndpointSlices](#lab-get-endpointslices)
   - [Managing service endpoints manually](#managing-service-endpoints-manually)
-  - [Lab: Create service withtout label selector](#lab-create-service-withtout-label-selector)
+    - [Lab: Create service withtout label selector](#lab-create-service-withtout-label-selector)
 
 ---
 
-## endpoints object
+## Endpoints object
 
 - `endpoints`
 
-  - the object to which a `service` forwards traffic can be anything
-    that **has an IP address**.
+  - the object to which a `service` **forwards traffic** can be anything that **has an IP address**.
 
 - fully managed by Kubernetes.
 
-  - created by Kubernetes when creating the associated Service objects.
-  - Each time a new `pod` **appears or disappears** that **matches** the Service’s `label selector`, Kubernetes **updates** the `Endpoints
-object` to **add or remove** the endpoint associated with the pod.
+  - **created** by Kubernetes when creating the **associated** `Service` objects.
+  - Each time a new `pod` **appears or disappears** that **matches** the `Service`’s `label selector`, Kubernetes **updates** the `Endpoints` object` to **add or remove** the endpoint associated with the pod.
 
 - Endpoint in service
 
   - `Services` do **not** **send traffic** to `Pods` directly.
-  - They send traffic to the `Endpoints object` that contains the real `Pod IPs`.
+  - `Services` send traffic to the `Endpoints object` that contains the real `Pod IPs`.
 
 - Each `Endpoints object` contains a list of `IP` and `port` combinations
 
 ---
 
-## Imperative Commands
+### Imperative Commands
 
 | CMD                                       | DESC                                                           |
 | ----------------------------------------- | -------------------------------------------------------------- |
@@ -55,7 +53,7 @@ object` to **add or remove** the endpoint associated with the pod.
 
 ---
 
-## Lab: Get Endpoint
+### Lab: Get Endpoint
 
 ```sh
 kubectl get svc
@@ -154,7 +152,7 @@ kubectl get endpoints demo-nodeport-svc -o yaml
 
 ---
 
-## Lab: Get EndpointSlices
+### Lab: Get EndpointSlices
 
 ```sh
 kubectl get endpointslices
@@ -212,7 +210,7 @@ kubectl describe endpointslice demo-nodeport-svc
 
 ---
 
-## Lab: Create service withtout label selector
+### Lab: Create service withtout label selector
 
 ```yaml
 apiVersion: v1

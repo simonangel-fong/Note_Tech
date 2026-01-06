@@ -20,7 +20,7 @@
 
 ---
 
-## Architeture
+## Cluster
 
 - [Architecture](./architecture/architecture/architecture.md)
   - Master Node / Control plane
@@ -32,6 +32,10 @@
     - [`kubelet`](./architecture/kubelet/kubelet.md)
     - [`kube-proxy`](./architecture/kube_proxy/kube_proxy.md)
 
+- [Scheduler](./node/scheduler/scheduler.md)
+
+  - [Manual Scheduler](./node/scheduler_manual/scheduler_manual.md)
+
 ---
 
 ## Container
@@ -41,16 +45,17 @@
   - [Back-off Mechanism & Restart Policy](./container/backoff_restart/backoff_restart.md)
   - [`Liveness Probe`](./container/liveness_probe/liveness_probe.md)
   - [`Startup Probe`](./container/startup_probe/startup_probe.md)
+  - [`Readiness Probes`](./container/readiness_probe/readiness_probe.md)
   - [`Lifecycle Hook`](./container/lifecycle_hook/lifecycle_hook.md)
   - [Command & Arg & ENV](./container/cmd_arg_env/cmd_arg_env.md)
 
-- Multiple Containers:
+- **Multiple Containers**:
 
   - [`Co-located Containers`](./container/colocated/colocated.md)
   - [`Init Containers`](./container/init/init.md)
   - [`Sidecar Containers`](./container/sidecar/sidecar.md)
 
-- Storage:
+- **Storage**:
   - [Docker Storage](./storage/docker_storage/docker_storage.md)
   - [`Pod Volume`](./storage/volume/volume.md)
   - [Common Volume Types](./storage/volume_type/volume_type.md)
@@ -59,7 +64,7 @@
     - [`Persistent Volume` & `Persistent Volume Claim`](./storage/pv_pvc/pv_pvc.md)
     - [`Node Local Persistent Volume`](./storage/node_local_pv/node_local_pv.md)
     - [Dynamic Volume Provisioning & `StorageClass`](./storage/dynamic_pv_storageclass/dynamic_pv_storageclass.md)
-- Injected Data
+- **Injected Data**
 
   - [`ConfigMap`](./storage/configmap/configmap.md)
     - [Use `ConfigMap` as Environment Variable](./storage/configmap_env/configmap_env.md)
@@ -72,22 +77,22 @@
     - [Use `Downward API` as Volume](./storage/downward_api_volume/downward_api_volume.md)
   - [`Projected Volumes`](./storage/projected_volume/projected_volume.md)
 
-- Networking
+- **Networking**
 
   - [Networking Fundamental](./networking/networking_fundamental/networking_fundamental.md)
-
+  - [Cluster DNS](./networking/dns/dns.md)
   - [`Service`](./networking/service/service.md)
 
-    - [`ClusterIP`](./networking/clusterip/clusterip.md)
-    - [`NodePort`](./networking/nodeport/nodeport.md)
-    - [`LoadBalancer`](./networking/loadbalancer/loadbalancer.md)
+    - [`Endpoint` & `EndpointSlice`](./networking/endpoint/endpoint.md)
+    - [`Topology-Aware Routing`](./networking/tar/tar.md)
+    - Service Types:
+      - [`ClusterIP`](./networking/clusterip/clusterip.md)
+      - [`NodePort`](./networking/nodeport/nodeport.md)
+      - [`LoadBalancer`](./networking/loadbalancer/loadbalancer.md)
+      - [`Headless Service`](./networking/headless_svc/headless_svc.md)
 
-  - [Endpoint](./networking/endpoint/endpoint.md)
-  - [Pod Networking](./networking/pod/pod.md)
-  - [Service Networking](./networking/service/service.md)
-  - [Cluster DNS](./networking/dns/dns.md)
-  - [Ingress](./networking/ingress/ingress.md)
-  - [Gateway API](./networking/gw_api/gw_api.md)
+  - [`Ingress`](./networking/ingress/ingress.md)
+  - [`Gateway API` & `GatewayClass`](./networking/gw_api/gw_api.md)
 
 ---
 
@@ -95,7 +100,8 @@
 
 - [`Pod`](./pod/pod/pod.md)
   - [Lifecycle](./pod/lifecycle/lifecycle.md)
-  - [`PriorityClass`](./app/pod_priorityclass/pod_priorityclass.md)
+  - [`PriorityClass`](./pod/priorityclass/priorityclass.md)
+  - [Affinity](./node/node_affinity/node_affinity.md)
 - [`ReplicaSet`](./replicaset/replicaset.md)
 - [`Deployment`](./deployment/deployment.md)
   - [Deployment Rollout & Rollback](./deployment/rollout_rollback.md)
@@ -112,23 +118,16 @@
 ## Node
 
 - [`Node`](./node/node/node.md)
+- [`Taints` and `Tolerations`](./node/taint_toleration/taint_toleration.md)
+- [Cordon](./node/cordon/cordon.md)
 
-  - [`Taints` and `Tolerations`](./node/taint_toleration/taint_toleration.md)
 
-- [Scheduler](./node/scheduler/scheduler.md)
 
-  - [Manual Scheduler](./node/scheduler_manual/scheduler_manual.md)
 
-- [Node Affinity](./node/node_affinity/node_affinity.md)
-- [Node Cordon](./node/node_cordon/node_cordon.md)
-
----
 
 ---
 
 - [Operator](./operator/operator.md)
-
----
 
 ---
 

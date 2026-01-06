@@ -1,8 +1,8 @@
-# Kubernetes - Node: Scheduler
+# Kubernetes - Control Plane: Scheduler
 
 [Back](../../index.md)
 
-- [Kubernetes - Node: Scheduler](#kubernetes---node-scheduler)
+- [Kubernetes - Control Plane: Scheduler](#kubernetes---control-plane-scheduler)
   - [Scheduler](#scheduler)
     - [How it works - From API to Kubelet](#how-it-works---from-api-to-kubelet)
     - [!!!How it works - Phases](#how-it-works---phases)
@@ -57,6 +57,7 @@
 ### !!!How it works - Phases
 
 - ref:
+
   - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduling_code_hierarchy_overview.md
   - https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/
 
@@ -89,7 +90,6 @@ spec:
 - `Scheduling Queue`:
   - a schedule phase where pods **are sorted based on the priority** defined on the pods.
   - pods with **higher priority** gets to the **beginning of the queue** to be scheduled **first**.
-
 
 ---
 

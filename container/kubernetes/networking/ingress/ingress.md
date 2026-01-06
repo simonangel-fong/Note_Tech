@@ -1,18 +1,15 @@
-# Kubernetes - Ingress
+# Kubernetes Networking: Ingress
 
 [Back](../../index.md)
 
-- [Kubernetes - Ingress](#kubernetes---ingress)
+- [Kubernetes Networking: Ingress](#kubernetes-networking-ingress)
   - [Ingress](#ingress)
+    - [Ingress Controller](#ingress-controller)
+    - [Default Backend](#default-backend)
     - [Imperative Commands](#imperative-commands)
-    - [Imperative Command](#imperative-command)
-    - [Lab:](#lab)
-    - [Lab: create ingress??](#lab-create-ingress)
-  - [Install](#install)
-  - [Lab: Create ingress](#lab-create-ingress-1)
-  - [ingress traffic routing](#ingress-traffic-routing)
-  - [Lab: Multiple Paths with services](#lab-multiple-paths-with-services)
-  - [default backend](#default-backend)
+    - [Lab: Install `Nginx Ingress Controller`](#lab-install-nginx-ingress-controller)
+    - [Lab: Create ingress](#lab-create-ingress)
+    - [Lab: Multiple Paths with services](#lab-multiple-paths-with-services)
   - [TLS](#tls)
     - [TLS passthrough](#tls-passthrough)
     - [Terminating TLS at the ingress](#terminating-tls-at-the-ingress)
@@ -20,7 +17,7 @@
   - [Customizing Ingress using annotations](#customizing-ingress-using-annotations)
     - [Lab: Cookie-based session affinity](#lab-cookie-based-session-affinity)
   - [Ingress class](#ingress-class)
-  - [custom resources as backend](#custom-resources-as-backend)
+  - [Custom Resources as Backend](#custom-resources-as-backend)
 
 ---
 
@@ -32,7 +29,7 @@
 
 - `Ingress`
 
-  - an API object that **manages external access** to `services` within a Kubernetes cluster, typically using HTTP and HTTPS protocols.
+  - an API object that **manages external access** to `services` within a Kubernetes cluster, typically using `HTTP` and `HTTPS` protocols.
   - used to expose multiple services with a single IP address
 
 - Additional features:
@@ -49,11 +46,15 @@
 
   - some **ingress implementations** use a **shared entrypoint** for all `Ingress objects`
 
-- Note that the `proxy` **doesn’t** send the request to the `service IP`, but **directly to the pod**.
+- **Note that** the `proxy` **doesn’t** send the request to the `service IP`, but **directly to the pod**.
 
 ![pic](./pic/ingress_pod.png)
 
+- `ingress` **forward the request** based on the **path** to different `services`
+
 ---
+
+### Ingress Controller
 
 - `Ingress Controller`
 
@@ -61,6 +62,36 @@
   - a specialized, **Layer 7 load balancer** and **reverse proxy** that manages external traffic into cluster, routing it to the correct **internal services** based on rules.
   - link between the `Ingress object` and the actual **physical ingress** (the reverse proxy)
   - popular e.g., nginx, haproxy, trafik
+
+- **Common Controllers**
+
+  - Google Kubernetes Engine: `GLBC (GCE L7 Load Balancer)`
+  - AWS: `AWS Load Balancer Controller`
+  - Azure: `AGIC (Application Gateway Ingress Controller)`
+
+- Nginx ingress controller: https://kubernetes.github.io/ingress-nginx/deploy/
+
+---
+
+### Default Backend
+
+- If the client request **doesn’t match any rules** defined in the `Ingress object`, the response **404 Not Found** is normally returned.
+- can define a `default backend` to which the ingress should forward the request if no rules are matched.
+
+  - The default backend serves as a catch-all rule.
+
+- `spec.defaultBackend` field
+
+```yaml
+spec:
+  defaultBackend:
+    service:
+      name: fun404
+      port:
+        name: http
+  rules:
+    # ...
+```
 
 ---
 
@@ -80,262 +111,7 @@
 
 ---
 
-- example: using nginx as ingress controller
-
-```yaml
-# empty configmap for further conf
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nginx-configuration
----
-# ingress controller: nginx
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-ingress-controller
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: nginx-ingress
-  template:
-    metadata:
-    labels:
-      name: nginx-ingress
-  spec:
-    containers:
-      - name: nginx-ingress-controller
-        image: quay.io/kubernetes-ingresscontroller/nginx-ingress-controller:0.21.0
-    args:
-      - /nginx-ingress-controller
-      - --configmap=$(POD_NAMESPACE)/nginx-configuration
-    env:
-      - name: POD_NAME
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.name
-      - name: POD_NAMESPACE
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.namespace
-    ports:
-      - name: http
-        containerPort: 80
-      - name: https
-        containerPort: 443
-
----
-# service in front of ingress
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-ingress
-spec:
-  type: NodePort
-  selector:
-    name: nginx-ingress
-  ports:
-    - port: 80
-      targetPort: 80
-      protocol: TCP
-      name: http
-    - port: 443
-      targetPort: 443
-      protocol: TCP
-      name: https
----
-# sa to manage ingress access
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: nginx-ingress-serviceaccount
-```
-
----
-
-- Example: ingress resource(the routing rules)
-
-```yaml
-# route based on the path
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-wear-watch
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /wear
-            backend:
-              service:
-                name: wear-service
-                port: 80
-          - path: /watch
-            backend:
-              service:
-                name: watch-service
-                port: 80
-```
-
----
-
-- Example: ingress resource(the routing rules)
-  - route for 2 domain name
-
-```yaml
-# route based on domain name
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-wear-watch
-spec:
-  rules:
-    # domain name
-    - host: wear.my-online-store.com
-      http:
-        paths:
-          - path: /wear
-            backend:
-              service:
-                name: wear-service
-                port: 80
-    # domain name
-    - host: watch.my-online-store.com
-      http:
-        paths:
-          - path: /watch
-            backend:
-              service:
-                name: watch-service
-                port: 80
-```
-
----
-
-### Imperative Command
-
-kubectl create ingress <ingress-name> --rule="host/path=service:port"
-kubectl create ingress ingress-test --rule="wear.my-online-store.com/wear\*=wear-service:80"
-
----
-
-### Lab:
-
-```sh
-# list ingress resources
-kubectl get ingress -A
-# NAMESPACE   NAME                 CLASS    HOSTS   ADDRESS          PORTS   AGE
-# app-space   ingress-wear-watch   <none>   *       172.20.111.110   80      6m32s
-
-# get details of ingress: host = *, any hosts
-kubectl describe ingress ingress-wear-watch -n app-space
-# Name:             ingress-wear-watch
-# Labels:           <none>
-# Namespace:        app-space
-# Address:          172.20.111.110
-# Ingress Class:    <none>
-# Default backend:  <default>
-# Rules:
-#   Host        Path  Backends
-#   ----        ----  --------
-#   *
-#               /wear    wear-service:8080 (172.17.0.4:8080)
-#               /watch   video-service:8080 (172.17.0.5:8080)
-# Annotations:  nginx.ingress.kubernetes.io/rewrite-target: /
-#               nginx.ingress.kubernetes.io/ssl-redirect: false
-# Events:
-#   Type    Reason  Age                  From                      Message
-#   ----    ------  ----                 ----                      -------
-#   Normal  Sync    8m8s (x2 over 8m8s)  nginx-ingress-controller  Scheduled for sync
-
-
-
-kubectl get svc pay-service -n critical-space
-# NAME          TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
-# pay-service   ClusterIP   172.20.22.82   <none>        8282/TCP   10m
-
-kubectl create ingress critical-ingress --rule="/pay=pay-service:8282" -n critical-space -o yaml > pay-ingress.yaml
-
-# add annotation
-cat pay-ingress.yaml
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   creationTimestamp: "2025-12-04T02:55:00Z"
-#   generation: 1
-#   name: critical-ingress
-#   namespace: critical-space
-#   resourceVersion: "5829"
-#   uid: b689ea3f-2910-4bde-9c44-802c8d108d2a
-#   annotations:
-#     nginx.ingress.kubernetes.io/rewrite-target: /
-# spec:
-#   rules:
-#   - http:
-#       paths:
-#       - backend:
-#           service:
-#             name: pay-service
-#             port:
-#               number: 8282
-#         path: /pay
-
-kubectl create -f pay-ingress.yaml
-
-kubectl describe ingress critical-ingress -n critical-space
-# Name:             critical-ingress
-# Labels:           <none>
-# Namespace:        critical-space
-# Address:          172.20.111.110
-# Ingress Class:    <none>
-# Default backend:  <default>
-# Rules:
-#   Host        Path  Backends
-#   ----        ----  --------
-#   *
-#               /pay   pay-service:8282 (172.17.0.11:8080)
-# Annotations:  <none>
-# Events:
-#   Type    Reason  Age                From                      Message
-#   ----    ------  ----               ----                      -------
-#   Normal  Sync    30s (x2 over 36s)  nginx-ingress-controller  Scheduled for sync
-```
-
----
-
-### Lab: create ingress??
-
-```sh
-# create ns for ingress
-kubectl create ns ingress-nginx
-# namespace/ingress-nginx created
-
-# create configMap
-kubectl create configmap ingress-nginx-controller -n ingress-nginx
-# configmap/ingress-nginx-controller created
-
-# create service account
-kubectl create sa ingress-nginx -n ingress-nginx
-# serviceaccount/ingress-nginx created
-kubectl create sa ingress-nginx-admission -n ingress-nginx
-# serviceaccount/ingress-nginx-admission created
-
-# create ingress
-kubectl create ingress ingress-wear
-```
-
----
-
-## Install
-
-- Common Controllers
-
-  - Google Kubernetes Engine: `GLBC (GCE L7 Load Balancer)`
-  - AWS: `AWS Load Balancer Controller`
-  - Azure: `AGIC (Application Gateway Ingress Controller)`
-
-- Nginx ingress controller: https://kubernetes.github.io/ingress-nginx/deploy/
+### Lab: Install `Nginx Ingress Controller`
 
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.14.1/deploy/static/provider/cloud/deploy.yaml
@@ -399,7 +175,7 @@ curl --resolve demo.localdev.me:8080:127.0.0.1 http://demo.localdev.me:8080
 
 ---
 
-## Lab: Create ingress
+### Lab: Create ingress
 
 ```yaml
 # demo-ingress-pod.yaml
@@ -562,13 +338,7 @@ curl http://demo-host:8080 --resolve demo-host:8080:127.0.0.1
 
 ---
 
-## ingress traffic routing
-
-- `ingress` forward the request based on the path to different `services`
-
----
-
-## Lab: Multiple Paths with services
+### Lab: Multiple Paths with services
 
 - Deployment nginx
 
@@ -790,28 +560,6 @@ curl "http://host-path:8080/httpd" --resolve host-path:8080:127.0.0.1
 
 ---
 
-## default backend
-
-- If the client request **doesn’t match any rules** defined in the `Ingress object`, the response **404 Not Found** is normally returned.
-- can define a `default backend` to which the ingress should forward the request if no rules are matched.
-
-  - The default backend serves as a catch-all rule.
-
-- `spec.defaultBackend` field
-
-```yaml
-spec:
-  defaultBackend:
-    service:
-      name: fun404
-      port:
-        name: http
-  rules:
-    # ...
-```
-
----
-
 ## TLS
 
 - two ways to add HTTPS support
@@ -954,7 +702,7 @@ kubectl get ingressclasses nginx -o yaml
 
 ---
 
-## custom resources as backend
+## Custom Resources as Backend
 
 - depends on the ingress controllers
 - e.g, The Citrix ingress controller provides the HTTPRoute custom object type, which allows you to configure where the ingress should route HTTP requests.
