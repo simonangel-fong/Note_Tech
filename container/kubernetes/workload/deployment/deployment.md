@@ -1,6 +1,6 @@
 # Kubernetes: Deployment
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes: Deployment](#kubernetes-deployment)
   - [Deployment](#deployment)

@@ -1,6 +1,6 @@
 # Kubernetes - CronJob
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - CronJob](#kubernetes---cronjob)
   - [CronJobs](#cronjobs)

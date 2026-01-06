@@ -1,6 +1,6 @@
 # Kubernetes: Deployment - Common Strategies
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes: Deployment - Common Strategies](#kubernetes-deployment---common-strategies)
   - [Common deployment strategies](#common-deployment-strategies)

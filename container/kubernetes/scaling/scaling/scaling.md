@@ -1,8 +1,8 @@
-# Kubernetes - Pod: Scaling
+# Kubernetes - Workload: Scaling
 
 [Back](../../index.md)
 
-- [Kubernetes - Pod: Scaling](#kubernetes---pod-scaling)
+- [Kubernetes - Workload: Scaling](#kubernetes---workload-scaling)
   - [Scaling](#scaling)
     - [Scaling in k8s](#scaling-in-k8s)
     - [VPA vs HPA](#vpa-vs-hpa)

@@ -1,4 +1,17 @@
-[Back](../index.md)
+# Kubernetes Workload: Debugging
+
+[Back](../../index.md)
+
+- [Kubernetes Workload: Debugging](#kubernetes-workload-debugging)
+  - [App Failure](#app-failure)
+  - [Lab: Debug 2 tiers app](#lab-debug-2-tiers-app)
+  - [Control Plane Debugging](#control-plane-debugging)
+    - [Lab:](#lab)
+  - [Worker node failure](#worker-node-failure)
+  - [Debuging: Network](#debuging-network)
+  - [DNS in Kubernetes](#dns-in-kubernetes)
+  - [Kube-Proxy](#kube-proxy)
+- [netstat -plan | grep kube-proxy](#netstat--plan--grep-kube-proxy)
 
 ---
 
@@ -278,6 +291,7 @@ kubectl describe pod kube-scheduler-controlplane
   - `kubectl get ds kube-proxy -n kube-system`
 
 - Check pod `kube-proxy`
+
   - `kubectl descrbe pod kube-proxy_pod -n kube-system`
 
 - Common issue:

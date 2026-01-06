@@ -1,6 +1,6 @@
 # Kubernetes - Job
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Job](#kubernetes---job)
   - [Job](#job)

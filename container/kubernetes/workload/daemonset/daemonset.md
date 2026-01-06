@@ -1,6 +1,6 @@
 # Kubernetes - DaemonSets
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - DaemonSets](#kubernetes---daemonsets)
   - [DaemonSet](#daemonset)

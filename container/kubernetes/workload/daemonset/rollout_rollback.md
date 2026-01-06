@@ -1,6 +1,6 @@
 # Kubernetes: DaemonSets - Rollout & Rollback
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes: DaemonSets - Rollout \& Rollback](#kubernetes-daemonsets---rollout--rollback)
   - [Imperative Command](#imperative-command)

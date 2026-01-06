@@ -1,6 +1,6 @@
 # Kubernetes: StatefulSet - Rollout & Rollback
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes: StatefulSet - Rollout \& Rollback](#kubernetes-statefulset---rollout--rollback)
   - [Imperative Command](#imperative-command)

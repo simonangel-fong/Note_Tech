@@ -32,6 +32,7 @@
 - Worker Node
 
   - [`kubelet`](./cluster/kubelet/kubelet.md)
+    - [`Static Pod`](./cluster/kubelet/static_pod.md)
   - [`kube-proxy`](./cluster/kube_proxy/kube_proxy.md)
 
 - Cluster
@@ -65,6 +66,7 @@
   - [`Readiness Probes`](./container/readiness_probe/readiness_probe.md)
   - [`Lifecycle Hook`](./container/lifecycle_hook/lifecycle_hook.md)
   - [Command & Arg & ENV](./container/cmd_arg_env/cmd_arg_env.md)
+  - [Resources Request, Limit, Quota](./container/resource/resource.md)
 
 - **Multiple Containers**:
 
@@ -113,38 +115,35 @@
   - [`Ingress`](./networking/ingress/ingress.md)
   - [`Gateway API` & `GatewayClass`](./networking/gw_api/gw_api.md)
 
-- **Resources**
-
-  - [Resources Request, Limit, Quota](./container/resource/resource.md)
-
 ---
 
 ## Workload
 
 - [`Pod`](./pod/pod/pod.md)
+
   - [Lifecycle](./pod/lifecycle/lifecycle.md)
   - [`PriorityClass`](./pod/priorityclass/priorityclass.md)
-  - [Affinity](./node/node_affinity/node_affinity.md)
-  - [Static Pod](./app/static_pod/static_pod.md)
-- [`ReplicaSet`](./replicaset/replicaset.md)
-- [`Deployment`](./deployment/deployment.md)
-  - [Deployment Rollout & Rollback](./deployment/rollout_rollback.md)
-  - [Common Deployment Strategies](./deployment/strategy.md)
-- [`StatefulSets`](./statefulset/statefulset.md)
-  - [StatefulSets Rollout & Rollback](./statefulset/rollout_rollback.md)
-- [`DaemonSets`](./daemonset/daemonset.md)
-  - [DaemonSets Rollout & Rollback](./daemonset/rollout_rollback.md)
-- [`Job`](./job/job.md)
-- [`CronJob`](./cronjob/cronjob.md)
-- [Operator](./operator/operator.md)
+  - [Affinity](./pod/affinity/affinity.md)
+
+- [`ReplicaSet`](./workload/replicaset/replicaset.md)
+- [`Deployment`](./workload/deployment/deployment.md)
+  - [Deployment Rollout & Rollback](./workload/deployment/rollout_rollback.md)
+  - [Common Deployment Strategies](./workload/deployment/strategy.md)
+- [`StatefulSets`](./workload/statefulset/statefulset.md)
+  - [StatefulSets Rollout & Rollback](./workload/statefulset/rollout_rollback.md)
+- [`DaemonSets`](./workload/daemonset/daemonset.md)
+  - [DaemonSets Rollout & Rollback](./workload/daemonset/rollout_rollback.md)
+- [`Job`](./workload/job/job.md)
+- [`CronJob`](./workload/cronjob/cronjob.md)
+- [Operator](./workload/operator/operator.md)
+- [Troubleshooting](./workload/debuging/debuging.md)
 
 - Scaling
 
-  - [Scaling](./pod/scaling/scaling.md)
-  - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
-  - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
+  - [Scaling](./scaling/scaling/scaling.md)
+  - [Horizontal Pod Autoscaler (HPA)](./scaling/hpa/hpa.md)
+  - [Vertical Pod Autoscaling (VPA)](./scaling/vpa/vpa.md)
 
-- [Troubleshooting](./debuging/debuging.md)
 
 ---
 

@@ -1,6 +1,6 @@
 # Kubernetes: Deployment - Rollout & Rollback
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes: Deployment - Rollout \& Rollback](#kubernetes-deployment---rollout--rollback)
   - [Imperative Command](#imperative-command)
