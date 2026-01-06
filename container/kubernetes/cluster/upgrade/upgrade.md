@@ -1,29 +1,46 @@
-## Version
+# Kubernetes Cluster: Update
 
-- V`major`.`minor`.`patch`
+[Back](../../index.md)
 
-  - patch: bug fixes
-  - minor:
+- [Kubernetes Cluster: Update](#kubernetes-cluster-update)
+  - [Kubernetes Version](#kubernetes-version)
+  - [Cluster Upgrade](#cluster-upgrade)
+    - [Upgrade Steps](#upgrade-steps)
+    - [Upgrade Worker Nodes Strategy](#upgrade-worker-nodes-strategy)
+  - [Upgrade Master Node](#upgrade-master-node)
+  - [Upgrade Worker Nodes](#upgrade-worker-nodes)
+    - [Imperative Commands](#imperative-commands)
+  - [Lab: Upgrade Cluster](#lab-upgrade-cluster)
+
+---
+
+## Kubernetes Version
+
+- `major`.`minor`.`patch`
+
+  - `patch`: bug fixes
+  - `minor`:
     - features, functionalities
     - every few months
 
-- alpha realse:
+- **alpha realse**:
+
   - e.g.,: v1.10.0-alpha
-  - new features are disabled by default.
+  - **new features** are **disabled** by default.
   - requires a flag to enable them
-- beta realse:
+
+- **beta realse**:
 
   - e.g., v1.10.0-beta
   - new features are enabled by default.
 
-- `etcd cluster` and `core dns` have their own versions
+- Components can have different release versions.
+  - `etcd cluster` and `core dns` have their own versions
+  - No other components should have a higher version than the API server.
 
-- ***
+---
 
 ## Cluster Upgrade
-
-- Components can have different release versions.
-- No other components should have a higher version than the API server.
 
 ![pic](./pic/version.png)
 
@@ -31,53 +48,57 @@
   - v1.12
   - v1.11
   - v1.10
-- Upgrade timing: before the new release.
-- Recommended approach:
-
-  - upgrade one minor version at a time.
-
+- **Upgrade timing**:
+  - before the new release.
+- **Recommended approach**:
+  - upgrade one **minor version** at a time.
 - Upgrade process depends on how the cluster is set up.
 
   - cloud providers offers easy upgrade solution.
-  - kubeadm:
+  - **kubeadm**:
     - `kubectl upgrade plan`
     - `kubectl upgrade apply`
   - manual way
 
-- Upgrade steps：
+---
 
-  - 1. upgrade master node
-    - cannot access with kubectl
-    - cannot deploy/modify/delete the existing application.
-    - no new pods will be automatically created.
-  - 2. upgrade worker node
+### Upgrade Steps
 
-- Strategy to upgrade worker nodes
+1. upgrade `master node`
 
-  - Strategy - 1
-    - upgrade all at onece
-    - lead to downtime
-  - Strategy - 2
-    - upgrade one node at a time
-    - no downtime
-  - Strategy - 3
-    - add new node with upgraded version at a time
-    - no down time
-    - common when using a cloud provider
+- cannot access with kubectl
+- cannot deploy/modify/delete the existing application.
+- no new pods will be automatically created.
 
-- After upgrading the cluster, the kubelets are needed to upgrad manually.
-- kubeadm should be upgraded before the cluster upgrade.
+2. upgrade `worker node`
 
 ---
 
+### Upgrade Worker Nodes Strategy
+
+- **Strategy A**
+  - upgrade **all at onece**
+  - lead to **downtime**
+- **Strategy B**
+  - upgrade **one node at a time**
+  - **no** downtime
+- **Strategy C**
+
+  - **add new node** with upgraded version at a time
+  - **no** down time
+  - common when using a cloud provider
+
+- After upgrading the cluster, the `kubelets` are needed to upgrad **manually**.
+- `kubeadm` should be upgraded **before the cluster upgrade**.
+
 ---
 
-- Steps:
-  - upgrade master node
-    1. upgrade kubeadm
-    2. Create and output an upgrade plan
-    3. Execute upgrade
-    4. Upgrade kubelet on the master node, if applied
+## Upgrade Master Node
+
+1. Upgrade `kubeadm`
+2. Create and output an `upgrade plan`
+3. Execute **upgrade**
+4. Upgrade `kubelet` on the `master node`, if applied
 
 | Command                         | Description                  |
 | ------------------------------- | ---------------------------- |
@@ -91,12 +112,17 @@
 
 ---
 
-- Steps:
-  - upgrade worker nodes
-    1. Drain the pod from the a worker node
-    2. Upgrade kubeadm and kubelet
-    3. upgrade the kube configuration
-    4. uncordon the node
+## Upgrade Worker Nodes
+
+1. **Cordon** the node
+2. **Drain** the `pod` from the a `worker node`
+3. **Upgrade** `kubeadm` and `kubelet`
+4. **Upgrade** the kube **configuration**
+5. **Uncordon** the node
+
+---
+
+### Imperative Commands
 
 | Command                                                      | Description                         |
 | ------------------------------------------------------------ | ----------------------------------- |
@@ -107,6 +133,9 @@
 | `system restart kubelet`                                     | Restart kubelet                     |
 | `kubectl uncordon node_name`                                 | Uncordon the node                   |
 
+---
+
+## Lab: Upgrade Cluster
 
 ```sh
 sudo apt-cache madison kubeadm
@@ -117,8 +146,6 @@ sudo apt-cache madison kubeadm
 # kubeadm | 1.33.2-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
 # kubeadm | 1.33.1-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
 # kubeadm | 1.33.0-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
-
-
 
 sudo apt-mark unhold kubeadm && \
 sudo apt-get update && sudo apt-get install -y kubeadm='1.33.6-1.1' && \

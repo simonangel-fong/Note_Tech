@@ -1,8 +1,8 @@
-# Kubernetes - Controller Manager
+# Kubernetes Cluster - Controller Manager
 
 [Back](../../index.md)
 
-- [Kubernetes - Controller Manager](#kubernetes---controller-manager)
+- [Kubernetes Cluster - Controller Manager](#kubernetes-cluster---controller-manager)
   - [Controller Manager](#controller-manager)
   - [Controllers](#controllers)
   - [Common Controllers](#common-controllers)

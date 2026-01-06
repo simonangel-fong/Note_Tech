@@ -1,8 +1,8 @@
-# Kubernetes - Architecture
+# Kubernetes Cluster - Architecture
 
 [Back](../../index.md)
 
-- [Kubernetes - Architecture](#kubernetes---architecture)
+- [Kubernetes Cluster - Architecture](#kubernetes-cluster---architecture)
   - [Architecture](#architecture)
     - [Node and Cluster](#node-and-cluster)
     - [Components](#components)

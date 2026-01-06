@@ -1,8 +1,8 @@
-# Kubernetes - API Server
+# Kubernetes Cluster - API Server
 
 [Back](../../index.md)
 
-- [Kubernetes - API Server](#kubernetes---api-server)
+- [Kubernetes Cluster - API Server](#kubernetes-cluster---api-server)
   - [API Server](#api-server)
 
 ---

@@ -1,8 +1,8 @@
-# Kubernetes - etcd
+# Kubernetes Cluster - `etcd`
 
 [Back](../../index.md)
 
-- [Kubernetes - etcd](#kubernetes---etcd)
+- [Kubernetes Cluster - `etcd`](#kubernetes-cluster---etcd)
   - [`etcd`](#etcd)
     - [How it Works - `kubectl apply`](#how-it-works---kubectl-apply)
     - [How it Works - `kubectl get`](#how-it-works---kubectl-get)

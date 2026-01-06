@@ -4,13 +4,14 @@
 
 - [Kubernetes - Control Plane: Scheduler](#kubernetes---control-plane-scheduler)
   - [Scheduler](#scheduler)
+  - [Scheduler](#scheduler-1)
     - [How it works - From API to Kubelet](#how-it-works---from-api-to-kubelet)
-    - [!!!How it works - Phases](#how-it-works---phases)
       - [Scheduling Queue](#scheduling-queue)
     - [Scheduling Process](#scheduling-process)
     - [Scheduler Policies \& Features](#scheduler-policies--features)
   - [Imperative Command](#imperative-command)
   - [Lab: Scheduler info](#lab-scheduler-info)
+
 
 ---
 
@@ -18,9 +19,39 @@
 
 - `scheduler`
 
+  - a **control plane** component used to **assign** `pods` to `nodes`.
+    - **decides** where a `Pod` should run, based on resource availability, constraints, and scheduling **policies**.
+  - just **writes the decision** back to the `API Server`.
+    - Not to actually place the pod on the node, which is managed by `kubelet`
+    - `kubelet` on the chosen `node` then **pulls** the `Pod` spec and starts the containers.
+
+---
+
+- How It Works: `etcd`->`scheduler`->`api server`->`kubelet`->`pod`
+  - `API Server` receives a request
+    - e.g., `kubectl apply -f pod.yaml`.
+  - The Pod object is **stored** in `etcd` but is initially **unscheduled** (no Node assigned).
+  - `Scheduler` detects unscheduled Pods and runs its **scheduling algorithm**:
+    - **Filtering** (predicates): **eliminate** nodes that cannot host the Pod (not enough CPU/memory, taints, constraints).
+    - **Scoring** (priorities): **rank** the remaining nodes by preference (least loaded, locality, affinity, etc.).
+  - `Scheduler` selects the **best** node.
+  - It writes the **decision** (`.spec.nodeName`) back to the `API Server`.
+  - The `kubelet` on that node pulls the `Pod` spec and starts the container.
+
+```sh
+kubectl get pods -n kube-system
+# NAME                                     READY   STATUS    RESTARTS         AGE
+# kube-scheduler-docker-desktop            1/1     Running   201 (4h2m ago)   148d
+
+```
+
+## Scheduler
+
+- `scheduler`
+
   - a `control plane` component responsible for **deciding** which `node` a newly created `Pod` should run on.
-    - doesn’t run the Pod itself
-    - only makes placement decisions.
+    - **doesn’t run** the `Pod` itself
+    - only **makes placement decisions**.
 
 - Types of Scheduling
   - **Manual** Scheduling:
@@ -51,37 +82,6 @@
 7. `Scheduler` selects the **highest-scoring** `node` as the placement target.
 8. `Scheduler` **updates** the `Pod object` in the `API server` by setting the `nodeName` field.
 9. `Kubelet` on the chosen node sees the updated `Pod assignment` and **starts the container(s)** by pulling the image and running it.
-
----
-
-### !!!How it works - Phases
-
-- ref:
-
-  - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduling_code_hierarchy_overview.md
-  - https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/
-
-- Example
-
-- Multiple nodes are avaialable with vary cpu and memory.
-- Multiple pods are waiting for being scheduled.
-- Pod defined to be scheduled.
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: webapp
-spec:
-  priorityClassName: high-priority
-  container: data-processor
-  - name: webapp
-    image: webapp
-    resources:
-      requests:
-        memory: "1Gi"
-        cpu: 10
-```
 
 ---
 

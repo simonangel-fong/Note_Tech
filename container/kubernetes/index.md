@@ -3,7 +3,6 @@
 [Back](../../index.md)
 
 - [Kubernetes](#kubernetes)
-  - [Fundamental](#fundamental)
   - [Cluster](#cluster)
   - [Node](#node)
   - [Container](#container)
@@ -14,41 +13,37 @@
 
 ---
 
-## Fundamental
-
-- [Fundamental](./fundamental/fundamental/fundamental.md)
-
-  - [API Object](./fundamental/api_object/api_object.md)
-  - [YAML File](./fundamental/yaml/yaml.md)
-
----
-
 ## Cluster
 
-- [Architecture](./architecture/architecture/architecture.md)
+- [Fundamental](./cluster/fundamental/fundamental.md)
 
-  - Master Node / Control plane
-    - [`etcd`](./architecture/etcd/etcd.md)
-    - [API Server](./architecture/api_server/api_server.md)
-    - [Controller Manager](./architecture/controller_manager/controller_manager.md)
-    - [Scheduler](./architecture/scheduler/scheduler.md)
-  - Worker Node
-    - [`kubelet`](./architecture/kubelet/kubelet.md)
-    - [`kube-proxy`](./architecture/kube_proxy/kube_proxy.md)
+  - [Architecture](./cluster/architecture/architecture.md)
+  - [YAML File](./cluster/yaml/yaml.md)
+  - [`kubectl`](./cluster/kubectl/kubectl.md)
 
-- [Scheduler](./node/scheduler/scheduler.md)
+- Master Node / Control plane
 
-  - [Manual Scheduler](./node/scheduler_manual/scheduler_manual.md)
+  - [API Server](./cluster/api_server/api_server.md)
+  - [`etcd`](./cluster/etcd/etcd.md)
+  - [Controller Manager](./cluster/controller_manager/controller_manager.md)
+  - [Scheduler](./cluster/scheduler/scheduler.md)
+    - [Manual Scheduler](./cluster/scheduler_manual/scheduler_manual.md)
 
-- [Release](./release/release.md)
+- Worker Node
 
-  - [Namespace](./management/namespace/namespace.md)
-  - [Label and Selector](./management/label_selector/label_selector.md)
-  - [Annotation](./object/annotation/annotation.md)
+  - [`kubelet`](./cluster/kubelet/kubelet.md)
+  - [`kube-proxy`](./cluster/kube_proxy/kube_proxy.md)
 
-- [Upgrade](./release/release.md)
-- [Backup](./backup/backup.md)
-  - [logging](./cluster/logging/logging.md)
+- Cluster
+
+  - [Upgrade](./cluster/upgrade/upgrade.md)
+  - [Backup](./cluster/backup/backup.md)
+  - [Logging](./cluster/logging/logging.md)
+
+- [API Object](./api_object/api_object/api_object.md)
+  - [Namespace](./api_object/namespace/namespace.md)
+  - [Label and Selector](./api_object/label_selector/label_selector.md)
+  - [Annotation](./api_object/annotation/annotation.md)
 
 ---
 
@@ -172,7 +167,6 @@
 
 ## Tools
 
-- [`kubectl`](./tool/kubectl/kubectl.md)
 - [HELM](./tool/helm/helm.md)
 - [Kustomize](./tool/kustomize/kustomize.md)
 - [Minikube](./tool/minikube/minikube.md)
