@@ -2,6 +2,16 @@
 
 [Back](../../index.md)
 
+- [Kubernetes](#kubernetes)
+  - [Fundamental](#fundamental)
+  - [Cluster](#cluster)
+  - [Node](#node)
+  - [Container](#container)
+  - [Workload](#workload)
+  - [Security](#security)
+  - [Tools](#tools)
+  - [Installation](#installation)
+
 ---
 
 ## Fundamental
@@ -10,19 +20,13 @@
 
   - [API Object](./fundamental/api_object/api_object.md)
   - [YAML File](./fundamental/yaml/yaml.md)
-  - [`kubectl`](./fundamental/kubectl/kubectl.md)
-
-- [Release](./release/release.md)
-
-  - [Namespace](./management/namespace/namespace.md)
-  - [Label and Selector](./management/label_selector/label_selector.md)
-  - [Annotation](./object/annotation/annotation.md)
 
 ---
 
 ## Cluster
 
 - [Architecture](./architecture/architecture/architecture.md)
+
   - Master Node / Control plane
     - [`etcd`](./architecture/etcd/etcd.md)
     - [API Server](./architecture/api_server/api_server.md)
@@ -35,6 +39,24 @@
 - [Scheduler](./node/scheduler/scheduler.md)
 
   - [Manual Scheduler](./node/scheduler_manual/scheduler_manual.md)
+
+- [Release](./release/release.md)
+
+  - [Namespace](./management/namespace/namespace.md)
+  - [Label and Selector](./management/label_selector/label_selector.md)
+  - [Annotation](./object/annotation/annotation.md)
+
+- [Upgrade](./release/release.md)
+- [Backup](./backup/backup.md)
+  - [logging](./cluster/logging/logging.md)
+
+---
+
+## Node
+
+- [`Node`](./node/node/node.md)
+- [`Taints` and `Tolerations`](./node/taint_toleration/taint_toleration.md)
+- [Cordon](./node/cordon/cordon.md)
 
 ---
 
@@ -56,6 +78,7 @@
   - [`Sidecar Containers`](./container/sidecar/sidecar.md)
 
 - **Storage**:
+
   - [Docker Storage](./storage/docker_storage/docker_storage.md)
   - [`Pod Volume`](./storage/volume/volume.md)
   - [Common Volume Types](./storage/volume_type/volume_type.md)
@@ -64,6 +87,7 @@
     - [`Persistent Volume` & `Persistent Volume Claim`](./storage/pv_pvc/pv_pvc.md)
     - [`Node Local Persistent Volume`](./storage/node_local_pv/node_local_pv.md)
     - [Dynamic Volume Provisioning & `StorageClass`](./storage/dynamic_pv_storageclass/dynamic_pv_storageclass.md)
+
 - **Injected Data**
 
   - [`ConfigMap`](./storage/configmap/configmap.md)
@@ -94,6 +118,10 @@
   - [`Ingress`](./networking/ingress/ingress.md)
   - [`Gateway API` & `GatewayClass`](./networking/gw_api/gw_api.md)
 
+- **Resources**
+
+  - [Resources Request, Limit, Quota](./container/resource/resource.md)
+
 ---
 
 ## Workload
@@ -102,6 +130,7 @@
   - [Lifecycle](./pod/lifecycle/lifecycle.md)
   - [`PriorityClass`](./pod/priorityclass/priorityclass.md)
   - [Affinity](./node/node_affinity/node_affinity.md)
+  - [Static Pod](./app/static_pod/static_pod.md)
 - [`ReplicaSet`](./replicaset/replicaset.md)
 - [`Deployment`](./deployment/deployment.md)
   - [Deployment Rollout & Rollback](./deployment/rollout_rollback.md)
@@ -112,47 +141,22 @@
   - [DaemonSets Rollout & Rollback](./daemonset/rollout_rollback.md)
 - [`Job`](./job/job.md)
 - [`CronJob`](./cronjob/cronjob.md)
-
----
-
-## Node
-
-- [`Node`](./node/node/node.md)
-- [`Taints` and `Tolerations`](./node/taint_toleration/taint_toleration.md)
-- [Cordon](./node/cordon/cordon.md)
-
-
-
-
-
----
-
 - [Operator](./operator/operator.md)
 
----
+- Scaling
 
-- [Static Pod](./app/static_pod/static_pod.md)
-- [Scaling](./pod/scaling/scaling.md)
-
+  - [Scaling](./pod/scaling/scaling.md)
   - [Horizontal Scaling](./pod/scaling_horizontal/scaling_horizontal.md)
   - [Vertical Scaling](./pod/scaling_vertical/scaling_vertical.md)
-
-- [Resources Limit](./pod/pod_resource_limit/pod_resource_limit.md)
 
 - [Troubleshooting](./debuging/debuging.md)
 
 ---
 
+## Security
+
+- [Admission Controller](./security/admission_controller/admission_controller.md)
 - [Admission Controller](./adm_ctl/adm_ctl.md)
-
----
-
-- [Upgrade](./release/release.md)
-- [Backup](./backup/backup.md)
-- [Install Master](./install_master/install_master.md)
-- [Install Worker](./install_worker/install_worker.md)
-
-- [Security]
 
   - [AUthentication](./authentication/authentication.md)
   - [KubeConfig](./kube_config/kube_config.md)
@@ -164,25 +168,21 @@
   - [Network Policy](./network_policy/network_policy.md)
   - [Custom Resource Definition(CRD)](./crd/crd.md)
 
-- Management
-
-  - [Monitor & Logging](./management/monitoring/monitoring.md)
-
 ---
 
-- [HELM](./helm/helm.md)
-- [Kustomize](./kustomize/kustomize.md)
+## Tools
 
----
-
-- Security
-
-  - [Admission Controller](./security/admission_controller/admission_controller.md)
+- [`kubectl`](./tool/kubectl/kubectl.md)
+- [HELM](./tool/helm/helm.md)
+- [Kustomize](./tool/kustomize/kustomize.md)
+- [Minikube](./tool/minikube/minikube.md)
 
 ---
 
 ## Installation
 
+- [Install Master](./install_master/install_master.md)
+- [Install Worker](./install_worker/install_worker.md)
 - [RHEL9: `minikube` installation](./install/minikube_rhel9/minikube_rhel9.md)
 - [Ubuntu: `minikube` installation](./install/minikube_ubuntu/minikube_ubuntu.md)
 - [Windows: `Docker Desktop` enable `Kubernetes`](./install/kube_docker_desktop_win/kube_docker_desktop_win.md)

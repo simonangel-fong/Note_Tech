@@ -1,4 +1,23 @@
-[Back](../index.md)
+# Kubernetes Tool - Kustomize
+
+[Back](../../index.md)
+
+- [Kubernetes Tool - Kustomize](#kubernetes-tool---kustomize)
+  - [Kustomize](#kustomize)
+    - [vs helm](#vs-helm)
+  - [Install](#install)
+  - [kustomization.yaml file](#kustomizationyaml-file)
+    - [Example](#example)
+  - [Lab:](#lab)
+  - [Common Transformer](#common-transformer)
+    - [Image transformer](#image-transformer)
+  - [Lab](#lab-1)
+  - [Patches](#patches)
+    - [Types of patch](#types-of-patch)
+    - [JSON 6902 patch](#json-6902-patch)
+    - [Strategic merge patch](#strategic-merge-patch)
+  - [Overlays](#overlays)
+  - [Components](#components)
 
 ---
 

@@ -6,7 +6,7 @@
   - [YAML](#yaml)
   - [Basic Syntax](#basic-syntax)
   - [Common Data Structure](#common-data-structure)
-    - [scalar - Strings, numbers, boolean, ...](#scalar---strings-numbers-boolean-)
+    - [Scalar - Strings, numbers, boolean, ...](#scalar---strings-numbers-boolean-)
     - [Mapping - Maps/Dictionaries](#mapping---mapsdictionaries)
     - [Sequences - Arrays/Lists](#sequences---arrayslists)
     - [Advanced](#advanced)
@@ -65,7 +65,7 @@ published: true
 
 ## Common Data Structure
 
-### scalar - Strings, numbers, boolean, ...
+### Scalar - Strings, numbers, boolean, ...
 
 - `scalar`
 

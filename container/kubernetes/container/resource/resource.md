@@ -1,17 +1,16 @@
-# Kubernetes - Pod: Resources Limit
+# Kubernetes: Container - Resources Limit
 
 [Back](../../index.md)
 
-- [Kubernetes - Pod: Resources Limit](#kubernetes---pod-resources-limit)
+- [Kubernetes: Container - Resources Limit](#kubernetes-container---resources-limit)
   - [Pod resource](#pod-resource)
   - [Resource Request](#resource-request)
   - [Resource](#resource)
-    - [CPU](#cpu)
-    - [Memory](#memory)
+    - [Resource Definition](#resource-definition)
     - [Example](#example)
   - [Request + Limit Strategy](#request--limit-strategy)
-    - [CPU](#cpu-1)
-    - [Memory](#memory-1)
+    - [CPU](#cpu)
+    - [Memory](#memory)
   - [Limit range](#limit-range)
   - [Quota](#quota)
   - [Edit a pod](#edit-a-pod)
@@ -23,6 +22,8 @@
 
 - By default, pods do not have any resources request and limit.
   - A pod can consume as many resources as required on any node.
+
+---
 
 ## Resource Request
 
@@ -44,29 +45,29 @@ spec:
 
 ## Resource
 
-- By default, a pod can consume unlimited resources
-  - resource limit can be defined for a pod
+- By default, a `Pod` can consume **unlimited** resources
+  - `resource limit` can be defined for a pod
 - Exceed Limit
   - CPU **cannot** exceed
   - memory **can** execeed
     - if memory is constantly over the limit, the pod will be terminated due to `OOMKilled` (out of memory error)
 
-### CPU
+---
+
+### Resource Definition
 
 - `1 cpu`:
+
   - 1 AWS vCPU
   - 1 GCP
   - 1 Azure Core
   - 1 Hyperthread
 
----
-
-### Memory
-
-- `1 Ki`: 1,024 bytes
-- `1 K`: 1,000 bytes
-- `1 Mi`: 1,048,576 bytes
-- `1 M`: 1,000,000 bytes
+- Memory
+  - `1 Ki`: 1,024 bytes
+  - `1 K`: 1,000 bytes
+  - `1 Mi`: 1,048,576 bytes
+  - `1 M`: 1,000,000 bytes
 
 ---
 
@@ -97,12 +98,12 @@ spec:
 
 - 2 pods:
 
-| Request | Limits | Resource concume                                                        |
-| ------- | ------ | ----------------------------------------------------------------------- |
-| No      | No     | Default                                                                 |
-| No      | Yes    | automatically set the requests = limit                                  |
-| Yes     | Yes    | each pod is limited by limited resource;idle cpu cannot consume         |
-| Yes     | No     | request resource allocate to each pod; each pod can conume the idle cpu |
+| Request | Limits | Resource concume                                                         |
+| ------- | ------ | ------------------------------------------------------------------------ |
+| No      | No     | Default                                                                  |
+| No      | Yes    | automatically set the requests = limit                                   |
+| Yes     | Yes    | each pod is limited by limited resource; **cannot** consume **idle cpu** |
+| Yes     | No     | request resource allocate to each pod; each pod can conume the idle cpu  |
 
 ---
 
