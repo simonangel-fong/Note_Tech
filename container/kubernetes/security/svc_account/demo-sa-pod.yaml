@@ -1,0 +1,13 @@
+# demo-sa-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jenkins
+spec:
+  serviceAccountName: jenkins # specify sa 
+  containers:
+    - name: jenkins
+      image: jenkins/jenkins:lts
+      ports:
+      - name: httpport
+        containerPort: 8080

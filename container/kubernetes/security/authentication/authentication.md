@@ -5,24 +5,20 @@
 - [Kubernetes Security: Authentication](#kubernetes-security-authentication)
   - [Authentication](#authentication)
   - [State Token File](#state-token-file)
-  - [TLS Cerfificates](#tls-cerfificates)
-  - [Asymmetric Encryption](#asymmetric-encryption)
-    - [Server Certificate](#server-certificate)
-    - [Client Cerficates](#client-cerficates)
-    - [TLS example: SSH](#tls-example-ssh)
-    - [TLS example: Openssl](#tls-example-openssl)
   - [TLS in k8s](#tls-in-k8s)
     - [Certificates in K8s](#certificates-in-k8s)
     - [Certificate Creation](#certificate-creation)
   - [Lab: Generate Cert and Key with Openssl](#lab-generate-cert-and-key-with-openssl)
     - [Cerfiticate Authority(CA) Certificate](#cerfiticate-authorityca-certificate)
     - [Client Certificates](#client-certificates)
-    - [Server Certificate](#server-certificate-1)
+    - [Server Certificate](#server-certificate)
     - [Kubelet](#kubelet)
     - [View the certificate](#view-the-certificate)
   - [Troubleshooting `kubeadm` TLS cert](#troubleshooting-kubeadm-tls-cert)
   - [Certificate Management](#certificate-management)
-  - [Lab: CertificateSigninRequest](#lab-certificatesigninrequest)
+    - [Lab: CertificateSigninRequest](#lab-certificatesigninrequest)
+
+---
 
 ## Authentication
 
@@ -149,118 +145,6 @@ curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
 
 ---
 
-## TLS Cerfificates
-
-对称加密
-
----
-
-## Asymmetric Encryption
-
-- User access the webserver
-- webserver return the public key
-  - 3rd-party also acquire the public key
-- user encrypt and send the data with public key
-  - 3rd-party can get the encripted data
-- webserver descript with private key.
-  - 3rd-party not easy to descript the encrypted data without a private key.
-- webserver returns and encripted data with public key
-
-  - 3rd-party not easy to descript the encrypted data without a private key.
-
-- Common public key file name
-
-  - `server.crt`
-  - `server.pem`
-  - `client.crt`
-  - `client.pem`
-
-- Common private key file name
-  - `server.key`
-  - `server-key.pem`
-  - `client.key`
-  - `client-key.pem`
-
----
-
-### Server Certificate
-
-- A middle man server act as the remote server
-
-  - Solution: Cerficate
-    - url + public key + issuer
-      - The requested url must match the url shown on the certificate
-        - Otherwise, requested url is not secure.
-      - issuer must be valid
-        - Otherwise, self-signed certificate is not secure.
-        - common web browser will issue a warning when the certificate is not valid.
-
-- `Certificate Authortity(CA)`
-
-  - the organization to validate a certificate.
-  - e.g., symantec
-  - a private CA can be deployed internally
-
-- `Certificate Signing Request (CSR)`
-  - the request sent by a DNS owner to verify a certificate
-    - DNS owner send CSR
-    - CA validate the information
-    - CA sign and return certificate
-
-```sh
-openssl req -new -key my.key -out my.csr -subj "/C=US/ST=CA/O=MyOrg, Inc./CN=my.com"
-# my.key my.csr
-
-```
-
-- `root certificate`
-  - a certificate used for CA
-
----
-
-### Client Cerficates
-
-- How client verify themselves when creating a secure connection with the remote server.
-
-  - Client create a CSR and verified with the CA.
-  - Client send and encrypt the data with the certificate.
-  - Server recieves the data and verify the cerficate with the CA.
-  - If the certificate is valid, server decrypts the data with private key.
-
-- `Public Key infrastructure(PKI)`
-
----
-
-### TLS example: SSH
-
-```sh
-# generate keys
-ssh-keygen
-# id_rsa: private key
-# id_rsa.pub: public key
-
-# copy public key
-ssh-copy-id -i id_rsa.pub user@remote_server
-# .ssh/authorized_keys
-
-# access remote
-ssh user@remote_server
-```
-
-### TLS example: Openssl
-
-```sh
-# private key
-openssl genrsa -out my.key 1024
-# my.key
-
-# public key
-openssl rsa -in my.key -pubout > my.pem
-# my.pem
-
-```
-
----
 
 ## TLS in k8s
 
@@ -838,7 +722,7 @@ echo "encoded_cert" | base64 --decode
 
 ---
 
-## Lab: CertificateSigninRequest
+### Lab: CertificateSigninRequest
 
 - new admin akshay send the cert and key to admin
 

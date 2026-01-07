@@ -21,7 +21,7 @@
 
 - `admission controller`
 
-  - used to intercept requests to the Kubernetes API server after authentication and authorization, but before the request is persisted in etcd, the cluster's data store.
+  - used to intercept requests to the Kubernetes API server after `authentication` and `authorization`, but before the request is persisted in etcd, the cluster's data store.
   - act as "gatekeepers" to enforce policies and ensure the integrity and security of the cluster.
 
 - Purpose:

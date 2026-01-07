@@ -3,183 +3,15 @@
 [Back](../../index.md)
 
 - [Kubernetes - Authorization](#kubernetes---authorization)
-  - [API Groups](#api-groups)
-    - [`/api`: core group](#api-core-group)
-    - [`/apis`: named group](#apis-named-group)
-  - [COnnection](#connection)
   - [Authorization](#authorization)
-  - [`Role-based access control`(`RBAC`)](#role-based-access-controlrbac)
+  - [Authorization Modes](#authorization-modes)
+    - [`Node authorizer`](#node-authorizer)
+    - [`Attribute-based access control`(`ABAC`)](#attribute-based-access-controlabac)
+    - [`Role-based access control`(`RBAC`)](#role-based-access-controlrbac)
+    - [`Webhook authorization`(`Webhook`)](#webhook-authorizationwebhook)
+  - [API service](#api-service)
+  - [`Role-based access control`(`RBAC`)](#role-based-access-controlrbac-1)
   - [Lab: Authorization](#lab-authorization)
-
----
-
-## API Groups
-
-- K8s API paths are grouped into serveral groups
-
-  - `/api`: core group
-  - `/apis`: named group, associate with resources
-
-```sh
-# list available paths
-curl https://localhost:6443 -k
-
-# get the sub-path
-curl https://localhost:6443/apis -k | grep "name"
-
-
-```
-
-- Common API Endpoints
-
-| **API Path**              | **Description**                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| `/healthz`                | Overall API server health check. Returns `200 OK` if healthy.               |
-| `/healthz/<probe>`        | Per-component health (e.g., `/healthz/etcd`, `/healthz/poststarthook/...`). |
-| `/readyz`                 | API server readiness check (often used by kubelet).                         |
-| `/livez`                  | API server liveness check (container health).                               |
-| `/metrics`                | Prometheus metrics for the API server (latency, request counts, etc.).      |
-| `/version`                | Returns the Kubernetes version info (git version, build date, platform).    |
-| `/swagger.json`           | The raw OpenAPI v2 spec (deprecated).                                       |
-| `/openapi/v2`             | OpenAPI v2 API definitions.                                                 |
-| `/openapi/v3`             | OpenAPI v3 schema split by groups.                                          |
-| `/logs`                   | API server logs (if aggregation / logging is enabled).                      |
-| `/debug/pprof/`           | Go pprof performance profiling endpoints (CPU, mem, traces).                |
-| `/api`                    | Entry point for **core API group** → `/api/v1/…`                            |
-| `/apis`                   | Entry point for **all named API groups**, e.g. `/apis/apps/v1/...`          |
-| `/api/v1`                 | Core API group (pods, services, nodes, configmaps, etc.)                    |
-| `/apis/<group>/<version>` | Named API group entry (apps, batch, networking…).                           |
-| `/clusters/<name>`        | Multicluster access (largest distros; API aggregator).                      |
-
----
-
-### `/api`: core group
-
-| **API Path**                     | **Description**        |
-| -------------------------------- | ---------------------- |
-| `/api/v1/nodes`                  | Nodes                  |
-| `/api/v1/pods`                   | Pod resources          |
-| `/api/v1/services`               | Services               |
-| `/api/v1/namespaces`             | Namespaces             |
-| `/api/v1/endpoints`              | Endpoints              |
-| `/api/v1/configmaps`             | ConfigMaps             |
-| `/api/v1/secrets`                | Secrets                |
-| `/api/v1/persistentvolumes`      | PersistentVolumes      |
-| `/api/v1/persistentvolumeclaims` | PersistentVolumeClaims |
-| `/api/v1/serviceaccounts`        | ServiceAccounts        |
-
----
-
-### `/apis`: named group
-
-- apps API
-  - Workload controllers.
-
-| **API Path**                        | **Description**                  |
-| ----------------------------------- | -------------------------------- |
-| `/apis/apps/v1/replicasets`         | ReplicaSets                      |
-| `/apis/apps/v1/deployments`         | Deployments                      |
-| `/apis/apps/v1/daemonsets`          | DaemonSets                       |
-| `/apis/apps/v1/statefulsets`        | StatefulSets                     |
-| `/apis/apps/v1/controllerrevisions` | Revision history for controllers |
-
-- batch API
-  - Jobs and CronJobs.
-
-| **API Path**              | **Description** |
-| ------------------------- | --------------- |
-| `/apis/batch/v1/jobs`     | Jobs            |
-| `/apis/batch/v1/cronjobs` | CronJobs        |
-
-- networking.k8s.io API
-  - Networking policies, Ingress, etc.
-
-| **API Path**                                 | **Description**   |
-| -------------------------------------------- | ----------------- |
-| `/apis/networking.k8s.io/v1/networkpolicies` | Network policies  |
-| `/apis/networking.k8s.io/v1/ingresses`       | Ingress resources |
-| `/apis/networking.k8s.io/v1/ingressclasses`  | IngressClass      |
-
-- policy API
-  - Pod disruption budgets.
-
-| **API Path**                           | **Description**               |
-| -------------------------------------- | ----------------------------- |
-| `/apis/policy/v1/poddisruptionbudgets` | Pod disruption budgets (PDBs) |
-
-- rbac.authorization.k8s.io API
-  - RBAC policies.
-
-| **API Path**                                             | **Description**     |
-| -------------------------------------------------------- | ------------------- |
-| `/apis/rbac.authorization.k8s.io/v1/roles`               | Namespaced Roles    |
-| `/apis/rbac.authorization.k8s.io/v1/clusterroles`        | Cluster roles       |
-| `/apis/rbac.authorization.k8s.io/v1/rolebindings`        | RoleBindings        |
-| `/apis/rbac.authorization.k8s.io/v1/clusterrolebindings` | ClusterRoleBindings |
-
-- autoscaling API
-  - HPA / VPA.
-
-| **API Path**                                    | **Description**                     |
-| ----------------------------------------------- | ----------------------------------- |
-| `/apis/autoscaling/v1/horizontalpodautoscalers` | HPA (CPU-based)                     |
-| `/apis/autoscaling/v2/horizontalpodautoscalers` | HPA (CPU + memory + custom metrics) |
-
-- storage.k8s.io API
-  - Storage classes, CSIs.
-
-| **API Path**                                | **Description**                |
-| ------------------------------------------- | ------------------------------ |
-| `/apis/storage.k8s.io/v1/storageclasses`    | Storage classes                |
-| `/apis/storage.k8s.io/v1/volumeattachments` | CSI volume attachments         |
-| `/apis/storage.k8s.io/v1/csinodes`          | Nodes that support CSI drivers |
-
-- admissionregistration.k8s.io API
-  - Webhooks.
-
-| **API Path**                                                            | **Description**     |
-| ----------------------------------------------------------------------- | ------------------- |
-| `/apis/admissionregistration.k8s.io/v1/mutatingwebhookconfigurations`   | Mutating webhooks   |
-| `/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations` | Validating webhooks |
-
-- apiextensions.k8s.io API
-  - CRDs.
-
-| **API Path**                                              | **Description**                    |
-| --------------------------------------------------------- | ---------------------------------- |
-| `/apis/apiextensions.k8s.io/v1/customresourcedefinitions` | Custom Resource Definitions (CRDs) |
-
-- metrics.k8s.io API
-
-| **API Path**                         | **Description**       |
-| ------------------------------------ | --------------------- |
-| `/apis/metrics.k8s.io/v1beta1/nodes` | Node CPU/Memory usage |
-| `/apis/metrics.k8s.io/v1beta1/pods`  | Pod CPU/Memory usage  |
-
-- Coordination API
-  - Used internally for leader election.
-
-| **API Path**                          | **Description**        |
-| ------------------------------------- | ---------------------- |
-| `/apis/coordination.k8s.io/v1/leases` | Leader election leases |
-
----
-
-## COnnection
-
-```sh
-# method 1:
-# access with endpint with credential
-curl https://localhost:6443 -k --key admin.key --cert admin.crt --cacert ca.cert
-
-# method 2:
-# enable proxy
-kubectl proxy
-# starting to server on 127.0.0.1:8001
-
-# access with proxy with kubeconfig automatically
-curl https://localhost:8001 -k
-```
 
 ---
 
@@ -187,50 +19,75 @@ curl https://localhost:8001 -k
 
 - `Authorization`
 
-  - evaluates all of the request attributes against all policies, potentially also consulting external services, and then allows or denies the request.
-  - within the API server
-  - takes place following authentication.
-  - denied by default.
+  - **evaluates** all of the **request attributes** against **policies**, potentially also consulting external services, and then **allows** or **denies** the request.
+  - takes place **following** `authentication` within the `API server`
 
-- authorization mode
+- **By default**:
 
-  - Node(Node authorizer)
-  - ABAC(Attribute-based access control)
-  - RBAC(Role-based access control)
-  - Webhook(Webhook authorization)
-  - AlwaysAllow (always allows requests;)
-  - AlwaysDeny (always denies requests)
+  - access is denied
 
 ---
 
-- `Node authorizer`
-  - kubelet access to api server
-  - request name: `system:node`
-  - group: `system:nodes`
+## Authorization Modes
+
+- The Kubernetes API server may **authorize a request** using one of several authorization modes:
+
+  - `AlwaysAllow`
+    - **allows all** requests
+    - brings security risks.
+  - `AlwaysDeny`
+    - **blocks all** requests
+  - `ABAC (attribute-based access control)`
+
+    - defines an **access control paradigm** whereby access rights are granted to users **through the use of policies** which combine **attributes** together.
+    - The **policies** can use any type of **attributes** (user attributes, resource attributes, object, environment attributes, etc).
+
+  - `RBAC (role-based access control)`
+
+    - a method of **regulating access** to computer or network resources **based on the roles of individual users** within an enterprise.
+    - **access** is the **ability** of an individual user to **perform a specific task**, such as view, create, or modify a file.
+    - use `rbac.authorization.k8s.io` API group to drive **authorization decisions**, allowing you to dynamically configure permission policies through the Kubernetes API.
+
+  - `Node`
+    - grants permissions to `kubelets` **based on the pods they are scheduled to run.**
+  - `Webhook`
+    - makes a **synchronous HTTP callout**, blocking the request until the `remote HTTP service` responds to the query.
+    - can write your own software to handle the callout, or use solutions from the ecosystem.
 
 ---
 
-- `Attribute-based access control`(`ABAC`)
-  - External access to the API
-  - controled by a JSON policy file
-    - `{"kind": "Policy", "spec": {"user": "dev-user", "namespace": "*", "resource":"pods","apiGroup":"*"}}`
-  - hard to use:
-    - require to edit policy manually and restart API server
+### `Node authorizer`
+
+- `kubelet` access to api server
+- request name: `system:node`
+- group: `system:nodes`
 
 ---
 
-- `Role-based access control`(`RBAC`)
-  - controll the access to the API server by defining a role
+### `Attribute-based access control`(`ABAC`)
+
+- External access to the API
+- controled by a JSON policy file
+  - `{"kind": "Policy", "spec": {"user": "dev-user", "namespace": "*", "resource":"pods","apiGroup":"*"}}`
+- hard to use:
+  - require to edit policy manually and restart API server
 
 ---
 
-- `Webhook authorization`(`Webhook`)
-  - manage authorization externally
-  - e.g., `Open Policy Agent`, a 3-rd party tools helps with admission control and authorization.
+### `Role-based access control`(`RBAC`)
+
+- controll the access to the API server by defining a role
 
 ---
 
-- API service
+### `Webhook authorization`(`Webhook`)
+
+- manage authorization externally
+- e.g., `Open Policy Agent`, a 3-rd party tools helps with admission control and authorization.
+
+---
+
+## API service
 
 ```conf
 ExecStart=/usr/local/bin/kube-apiserver \\
