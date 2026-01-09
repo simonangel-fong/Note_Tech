@@ -4,6 +4,7 @@
 
 - [Kubernetes: Container - Logging](#kubernetes-container---logging)
   - [Metric](#metric)
+    - [Imperative Command](#imperative-command)
   - [Metrics Server](#metrics-server)
   - [Lab: Enable Metric Server](#lab-enable-metric-server)
   - [Event objects](#event-objects)
@@ -13,6 +14,16 @@
 ---
 
 ## Metric
+
+### Imperative Command
+
+| CMD                                        | DESC                                            |
+| ------------------------------------------ | ----------------------------------------------- |
+| `kubectl top node`                         | Display resource (CPU/memory) usage of nodes    |
+| `kubectl top pod`                          | Display resource (CPU/memory) usage of pods     |
+| `kubectl top pod POD_NAME --containers`    | Show metrics for a given pod and its containers |
+| `kubectl top pod POD_NAME --show-swap`     | Show pod resources related to swap memory       |
+| `kubectl top pod POD_NAME --sort-by=cpu` | sort pods list using specified field            |
 
 ---
 

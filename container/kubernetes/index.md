@@ -40,7 +40,7 @@
 
 - [`Node`](./node/node/node.md)
 - [`Taints` and `Tolerations`](./node/taint_toleration/taint_toleration.md)
-- [Cordon](./node/cordon/cordon.md)
+- [Cordon & Drain](./node/cordon/cordon.md)
 
 ---
 
@@ -85,6 +85,7 @@
 - **Storage**:
 
   - [Docker Storage](./storage/docker_storage/docker_storage.md)
+  - [CSI (Container Storage Interface)](./storage/csi/csi.md)
   - [`Pod Volume`](./storage/volume/volume.md)
   - [Common Volume Types](./storage/volume_type/volume_type.md)
     - [`emptyDir`](./storage/empty_dir/empty_dir.md)
@@ -157,7 +158,6 @@
 ## Security
 
 - [Security Fundamental](./security/fundamental/fundamental.md)
-- [Docker Security](./security/docker_security/docker_security.md)
 
 - [Admission Controller](./security/admission_controller/admission_controller.md)
 
@@ -168,6 +168,8 @@
 - [Authorization](./security/authorization/authorization.md)
   - [`Role-based access control (RBAC)`](./security/rbac/rbac.md)
 - [Security Context](./security/security_context/security_context.md)
+  - [Docker Security](./security/docker_security/docker_security.md)
+
 ---
 
 ## Configuration
@@ -200,4 +202,4 @@ https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 ---
 
 - CKA
-  - [cka01](./cka/01/01.md)
+  - [cka](./cka/cka.md)

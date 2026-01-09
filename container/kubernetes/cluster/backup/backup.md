@@ -100,3 +100,50 @@ https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#back
 https://github.com/etcd-io/website/blob/main/content/en/docs/v3.5/op-guide/recovery.md
 
 https://www.youtube.com/watch?v=qRPNuT080Hk
+
+
+
+---
+
+## Install 
+
+- Install Go
+
+```sh
+sudo apt install golang
+
+go version
+# go version go1.23.8 linux/amd64
+```
+
+??
+
+```sh
+sudo apt install etcd-client
+```
+
+
+```sh
+git clone -b v3.4.37 https://github.com/etcd-io/etcd.git
+cd etcd
+
+# Run the build script
+./build
+
+# Add the full path
+sudo export PATH="$PATH:`pwd`/bin"
+
+etcd --version
+# WARNING: Package "github.com/golang/protobuf/protoc-gen-go/generator" is deprecated.
+#         A future release of golang/protobuf will delete this package,
+#         which has long been excluded from the compatibility promise.
+
+# etcd Version: 3.4.37
+# Git SHA: 1a36b4853
+# Go Version: go1.23.8
+# Go OS/Arch: linux/amd64
+
+etcdctl version
+# etcdctl version: 3.4.37
+# API version: 3.4
+```

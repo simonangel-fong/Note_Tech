@@ -10,6 +10,7 @@
   - [Resource](#resource)
     - [Request + Limit Strategy](#request--limit-strategy)
   - [Limit range](#limit-range)
+    - [Imperative Commands](#imperative-commands)
   - [Quota](#quota)
   - [Edit a pod](#edit-a-pod)
   - [Edit Deployments](#edit-deployments)
@@ -185,6 +186,15 @@ spec:
         cpu: 500Mi
       type: Container
 ```
+
+---
+
+### Imperative Commands
+
+| Command | Description      |
+| ------- | ---------------- |
+|         | Display resource |
+|         |                  |
 
 ---
 
