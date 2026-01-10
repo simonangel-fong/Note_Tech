@@ -12,6 +12,7 @@
   - [Security](#security)
   - [Configuration](#configuration)
   - [Installation](#installation)
+  - [CKA](#cka)
 
 ---
 
@@ -201,5 +202,12 @@ https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 
 ---
 
-- CKA
-  - [cka](./cka/cka.md)
+## CKA
+
+- [Curriculum](./cka/exam.md)
+- [cka](./cka/cka.md)
+  - [Network](./cka/network.md)
+  - [Storage](./cka/storage.md)
+  - [workload](./cka/workload.md)
+  - [Node](./cka/node.md)
+  - [Security](./cka/security.md)
