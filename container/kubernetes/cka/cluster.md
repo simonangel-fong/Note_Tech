@@ -1,590 +1,238 @@
-# CKA
+# CKA - Cluster
 
 [Back](../index.md)
 
-- [CKA](#cka)
-  - [权限控制 RBAC](#权限控制-rbac)
-  - [查看 pod 的 CPU](#查看-pod-的-cpu)
-  - [6、扩容 deployment 副本数量](#6扩容-deployment-副本数量)
-  - [7、调度 pod 到指定节点](#7调度-pod-到指定节点)
-  - [8 查看可用节点数量](#8-查看可用节点数量)
-  - [9 创建多容器的 pod](#9-创建多容器的-pod)
-  - [10.创建 PV](#10创建-pv)
-  - [11.创建 PVC](#11创建-pvc)
-  - [12.查看 pod 日志](#12查看-pod-日志)
-  - [13. 使用 sidecar 代理容器日志](#13-使用-sidecar-代理容器日志)
-  - [14.升级集群](#14升级集群)
-  - [15.备份还原 etcd](#15备份还原-etcd)
-  - [16. 排查集群中故障节点](#16-排查集群中故障节点)
-  - [17.节点维护](#17节点维护)
+- [CKA - Cluster](#cka---cluster)
+  - [kubeadm](#kubeadm)
+    - [Task: join a node](#task-join-a-node)
+  - [Cluster](#cluster)
+    - [Task: Upgrade controlplane](#task-upgrade-controlplane)
+    - [Task: Snapshot etcd](#task-snapshot-etcd)
+    - [Task: Troubleshooting](#task-troubleshooting)
+    - [Task: upgrade cluster](#task-upgrade-cluster)
+    - [Task: backup and restore etcd](#task-backup-and-restore-etcd)
+    - [Task: Troubleshooting worker node](#task-troubleshooting-worker-node)
+  - [Scheduling](#scheduling)
+    - [Task: Node selector](#task-node-selector)
+    - [Task: node selector](#task-node-selector-1)
+    - [Task: Taints and Tolerations](#task-taints-and-tolerations)
+    - [Task: Taints](#task-taints)
+    - [Task: available node](#task-available-node)
+    - [Task: Cordon](#task-cordon)
 
 ---
 
-## 权限控制 RBAC
+## kubeadm
 
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
+### Task: join a node
 
-Context
-为部署流水线创建一个新的 ClusterRole 并将其绑定到范围为特定的 namespace 的特定 ServiceAccount。
+CKA EXAM OBJECTIVE: Create and manage Kubernetes clusters using kubeadm
+TASK:
 
-Task
-创建一个名为 deployment-clusterrole 且仅允许创建以下资源类型的新 ClusterRole：
-Deployment
-StatefulSet
-DaemonSet
-在现有的 namespace app-team1 中创建一个名为 cicd-token 的新 ServiceAccount。
-限于 namespace app-team1 中，将新的 ClusterRole deployment-clusterrole 绑定到新的 ServiceAccount cicd-token。Copy
-
----
-
-```sh
-# create cluster role
-kubectl create clusterrole deployment-clusterrole --resource=deployment,statefulsets,daemonsets --verb=create
-
-# create sa
-kubectl create sa cicd-token -n app-team1
-
-# cluster role binding
-kubectl create rolebinding cicd-token-rolebinding --clusterrole=deployment-clusterrole --serviceaccount=cicd-token -n app-team1
-
-# confirm
-kubectl -n app-team1 describe rolebinding cicd-token-rolebinding
-
-```
-
----
-
-## 查看 pod 的 CPU
-
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
-
-Task
-通过 pod label name=cpu-loader，找到运行时占用大量 CPU 的 pod，
-并将占用 CPU 最高的 pod 名称写入文件 /opt/KUTR000401/KUTR00401.txt（已存在）。Copy
-
-```sh
-kubectl top pod -l name=cpu-loader --sort-by=cpu -A
-```
-
----
-
-
-## 6、扩容 deployment 副本数量
-
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
-
-Task
-将 deployment presentation 扩展至 4 个 podsCopy
-
----
-
-- Configure Exam Environment
-
-```sh
-kubectl create deploy presentation --image=nginx
-# deployment.apps/presentation created
-
-# confirm
-kubectl get deploy presentation
-# NAME           READY   UP-TO-DATE   AVAILABLE   AGE
-# presentation   1/1     1            1           10s
-```
-
-- Solution
-
-```sh
-kubectl scale deploy presentation --replicas=4
-# deployment.apps/presentation scaled
-
-# confirm
-kubectl rollout status deploy presentation
-# deployment "presentation" successfully rolled out
-kubectl get deploy presentation -o wide
-# NAME           READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES   SELECTOR
-# presentation   4/4     4            4           3m54s   nginx        nginx    app=presentation
-```
-
----
-
-## 7、调度 pod 到指定节点
-
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
-
-Task
-按如下要求调度一个 pod：
-名称：nginx-kusc00401
-Image：nginx
-Node selector：disktype=ssd
+1. Join node02 to your existing kubeadm cluster. It has already been pre-provisioned with all necessary inst
+   allations.
 
 ---
 
 - Solution
 
-```sh
-# ##############################
-# Collect Info
-# ##############################
-kubectl get node --show-labels
-# NAME           STATUS   ROLES           AGE   VERSION   LABELS
-# controlplane   Ready    control-plane   42d   v1.33.6   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=controlplane,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
-# node01         Ready    <none>          42d   v1.33.6   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=node01,kubernetes.io/os=linux
-# node02         Ready    <none>          42d   v1.33.6   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,disk=ssd,kubernetes.io/arch=amd64,kubernetes.io/hostname=node02,kubernetes.io/os=linux,node-role=front-end,ssd=
-
-# add node label
-kubectl label node node02 disktype=ssd
-# node/node02 labeled
-
-# confirm
-kubectl get node -l disktype=ssd
-# NAME     STATUS   ROLES    AGE   VERSION
-# node02   Ready    <none>   42d   v1.33.6
-
-kubectl run nginx-kusc00401 --image=nginx --dry-run=client -o yaml > nodeSelector-pod.yaml
-
-vi nodeSelector-pod.yaml
-# apiVersion: v1
-# kind: Pod
-# metadata:
-#   name: nginx-kusc00401
-# spec:
-#   nodeSelector:
-#     disktype: ssd
-#   containers:
-#   - name: nginx
-#     image: nginx
-
-# create pod
-kubectl apply -f nodeSelector-pod.yaml
-# pod/nginx-kusc00401 created
-
-# confirm
-kubectl get pod nginx-kusc00401 -o wide
-# NAME              READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
-# nginx-kusc00401   1/1     Running   0          81s   10.244.2.85   node02   <none>           <none>
-```
-
----
-
-## 8 查看可用节点数量
-
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
-
-Task
-检查有多少 nodes 已准备就绪（不包括被打上 Taint：NoSchedule 的节点），
-并将数量写入 /opt/KUSC00402/kusc00402.txtCopy
-
----
-
-- Configure Environment
+- ref:
+  - https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/
+    - Token-based discovery with CA pinning
 
 ```sh
-kubectl taint node node01 app=db:NoSchedule
-# node/node01 tainted
+# ssh to controlplane
+
+# output command with tokens
+kubeadm token create --print-join-comman
+# kubeadm join 192.168.10.150:6443 --token 50jiwr.l7--discovery-token-ca-cert-hash sha256:f56b2
+
+# ssh to node02
+
+# join with command
+sudo kubeadm join 192.168.10.150:6443 --token 50jiwr.l7--discovery-token-ca-cert-hash sha256:f56b2
 
 # confirm
-kubectl describe node node01 | grep Taints
-# Taints:             app=db:NoSchedule
-```
-
-- Solution
-
-```sh
-kubectl describe node | grep Taints
-# Taints:             node-role.kubernetes.io/control-plane:NoSchedule
-# Taints:             app=db:NoSchedule
-# Taints:             <none>
-
-kubectl describe node | grep Taints | grep -vc NoSchedule > /opt/KUSC00402/kusc00402.txt
-# 1
-
-# confirm
-cat /opt/KUSC00402/kusc00402.txt
+# ssh controlplane
+k get node
 ```
 
 ---
 
-## 9 创建多容器的 pod
+## Cluster
 
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
+### Task: Upgrade controlplane
 
-Task
-按如下要求调度一个 Pod：
-名称：kucc8
-app containers: 2
-container 名称/images：
+CKA EXAM OBJECTIVE: Manage the lifecycle of Kubernetes clusters
+TASK:
 
-- nginx
-- redis
-
----
-
-- Solution:
-
-```sh
-kubectl run kucc8 --image=nginx --dry-run=client -o yaml > multi-con.yaml
-
-vi multi-con.yaml
-# apiVersion: v1
-# kind: Pod
-# metadata:
-#   name: kucc8
-# spec:
-#   containers:
-#   - name: nginx
-#     image: nginx
-#   - name: redis
-#     image: redis
-
-kubectl apply -f multi-con.yaml
-# pod/kucc8 created
-
-# confirm
-kubectl get pod kucc8
-```
-
----
-
-## 10.创建 PV
-
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context hk8s
-
-Task
-创建名为 app-config 的 persistent volume，容量为 1Gi，访问模式为 ReadWriteMany。
-volume 类型为 hostPath，位于 /srv/app-config
-
----
-
-```yaml
-# pv.yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: app-config
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: "/srv/app-config"
-```
-
-```sh
-kubectl apply -f pv.yaml
-# persistentvolume/app-config created
-
-kubectl get pv app-config
-# NAME         CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
-# app-config   1Gi        RWX            Retain           Available                          <unset>                          27s
-
-kubectl describe pv app-config
-# Name:            app-config
-# Labels:          <none>
-# Annotations:     <none>
-# Finalizers:      [kubernetes.io/pv-protection]
-# StorageClass:
-# Status:          Available
-# Claim:
-# Reclaim Policy:  Retain
-# Access Modes:    RWX
-# VolumeMode:      Filesystem
-# Capacity:        1Gi
-# Node Affinity:   <none>
-# Message:
-# Source:
-#     Type:          HostPath (bare host directory volume)
-#     Path:          /srv/app-configCopy
-#     HostPathType:
-# Events:            <none>
-```
-
----
-
-## 11.创建 PVC
-
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context ok8s
-
-Task
-创建一个新的 PersistentVolumeClaim：
-名称: pv-volume
-Class: csi-hostpath-sc
-容量: 10Mi
-
-创建一个新的 Pod，来将 PersistentVolumeClaim 作为 volume 进行挂载：
-名称：web-server
-Image：nginx:1.16
-挂载路径：/usr/share/nginx/html
-
-配置新的 Pod，以对 volume 具有 ReadWriteOnce 权限。
-
-最后，使用 kubectl edit 或 kubectl patch 将 PersistentVolumeClaim 的容量扩展为 70Mi，并记录此更改。
+1. Use kubeadm to upgrade the controller node from version v1.31.4 to v1.32.1.
+2. You will also upgrade kubelet and kubectl to match this version.
 
 ---
 
 - Solution
 
-```yaml
-# pvc.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pv-volume
-spec:
-  storageClassName: csi-hostpath-sc
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Mi
-```
+- ref:
+  - https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
+- Common mistake:
+  - log in the wrong node
+  - use incorrect versions
 
 ```sh
-kubectl apply -f pvc.yaml
-# persistentvolumeclaim/pv-volume created
+# confirm the node to be upgraded
+# confirm the version
+k get node
 
-kubectl get pvc
-# NAME                 STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS      VOLUMEATTRIBUTESCLASS   AGE
-# pv-volume            Bound     pvc-20bb7ba7-c811-47c6-85fb-13881c9af538   10Mi       RWO            csi-hostpath-sc   <unset>                 4m
-```
+# unhold
+sudo apt-mark unhold kubeadm
+# update packages
+sudo apt-get update
+# install the correct version
+sudo apt-get install -y kubeadm='1.32.1'
 
-```yaml
-# pvc-pod.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: web-server
-spec:
-  volumes:
-    - name: pv-storage
-      persistentVolumeClaim:
-        claimName: pv-volume
-  containers:
-    - name: nginx
-      image: nginx:1.16
-      volumeMounts:
-        - mountPath: "/usr/share/nginx/html"
-          name: pv-storage
-```
+# hold
+sudo apt-mark hold kubeadm
 
-```sh
-kubectl apply -f pvc-pod.yaml
-# pod/web-server created
+# confirm adm version
+kubeadm version
 
-kubectl get pod web-server
-# NAME         READY   STATUS    RESTARTS   AGE
-# web-server   1/1     Running   0          24s
+# Verify the upgrade plan
+sudo kubeadm upgrade plan
 
-kubectl describe pod web-server
-# Containers:
-#   nginx:
-#     Mounts:
-#       /usr/share/nginx/html from pv-storage (rw)
-# Volumes:
-#   pv-storage:
-#     Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-#     ClaimName:  pv-volume
-```
+# upgrade with correct version
+sudo kubeadm upgrade apply v1.32.1
 
-- update
+# ########### upgrade kubelet
 
-```sh
-kubectl edit pvc pv-volume --record
-# spec:
-#   resources:
-#     requests:
-#       storage: 70Mi
-# persistentvolumeclaim/pv-volume edited
+# drain
+kubectl drain <node-to-drain> --ignore-daemonsets
 
-# confirm
-kubectl get pvc pv-volume
-# NAME        STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS      VOLUMEATTRIBUTESCLASS   AGE
-# pv-volume   Bound    pvc-20bb7ba7-c811-47c6-85fb-13881c9af538   70Mi       RWO            csi-hostpath-sc   <unset>                 12m
+sudo apt-mark unhold kubelet kubectl
+sudo apt-get update
+sudo apt-get install -y kubelet='1.32.1' kubectl='1.32.1'
+sudo apt-mark hold kubelet kubectl
 
-kubectl describe pvc pv-volume
-# Capacity:      70Mi
-# Events:
-#   Type     Reason                    Age                    From                                                                           Message
-#   ----     ------                    ----                   ----                                                                           -------
-#   Normal   Resizing                  26s                    external-resizer hostpath.csi.k8s.io                                           External resizer is resizing volume pvc-20bb7ba7-c811-47c6-85fb-13881c9af538
-#   Normal   FileSystemResizeRequired  25s                    external-resizer hostpath.csi.k8s.io                                           Require file system resize of volume on node
+# Restart the kubelet:
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+# Uncordon the node
+kubectl uncordon controlplane
+
+# confirm node and version
+k get node
 ```
 
 ---
 
-## 12.查看 pod 日志
+### Task: Snapshot etcd
 
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
+CKA EXAM OBJECTIVE: Manage the lifecycle of Kubernetes clusters
+TASK :
 
-Task
-监控 pod foo 的日志并：
-提取与错误 RLIMIT_NOFILE 相对应的日志行
-将这些日志行写入 /opt/KUTR00101/foo
+1. Take a snapshot of the etcd cluster and save it as /opt/clusterstate.backup
+2. Restore the cluster state from /opt/clusterstate.backup.
 
 ---
 
-- Config env
+- Solution
+
+- ref:
+
+  - https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
+
+- Dangous Step
+  - better do it first.
+- !!!: This will hang
+  - `sudo ETCDCTL_API=3 etcdctl --endpoints $ENDPOINT snapshot save snapshot.db`
+- !!!: always use command with options
 
 ```sh
-kubectl run foo --image=busybox -- sleep infinity
-# pod/foo created
+export ETCDCTL_API=3
 
-kubectl exec -it foo -- ulimit -n
+sudo ETCDCTL_API=3 etcdctl snapshot save <backup-file-location> \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=<trusted-ca-file> \
+  --cert=<cert-file> \
+  --key=<key-file>
+
+
+# Verify the snapshot
+etcdutl --write-out=table snapshot status snapshot.db
 ```
+
+---
+
+- Restore
+  - ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#restoring-an-etcd-cluster
+- Command int he doc without option
+  - it will hang
+  - need to **add option**
+
+```sh
+export ETCDCTL_API=3
+
+sudo ETCDCTL_API=3 etcdctl snapshot restore <backup-file-location> \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=<trusted-ca-file> \
+  --cert=<cert-file> \
+  --key=<key-file>  \
+  --data-dir <data-dir-location> \
+  --skip-hash-check
+
+# update etcd config for the new data-dir
+# /etc/kubernetes/manifests/etcd.yaml's volumes.hostPath.path
+vi /etc/kubernetes/manifests/etcd.yaml
+# volumes.hostPath.path
+
+
+# wait until minutes
+# confirm working
+kubectl get node
+
+```
+
+> data-dir-location: must diff from backup-file-location
+> default path: /var/lib/etcd
+> It will take munites for restore etcd, at the same time kubectl will fail.
+
+---
+
+### Task: Troubleshooting
+
+CKA EXAM OBJECTIVE: Troubleshoot clusters and nodes
+TASK:
+
+1. Fix whatever problem is causing a node to be in the NotReady state.
+
+---
 
 - Solution
 
 ```sh
-kubectl logs foo | grep "RLIMIT_NOFILE" > /opt/KUTR00101/foo
-```
+# identify the failure node
+kubectl get nodes
 
----
+kubectl describe node NODE_NAME
+# commonly show nothing useful
 
-## 13. 使用 sidecar 代理容器日志
+# ssh node
+# check kubelet service
+sudo systemctl status kubelet
 
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
+sudo systemctl restart kubelet
 
-Context
-将一个现有的 Pod 集成到 Kubernetes 的内置日志记录体系结构中（例如 kubectl logs）。
-添加 streaming sidecar 容器是实现此要求的一种好方法。
+sudo systemctl status kubelet
 
-Task
-使用 busybox Image 来将名为 sidecar 的 sidecar 容器添加到现有的 Pod 11-factor-app 中。
-新的 sidecar 容器必须运行以下命令：
-/bin/sh -c tail -n+1 -f /var/log/11-factor-app.log
-使用挂载在/var/log 的 Volume，使日志文件 11-factor-app.log 可用于 sidecar 容器。
-除了添加所需要的 volume mount 以外，请勿更改现有容器的规格。
-
----
-
-- Config env
-
-```yaml
-# 11-factor-app.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: 11-factor-app
-spec:
-  containers:
-    - name: count
-      image: busybox
-      command:
-        - "/bin/sh"
-        - "-c"
-      args:
-        - |
-          i=0;
-          while true;
-          do
-           echo "$i: $(date)" >> /var/log/11-factor-app.log;
-           i=$((i+1));
-           sleep 1;
-          done
-```
-
-```sh
-kubectl apply -f 11-factor-app.yaml
-# pod/11-factor-app created
-
-kubectl get pod
-# NAME                   READY   STATUS    RESTARTS      AGE
-# 11-factor-app          1/1     Running   0             3m54s
-
-kubectl exec -it 11-factor-app -- cat /var/log/11-factor-app.log
-# 0: Thu Jan  8 20:45:44 UTC 2026
-# 1: Thu Jan  8 20:45:45 UTC 2026
-# 2: Thu Jan  8 20:45:46 UTC 2026
-# 3: Thu Jan  8 20:45:47 UTC 2026
-# 4: Thu Jan  8 20:45:49 UTC 2026
-```
-
-```sh
-kubectl get pod 11-factor-app -o yaml > sidecar.yaml
-
-# backup
-cp sidecar.yaml sidecar.yaml.bak
-vi sidecar.yaml
-```
-
-```yaml
-# sidecar.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: 11-factor-app
-spec:
-  volumes:
-    - name: varlog
-      emptyDir: {}
-  containers:
-    - name: count
-      image: busybox
-      volumeMounts:
-        - name: varlog
-          mountPath: /var/log
-      command:
-        - "/bin/sh"
-        - "-c"
-      args:
-        - |
-          i=0;
-          while true;
-          do
-           echo "$i: $(date)" >> /var/log/11-factor-app.log;
-           i=$((i+1));
-           sleep 1;
-          done
-    - name: sidecar
-      image: busybox
-      volumeMounts:
-        - name: varlog
-          mountPath: /var/log
-      command:
-        - "/bin/sh"
-        - "-c"
-      args:
-        - |
-          tail -n+1 -f /var/log/11-factor-app.log
-```
-
-```sh
-kubectl delete pod 11-factor-app --grace-period=1
-# pod "11-factor-app" deleted
-
-kubectl apply -f sidecar.yaml
-# pod/11-factor-app replaced
-
-kubectl get pod 11-factor-app
-# NAME            READY   STATUS    RESTARTS   AGE
-# 11-factor-app   2/2     Running   0          17s
-
+# ssh controlplane
 # confirm
-kubectl logs 11-factor-app -c sidecar
-# 0: Thu Jan  8 20:53:07 UTC 2026
-# 1: Thu Jan  8 20:53:09 UTC 2026
-# 2: Thu Jan  8 20:53:10 UTC 2026
-# 3: Thu Jan  8 20:53:11 UTC 2026
-# 4: Thu Jan  8 20:53:12 UTC 2026
-# 5: Thu Jan  8 20:53:13 UTC 2026
-# 6: Thu Jan  8 20:53:14 UTC 2026
-# 7: Thu Jan  8 20:53:15 UTC 2026
-# 8: Thu Jan  8 20:53:16 UTC 2026
-
+kubectl get node
 ```
 
 ---
 
-## 14.升级集群
+### Task: upgrade cluster
 
 设置配置环境：
 [candidate@node-1] $ kubectl config use-context mk8s
@@ -798,7 +446,7 @@ kubectl get nodes
 
 ---
 
-## 15.备份还原 etcd
+### Task: backup and restore etcd
 
 设置配置环境
 此项目无需更改配置环境。但是，在执行此项目之前，请确保您已返回初始节点。
@@ -858,7 +506,7 @@ sudo -i ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/k
 
 ---
 
-## 16. 排查集群中故障节点
+### Task: Troubleshooting worker node
 
 设置配置环境：
 [candidate@node-1] $ kubectl config use-context wk8s
@@ -1092,7 +740,232 @@ kubectl get node
 
 ---
 
-## 17.节点维护
+## Scheduling
+
+### Task: Node selector
+
+1. create a pod named noded that uses the nginx image
+2. ensure the pod is scheduled to the a node labeled disk=nvme
+
+- setup env
+
+```sh
+k label node node02 disk=nvme --overwrite
+```
+
+---
+
+- Solution
+
+```yaml
+# task-nodeselector.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: noded
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      imagePullPolicy: IfNotPresent
+  nodeSelector:
+    disk: nvme
+```
+
+```sh
+k get node -L disk
+# NAME           STATUS   ROLES           AGE   VERSION   DISK
+# controlplane   Ready    control-plane   46d   v1.34.3
+# node01         Ready    <none>          46d   v1.33.6
+# node02         Ready    <none>          46d   v1.33.6   nvme
+
+k apply -f task-nodeselector.yaml
+# pod/nginx created
+
+ kubectl get pod nginx -o wide
+# NAME    READY   STATUS    RESTARTS   AGE   IP             NODE     NOMINATED NODE   READINESS GATES
+# nginx   1/1     Running   0          30s   10.244.2.183   node02   <none>           <none>
+```
+
+---
+
+### Task: node selector
+
+设置配置环境：
+[candidate@node-1] $ kubectl config use-context k8s
+
+Task
+按如下要求调度一个 pod：
+名称：nginx-kusc00401
+Image：nginx
+Node selector：disktype=ssd
+
+---
+
+- Solution
+
+```sh
+# ##############################
+# Collect Info
+# ##############################
+kubectl get node --show-labels
+# NAME           STATUS   ROLES           AGE   VERSION   LABELS
+# controlplane   Ready    control-plane   42d   v1.33.6   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=controlplane,kubernetes.io/os=linux,node-role.kubernetes.io/control-plane=,node.kubernetes.io/exclude-from-external-load-balancers=
+# node01         Ready    <none>          42d   v1.33.6   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=node01,kubernetes.io/os=linux
+# node02         Ready    <none>          42d   v1.33.6   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,disk=ssd,kubernetes.io/arch=amd64,kubernetes.io/hostname=node02,kubernetes.io/os=linux,node-role=front-end,ssd=
+
+# add node label
+kubectl label node node02 disktype=ssd
+# node/node02 labeled
+
+# confirm
+kubectl get node -l disktype=ssd
+# NAME     STATUS   ROLES    AGE   VERSION
+# node02   Ready    <none>   42d   v1.33.6
+
+kubectl run nginx-kusc00401 --image=nginx --dry-run=client -o yaml > nodeSelector-pod.yaml
+
+vi nodeSelector-pod.yaml
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: nginx-kusc00401
+# spec:
+#   nodeSelector:
+#     disktype: ssd
+#   containers:
+#   - name: nginx
+#     image: nginx
+
+# create pod
+kubectl apply -f nodeSelector-pod.yaml
+# pod/nginx-kusc00401 created
+
+# confirm
+kubectl get pod nginx-kusc00401 -o wide
+# NAME              READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+# nginx-kusc00401   1/1     Running   0          81s   10.244.2.85   node02   <none>           <none>
+```
+
+---
+
+### Task: Taints and Tolerations
+
+On node node-1, add a taint so that no normal pods can schedule there.
+Then schedule a Pod on that node by adding the appropriate toleration to the Pod spec (and ensure it actually lands on node-2).
+
+---
+
+- Solution
+
+- Taints
+
+```sh
+kubectl describe node node01 | grep Taints
+# Taints:             <none>
+
+kubectl taint nodes node01 process=gpu:NoSchedule
+# node/node01 tainted
+
+kubectl describe node node01 | grep Taints
+# Taints:             process=gpu:NoSchedule
+
+kubectl run web --image=nginx --dry-run=client -o yaml > toleration-pod.yaml
+
+vi toleration-pod.yaml
+# apiVersion: v1
+# kind: Pod
+# matadata:
+#   name: web
+# spec:
+#   tolerations:
+#   - key: "process"
+#     operator: "Equal"
+#     value: "gpu"
+#     effect: "NoSchedule"
+#   containers:
+#   - image: nginx
+#     name: web
+
+kubectl apply -f toleration-pod.yaml
+# pod/web created
+
+kubectl get pod web -o wide
+# NAME   READY   STATUS    RESTARTS   AGE     IP             NODE     NOMINATED NODE   READINESS GATES
+# web    1/1     Running   0          3m53s   10.244.2.132   node02   <none>           <none>
+```
+
+---
+
+### Task: Taints
+
+CKA EXAM OBJECTIVE: Troubleshoot clusters and nodes
+TASK:
+
+1. Inspect the nodes controlplane and node01 for any taints they have. Write the results to their respective files:
+2. controller /opt/cka/answers/controller.taint
+3. node01 /opt/cka/answers/node-1.taint
+
+---
+
+- Solution
+
+```sh
+kubectl get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   46d   v1.34.3
+# node01         Ready    <none>          46d   v1.33.6
+# node02         Ready    <none>          46d   v1.33.6
+
+kubectl describe node controlplane | grep -i Taints
+# Taints:             node-role.kubernetes.io/control-plane:NoSchedule
+
+kubectl describe node node01 | grep -i Taints
+# Taints:             process=gpu:NoSchedule
+```
+
+---
+
+### Task: available node
+
+设置配置环境：
+[candidate@node-1] $ kubectl config use-context k8s
+
+Task
+检查有多少 nodes 已准备就绪（不包括被打上 Taint：NoSchedule 的节点），
+并将数量写入 /opt/KUSC00402/kusc00402.txtCopy
+
+---
+
+- Configure Environment
+
+```sh
+kubectl taint node node01 app=db:NoSchedule
+# node/node01 tainted
+
+# confirm
+kubectl describe node node01 | grep Taints
+# Taints:             app=db:NoSchedule
+```
+
+- Solution
+
+```sh
+kubectl describe node | grep Taints
+# Taints:             node-role.kubernetes.io/control-plane:NoSchedule
+# Taints:             app=db:NoSchedule
+# Taints:             <none>
+
+kubectl describe node | grep Taints | grep -vc NoSchedule > /opt/KUSC00402/kusc00402.txt
+# 1
+
+# confirm
+cat /opt/KUSC00402/kusc00402.txt
+```
+
+---
+
+### Task: Cordon
 
 设置配置环境：
 [candidate@node-1] $ kubectl config use-context ek8s

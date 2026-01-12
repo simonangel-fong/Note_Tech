@@ -170,6 +170,7 @@
   - [`Role-based access control (RBAC)`](./security/rbac/rbac.md)
 - [Security Context](./security/security_context/security_context.md)
   - [Docker Security](./security/docker_security/docker_security.md)
+- [Pod Security Standards](./security/pod_security/pod_security.md)
 
 ---
 
@@ -205,9 +206,8 @@ https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 ## CKA
 
 - [Curriculum](./cka/exam.md)
-- [cka](./cka/cka.md)
   - [Network](./cka/network.md)
   - [Storage](./cka/storage.md)
   - [workload](./cka/workload.md)
-  - [Node](./cka/node.md)
   - [Security](./cka/security.md)
+  - [Cluster](./cka/cluster.md)

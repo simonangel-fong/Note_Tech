@@ -4,20 +4,90 @@
 
 - [CKA - Network](#cka---network)
   - [NetworkPolicy](#networkpolicy)
-    - [Task](#task)
-      - [Solution](#solution)
+    - [Task: NetworkPolicy](#task-networkpolicy)
+    - [Task: NetworkPolicy](#task-networkpolicy-1)
   - [Service](#service)
-    - [Task](#task-1)
-      - [Solution](#solution-1)
+    - [Task: svc + Deploy](#task-svc--deploy)
   - [Ingress](#ingress)
-    - [Task](#task-2)
-    - [Solution](#solution-2)
+    - [Task: Ingress + SVC](#task-ingress--svc)
+    - [Task: ingress + svc](#task-ingress--svc-1)
+  - [CoreDNS](#coredns)
+    - [Task: CoreDNS config error](#task-coredns-config-error)
+    - [Task: CoreDNS map DNS to IP](#task-coredns-map-dns-to-ip)
+  - [Gateway API](#gateway-api)
+    - [Task: API GATEWAY + Routhttp](#task-api-gateway--routhttp)
 
 ---
 
 ## NetworkPolicy
 
-### Task
+### Task: NetworkPolicy
+
+CKA EXAM OBJECTIVE: Define and enforce Network Policies
+Task :
+
+1. In namespace cherry you'll find two deployments named pit and stem. Both deployments are exposed via a service.
+2. Make a NetworkPolicy named cherry-control that:
+3. that prevents outgoing traffic from deployment pit ...
+4. ... EXCEPT to that of deployment stem.
+
+```sh
+k create ns cherry
+k create deploy pit -n cherry --image=nginx
+k expose deploy pit -n cherry --port=80
+k create deploy stem -n cherry --image=nginx
+k expose deploy stem -n cherry --port=80
+
+k get all -n cherry
+```
+
+---
+
+- Solution
+
+```yaml
+# task-networkpolicy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cherry-control
+  namespace: cherry
+spec:
+  podSelector:
+    matchLabels:
+      app: pit
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: stem
+```
+
+```sh
+k apply -f task-networkpolicy.yaml
+# networkpolicy.networking.k8s.io/cherry-control created
+
+k describe networkpolicy cherry-control -n cherry
+# Name:         cherry-control
+# Namespace:    cherry
+# Created on:   2026-01-11 17:01:03 -0500 EST
+# Labels:       <none>
+# Annotations:  <none>
+# Spec:
+#   PodSelector:     app=pit
+#   Not affecting ingress traffic
+#   Allowing egress traffic:
+#     To Port: <any> (traffic allowed to all ports)
+#     To:
+#       PodSelector: app=stem
+#   Policy Types: Egress
+```
+
+---
+
+### Task: NetworkPolicy
 
 Create a new NetworkPolicy named allow-port-from-namespace in the existing namespace fubar.
 Ensure that the new NetworkPolicy allows Pods in namespace internal to connect to port 9000 of Pods in namespace fubar.
@@ -34,7 +104,7 @@ kubectl create ns internal
 
 ---
 
-#### Solution
+- Solution
 
 ```yaml
 # networkpolicy.yaml
@@ -90,7 +160,7 @@ kubectl describe networkpolicy allow-port-from-namespace -n fubar
 
 ## Service
 
-### Task
+### Task: svc + Deploy
 
 Reconfigure the existing deployment front-end and add a port specification named http
 exposing port 80/tcp of the existing container nginx.
@@ -107,7 +177,7 @@ kubectl rollout status deploy/front-end
 
 ---
 
-#### Solution
+- Solution
 
 - ref: https://kubernetes.io/docs/tasks/access-application-cluster/service-access-application-cluster/
 
@@ -172,7 +242,56 @@ kubectl get pod -l app=front-end -o custom-columns=Name:metadata.name,IP:status.
 
 ## Ingress
 
-### Task
+### Task: Ingress + SVC
+
+create an Ingress resource named luau that routes traffic on the path /aloha to the aloha service on port 54321
+
+---
+
+- Solution
+
+```yaml
+# task-ingress02.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: luau
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /aloha
+            pathType: Prefix
+            backend:
+              service:
+                name: aloha
+                port:
+                  number: 54321
+```
+
+```sh
+k apply -f task-ingress02.yaml
+# ingress.networking.k8s.io/luau created
+
+k describe ing luau
+# Name:             luau
+# Labels:           <none>
+# Namespace:        default
+# Address:
+# Ingress Class:    traefik-app
+# Default backend:  <default>
+# Rules:
+#   Host        Path  Backends
+#   ----        ----  --------
+#   *
+#               /aloha   aloha:54321 (<error: services "aloha" not found>)
+# Annotations:  <none>
+# Events:       <none>
+```
+
+---
+
+### Task: ingress + svc
 
 如下创建一个新的 nginx Ingress 资源：
 名称: ping
@@ -200,7 +319,7 @@ kubectl run env-test -n ing-internal --rm -it --image=curlimages/curl --restart=
 
 ---
 
-### Solution
+- Solution
 
 - ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
 
@@ -268,6 +387,165 @@ kubectl get svc hello -n ing-internal -o wide
 kubectl get pod -n ing-internal -l app=hello -o wide
 # NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
 # hello-5f8f7fff68-vkf6d   1/1     Running   0          29m   10.244.2.81   node02   <none>           <none>
+
+```
+
+---
+
+## CoreDNS
+
+### Task: CoreDNS config error
+
+DNS lookups are failing in the cluster.
+Inverstigate and repair CoreDNS.
+
+---
+
+- Solution
+
+```sh
+# troubleshooting
+
+# list all dns pod
+kubectl get pod -n kube-system | grep coredns
+
+kubectl logs -n kube-system coredns-***
+# locate the error
+# locate the configuration file with cm
+# commonly, it is the error in the configuration file
+
+# edit the configmap
+kubectl edit configmap coredns -n kube-system
+# correct the file
+
+# remove the pod
+kubectl delete pod corddns-***
+
+# confirm new pod is correct
+kubect get pod -n kube-system | grep coredns
+
+
+```
+
+---
+
+### Task: CoreDNS map DNS to IP
+
+Cluster workloads need to resolve a custom domain internally.
+Configure CoreDNS such that any DNS query for `myapp.internal` returns the IP address `10.10.10.10`.
+After configuration, pods in the cluster should be able to esolve myapp. internal' to '10.10.10.10'.
+
+---
+
+- Solution
+
+- ref: https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
+
+```sh
+# update coredns configmap
+kubectl -n kube-system edit configmap coredns
+#         hosts {
+#           10.10.10.10 myapp.internal
+#           fallthrough
+#         }
+# configmap/coredns edited
+
+# remove the old dns pod
+kubectl get pod -n kube-system | grep dns
+# coredns-66bc5c9577-n9hg7               1/1     Running   1 (21h ago)   38h
+# coredns-66bc5c9577-zrj2k               1/1     Running   1 (21h ago)   38h
+
+kubectl delete pod coredns-66bc5c9577-n9hg7 coredns-66bc5c9577-zrj2k -n kube-system
+# pod "coredns-66bc5c9577-n9hg7" deleted from kube-system namespace
+# pod "coredns-66bc5c9577-zrj2k" deleted from kube-system namespace
+
+# confirm new dns pod created
+kubectl get pod -n kube-system | grep dns
+# coredns-66bc5c9577-tcbx4               1/1     Running   0             48s
+# coredns-66bc5c9577-vwg9j               1/1     Running   0             48s
+
+# test
+kubectl run --rm -it dns-client --image=busybox --restart=Never -- nslookup myapp.internal
+# Server:         10.96.0.10
+# Address:        10.96.0.10:53
+
+
+# Name:   myapp.internal
+# Address: 10.10.10.10
+
+```
+
+---
+
+## Gateway API
+
+### Task: API GATEWAY + Routhttp
+
+Your cluster uses the Gateway API for ingress traffic.
+A service named web-service is running in the default namespace on port 80.
+A Gateway API-compatible controller is already installed, and a
+GatewayClass named example-gw-class is available in the cluster.
+
+Objective:
+Use Gateway API resources to expose web-service externally on HTTP port 80,
+routed via the hostname web.example.com.
+
+- setup env
+
+```sh
+kubectl create deploy web --image=nginx --replicas=2
+
+kubectl expose deploy web --name=web-service  --port=80 --target-port=80
+```
+
+---
+
+- Solution
+
+```yaml
+# task-gwapi.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+spec:
+  gatewayClassName: example-gw-class
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: "web.example.com"
+      allowedRoutes:
+        namespaces:
+          from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-httproute
+spec:
+  parentRefs:
+    - name: web-gateway
+      sectionName: http
+  hostnames:
+    - "web.example.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: web-service
+          port: 80
+```
+
+```sh
+kubectl apply -f task-gwapi.yaml
+# gateway.gateway.networking.k8s.io/web-gateway created
+# httproute.gateway.networking.k8s.io/web-httproute created
+
+# get svc port
+kubectl get svc -n
 
 ```
 

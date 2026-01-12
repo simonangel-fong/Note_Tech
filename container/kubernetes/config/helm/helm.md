@@ -12,6 +12,11 @@
   - [Helm CLI](#helm-cli)
   - [Customizing Chart Parameters](#customizing-chart-parameters)
   - [Lifecycle Management](#lifecycle-management)
+  - [Lab: Install Traefik](#lab-install-traefik)
+    - [Repo](#repo-1)
+    - [Install Application](#install-application)
+    - [Remove App](#remove-app)
+    - [Chart info](#chart-info)
 
 ---
 
@@ -159,13 +164,50 @@ image:
 
 ## Helm CLI
 
-| CMD                                    | DESC                              |
-| -------------------------------------- | --------------------------------- |
-| `helm search hub chart_name `          | Search for chart on the hub       |
-| `helm repo add bitnami repo_url`       | Add a repo                        |
-| `helm install release_name chart_name` | Deploy application to the cluster |
-| `helm list`                            | List all release                  |
-| `helm unistall chart_name`             | remove an application             |
+- Repo
+
+| CMD                         | DESC                                         |
+| --------------------------- | -------------------------------------------- |
+| `helm search hub KEYWORD `  | Search for Helm charts in the Hub            |
+| `helm search repo KEYWORD ` | Search for chart in the local repo           |
+| `helm repo add REPO URL`    | Add a chart repository from url              |
+| `helm repo list`            | List chart repositories                      |
+| `helm repo update`          | Gets the latest information of all charts    |
+| `helm repo update REPO`     | Gets the latest information of a chart       |
+| `helm repo remove REPO`     | Remove one or more chart repositories        |
+| `helm pull REPO/CHART`      | Retrieve a package from a package repository |
+| `helm push REPO`            | Upload a chart to a registry.                |
+
+- info
+
+| CMD                           | DESC                              |
+| ----------------------------- | --------------------------------- |
+| `helm show all REPO/CHART`    | show all information of the chart |
+| `helm show chart REPO/CHART`  | show the chart's definition       |
+| `helm show crds REPO/CHART`   | show the chart's CRDs             |
+| `helm show values REPO/CHART` | show the chart's values           |
+| `helm show readme REPO/CHART` | show the chart's README           |
+| `helm show readme REPO/CHART` | show the chart's README           |
+| `helm get values RELEASE`     | get the release value             |
+
+- Release
+
+| CMD                                              | DESC                                            |
+| ------------------------------------------------ | ----------------------------------------------- |
+| `helm list`                                      | Lists all of the releases for current namespace |
+| `helm list -a`                                   | Show all releases                               |
+| `helm list -A`                                   | List releases across all namespaces             |
+| `helm list -n NAMESPACE`                         | List releases for a specific namespaces         |
+| `helm list -f 'ara[a-z]+'`                       | Filter releases                                 |
+| `helm list -l STRING`                            | Filter by labels                                |
+| `helm install -f YAML_FILE APP_NAME`             | Install an app with yaml file                   |
+| `helm install APP_NAME REPO/CHART`               | Install app from repo                           |
+| `helm install APP_NAME DIR`                      | Install app from a dir                          |
+| `helm install APP_NAME URL`                      | Install app from an url                         |
+| `helm install --repo URL APP_NAME`               | Install app from a repo url                     |
+| `helm install --set key=val APP_NAME REPO/CHART` | Install app from repo and set values            |
+| `helm unistall APP_NAME`                         | Remove an application                           |
+| `helm show values REPO/CHART`                    | Show values of a repo                           |
 
 ---
 
@@ -227,3 +269,109 @@ helm install release_name ./wordpress
 - Rollback a release to the revision 1
   - `helm rollback nginx-release 1`
   - note: only rollback the cluster object, not the data, like user data.
+
+---
+
+## Lab: Install Traefik
+
+### Repo
+
+```sh
+helm search hub traefik
+
+# add repo
+helm repo add traefik https://traefik.github.io/charts
+# "traefik" has been added to your repositories
+
+helm repo update
+# Hang tight while we grab the latest from your chart repositories...
+# ...Successfully got an update from the "traefik" chart repository
+# Update Complete. ⎈Happy Helming!⎈
+
+# pull
+helm pull traefik/traefik
+```
+
+---
+
+### Install Application
+
+```sh
+# install with new ns
+helm install traefik-app traefik/traefik -n traefik --create-namespace
+# NAME: traefik-app
+# LAST DEPLOYED: Sat Jan 10 14:45:23 2026
+# NAMESPACE: traefik
+# STATUS: deployed
+# REVISION: 1
+# TEST SUITE: None
+# NOTES:
+# traefik-app with docker.io/traefik:v3.6.6 has been deployed successfully on traefik namespace!
+
+# confirm
+helm list -A
+# NAME            NAMESPACE       REVISION        UPDATED                                STATUS          CHART           APP VERSION
+# traefik-app     traefik         1               2026-01-10 14:45:23.258773107 -0500 ESTdeployed        traefik-38.0.2  v3.6.6
+
+```
+
+---
+
+### Remove App
+
+```sh
+helm uninstall traefik-app -n traefik
+# release "traefik-app" uninstalled
+```
+
+---
+
+### Chart info
+
+```sh
+# show all info
+helm show all traefik/traefik
+
+# show chart
+helm show chart traefik/traefik
+# annotations:
+#   artifacthub.io/changes: |
+#     - "revert(CRDs): use Traefik Hub v3.18.0 compatible crds"
+#     - "fix(security): set the seccomp profile to RuntimeDefault"
+#     - "fix(CRDs): enforce the fact that this Chart does not support Traefik Hub v3.19.0"
+#     - "feat(deps): update traefik docker tag to v3.6.6"
+#     - "chore(release): publish traefik 38.0.2 and crds 1.13.1"
+# apiVersion: v2
+# appVersion: v3.6.6
+# description: A Traefik based Kubernetes ingress controller
+# home: https://traefik.io/
+# icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
+# keywords:
+# - traefik
+# - ingress
+# - networking
+# kubeVersion: '>=1.22.0-0'
+# maintainers:
+# - email: michel.loiseleur@traefik.io
+#   name: mloiseleur
+# - email: remi.buisson@traefik.io
+#   name: darkweaver87
+# - name: jnoordsij
+# name: traefik
+# sources:
+# - https://github.com/traefik/traefik-helm-chart
+# - https://github.com/traefik/traefik
+# type: application
+# version: 38.0.2
+
+# show crd
+helm show crds traefik/traefik
+
+# show values
+helm show values traefik/traefik
+
+# show readme
+helm show readme traefik/traefik
+
+
+```
