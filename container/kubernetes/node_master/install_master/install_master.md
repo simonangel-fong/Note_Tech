@@ -11,6 +11,7 @@
     - [Install `kubeadm`](#install-kubeadm)
     - [Create Cluster with `kubeadm`](#create-cluster-with-kubeadm)
     - [Generate Token for Node to join](#generate-token-for-node-to-join)
+    - [Install `etcd-client`](#install-etcd-client)
 
 ---
 
@@ -98,7 +99,7 @@ network:
         - to: default
           via: 192.168.10.2
       nameservers:
-        addresses: [8.8.8.8, 1.1.1.1]
+        addresses: [192.168.10.2, 8.8.8.8, 1.1.1.1]
 EOF
 
 sudo chmod 600 /etc/netplan/*
@@ -172,9 +173,9 @@ sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 # ##############################
 sudo mkdir -pv /etc/apt/keyrings
 
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 # ##############################
 # Install kubelet kubeadm kubectl
@@ -188,8 +189,8 @@ sudo systemctl enable --now kubelet
 
 # confirm client version
 kubectl version --client
-# Client Version: v1.33.6
-# Kustomize Version: v5.6.0
+# Client Version: v1.32.11
+# Kustomize Version: v5.5.0
 ```
 
 ---
@@ -244,14 +245,21 @@ kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Doc
 # confirm
 kubectl get nodes
 # NAME           STATUS   ROLES           AGE   VERSION
-# controlplane   Ready    control-plane   11m   v1.33.6
+# controlplane   Ready    control-plane   67s   v1.32.11
 ```
 
 ---
-
 
 ### Generate Token for Node to join
 
 ```sh
 kubeadm token create --print-join-command
+```
+
+---
+
+### Install `etcd-client`
+
+```sh
+sudo apt install etcd-client
 ```

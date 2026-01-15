@@ -13,7 +13,7 @@
     - [Task: ingress + svc](#task-ingress--svc-1)
   - [CoreDNS](#coredns)
     - [Task: CoreDNS config error](#task-coredns-config-error)
-    - [Task: CoreDNS map DNS to IP](#task-coredns-map-dns-to-ip)
+    - [Task: \*\*\*CoreDNS map DNS to IP](#task-coredns-map-dns-to-ip)
   - [Gateway API](#gateway-api)
     - [Task: API GATEWAY + Routhttp](#task-api-gateway--routhttp)
 
@@ -429,7 +429,7 @@ kubect get pod -n kube-system | grep coredns
 
 ---
 
-### Task: CoreDNS map DNS to IP
+### Task: \*\*\*CoreDNS map DNS to IP
 
 Cluster workloads need to resolve a custom domain internally.
 Configure CoreDNS such that any DNS query for `myapp.internal` returns the IP address `10.10.10.10`.

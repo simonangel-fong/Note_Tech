@@ -9,9 +9,9 @@
     - [Task: PVC + pod mount](#task-pvc--pod-mount)
     - [Task: PVC + pod](#task-pvc--pod)
     - [Task: PVC + pod mount](#task-pvc--pod-mount-1)
-    - [Task: PV + PVC](#task-pv--pvc)
+    - [\*\*\*Task: PV + PVC](#task-pv--pvc)
   - [StorageClass](#storageclass)
-    - [Task: StorageClass + PV](#task-storageclass--pv)
+    - [\*\*\*\*Task: StorageClass + PV](#task-storageclass--pv)
 
 ---
 
@@ -116,7 +116,7 @@ kubectl describe pv app-config
 A developer needs a persistent volume for an application. Create a PersistentVolumeClaim with:
 · size 100Mi
 . access mode ReadWriteOnce
-. using the storage class "csi-hostpath-sc" (installed)
+. using the storage class "local-path" (installed)
 
 Create a Pod that mounts this PVC at /data and verify that the volume is automatically created and mounted.
 
@@ -378,7 +378,7 @@ k describe pod rwopod
 
 ---
 
-### Task: PV + PVC
+### \*\*\*Task: PV + PVC
 
 Manually create a PersistentVolume that:
 · is named static-pv-example
@@ -402,13 +402,10 @@ spec:
     storage: 200Mi
   accessModes:
     - ReadWriteOnce
-  # policy
   persistentVolumeReclaimPolicy: Retain
-  # host path
   hostPath:
-    path: "/mnt/data-static" # existed path
-    type: Directory
-  # node affinity
+    path: /mnt/static-pv
+    type: DirectoryOrCreate
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -423,9 +420,9 @@ spec:
 kubectl apply -f task-03-pv.yaml
 # persistentvolume/static-pv-example created
 
-kubectl get pv static-pv-example
-# NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
-# static-pv-example   200Mi      RWO            Retain           Available                          <unset>                          23s
+k get pv static-pv-example
+# NAME                CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                        STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# static-pv-example   200Mi      RWO            Retain           Bound    default/static-pvc-example                  <unset>                          46s
 ```
 
 ```yaml
@@ -435,7 +432,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: static-pvc-example
 spec:
-  volumeName: static-pv-example # specify the name
+  storageClassName: ""
+  volumeName: static-pv-example
   accessModes:
     - ReadWriteOnce
   resources:
@@ -448,15 +446,15 @@ kubectl apply -f task-03-pvc.yaml
 # persistentvolumeclaim/static-pvc-example created
 
 kubectl get pvc static-pvc-example
-# NAME                 STATUS    VOLUME              CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-# static-pvc-example   Pending   static-pv-example   0                         local-path     <unset>                 30s
+# NAME                 STATUS   VOLUME              CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# static-pvc-example   Bound    static-pv-example   200Mi      RWO                           <unset>                 80s
 ```
 
 ---
 
 ## StorageClass
 
-### Task: StorageClass + PV
+### \*\*\*\*Task: StorageClass + PV
 
 Create a StorageClass:
 . named fast-storage
@@ -466,7 +464,7 @@ sets a Retain reclaim policy
 
 Create a PersistentVolume and a PersistentVolumeClaim:
 . the PV should use fast-storage
-· configure node affinity so Kubernetes knows where to create the volume
+· configure node affinity so Kubernetes knows where to create the volume (node01)
 . the PVC should bind to that PV
 . Verify that when the PVC is deleted, the PV remains (in Released state)
 
@@ -488,33 +486,160 @@ volumeBindingMode: Immediate
 ```sh
 kubectl apply -f storageClass.yaml
 # storageclass.storage.k8s.io/fast-storage created
+
 kubectl get sc fast-storage
 # NAME           PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 # fast-storage   rancher.io/local-path   Retain          Immediate           false                  12s
 ```
 
 ```yaml
-# pvc-sc.yaml
+# task-sc-pv.yaml
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: PersistentVolume
 metadata:
-  name: task-pvc-sc
+  name: fast-storage-pv
 spec:
+  capacity:
+    storage: 100Mi
   accessModes:
     - ReadWriteOnce
-  resources:
-    requests:
-      storage: 50Mi
   storageClassName: fast-storage
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/fast-storage/pv
+    type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - node01
 ```
 
 ```sh
-kubectl apply -f pvc-sc.yaml
-# persistentvolumeclaim/task-pvc-sc created
+kubectl apply -f task-sc-pv.yaml
+# persistentvolume/fast-storage-pv created
 
-kubectl get pvc task-pvc-sc
-# NAME          STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-# task-pvc-sc   Pending                                      fast-storage   <unset>                 3m16s
+kubectl get pv fast-storage-pv
+# NAME              CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# fast-storage-pv   100Mi      RWO            Retain           Available           fast-storage   <unset>                          55s
 ```
 
 ---
+
+```yaml
+# task-sc-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fast-storage-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-storage
+  volumeName: fast-storage-pv
+  resources:
+    requests:
+      storage: 100Mi
+```
+
+```sh
+kubectl apply -f task-sc-pvc.yaml
+# persistentvolumeclaim/fast-storage-pvc created
+
+kubectl get pvc fast-storage-pvc
+# NAME               STATUS   VOLUME            CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# fast-storage-pvc   Bound    fast-storage-pv   100Mi      RWO            fast-storage   <unset>                 11s
+```
+
+---
+
+A user accidentally deleted the MariaDB Deployment in the mariadb namespace, which was configured with persistent storage. Your responsibility is to re-establish the Deployment while ensuring data is preserved by reusing the available PersistentVolume.
+
+Task:
+A PersistentVolume already exists and is retained for reuse. only one pv exist.
+
+Create a PersistentVolumeClaim (PVC) named mariadb in the mariadb NS with the spec: Access mode ReadWriteOnce and Storage 250Mi
+
+Edit the MariaDB Deploy file located at ~/mariadb-deploy.yaml to use PVC created in the previous step.
+
+Apply the updated Deployment file to the cluster.
+
+Ensure the MariaDB Deployment is running and Stable
+
+- Create Env
+
+```sh
+ssh node02
+sudo mkdir -p /mnt/data/mariadb
+sudo chmod 777 /mnt/data/mariadb
+
+ssh controlplane
+kubectl create namespace mariadb
+
+# create pv
+cat <<'EOF' | kubectl apply -f -
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mariadb-pv
+spec:
+  capacity:
+    storage: 250Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    path: /mnt/data/mariadb
+EOF
+
+kubectl get pv mariadb-pv
+
+# Create the MariaDB deploy YAML file
+cat <<'EOF' > ~/mariadb-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        image: mariadb:11.4
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          value: "rootpass"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: data
+        # Intentionally wrong for your task: not using PVC yet
+        emptyDir: {}
+EOF
+
+
+# “accidentally deleted”
+kubectl -n mariadb delete deployment mariadb --ignore-not-found
+kubectl -n mariadb delete pvc mariadb --ignore-not-found
+
+# Confirm
+kubectl -n mariadb get deploy,pods,pvc
+kubectl get pv
+ls -l ~/mariadb-deploy.yaml
+
+```

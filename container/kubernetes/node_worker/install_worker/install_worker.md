@@ -49,7 +49,7 @@ network:
         - to: default
           via: 192.168.10.2
       nameservers:
-        addresses: [8.8.8.8, 1.1.1.1]
+        addresses: [192.168.10.2, 8.8.8.8, 1.1.1.1]
 EOF
 
 sudo chmod 600 /etc/netplan/*
@@ -116,9 +116,9 @@ sudo apt-get install -y apt-transport-https curl ca-certificates gpg
 
 sudo mkdir -pv /etc/apt/keyrings
 
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 sudo apt-get update
 sudo apt-get install -y kubelet kubeadm kubectl
@@ -221,7 +221,7 @@ network:
         - to: default
           via: 192.168.10.2
       nameservers:
-        addresses: [8.8.8.8, 1.1.1.1]
+        addresses: [192.168.10.2, 8.8.8.8, 1.1.1.1]
 EOF
 
 sudo chmod 600 /etc/netplan/*

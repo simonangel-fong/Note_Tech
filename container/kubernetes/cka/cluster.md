@@ -19,6 +19,7 @@
     - [Task: Taints](#task-taints)
     - [Task: available node](#task-available-node)
     - [Task: Cordon](#task-cordon)
+    - [Task: fix cluster connection](#task-fix-cluster-connection)
 
 ---
 
@@ -42,20 +43,32 @@ TASK:
 
 ```sh
 # ssh to controlplane
+k get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   47d   v1.33.6
 
 # output command with tokens
-kubeadm token create --print-join-comman
+kubeadm token create --print-join-command
 # kubeadm join 192.168.10.150:6443 --token 50jiwr.l7--discovery-token-ca-cert-hash sha256:f56b2
 
 # ssh to node02
 
 # join with command
 sudo kubeadm join 192.168.10.150:6443 --token 50jiwr.l7--discovery-token-ca-cert-hash sha256:f56b2
+# This node has joined the cluster:
+# * Certificate signing request was sent to apiserver and a response was received.
+# * The Kubelet was informed of the new secure connection details.
 
 # confirm
 # ssh controlplane
 k get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   62m   v1.32.11
+# node01         Ready    <none>          15m   v1.32.11
+# node02         Ready    <none>          14m   v1.32.11
 ```
+
+> if error, reset the kubelet: `kubeadm reset`
 
 ---
 
@@ -84,33 +97,73 @@ TASK:
 # confirm the version
 k get node
 
+# update version in config
+vi /etc/apt/sources.list.d/kubernetes.list
+#  https://pkgs.k8s.io/core:/stable:/v1.33/deb/
+
+# update repo
+sudo apt update
+
+# find the version to update
+sudo apt-cache madison kubeadm
+#  kubeadm | 1.33.7-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+#  kubeadm | 1.33.6-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+#  kubeadm | 1.33.5-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+#  kubeadm | 1.33.4-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+#  kubeadm | 1.33.3-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+#  kubeadm | 1.33.2-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+#  kubeadm | 1.33.1-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+#  kubeadm | 1.33.0-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+
 # unhold
 sudo apt-mark unhold kubeadm
 # update packages
 sudo apt-get update
 # install the correct version
-sudo apt-get install -y kubeadm='1.32.1'
+sudo apt-get install -y kubeadm='1.33.7-1.1'
 
 # hold
 sudo apt-mark hold kubeadm
 
 # confirm adm version
 kubeadm version
+# kubeadm version: &version.Info{Major:"1", Minor:"33", EmulationMajor:"", EmulationMinor:"", MinCompatibilityMajor:"", MinCompatibilityMinor:"", GitVersion:"v1.33.7", GitCommit:"a7245cdf3f69e11356c7e8f92b3e78ca4ee4e757", GitTreeState:"clean", BuildDate:"2025-12-09T14:41:01Z", GoVersion:"go1.24.11", Compiler:"gc", Platform:"linux/amd64"}
 
 # Verify the upgrade plan
 sudo kubeadm upgrade plan
 
 # upgrade with correct version
-sudo kubeadm upgrade apply v1.32.1
+sudo kubeadm upgrade apply v1.33.7
 
 # ########### upgrade kubelet
 
 # drain
 kubectl drain <node-to-drain> --ignore-daemonsets
 
+# find the version
+apt-cache madison kubelet
+# kubelet | 1.33.7-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubelet | 1.33.6-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubelet | 1.33.5-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubelet | 1.33.4-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubelet | 1.33.3-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubelet | 1.33.2-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubelet | 1.33.1-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubelet | 1.33.0-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+
+apt-cache madison kubectl
+# kubectl | 1.33.7-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubectl | 1.33.6-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubectl | 1.33.5-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubectl | 1.33.4-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubectl | 1.33.3-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubectl | 1.33.2-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubectl | 1.33.1-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+# kubectl | 1.33.0-1.1 | https://pkgs.k8s.io/core:/stable:/v1.33/deb  Packages
+
 sudo apt-mark unhold kubelet kubectl
 sudo apt-get update
-sudo apt-get install -y kubelet='1.32.1' kubectl='1.32.1'
+sudo apt-get install -y kubelet='1.33.7-1.1' kubectl='1.33.7-1.1'
 sudo apt-mark hold kubelet kubectl
 
 # Restart the kubelet:
@@ -121,7 +174,11 @@ sudo systemctl restart kubelet
 kubectl uncordon controlplane
 
 # confirm node and version
-k get node
+kubectl get nodes
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   82m   v1.33.7
+# node01         Ready    <none>          34m   v1.32.11
+# node02         Ready    <none>          34m   v1.32.11
 ```
 
 ---
@@ -133,6 +190,11 @@ TASK :
 
 1. Take a snapshot of the etcd cluster and save it as /opt/clusterstate.backup
 2. Restore the cluster state from /opt/clusterstate.backup.
+
+- Save path: /var/lib/backup/etcd-snapshot.db
+- cacert: /etc/kubernetes/pki/etcd/ca.crt
+- cert: /etc/kubernetes/pki/etcd/server.crt
+- key: /etc/kubernetes/pki/etcd/server.key
 
 ---
 
@@ -149,17 +211,38 @@ TASK :
 - !!!: always use command with options
 
 ```sh
+# get crt and key
+sudo cat /etc/kubernetes/manifests/etcd.yaml
+#   - --cert-file=/etc/kubernetes/pki/etcd/server.crt
+#   - --listen-client-urls=https://127.0.0.1:2379,https://192.168.10.150:2379
+#   - --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+#   - --key-file=/etc/kubernetes/pki/etcd/server.key
+# - hostPath:
+#     path: /var/lib/etcd
+#     type: DirectoryOrCreate
+#   name: etcd-data
+
 export ETCDCTL_API=3
-
-sudo ETCDCTL_API=3 etcdctl snapshot save <backup-file-location> \
-  --endpoints=https://127.0.0.1:2379 \
-  --cacert=<trusted-ca-file> \
-  --cert=<cert-file> \
-  --key=<key-file>
-
+etcdctl --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  snapshot save /var/lib/backup/etcd-snapshot.db
+# {"level":"info","ts":1768269549.202995,"caller":"snapshot/v3_snapshot.go:119","msg":"created temporary db file","path":"/var/lib/backup/etcd-snapshot.db.part"}
+# {"level":"info","ts":"2026-01-12T20:59:09.208264-0500","caller":"clientv3/maintenance.go:212","msg":"opened snapshot stream; downloading"}
+# {"level":"info","ts":1768269549.2083018,"caller":"snapshot/v3_snapshot.go:127","msg":"fetching snapshot","endpoint":"https://127.0.0.1:2379"}
+# {"level":"info","ts":"2026-01-12T20:59:09.25052-0500","caller":"clientv3/maintenance.go:220","msg":"completed snapshot read; closing"}
+# {"level":"info","ts":1768269549.2593517,"caller":"snapshot/v3_snapshot.go:142","msg":"fetched snapshot","endpoint":"https://127.0.0.1:2379","size":"4.2 MB","took":0.056287114}
+# {"level":"info","ts":1768269549.259501,"caller":"snapshot/v3_snapshot.go:152","msg":"saved","path":"/var/lib/backup/etcd-snapshot.db"}
+# Snapshot saved at /var/lib/backup/etcd-snapshot.db
 
 # Verify the snapshot
-etcdutl --write-out=table snapshot status snapshot.db
+sudo etcdctl --write-out=table snapshot status /var/lib/backup/etcd-snapshot.db
+# +----------+----------+------------+------------+
+# |   HASH   | REVISION | TOTAL KEYS | TOTAL SIZE |
+# +----------+----------+------------+------------+
+# | 943ae218 |     7340 |       1516 |     4.2 MB |
+# +----------+----------+------------+------------+
 ```
 
 ---
@@ -171,26 +254,34 @@ etcdutl --write-out=table snapshot status snapshot.db
   - need to **add option**
 
 ```sh
-export ETCDCTL_API=3
+# get default data dir
+sudo cat /etc/kubernetes/manifests/etcd.yaml
+# - hostPath:
+#     path: /var/lib/etcd
+#     type: DirectoryOrCreate
+#   name: etcd-data
 
-sudo ETCDCTL_API=3 etcdctl snapshot restore <backup-file-location> \
-  --endpoints=https://127.0.0.1:2379 \
-  --cacert=<trusted-ca-file> \
-  --cert=<cert-file> \
-  --key=<key-file>  \
-  --data-dir <data-dir-location> \
-  --skip-hash-check
+# set data-dir a new path
+export ETCDCTL_API=3
+sudo etcdctl --data-dir /var/lib/etcd/data snapshot restore /var/lib/backup/etcd-snapshot.db
+# {"level":"info","ts":1768270244.5142756,"caller":"snapshot/v3_snapshot.go:306","msg":"restoring snapshot","path":"/var/lib/backup/etcd-snapshot.db","wal-dir":"/var/lib/etcd/data/member/wal","data-dir":"/var/lib/etcd/data","snap-dir":"/var/lib/etcd/data/member/snap"}
+# {"level":"info","ts":1768270244.6023808,"caller":"mvcc/kvstore.go:388","msg":"restored last compact revision","meta-bucket-name":"meta","meta-bucket-name-key":"finishedCompactRev","restored-compact-revision":6631}
+# {"level":"info","ts":1768270244.6671963,"caller":"membership/cluster.go:392","msg":"added member","cluster-id":"cdf818194e3a8c32","local-member-id":"0","added-peer-id":"8e9e05c52164694d","added-peer-peer-urls":["http://localhost:2380"]}
+# {"level":"info","ts":1768270244.7137876,"caller":"snapshot/v3_snapshot.go:326","msg":"restored snapshot","path":"/var/lib/backup/etcd-snapshot.db","wal-dir":"/var/lib/etcd/data/member/wal","data-dir":"/var/lib/etcd/data","snap-dir":"/var/lib/etcd/data/member/snap"}
+
+# confirm
+sudo ls /var/lib/etcd/data
 
 # update etcd config for the new data-dir
 # /etc/kubernetes/manifests/etcd.yaml's volumes.hostPath.path
 vi /etc/kubernetes/manifests/etcd.yaml
-# volumes.hostPath.path
+  # - hostPath:
+  #     path: /var/lib/etcd/data
+  #     type: DirectoryOrCreate
+  #   name: etcd-data
 
-
-# wait until minutes
-# confirm working
-kubectl get node
-
+# wait for kubectl
+ kubectl get node
 ```
 
 > data-dir-location: must diff from backup-file-location
@@ -462,7 +553,7 @@ Task
 
 CA 证书: /opt/KUIN00601/ca.crt
 客户端证书: /opt/KUIN00601/etcd-client.crt
-客户端密钥: /opt/KUIN00601/etcd-client.keyCopy
+客户端密钥: /opt/KUIN00601/etcd-client.key
 
 ---
 
@@ -791,9 +882,6 @@ k apply -f task-nodeselector.yaml
 
 ### Task: node selector
 
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
-
 Task
 按如下要求调度一个 pod：
 名称：nginx-kusc00401
@@ -1045,4 +1133,45 @@ kubectl get pod | grep node02
 # web-64c966cf88-jw42h   1/1     Running             0          55s    10.244.1.107   node01   <none>           <none>
 # web-64c966cf88-k5xwd   1/1     Running             0          103s   10.244.1.103   node01   <none>           <none>
 # web-64c966cf88-mhrsr   1/1     Running             0          103s   10.244.1.104   node01   <none>           <none>
+```
+
+---
+
+### Task: fix cluster connection
+
+the command `kubectl get po` return "The connection to the server 192.168.10.150:6443 was refused - did you specify the right host or port?"
+
+---
+
+- Solution
+  - detail errer `journalctl -u kubelet --no-pager`
+
+1. Confirm the `kubelet` is running
+
+```sh
+sudo systemctl status kubelet
+
+# if not, start kubelet
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+```
+
+2. Checkt the manifests to ensure the configurations are correct.
+
+```sh
+# check all manifests
+ls /etc/kubernetes/manifests/
+# etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
+
+# check api server manifest
+sudo cat /etc/kubernetes/manifests/kube-apiserver.yaml
+# spec:
+#   containers:
+#   - command:
+#     - kube-apiserver
+#     - --etcd-servers=https://127.0.0.1:2379
+
+# restart the kubelet whenever manifests updates
+sudo systemctl restart kubelet
 ```

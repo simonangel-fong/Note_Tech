@@ -1,4 +1,17 @@
-# Backup
+# Kubernetes Cluster - `etcd` Backup and Restore
+
+[Back](../../index.md)
+
+- [Kubernetes Cluster - `etcd` Backup and Restore](#kubernetes-cluster---etcd-backup-and-restore)
+  - [Backup](#backup)
+    - [Backup Resource Configuration](#backup-resource-configuration)
+  - [Backup `etcd`](#backup-etcd)
+    - [Backup Steps](#backup-steps)
+    - [Imperative Commands](#imperative-commands)
+
+---
+
+## Backup
 
 - Backup Candidate:
   - Resource Configuration
@@ -7,30 +20,39 @@
 
 ---
 
+### Backup Resource Configuration
+
 - Resource Configuration
   - usually is the yaml files
-    - usually store on git repo
-  - output from the API server
-    - `kubectl get all --all-namespace -o yaml > all-deploy-services.yaml`
+  - usually store on git repo
+- output from the API server
+  - `kubectl get all --all-namespace -o yaml > all-deploy-services.yaml`
+  - Only output few resources, not all
+  - use 3rd party tools
 
 ---
 
-- etcd cluster
-  - store the state of the cluster
-    - location: `etcd.service.--data-dir`
-  - can take a snapshot database
-    - `etcdctl snapshot save snapshot.db`
-    - `etcdctl snapshot status snapshot.db`
-  - restore:
-    - `systemctl stop kube-apiserver`
-    - add the backup as a new etcd
-      - `etcdctl snapstho restore snapshot.db --data-dir /var/lib/etcd-from-backup`
-    - update etcd
-      - `etcd.service`
-    - restart
-      - `systemctl daemon-reload`
-      - `systemctl restart etcd`
-      - `systemctl start kube-apiserver`
+## Backup `etcd`
+
+- `etcd` store the state of the cluster, including all resources.
+- `etcdctl`:
+
+  - the CLI tool used to manage `etcd` component
+
+---
+
+### Backup Steps
+
+---
+
+### Imperative Commands
+
+| Command                                              | Description                                     |
+| ---------------------------------------------------- | ----------------------------------------------- |
+| `etcdctl version`                                    | Get etcd version                                |
+| `etcdctl snapshot save DB_FILE`                      | Backup a snapshot to a db file                  |
+| `etcdctl snapshot status DB_FILE`                    | Show status of a db file                        |
+| `etcdctl snapshot restore DB_FILE --data-dir=PATH  ` | Restores an etcd member snapshot to a directory |
 
 ```sh
 
@@ -45,6 +67,7 @@ ETCDCTL_API=3 etcdctl \
   --cert=/etc/kubernetes/pki/etcd/server.crt \
   --key=/etc/kubernetes/pki/etcd/server.key \
   snapshot save /opt/snapshot-pre-boot.db
+```
 
 Required Options
 --endpoints points to the etcd server (default: localhost:2379)
@@ -55,20 +78,19 @@ Required Options
 
 --key path to the client key
 
-
 Using etcdutl (File-based Backup)
 For offline file-level backup of the data directory:
 
 etcdutl backup \
-  --data-dir /var/lib/etcd \
-  --backup-dir /backup/etcd-backup
+ --data-dir /var/lib/etcd \
+ --backup-dir /backup/etcd-backup
 This copies the etcd backend database and WAL files to the target location.
 
 Checking Snapshot Status
 You can inspect the metadata of a snapshot file using:
 
 etcdctl snapshot status /backup/etcd-snapshot.db \
-  --write-out=table
+ --write-out=table
 This shows details like size, revision, hash, total keys, etc. It is helpful to verify snapshot integrity before restore.
 
 Restoring ETCD
@@ -88,11 +110,9 @@ etcdutl snapshot restore is used to restore a .db snapshot file.
 
 etcdutl backup performs a raw file-level copy of etcd’s data and WAL files without needing etcd to be running.
 
-```
+````
 
-| Command           | Description      |
-| ----------------- | ---------------- |
-| `etcdctl version` | Get etcd version |
+
 
 
 https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
@@ -105,7 +125,7 @@ https://www.youtube.com/watch?v=qRPNuT080Hk
 
 ---
 
-## Install 
+## Install
 
 - Install Go
 
@@ -114,14 +134,13 @@ sudo apt install golang
 
 go version
 # go version go1.23.8 linux/amd64
-```
+````
 
 ??
 
 ```sh
 sudo apt install etcd-client
 ```
-
 
 ```sh
 git clone -b v3.4.37 https://github.com/etcd-io/etcd.git

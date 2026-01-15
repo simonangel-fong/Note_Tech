@@ -211,3 +211,8 @@ https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
   - [workload](./cka/workload.md)
   - [Security](./cka/security.md)
   - [Cluster](./cka/cluster.md)
+
+- Common Command
+```sh
+kubectl config set-context --current --namespace=<your-namespace-name>
+```

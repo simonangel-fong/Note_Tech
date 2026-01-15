@@ -20,7 +20,7 @@
   - [HPA](#hpa)
     - [Task: Autoscaling](#task-autoscaling)
   - [Helm](#helm)
-    - [Task: Deploy with helm](#task-deploy-with-helm)
+    - [\*\*\*Task: Deploy with helm](#task-deploy-with-helm)
     - [Task: Helm](#task-helm)
   - [Kustomize](#kustomize)
     - [Task: Kustomize](#task-kustomize)
@@ -35,20 +35,17 @@
 
 ### Task: Pod - Log
 
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
-
 Task
 监控 pod foo 的日志并：
-提取与错误 RLIMIT_NOFILE 相对应的日志行
-将这些日志行写入 /opt/KUTR00101/foo
+提取与错误 No such file or directory 相对应的日志行
+将这些日志行写入 /tmp/KUTR00101/foo
 
 ---
 
 - Config env
 
 ```sh
-kubectl run foo --image=busybox -- sleep infinity
+kubectl run foo --image=busybox -- cat /tmp/msg
 # pod/foo created
 
 kubectl exec -it foo -- ulimit -n
@@ -64,8 +61,14 @@ kubectl logs foo | grep "RLIMIT_NOFILE" > /opt/KUTR00101/foo
 
 ### Task: Pod - log
 
-1. monitor the log of the fnf pod and filter any lines containing the error file-not-found.
-2. /opt/cka/answers/sorted_log.log
+1. monitor the log of the fnf pod and filter any lines containing the error "No such file or directory".
+2. /tmp/cka/sorted_log.log
+
+- Env
+
+```sh
+k run fnf --image=busybox -- cat /tmp/msg
+```
 
 ---
 
@@ -74,15 +77,12 @@ kubectl logs foo | grep "RLIMIT_NOFILE" > /opt/KUTR00101/foo
 ```sh
 k get pod fnf
 
-k logs fnf | grep "file-not-found" > /opt/cka/answers/sorted_log.log
+k logs fnf | grep "No such file or directory" > /opt/cka/answers/sorted_log.log
 ```
 
 ---
 
 ### Task: Pod - Multiple Containers
-
-设置配置环境：
-[candidate@node-1] $ kubectl config use-context k8s
 
 Task
 按如下要求调度一个 Pod：
@@ -185,7 +185,7 @@ Task
 - Config env
 
 ```yaml
-# 11-factor-app.yaml
+# task-sidecar01-env.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -399,7 +399,7 @@ k apply -f task-sidecar.yaml
 [candidate@node-1] $ kubectl config use-context k8s
 
 Task
-将 deployment presentation 扩展至 4 个 podsCopy
+将 deployment presentation 扩展至 4 个 pods
 
 ---
 
@@ -474,7 +474,7 @@ Task:
 ```sh
 k create ns king-of-lions
 k create deploy mufasa --image=nginx -n king-of-lions
-k get deploy -n king-of-lions --record "version 1"
+k get deploy -n king-of-lions
 ```
 
 ---
@@ -611,7 +611,7 @@ Task :
 - setup env
 
 ```sh
-tee ~/cka/workload/index.html<<EOF
+tee ./index.html<<EOF
 <html>
 <title></title>
 <body>
@@ -833,7 +833,7 @@ kubectl describe hpa cpu-demo
 
 ## Helm
 
-### Task: Deploy with helm
+### ***Task: Deploy with helm
 
 Use Helm to deploy the Traefik Ingress Controller on the cluster. url: https://traefik.github.io/charts
 Install it in a dedicated namespace traefik with release name traefik.
@@ -855,7 +855,7 @@ helm repo update
 # Update Complete. ⎈Happy Helming!⎈
 
 # install
-helm install traefik-app traefik/traefik -n traefik --create-namespace --set experimental.kubernetesGateway.enabled=true
+helm install traefik-app traefik/traefik -n traefik --create-namespace --set providers.kubernetesGateway.enabled=true
 # NAME: traefik-app
 # LAST DEPLOYED: Sat Jan 10 15:14:18 2026
 # NAMESPACE: traefik
@@ -908,7 +908,7 @@ helm install NAME ~/ckad-helm-task --set replicaCount=3 -n NAMESPACE
 
 ### Task: Kustomize
 
-You have base manifests for an app in /home/student/kustomize/base.
+You have base manifests for an app in ~/kustomize/base.
 Use Kustomize to deploy a production variant of this app:
 
 . The production variant should add the label environment: production to all resources.
@@ -919,9 +919,9 @@ Use Kustomize to deploy a production variant of this app:
 
 ```sh
 # base manifest
-sudo mkdir -pv /home/student/kustomize/base
+sudo mkdir -pv ~/kustomize/base
 
-sudo vi /home/student/kustomize/base/deployment.yaml
+sudo vi ~/kustomize/base/deployment.yaml
 # apiVersion: apps/v1
 # kind: Deployment
 # metadata:
@@ -944,7 +944,7 @@ sudo vi /home/student/kustomize/base/deployment.yaml
 #         - containerPort: 80
 
 # create kustomization
-sudo vi /home/student/kustomize/base/kustomization.yaml
+sudo vi ~/kustomize/base/kustomization.yaml
 resources:
 - deployment.yaml
 ```
@@ -957,11 +957,11 @@ resources:
 
 ```sh
 # create overlay dir
-sudo mkdir -pv /home/student/kustomize/overlay-prod
-# mkdir: created directory '/home/student/kustomize/overlay-prod'
+sudo mkdir -pv ~/kustomize/overlay-prod
+# mkdir: created directory '~/kustomize/overlay-prod'
 
 # edit yaml
-sudo vi /home/student/kustomize/overlay-prod/kustomization.yaml
+sudo vi ~/kustomize/overlay-prod/kustomization.yaml
 # resources:
 # - ../base
 
@@ -975,7 +975,7 @@ sudo vi /home/student/kustomize/overlay-prod/kustomization.yaml
 #   newTag: "1.21"
 
 # apply kustomize
-kubectl apply -k /home/student/kustomize/overlay-prod/
+kubectl apply -k ~/kustomize/overlay-prod/
 # deployment.apps/prod-hello-app created
 
 # confirm
@@ -1067,7 +1067,7 @@ Task :
 
 1. Identify all Pods in the integration namespace with the label app=intensive
 2. Determine which of these Pods is using the most CPU resources
-3. Write the name of the Pod consuming the most CPU resources to /opt/cka/answers/cpu_pod_01.txt
+3. Write the name of the Pod consuming the most CPU resources to /tmp/cka/cpu_pod_01.txt
 
 - Setup env
 
@@ -1081,9 +1081,7 @@ k run intensive --image=busybox -l app=intensive -n integration -- sleep infinit
 - Solution
 
 ```sh
-k top pod -l app=intensive --sort-by cpu
-
-
+k top pod -n integration -l app=intensive --sort-by='cpu'
 ```
 
 ---
@@ -1095,10 +1093,26 @@ k top pod -l app=intensive --sort-by cpu
 
 Task
 通过 pod label name=cpu-loader，找到运行时占用大量 CPU 的 pod，
-并将占用 CPU 最高的 pod 名称写入文件 /opt/KUTR000401/KUTR00401.txt（已存在）。Copy
+并将占用 CPU 最高的 pod 名称写入文件 /tmp/cka/cpu-loader.txt（已存在）。Copy
+
+- env
 
 ```sh
+k create deploy cpu-loader --image=busybox --replicas=4 -- sleep infinity
+k label pod -l app=cpu-loader name=cpu-loader
+```
+
+```sh
+k get pod -l name=cpu-loader
+# NAME                          READY   STATUS    RESTARTS   AGE
+# cpu-loader-546f8f548c-jc4wf   1/1     Running   0          110s
+
 kubectl top pod -l name=cpu-loader --sort-by=cpu -A
+# NAMESPACE   NAME                          CPU(cores)   MEMORY(bytes)
+# default     cpu-loader-546f8f548c-kmzzf   0m           0Mi
+# default     cpu-loader-546f8f548c-pmn87   0m           0Mi
+# default     cpu-loader-546f8f548c-wbfsx   0m           0Mi
+# default     cpu-loader-546f8f548c-xxb7x   0m           0Mi
 ```
 
 ---
