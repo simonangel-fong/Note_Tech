@@ -12,6 +12,7 @@
     - [Task: upgrade cluster](#task-upgrade-cluster)
     - [Task: backup and restore etcd](#task-backup-and-restore-etcd)
     - [Task: Troubleshooting worker node](#task-troubleshooting-worker-node)
+    - [Task: Troubleshooting API server](#task-troubleshooting-api-server)
   - [Scheduling](#scheduling)
     - [Task: Node selector](#task-node-selector)
     - [Task: node selector](#task-node-selector-1)
@@ -20,6 +21,8 @@
     - [Task: available node](#task-available-node)
     - [Task: Cordon](#task-cordon)
     - [Task: fix cluster connection](#task-fix-cluster-connection)
+  - [Task: install](#task-install)
+    - [Task: Install CNI](#task-install-cni)
 
 ---
 
@@ -563,18 +566,9 @@ CA 证书: /opt/KUIN00601/ca.crt
 
 ```sh
 sudo mkdir -pv /var/lib/backup/
-# mkdir: created directory '/var/lib/backup/'
 
 export ETCDCTL_API=3
-
 sudo -i ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /var/lib/backup/etcd-snapshot.db
-# {"level":"info","ts":1767926465.3337407,"caller":"snapshot/v3_snapshot.go:119","msg":"created temporary db file","path":"/var/lib/backup/etcd-snapshot.db.part"}
-# {"level":"info","ts":"2026-01-08T21:41:05.351464-0500","caller":"clientv3/maintenance.go:212","msg":"opened snapshot stream; downloading"}
-# {"level":"info","ts":1767926465.3517191,"caller":"snapshot/v3_snapshot.go:127","msg":"fetching snapshot","endpoint":"https://127.0.0.1:2379"}
-# {"level":"info","ts":"2026-01-08T21:41:05.790886-0500","caller":"clientv3/maintenance.go:220","msg":"completed snapshot read; closing"}
-# {"level":"info","ts":1767926465.8104656,"caller":"snapshot/v3_snapshot.go:142","msg":"fetched snapshot","endpoint":"https://127.0.0.1:2379","size":"8.7 MB","took":0.471495617}
-# {"level":"info","ts":1767926465.8106403,"caller":"snapshot/v3_snapshot.go:152","msg":"saved","path":"/var/lib/backup/etcd-snapshot.db"}
-# Snapshot saved at /var/lib/backup/etcd-snapshot.db
 
 # Verify the snapshot:
 sudo -i ETCDCTL_API=3 etcdctl --write-out=table snapshot status /var/lib/backup/etcd-snapshot.db
@@ -589,10 +583,16 @@ sudo -i ETCDCTL_API=3 etcdctl --write-out=table snapshot status /var/lib/backup/
 
 ```sh
 sudo -i ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot restore /var/lib/backup/etcd-snapshot.db
-# {"level":"info","ts":1767926957.5838912,"caller":"snapshot/v3_snapshot.go:306","msg":"restoring snapshot","path":"/var/lib/backup/etcd-snapshot.db","wal-dir":"default.etcd/member/wal","data-dir":"default.etcd","snap-dir":"default.etcd/member/snap"}
-# {"level":"info","ts":1767926957.6159048,"caller":"mvcc/kvstore.go:388","msg":"restored last compact revision","meta-bucket-name":"meta","meta-bucket-name-key":"finishedCompactRev","restored-compact-revision":452894}
-# {"level":"info","ts":1767926957.6326818,"caller":"membership/cluster.go:392","msg":"added member","cluster-id":"cdf818194e3a8c32","local-member-id":"0","added-peer-id":"8e9e05c52164694d","added-peer-peer-urls":["http://localhost:2380"]}
-# {"level":"info","ts":1767926957.6468241,"caller":"snapshot/v3_snapshot.go:326","msg":"restored snapshot","path":"/var/lib/backup/etcd-snapshot.db","wal-dir":"default.etcd/member/wal","data-dir":"default.etcd","snap-dir":"default.etcd/member/snap"}
+
+sudo vi /etc/kubernetes/manifests/etcd.yaml
+# find:
+# - name: etcd-data
+#   hostPath:
+#     path: /var/lib/etcd
+# update:
+# - name: etcd-data
+#   hostPath:
+#     path: /var/lib/backup
 ```
 
 ---
@@ -828,6 +828,75 @@ kubectl get node
 # node01         Ready    <none>          44d   v1.33.6
 # node02         Ready    <none>          44d   v1.33.6
 ```
+
+---
+
+### Task: Troubleshooting API server
+
+A kubeadm provisioned cluster was migrated to a new machine. Requires configuration changes to run successfully.
+
+Task:
+
+We need fix a single-node cluster that got broken during machine migration.
+Identify the broken cluster components and investigate what caused to break those components.
+The decommissioned cluster used an external etcd server.
+Next, fix the configuration of all broken cluster components.
+Ensure to restart all necessary services and components for changes to take effect.
+Finally, ensure the cluster, single node and all pods are Ready.
+
+- setup env
+
+```sh
+vi /etc/kubernetes/manifests/kube-apiserver.yaml
+#    - --etcd-servers=https://128.0.0.1:2379
+```
+
+---
+
+- Solution
+  - analyze: "Used an external etcd server." is a hint
+  - issue could be caused by etcd server configuration
+
+```sh
+# confirm issue
+k get node
+# The connection to the server 192.168.10.150:6443 was refused - did you specify the right host or port?
+
+# debug
+journalctl -u kubelet --no-pager | tail -n 60
+# Jan 15 14:11:13 controlplane kubelet[1233]: E0115 14:11:13.207487    1233 event.go:368] "Unable to write event (may retry after sleeping)" err="Patch \"https://192.168.10.150:6443/api/v1/namespaces/kube-system/events/kube-scheduler-controlplane.188af5f3415b8a3d\": dial tcp 192.168.10.150:6443: connect: connection refused" event="&Event{ObjectMeta:{kube-scheduler-controlplane.188af5f3415b8a3d  kube-system   2157 0 0001-01-01 00:00:00 +0000 UTC <nil> <nil> map[] map[] [] [] []},InvolvedObject:ObjectReference{Kind:Pod,Namespace:kube-system,Name:kube-scheduler-controlplane,UID:03251309c465d6762648423f73e80586,APIVersion:v1,ResourceVersion:,FieldPath:spec.containers{kube-scheduler},},Reason:Unhealthy,Message:Readiness probe failed: Get \"https://127.0.0.1:10259/readyz\": dial tcp 127.0.0.1:10259: connect: connection refused,Source:EventSource{Component:kubelet,Host:controlplane,},FirstTimestamp:2026-01-15 11:57:08 -0500 EST,LastTimestamp:2026-01-15 14:06:44.094794979 -0500 EST m=+7337.020981358,Count:25,Type:Warning,EventTime:0001-01-01 00:00:00 +0000 UTC,Series:nil,Action:,Related:nil,ReportingController:kubelet,ReportingInstance:controlplane,}"
+# Jan 15 14:11:18 controlplane kubelet[1233]: E0115 14:11:18.155764    1233 kubelet_node_status.go:548] "Error updating node status, will retry" err="failed to patch status \"{\\\"status\\\":{\\\"$setElementOrder/conditions\\\":[{\\\"type\\\":\\\"NetworkUnavailable\\\"},{\\\"type\\\":\\\"MemoryPressure\\\"},{\\\"type\\\":\\\"DiskPressure\\\"},{\\\"type\\\":\\\"PIDPressure\\\"},{\\\"type\\\":\\\"Ready\\\"}],\\\"conditions\\\":[{\\\"lastHeartbeatTime\\\":\\\"2026-01-15T19:11:18Z\\\",\\\"type\\\":\\\"MemoryPressure\\\"},{\\\"lastHeartbeatTime\\\":\\\"2026-01-15T19:11:18Z\\\",\\\"type\\\":\\\"DiskPressure\\\"},{\\\"lastHeartbeatTime\\\":\\\"2026-01-15T19:11:18Z\\\",\\\"type\\\":\\\"PIDPressure\\\"},{\\\"lastHeartbeatTime\\\":\\\"2026-01-15T19:11:18Z\\\",\\\"type\\\":\\\"Ready\\\"}]}}\" for node \"controlplane\": Patch \"https://192.168.10.150:6443/api/v1/nodes/controlplane/status?timeout=10s\": dial tcp 192.168.10.150:6443: connect: connection refused"
+# Jan 15 14:11:18 controlplane kubelet[1233]: E0115 14:11:18.156328    1233 kubelet_node_status.go:548] "Error updating node status, will retry" err="error getting node \"controlplane\": Get \"https://192.168.10.150:6443/api/v1/nodes/controlplane?timeout=10s\": dial tcp 192.168.10.150:6443: connect: connection refused"
+# Jan 15 14:11:18 controlplane kubelet[1233]: E0115 14:11:18.157119    1233 kubelet_node_status.go:548] "Error updating node status, will retry" err="error getting node \"controlplane\": Get \"https://192.168.10.150:6443/api/v1/nodes/controlplane?timeout=10s\": dial tcp 192.168.10.150:6443: connect: connection refused"
+# Jan 15 14:11:18 controlplane kubelet[1233]: E0115 14:11:18.157450    1233 kubelet_node_status.go:548] "Error updating node status, will retry" err="error getting node \"controlplane\": Get \"https://192.168.10.150:6443/api/v1/nodes/controlplane?timeout=10s\": dial tcp 192.168.10.150:6443: connect: connection refused"
+# Jan 15 14:11:18 controlplane kubelet[1233]: E0115 14:11:18.157743    1233 kubelet_node_status.go:548] "Error updating node status, will retry" err="error getting node \"controlplane\": Get \"https://192.168.10.150:6443/api/v1/nodes/controlplane?timeout=10s\": dial tcp 192.168.10.150:6443: connect: connection refused"
+# Jan 15 14:11:18 controlplane kubelet[1233]: E0115 14:11:18.157760    1233 kubelet_node_status.go:535] "Unable to update node status" err="update node status exceeds retry count"
+
+# check the api server cf
+vi /etc/kubernetes/manifest/kube-apiserver.yaml
+# check:
+#    - --etcd-servers=https://128.0.0.1:2379
+# correct:
+#    - --etcd-servers=https://127.0.0.1:2379
+
+# confirm
+kubectl get node
+# NAME           STATUS   ROLES           AGE     VERSION
+# controlplane   Ready    control-plane   2d19h   v1.32.11
+# node01         Ready    <none>          12h     v1.32.11
+# node02         Ready    <none>          12h     v1.32.11
+```
+
+> Common Issue:
+>
+> - etcd connection error:
+>   - If the api uses internal etcd, check the api server manifest.
+>   - If the api uses external etcd, `kubectl get pod api-server -o yaml` to get the etcd ip and confirm it is correct.
+>     - curl -k https://ip:2379/readyz
+> - pod status keep `Pending`:
+>   - `/etc/kubernetes/manifests/kube-scheduler.yaml`: check ip
+> - deployment/sts can created but pod cannot create:
+>   - scheduler manager error: check the bind-address
 
 ---
 
@@ -1174,4 +1243,193 @@ sudo cat /etc/kubernetes/manifests/kube-apiserver.yaml
 
 # restart the kubelet whenever manifests updates
 sudo systemctl restart kubelet
+```
+
+---
+
+## Task: install
+
+Prepare a Linux system for Kubernetes. Docker is already installed, but you
+need to configure it for kubeadm.
+Task
+
+Complete these tasks to prepare the system for Kubernetes :
+Set up cri-dockerd:
+Install the Debian package ~/cri-dockerd_0.3.9.3-0.ubuntu-
+jammy_amd64.deb
+Debian packages are installed using dpkg.
+Enable and start the cri-docker service
+Configure these system parameters:
+Set net.bridge.bridge-nf-call-iptables to 1
+Set net.ipv6.conf.all.forwarding to 1
+Set net.ipv4.ip_forward to 1
+Set net.netfilter.nf_conntrack max to 131072
+
+```sh
+sudo dpkg -i ~/cri-dockerd_0.3.9.3-0.ubuntu-jammy_amd64.deb
+sudo apt-get -f install -y
+cri-dockerd --version
+
+sudo systemctl daemon-reload
+sudo systemctl enable cri-docker
+sudo systemctl start cri-docker
+
+sudo tee /etc/sysctl.d/99-kubernetes-cri.conf <<EOF
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv6.conf.all.forwarding = 1
+net.ipv4.ip_forward = 1
+net.netfilter.nf_conntrack_max = 131072
+EOF
+
+sudo sysctl --system
+```
+
+---
+
+### Task: Install CNI
+
+Install and configure a Container Network Interface (CNI) of your choice that meets the specified requirements. Choose one of the following CNI options:
+
+- Flannel using the manifest:
+  - https://github.com/flannel-io/flannel/releases/download/v0.26.1/kube-flannel.yml
+- Calico using the manifest:
+  - crds: https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/operator-crds.yaml
+  - Tigera Operator:https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+
+Ensure the selected CNI is properly installed and configured in the Kubernetes cluster.
+
+The CNI you choose must:
+Let Pods communicate with each other
+Support Network Policy enforcement
+Install from manifest files (do not use Helm)
+
+---
+
+- Solution
+
+```sh
+# install operator
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/operator-crds.yaml
+# namespace/tigera-operator created
+# serviceaccount/tigera-operator created
+# clusterrole.rbac.authorization.k8s.io/tigera-operator-secrets created
+# clusterrole.rbac.authorization.k8s.io/tigera-operator created
+# clusterrolebinding.rbac.authorization.k8s.io/tigera-operator created
+# rolebinding.rbac.authorization.k8s.io/tigera-operator-secrets created
+# deployment.apps/tigera-operator created
+
+# confirm
+kubectl get pod -n tigera-operator
+# NAME                              READY   STATUS    RESTARTS   AGE
+# tigera-operator-7d4578d8d-hb6sg   1/1     Running   0          2m50s
+
+# install customer resources
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/custom-resources.yaml
+# installation.operator.tigera.io/default created
+# apiserver.operator.tigera.io/default created
+# goldmane.operator.tigera.io/default created
+# whisker.operator.tigera.io/default created
+
+kubectl get tigerastatus
+# NAME        AVAILABLE   PROGRESSING   DEGRADED   SINCE
+# apiserver                             True
+# calico                                True
+# goldmane                              True
+# ippools                               True
+# whisker                               True
+
+# test
+kubectl run web2test --image=nginx
+kubectl expose pod web2test --port=80 --name=web2test-svc
+
+kubectl get pod,svc
+# NAME           READY   STATUS    RESTARTS   AGE
+# pod/web2test   1/1     Running   0          22m
+
+# NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+# service/kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP   3d22h
+# service/web2test-svc   ClusterIP   10.107.175.223   <none>        80/TCP    2m31s
+
+kubectl run --rm -it tester --image=busybox --restart=Never -- wget -qO- http://web2test-svc
+# <!DOCTYPE html>
+# <html>
+# <head>
+# <title>Welcome to nginx!</title>
+# <style>
+# html { color-scheme: light dark; }
+# body { width: 35em; margin: 0 auto;
+# font-family: Tahoma, Verdana, Arial, sans-serif; }
+# </style>
+# </head>
+# <body>
+# <h1>Welcome to nginx!</h1>
+# <p>If you see this page, the nginx web server is successfully installed and
+# working. Further configuration is required.</p>
+
+# <p>For online documentation and support please refer to
+# <a href="http://nginx.org/">nginx.org</a>.<br/>
+# Commercial support is available at
+# <a href="http://nginx.com/">nginx.com</a>.</p>
+
+# <p><em>Thank you for using nginx.</em></p>
+# </body>
+# </html>
+# pod "tester" deleted
+
+# test network policy
+tee netpol.yaml<<'EOF'
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+EOF
+
+kubectl apply -f netpol.yaml
+# networkpolicy.networking.k8s.io/deny-all created
+
+kubectl describe netpol deny-all
+# Name:         deny-all
+# Namespace:    default
+# Created on:   2026-01-16 18:01:26 -0500 EST
+# Labels:       <none>
+# Annotations:  <none>
+# Spec:
+#   PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)
+#   Allowing ingress traffic:
+#     <none> (Selected pods are isolated for ingress connectivity)
+#   Allowing egress traffic:
+#     <none> (Selected pods are isolated for egress connectivity)
+#   Policy Types: Ingress, Egress
+
+# test networkpolicy
+kubectl run --rm -it tester --image=busybox --restart=Never -- wget -qO- http://web2test-svc
+# <!DOCTYPE html>
+# <html>
+# <head>
+# <title>Welcome to nginx!</title>
+# <style>
+# html { color-scheme: light dark; }
+# body { width: 35em; margin: 0 auto;
+# font-family: Tahoma, Verdana, Arial, sans-serif; }
+# </style>
+# </head>
+# <body>
+# <h1>Welcome to nginx!</h1>
+# <p>If you see this page, the nginx web server is successfully installed and
+# working. Further configuration is required.</p>
+
+# <p>For online documentation and support please refer to
+# <a href="http://nginx.org/">nginx.org</a>.<br/>
+# Commercial support is available at
+# <a href="http://nginx.com/">nginx.com</a>.</p>
+
+# <p><em>Thank you for using nginx.</em></p>
+# </body>
+# </html>
+# pod "tester" deleted
 ```

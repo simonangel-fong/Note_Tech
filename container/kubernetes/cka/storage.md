@@ -12,6 +12,8 @@
     - [\*\*\*Task: PV + PVC](#task-pv--pvc)
   - [StorageClass](#storageclass)
     - [\*\*\*\*Task: StorageClass + PV](#task-storageclass--pv)
+  - [Task: PVC](#task-pvc)
+    - [Task: SC](#task-sc)
 
 ---
 
@@ -556,6 +558,8 @@ kubectl get pvc fast-storage-pvc
 
 ---
 
+## Task: PVC
+
 A user accidentally deleted the MariaDB Deployment in the mariadb namespace, which was configured with persistent storage. Your responsibility is to re-establish the Deployment while ensuring data is preserved by reusing the available PersistentVolume.
 
 Task:
@@ -591,7 +595,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: ""
+  storageClassName: local-path
   hostPath:
     path: /mnt/data/mariadb
 EOF
@@ -642,4 +646,107 @@ kubectl -n mariadb get deploy,pods,pvc
 kubectl get pv
 ls -l ~/mariadb-deploy.yaml
 
+```
+
+---
+
+- Solution
+
+```sh
+# get pv storageClass
+kubectl get pv
+# NAME         CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# mariadb-pv   250Mi      RWO            Retain           Available           local-path     <unset>                          6s
+```
+
+```yaml
+# pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  storageClassName: local-path # match the pv sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Mi
+```
+
+```sh
+
+
+kubectl apply -f pvc.yaml
+# persistentvolumeclaim/mariadb created
+
+# confirm
+kubectl get pvc mariadb -n mariadb
+# NAME      STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# mariadb   Bound    mariadb-pv   250Mi      RWO            local-path     <unset>                 6s
+
+vi mariadb-deploy.yaml
+# volumes:
+# - name: data
+#   persistentVolumeClaim:
+#     claimName: mariadb
+
+kubectl apply -f mariadb-deploy.yaml
+# deployment.apps/mariadb created
+
+kubectl get pod -n mariadb
+# NAME                       READY   STATUS    RESTARTS   AGE
+# mariadb-586c877688-f5bbd   1/1     Running   0          77s
+
+kubectl describe pod mariadb-586c877688-f5bbd -n mariadb
+# Containers:
+#   mariadb:
+#     Mounts:
+#       /var/lib/mysql from data (rw)
+# Volumes:
+#   data:
+#     Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+#     ClaimName:  mariadb
+```
+
+---
+
+### Task: SC
+
+Create a new StorageClass named low-latency that uses the existing provisioner rancher.io/local-path.
+Set the VolumeBindingMode to WaitForFirstConsumer. (Mandatory or the score will be reduced)
+
+Make the newly created StorageClass (low-latency) the default StorageClass in the cluster.
+
+Do NOT modify any existing Deployments or PersistentVolumeClaims. (If modified, the-score will be reduced)
+
+---
+
+- Solution
+
+```yaml
+# sc.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: low-latency
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
+```
+
+```sh
+kubectl apply -f sc.yaml
+# storageclass.storage.k8s.io/low-latency created
+
+# Mark the default StorageClass as non-default
+kubectl patch sc local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+# storageclass.storage.k8s.io/local-path patched
+
+kubectl get sc
+# NAME                    PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+# local-path              rancher.io/local-path   Delete          WaitForFirstConsumer   false                  2d22h
+# low-latency (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  5s
 ```

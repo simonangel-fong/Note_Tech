@@ -6,6 +6,8 @@
   - [Custom Resource Definition(CRD)](#custom-resource-definitioncrd)
   - [Custom Controller](#custom-controller)
   - [Operator Framework](#operator-framework)
+    - [Imperative Commands](#imperative-commands)
+  - [Lab: Create CRD](#lab-create-crd)
 
 ---
 
@@ -107,3 +109,78 @@ spec:
 
 - used to pack both crd and custom controller
 - OperatorHub.io
+
+---
+
+### Imperative Commands
+
+|
+k get crd
+
+---
+
+## Lab: Create CRD
+
+```yaml
+# crd-crontab.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: crontabs.stable.example.com
+spec:
+  group: stable.example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                cronSpec:
+                  type: string
+                image:
+                  type: string
+                replicas:
+                  type: integer
+  scope: Namespaced
+  names:
+    plural: crontabs
+    singular: crontab
+    kind: CronTab
+    shortNames:
+      - ct
+```
+
+```sh
+kubectl apply -f crd-crontab.yaml
+# customresourcedefinition.apiextensions.k8s.io/crontabs.stable.example.com created
+
+kubectl get crd
+# NAME                          CREATED AT
+# crontabs.stable.example.com   2026-01-16T03:22:35Z
+```
+
+```yaml
+# my-crontab.yaml
+apiVersion: "stable.example.com/v1"
+kind: CronTab
+metadata:
+  name: my-new-cron-object
+spec:
+  cronSpec: "* * * * */5"
+  image: my-awesome-cron-image
+  replicas: 3
+```
+
+```sh
+kubectl apply -f my-crontab.yaml
+# crontab.stable.example.com/my-new-cron-object created
+
+kubectl get ct
+# NAME                 AGE
+# my-new-cron-object   48s
+```

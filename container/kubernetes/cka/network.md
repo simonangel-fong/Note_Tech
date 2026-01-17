@@ -6,16 +6,20 @@
   - [NetworkPolicy](#networkpolicy)
     - [Task: NetworkPolicy](#task-networkpolicy)
     - [Task: NetworkPolicy](#task-networkpolicy-1)
+    - [Task: Network Policy](#task-network-policy)
   - [Service](#service)
     - [Task: svc + Deploy](#task-svc--deploy)
   - [Ingress](#ingress)
     - [Task: Ingress + SVC](#task-ingress--svc)
     - [Task: ingress + svc](#task-ingress--svc-1)
+    - [Task: Ingres + svc](#task-ingres--svc)
   - [CoreDNS](#coredns)
     - [Task: CoreDNS config error](#task-coredns-config-error)
     - [Task: \*\*\*CoreDNS map DNS to IP](#task-coredns-map-dns-to-ip)
   - [Gateway API](#gateway-api)
     - [Task: API GATEWAY + Routhttp](#task-api-gateway--routhttp)
+    - [Task: Service](#task-service)
+    - [Task: gateway](#task-gateway)
 
 ---
 
@@ -154,6 +158,67 @@ kubectl describe networkpolicy allow-port-from-namespace -n fubar
 #       NamespaceSelector: kubernetes.io/metadata.name=internal
 #   Not affecting egress traffic
 #   Policy Types: Ingress
+```
+
+---
+
+### Task: Network Policy
+
+We have `frontend` and `backend` Deploy in separate NS (`frontend` and `backend`). They need to communicate.
+Analyze: Inspect the `frontend` and `backend` Deployments to understand their communication requirements.
+Apply: From the NetworkPolicy YAML files in the ./netpol/ folder, choose one to apply.
+It must:
+Allow communication between frontend and backend.
+Be as restrictive as possible (least permissive)
+Do not delete or change the existing "deny-all" netpol's.
+Failure to follow these rules may result in a score reduction or zero.
+
+- setup env
+
+```sh
+kubectl create ns frontend
+kubectl create deploy frontend -n frontend --image=nginx
+kubectl expose deploy frontend -n frontend --name=frontend --port=80
+
+kubectl create ns backend
+kubectl create deploy backend -n backend --image=nginx
+kubectl expose deploy backend -n backend --name=backend --port=80
+
+mkdir netpol
+
+cat <<'EOF' > ./netpol/deny-all.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: frontend
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: backend
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+EOF
+
+kubectl apply -f ./netpol/deny-all.yaml
+```
+
+---
+
+- Solution
+
+```sh
+
 ```
 
 ---
@@ -392,6 +457,74 @@ kubectl get pod -n ing-internal -l app=hello -o wide
 
 ---
 
+### Task: Ingres + svc
+
+Create a new Ingress resource echo in echo-sound namespace
+Exposing Service echoserver-service on http://example.org/echo using Service port 8080
+The availability of Service echoserver-service can be checked
+
+using the following command, which should return 200:
+[candidate@cka2025] $ curl -o /dev/null -s -w "%{http_code)\n" http://example.org/echo
+
+- Setup environment
+
+```sh
+kubectl create ns echo-sound
+kubectl create deploy web --image=nginx -n echo-sound
+kubectl expose deploy web --name=echoserver-service -n echo-sound --port=8080 --target-port=80
+```
+
+---
+
+- Solution:
+
+```yaml
+# echo-ing.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echo
+  namespace: echo-sound
+spec:
+  rules:
+    - host: example.org
+      http:
+        paths:
+          - path: /echo
+            pathType: Prefix
+            backend:
+              service:
+                name: echoserver-service
+                port:
+                  number: 8080
+```
+
+```sh
+kubectl apply -f ing.yaml
+
+# confirm
+kubectl get ing -n echo-sound
+# NAME   CLASS    HOSTS         ADDRESS   PORTS   AGE
+# echo   <none>   example.org             80      3m30s
+
+kubectl describe ing echo -n echo-sound
+# Name:             echo
+# Labels:           <none>
+# Namespace:        echo-sound
+# Address:
+# Ingress Class:    <none>
+# Default backend:  <default>
+# Rules:
+#   Host         Path  Backends
+#   ----         ----  --------
+#   example.org
+#                /echo   echoserver-service:8080 (10.244.1.12:80)
+# Annotations:   <none>
+# Events:        <none>
+```
+
+---
+
 ## CoreDNS
 
 ### Task: CoreDNS config error
@@ -550,3 +683,180 @@ kubectl get svc -n
 ```
 
 ---
+
+### Task: Service
+
+Reconfigure the existing Deployment front-end in namespace sp-culator to expose port 80/tcp of the existing container nginx.
+Create a new Service named front-end-svc exposing the container port 80/tcp.
+Configure the new Service to also expose the individual pods via & NodePort
+
+- Set
+
+```sh
+kubectl create ns sp-culator
+
+tee env-deploy.yaml<<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-end
+  namespace: sp-culator
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: front-end
+  template:
+    metadata:
+      labels:
+        app: front-end
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+EOF
+
+kubectl apply -f env-deploy.yaml
+
+```
+
+---
+
+- Solution
+
+```sh
+kubectl edit deploy front-end -n sp-culator
+#         ports:
+#         - containerPort: 80
+# deployment.apps/front-end edited
+
+kubectl expose deploy front-end -n sp-culator --name=front-end-svc --type=NodePort --port=80 --target-port=80
+# service/front-end-svc exposed
+
+kubectl describe svc front-end-svc -n sp-culator
+# Name:                     front-end-svc
+# Namespace:                sp-culator
+# Labels:                   <none>
+# Annotations:              <none>
+# Selector:                 app=front-end
+# Type:                     NodePort
+# IP Family Policy:         SingleStack
+# IP Families:              IPv4
+# IP:                       10.110.48.218
+# IPs:                      10.110.48.218
+# Port:                     <unset>  80/TCP
+# TargetPort:               80/TCP
+# NodePort:                 <unset>  31117/TCP
+# Endpoints:                10.244.2.12:80,10.244.1.11:80,10.244.2.11:80
+# Session Affinity:         None
+# External Traffic Policy:  Cluster
+# Internal Traffic Policy:  Cluster
+# Events:                   <none>
+```
+
+---
+
+### Task: gateway
+
+Migrate an existing web application from Ingress to Gateway API.
+We must maintain HTTPSaccess.
+A GatewayClass named `nginx` is installed in the cluster.
+
+First, create a Gateway named `web-gateway` with hostname `gateway.web.k8s.local` that maintains the existing TLS and listener configuration from the **existing ingress** resource named `web`.
+
+Next, create an `HTTPRoute` named **web-route** with hostname `gateway.web.k8s.local` that maintains the existing routing rules from the current **Ingress resource** named `web`.
+
+You can test your Gateway API configuration with the following command:
+[candidate@cka2025] $ curl https: //gateway.web.k8s.local
+Finally, delete the existing Ingress resource named web.
+
+- Setup ENv
+
+```sh
+kubectl create deploy web-app --image=nginx
+kubectl expose deploy web-app --port=80 --name=web-svc
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tls.key -out tls.crt \
+  -subj "/CN=gateway.web.k8s.local" \
+  -addext "subjectAltName=DNS:gateway.web.k8s.local"
+
+kubectl create secret tls web-tls --cert=tls.crt --key=tls.key
+
+tee ing.yaml<<'EOF'
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-gateway
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - gateway.web.k8s.local
+    secretName: web-tls
+  rules:
+  - host: gateway.web.k8s.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-svc
+            port:
+              number: 80
+EOF
+
+kubectl apply -f ing.yaml
+
+```
+
+---
+
+- SOlution
+- ref: https://gateway-api.sigs.k8s.io/guides/tls/
+
+```sh
+tee
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+  namespace: default
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: gateway.web.k8s.local
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: web-tls
+
+# http
+cat <<'EOF' | kubectl apply -f -
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-route
+  namespace: default
+spec:
+  hostnames:
+  - gateway.web.k8s.local
+  parentRefs:
+  - name: web-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: web-svc
+      port: 80
+EOF
+
+
+```

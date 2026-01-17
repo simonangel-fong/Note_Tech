@@ -17,6 +17,7 @@
   - [Lab: Create Namespace(Imperative Method)](#lab-create-namespaceimperative-method)
   - [Lab: Create namespace(Declarative Method)](#lab-create-namespacedeclarative-method)
   - [Lab: Set default for a context](#lab-set-default-for-a-context)
+  - [TroubleShooting: Deleting NS get stuck](#troubleshooting-deleting-ns-get-stuck)
 
 ---
 
@@ -476,3 +477,41 @@ kubectl get pods --all-namespaces
 # kube-system   vpnkit-controller                        1/1     Running   4 (133m ago)    4d14h
 # myns          nginx                                    1/1     Running   0               27m
 ```
+
+---
+
+## TroubleShooting: Deleting NS get stuck
+
+
+```sh
+k get ns
+# NAME                 STATUS        AGE
+# kube-flannel         Terminating   3d23h
+
+# !!! Patch doesn't work
+kubectl patch namespace kube-flannel -p '{"metadata":{"finalizers":null}}'
+
+# output ns as json
+kubectl get ns kube-flannel -o json > temp.json
+
+# update json
+vi temp.json
+# find:
+#     "spec": {
+#         "finalizers": [
+#             "kubernetes"
+#         ]
+# change:
+#     "spec": {
+#         "finalizers": []
+
+# proxy api server
+kubectl proxy
+
+# make request:
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json http://127.0.0.1:8001/api/v1/namespaces/kube-flannel/finalize
+
+# confirm
+k get ns kube-flannel
+```
+

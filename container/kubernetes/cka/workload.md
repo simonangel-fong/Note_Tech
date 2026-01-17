@@ -9,6 +9,7 @@
     - [Task: Pod - Multiple Containers](#task-pod---multiple-containers)
     - [Task: Pod - multiple container](#task-pod---multiple-container)
     - [Task: Pod - Sidecar Pod](#task-pod---sidecar-pod)
+    - [Task: Pod - Volume + Sidercar](#task-pod---volume--sidercar)
     - [Task: Pod - volume + sidecar](#task-pod---volume--sidecar)
     - [Task: Deployment - scale](#task-deployment---scale)
     - [Task: Deployment - scale](#task-deployment---scale-1)
@@ -28,6 +29,12 @@
     - [Task: Limit range](#task-limit-range)
     - [Task: query resource usage](#task-query-resource-usage)
     - [Task: Query pod 的 CPU](#task-query-pod-的-cpu)
+  - [Task: Resources](#task-resources)
+    - [Task: \*\*\*CRD](#task-crd)
+    - [Task: PriorityClass](#task-priorityclass)
+    - [Task: \*\*\*helm - Install Argo](#task-helm---install-argo)
+    - [Task: HPA](#task-hpa)
+    - [Task: CM](#task-cm)
 
 ---
 
@@ -209,7 +216,7 @@ spec:
 ```
 
 ```sh
-kubectl apply -f 11-factor-app.yaml
+kubectl apply -f task-sidecar01-env.yaml
 # pod/11-factor-app created
 
 kubectl get pod
@@ -296,6 +303,55 @@ kubectl logs 11-factor-app -c sidecar
 # 7: Thu Jan  8 20:53:15 UTC 2026
 # 8: Thu Jan  8 20:53:16 UTC 2026
 
+```
+
+---
+
+### Task: Pod - Volume + Sidercar
+
+A legacy app needs to be integrated into the Kubernetes built-in logging architecture (i.e. kubectl logs). Adding a streaming co-located container is a good and common way to accomplish this requirement.
+
+Task
+
+Update the existing Deployment synergy-deployment, adding a co-located container named sidecar using the busybox:stable image to the existing Pod.
+The new co-located container has to run the following command: `/bin/sh-c "tail -n+l -f /var/log/synergy-deployment.log"`
+Use a Volume mounted at /var/log to make the log file synergy-deployment.log available to the co located container.
+Do not modify the specification of the existing container other than adding the required.
+Hint: Use a shared volume to expose the log file between the main application container and the sidecar
+
+- Setup Env
+
+```sh
+tee env-deploy.yaml<<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synergy-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synergy
+  template:
+    metadata:
+      labels:
+        app: synergy
+    spec:
+      containers:
+      - name: synergy
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            i=1;
+            while true; do
+              echo "$(date) synergy log line $i" >> /var/log/synergy-deployment.log;
+              i=$((i+1));
+              sleep 2;
+            done
+EOF
+
+kubectl apply -f env-deploy.yaml
 ```
 
 ---
@@ -833,7 +889,7 @@ kubectl describe hpa cpu-demo
 
 ## Helm
 
-### ***Task: Deploy with helm
+### \*\*\*Task: Deploy with helm
 
 Use Helm to deploy the Traefik Ingress Controller on the cluster. url: https://traefik.github.io/charts
 Install it in a dedicated namespace traefik with release name traefik.
@@ -1116,3 +1172,624 @@ kubectl top pod -l name=cpu-loader --sort-by=cpu -A
 ```
 
 ---
+
+## Task: Resources
+
+Task
+
+A WordPress application with 3 replicas in the relative-fawn namespace consists of: cpu 1 memory 2015360ki
+
+Adjust all Pod resource requests as follows:
+Divide node resources evenly across all 3 pods.
+Give each Pod a fair share of CPU and memory.
+Add enough overhead to keep the node stable.
+Use the exact same requests for both containers and init containers.
+
+You are not required to change any resource limits.
+It may help to temporarily scale the WordPress Deployment to 0 replicas while updating the resource requests.
+
+- After updates, confirm:
+
+  - WordPress keeps 3 replicas.
+  - All Pods are running and ready.
+
+- Setup Env
+
+```sh
+kubectl label node node02 wpnode=true
+kubectl create ns relative-fawn
+
+tee env-deploy.yaml<<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: relative-fawn
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      nodeSelector:
+        wpnode: "true"
+      initContainers:
+      - name: init-container
+        image: busybox
+        command: ["sh", "-c", "sleep 30"]
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+EOF
+
+kubectl apply -f env-deploy.yaml
+```
+
+- Solution
+  - find the node where the app is scheduled, find the capacity: cpu+memory
+  - caculate:
+    - save 25% for system
+    - 75% / 3 =25% total cpu
+
+```sh
+# find the
+kubectl -n relative-fawn get pod -o wide
+# NAME                         READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+# wordpress-6b77fdbd49-6gd4q   1/1     Running   0          5m19s   10.244.2.22   node02   <none>           <none>
+# wordpress-6b77fdbd49-8d2qh   1/1     Running   0          5m19s   10.244.2.23   node02   <none>           <none>
+# wordpress-6b77fdbd49-hkw7z   1/1     Running   0          5m19s   10.244.2.24   node02   <none>           <none>
+
+# get the resource
+kubectl describe node node02
+# Capacity:
+#   cpu:                1
+#   ephemeral-storage:  30784420Ki
+#   hugepages-1Gi:      0
+#   hugepages-2Mi:      0
+#   memory:             1965484Ki
+```
+
+- Caculation:
+  - 1000m \* (1-25%) = 750
+  - 750/3 = 250m
+  - 2Gi \* (1-25%) = 1500Mi
+  - 1500Mi / 3 = 500Mi
+
+```sh
+# scale down
+kubectl scale deploy wordpress -n relative-fawn --replicas=0
+
+k get deploy -n relative-fawn
+# NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+# wordpress   0/0     0            0           13m
+
+# update resource
+k edit deploy wordpress -n relative-fawn
+
+# confirm
+k get deploy wordpress -n relative-fawn -o yaml
+# containers:
+#   name: nginx
+#   resources:
+#     requests:
+#       cpu: 250m
+#       memory: 800Mi
+# initContainers:
+#   name: init-container
+#   resources:
+#     requests:
+#       cpu: 250m
+#       memory: 800Mi
+
+# scale out
+kubectl scale deploy wordpress -n relative-fawn --replicas=3
+
+# confirm
+k get deploy wordpress -n relative-fawn
+# NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+# wordpress   3/3     3            3           9m35s
+```
+
+---
+
+### Task: \*\*\*CRD
+
+Task:
+
+Verify the cert-manager application which has been deployed in the cluster.
+
+Create a list of all cert-manager Custom Resource Definitions (CRDs) and save it to ~/resources.yaml. make sure kubectl's default output format and use kubectl to list CRD's
+
+Do not set an output format.
+Failure to do so will result in a reduced score.
+Using kubectl, extract the documentation for the subject specification field of the Certificate Custom Resource and save it to ~/subject.vaml.
+You may use any output format that kubecl supports.
+
+---
+
+- Solution
+
+```sh
+# get the list of crd with app
+kubectl get crds | grep cert-manager
+
+# output the list
+kubectl get crds | grep cert-manager > ~/resources.yaml
+
+# confirm
+cat ~/resources.yaml
+
+# ################
+
+# get the app Certificate
+kubectl get crd | grep certificate
+
+# get the document using explain
+kubectl explain certificate.**.spec.subject
+
+# output
+kubectl explain certificate.**.spec.subject > ~/subject.vaml
+
+cat ~/subject.vaml
+
+```
+
+---
+
+### Task: PriorityClass
+
+Create a new `PriorityClass` named **high-priority** for user-workloads with a value that is one less than the highest existing **user-defined** `priority class` value.
+Patch the existing `Deployment` **busybox-logger** running in the **priority1** `namespace` to use the **high-priority** `priority class`.
+Ensure that the busybox-logger Deployment rolls out successfully with the **new** `priority class` set.
+It is expected that Pods from other Deployments running in the priority namespace are evicted.
+Do not modify other Deployments running in the priority namespace.
+Failure to do so may result in a reduced score.
+
+- Seteup environment
+
+```sh
+tee env-setup.yaml<<'EOF'
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: low-user
+value: 1000
+globalDefault: false
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: medium-user
+value: 5000
+globalDefault: false
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: top-user
+value: 10000
+globalDefault: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: existing-app
+  namespace: priority1
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: existing-app
+  template:
+    metadata:
+      labels:
+        app: existing-app
+    spec:
+      priorityClassName: low-user
+      containers:
+      - name: stress
+        image: busybox:1.36
+        command: ["sh", "-c", "while true; do echo filler-low; sleep 5; done"]
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "128Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-logger
+  namespace: priority1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox-logger
+  template:
+    metadata:
+      labels:
+        app: busybox-logger
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.36
+        command: ["sh", "-c", "while true; do echo $(date) busybox-logger; sleep 2; done"]
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "128Mi"
+
+EOF
+kubectl create ns priority1
+kubectl apply -f env-setup.yaml
+# priorityclass.scheduling.k8s.io/low-user created
+# priorityclass.scheduling.k8s.io/medium-user created
+# priorityclass.scheduling.k8s.io/top-user created
+# deployment.apps/busybox-logger created
+# deployment.apps/existing-app created
+
+kubectl get priorityclass
+# NAME                      VALUE        GLOBAL-DEFAULT   AGE     PREEMPTIONPOLICY
+# low-user                  1000         false            16s     PreemptLowerPriority
+# medium-user               5000         false            16s     PreemptLowerPriority
+# system-cluster-critical   2000000000   false            3d19h   PreemptLowerPriority
+# system-node-critical      2000001000   false            3d19h   PreemptLowerPriority
+# top-user                  10000        false            16s     PreemptLowerPriority
+```
+
+---
+
+- Solution
+
+```sh
+# collect info
+kubectl get priorityclass
+# NAME                      VALUE        GLOBAL-DEFAULT   AGE     PREEMPTIONPOLICY
+# low-user                  1000         false            16s     PreemptLowerPriority
+# medium-user               5000         false            16s     PreemptLowerPriority
+# system-cluster-critical   2000000000   false            3d19h   PreemptLowerPriority
+# system-node-critical      2000001000   false            3d19h   PreemptLowerPriority
+# top-user                  10000        false            16s     PreemptLowerPriority
+
+kubectl get deploy -n priority1
+# NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+# busybox-logger   0/1     1            0           21s
+# existing-app     6/6     6            6           21s
+```
+
+```yaml
+# pc.yaml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 9999
+globalDefault: false
+```
+
+```sh
+kubectl apply -f pc.yaml
+# priorityclass.scheduling.k8s.io/high-priority created
+
+# confirm
+k get pc  --sort-by='value'
+# NAME                      VALUE        GLOBAL-DEFAULT   AGE     PREEMPTIONPOLICY
+# low-user                  1000         false            2m15s   PreemptLowerPriority
+# medium-user               5000         false            2m15s   PreemptLowerPriority
+# high-priority             9999         false            56s     PreemptLowerPriority
+# top-user                  10000        false            2m15s   PreemptLowerPriority
+# system-cluster-critical   2000000000   false            3d20h   PreemptLowerPriority
+# system-node-critical      2000001000   false            3d20h   PreemptLowerPriority
+
+# confirm no priority class
+kubectl get deploy busybox-logger -n priority1 -o yaml
+
+# scale down to 0
+kubectl scale deploy busybox-logger -n priority1 --replicas=0
+# deployment.apps/busybox-logger scaled
+
+kubectl get deploy busybox-logger -n priority1
+# NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+# busybox-logger   0/0     0            0           7m36s
+
+kubectl patch deploy busybox-logger -n priority1 -p '{"spec":{"template":{"spec":{"priorityClassName":"high-priority"}}}}'
+# deployment.apps/busybox-logger patched
+
+# confirm
+kubectl get deploy busybox-logger -n priority1 -o yaml
+# spec:
+#   template:
+#     spec:
+#       priorityClassName: high-priority
+
+# scale out
+kubectl scale deploy busybox-logger -n priority1 --replicas=1
+
+# confirm
+k get deploy -n priority1
+# NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+# busybox-logger   1/1     1            1           6m32s
+# existing-app     5/6     6            5           6m32s
+```
+
+---
+
+### Task: \*\*\*helm - Install Argo
+
+Install Argo CD in cluster:
+Add the official Argo CD Helm repository with the name argo. url: https://argoproj.github.io/argo-helm
+The Argo CD CRDs have already been pre-installed in the cluster.
+Generate a helm template of the Argo CD Helm chart version 7.7.3 for the **argocd NS** and save to /argo-helm.yaml
+Configure the chart to not install CRDs.
+Install Argo CD using Helm with release name argocd using the same version as above and configuration as used in the template 7.7.3.
+Install it in the argocd ns and configure it to not install CRDs.
+
+You do not need to configure access to the Argo CD server UI.
+
+---
+
+- Solution
+
+- https://argoproj.github.io/argo-helm/
+
+```sh
+# add repo
+helm repo add argo https://argoproj.github.io/argo-helm
+# "argo" has been added to your repositories
+
+helm repo list
+# NAME    URL
+# argo    https://argoproj.github.io/argo-helm
+
+
+helm search repo argo/argo
+# NAME                            CHART VERSION   APP VERSION     DESCRIPTION
+# argo/argo                       1.0.0           v2.12.5         A Helm chart for Argo Workflows
+# argo/argo-cd                    9.3.4           v3.2.5          A Helm chart for Argo CD, a declarative, GitOps...
+# argo/argo-ci                    1.0.0           v1.0.0-alpha2   A Helm chart for Argo-CI
+# ...
+
+# update
+helm repo update
+# Hang tight while we grab the latest from your chart repositories...
+# ...Successfully got an update from the "argo" chart repository
+# Update Complete. ⎈Happy Helming!⎈
+
+# create ns
+kubectl create ns argocd
+# namespace/argocd created
+
+# render Helm chart templates locally
+helm template argocd argo/argo-cd -n argocd --version 7.7.3 --set crds.install=false > ./argo-helm.yaml
+
+helm install argocd argo/argo-cd --version 7.7.3 --namespace argocd --set crds.install=false
+# NAME: argocd
+# LAST DEPLOYED: Fri Jan 16 16:00:11 2026
+# NAMESPACE: argocd
+# STATUS: deployed
+# REVISION: 1
+# DESCRIPTION: Install complete
+# TEST SUITE: None
+# NOTES:
+
+# Verify
+helm -n argocd list
+# NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART             APP VERSION
+# argocd  argocd          1               2026-01-16 16:00:11.919253784 -0500 EST deployed        argo-cd-7.7.3     v2.13.0
+
+kubectl -n argocd get pods
+
+```
+
+---
+
+### Task: HPA
+
+Create a new HorizontalPodAutoscaler (HPA) named apache-server in the autoscale namespace. This HPA must target the existing Deployment called apache-server in the autoscale namespace.
+Set the HPA to target for 50% CPU usage per Pod.
+.
+Configure hpa to have at min 1 Pod and no more than 4 Pods[max]. Also, we have to set the downscale stabilization window to 30 seconds.
+
+- Setup env
+
+```sh
+kubectl create ns autoscale
+kubectl create deploy apache-server --image=nginx -n autoscale
+
+kubectl -n autoscale set resources deploy/apache-server --requests=cpu=100m,memory=64Mi --limits=cpu=200m,memory=128Mi
+```
+
+---
+
+- Solution
+
+```sh
+kubectl autoscale deployment apache-server -n autoscale --cpu-percent=50 --min=1 --max=4 > hpa.yaml
+
+vi hpa.yaml
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: apache-server
+#   namespace: autoscale
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: apache-server
+#   minReplicas: 1
+#   maxReplicas: 4
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       target:
+#         type: Utilization
+#         averageUtilization: 30
+#   behavior:
+#     scaleDown:
+#       stabilizationWindowSeconds: 30
+
+kubectl apply -f hpa.yaml
+# horizontalpodautoscaler.autoscaling/apache-server created
+
+# confirm
+kubectl get hpa -n autoscale
+# NAME            REFERENCE                  TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+# apache-server   Deployment/apache-server   cpu: <unknown>/30%   1         4         1          2m4s
+
+kubectl describe hpa apache-server -n autoscale
+# Name:                                                  apache-server
+# Namespace:                                             autoscale
+# Labels:                                                <none>
+# Annotations:                                           <none>
+# CreationTimestamp:                                     Fri, 16 Jan 2026 19:39:03 -0500
+# Reference:                                             Deployment/apache-server
+# Metrics:                                               ( current / target )
+#   resource cpu on pods  (as a percentage of request):  <unknown> / 30%
+# Min replicas:                                          1
+# Max replicas:                                          4
+# Behavior:
+#   Scale Up:
+#     Stabilization Window: 0 seconds
+#     Select Policy: Max
+#     Policies:
+#       - Type: Pods     Value: 4    Period: 15 seconds
+#       - Type: Percent  Value: 100  Period: 15 seconds
+#   Scale Down:
+#     Stabilization Window: 30 seconds
+#     Select Policy: Max
+#     Policies:
+#       - Type: Percent  Value: 100  Period: 15 seconds
+# Deployment pods:       1 current / 0 desired
+# Conditions:
+#   Type           Status  Reason                   Message
+#   ----           ------  ------                   -------
+#   AbleToScale    True    SucceededGetScale        the HPA controller was able to get the target's current scale
+#   ScalingActive  False   FailedGetResourceMetric  the HPA was unable to compute the replica count: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+# Events:
+#   Type     Reason                        Age                From                       Message
+#   ----     ------                        ----               ----                       -------
+#   Warning  FailedGetResourceMetric       14s (x2 over 29s)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+#   Warning  FailedComputeMetricsReplicas  14s (x2 over 29s)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+```
+
+---
+
+### Task: CM
+
+An NGINX Deploy named nginx-static is Running in the nginx-static NS. It is configured using a CfgMap named nginx-
+config. Update the nginx-config CfgMap to allow only TLSv1.3 connections. re-create, restart, or scale resources as necessary. By using command to test the changes:
+
+[candidate@cka2025] $ curl -- tls-max 1.2 https://web.k8s.local
+As TLSV1.2 should not be allowed anymore, the command should fail
+
+- Setup env
+
+```sh
+# Namespace
+kubectl create ns nginx-static
+
+# Create a self-signed cert for web.k8s.local (TLS secret)
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tls.key -out tls.crt \
+  -subj "/CN=web.k8s.local" \
+  -addext "subjectAltName=DNS:web.k8s.local"
+
+kubectl create secret tls web-tls --cert=tls.crt --key=tls.key -n nginx-static
+
+# ConfigMap with nginx.conf (initially allows TLSv1.2 + TLSv1.3)
+tee cm.yaml<<'EOF'
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: nginx-static
+data:
+  nginx.conf: |
+    events {}
+
+    http {
+      server {
+        listen 443 ssl;
+        server_name web.k8s.local;
+
+        ssl_certificate     /etc/nginx/tls/tls.crt;
+        ssl_certificate_key /etc/nginx/tls/tls.key;
+
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        location / {
+          default_type text/plain;
+          return 200 "nginx-static OK\n";
+        }
+      }
+    }
+EOF
+
+kubectl apply -f cm.yaml
+# configmap/nginx-config created
+
+tee deploy.yaml<<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-static
+  namespace: nginx-static
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-static
+  template:
+    metadata:
+      labels:
+        app: nginx-static
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: nginx
+        image: nginx:1.25-alpine
+        ports:
+        - containerPort: 443
+          hostPort: 443
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: tls
+          mountPath: /etc/nginx/tls
+          readOnly: true
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-config
+      - name: tls
+        secret:
+          secretName: web-tls
+EOF
+
+kubectl apply -f deploy.yaml
+# deployment.apps/nginx-static created
+```
+
+---
+
+- Solution
+
+```sh
+# remove TLSv1.2
+kubectl edit cm nginx-config -n nginx-static
+# configmap/nginx-config edited
+
+# restart deployment to apply new cm
+kubectl rollout restart deploy nginx-static -n nginx-static
+# deployment.apps/nginx-static restarted
+```
