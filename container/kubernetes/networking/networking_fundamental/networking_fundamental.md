@@ -21,7 +21,6 @@
     - [Lab: obervation on how docker bridge network](#lab-obervation-on-how-docker-bridge-network)
   - [Kubernetes Networking](#kubernetes-networking)
     - [Cluster Node Networking](#cluster-node-networking)
-    - [Container Networking Interface(CNI)](#container-networking-interfacecni)
     - [Pod Networking](#pod-networking)
     - [Solution: `WeaveWork`](#solution-weavework)
   - [Lab:](#lab)
@@ -35,21 +34,18 @@
 ### Terminology
 
 - `Switching`
-
   - the process of **transferring** data packets from one **device** to another within the **same network** by using a `network switch`
   - Connects devices within a **single network** (LAN)
   - OSI Layer: `layer 2`
   - Uses `MAC addresses`
 
 - `Routing`
-
   - the process of **selecting a path** for data packets to travel across **one or more networks** from a source to a destination.
   - Connects devices within **different network** (LAN)
   - OSI Layer: `layer 3`
   - Uses `IP addresses`
 
 - `gateway`
-
   - a **hardware device** or **software program** that **connects two different networks** with **different protocols**, acting as an **entry and exit point** for data.
 
 - `forwarding`
@@ -81,17 +77,14 @@
 ## Domain Name System(DNS)
 
 - `Name Resolution`
-
   - the process of converting a **human-readable name** (like a website address) into the **numerical IP address** that computers use to communicate.
   - `/etc/hosts`
     - a plain-text file that maps `IP addresses` to `hostnames`
 
 - `DNS server`
-
   - translates **human-readable domain names** (like "google.com") into **machine-readable IP addresses** (like "\(172.217.164.142\)")
   - acting as the "phone book of the internet".
   - `/etc/resolv.conf`: `nameserver ip_dns_server`
-
     - a configuration file that tells the system where to find **Domain Name System (DNS) servers**
 
   - Default order
@@ -99,7 +92,6 @@
     - local hosts file > DNS server
 
 - `Domain Names`
-
   - www.google.com
     - `.`: root
     - `.com`: top-level domain
@@ -182,11 +174,9 @@ tar -zxf coredns_1.12.4_linux_amd64.tgz
 ## Network Namespaces
 
 - `namespace`
-
   - a feature of the Linux kernel that **isolates system resources** for a **group of processes**
 
 - `process namespace`
-
   - a Linux kernel feature that **isolates a process's view** of system resources,
     - such as process IDs (PIDs), network stack, and mount points, from other processes.
   - Changes within a `process namespace` are only visible to other processes in the **same namespace**
@@ -195,7 +185,6 @@ tar -zxf coredns_1.12.4_linux_amd64.tgz
     - `ps aux`
 
 - `Network namespaces`
-
   - used to **isolate** a system's **networking resources**
     - e.g., `network interfaces`, `IP addresses`, `routing tables`, and `firewall rules`
   - a `container` within a `namespace` only can see the `network interfaces`, `routing table`, `ARP tables` within the **same namespace**.
@@ -509,13 +498,10 @@ sudo iptables -nvL -t nat
 
 - Each `Node` has **IP address**
 - Each `Pod` has its **internal IP address**
-
   - default range: `10.244.0.0/16`
 
 - `Cluster Networking`:
-
   - **Pod-to-Pod Communication**:
-
     - `Pods` can communicate with each other **directly via IP addresses**.
     - Each `Pod` gets **its IP address**, and communication between `Pods` within the **same cluster** is efficient and fast.
 
@@ -526,9 +512,7 @@ sudo iptables -nvL -t nat
 ---
 
 - Example:
-
   - Node A:
-
     - IP: `192.168.1.2`
     - Internal Network: `10.244.0.0/16`
       - Pod: `10.244.0.2`
@@ -545,7 +529,6 @@ sudo iptables -nvL -t nat
 ### Cluster Node Networking
 
 - Both `master` and `worker` nodes must
-
   - have **at least one** `interface` with **unique** `ip` and `mac addresses`
   - have **unique** `hostname`
 
@@ -588,41 +571,9 @@ netstat -npa | grep -i etcd | grep -i 2380 | wc -l
 
 ---
 
-### Container Networking Interface(CNI)
-
-- `Container Networking Interface(CNI)`
-
-  - a **standard** that specifies how to **configure network interfaces** for containers.
-  - responsibility:
-    - The `container runtime` must create **network namespace**
-    - identify the **network** to which the container attach
-    - invoke `Network Plugin(bridge)` when container is added/deleted
-    - assign ip address to the container
-    - output netowork configuration
-  - common supported runtime:
-    - rkt
-    - mesos
-    - k8s
-
-- Docker does not support CNI
-
-  - use Container Network Model(CNM)
-  - can work around with manaul work with CNI
-    - `docker run --network=none nginx`
-    - `bridge add con_id /var/run/netns/con_id`
-
-- `/opt/cni/bin`
-  - **defalt path** for container runtime to find the CNI plugin
-- `/etc/cni/net.d`
-  - the path to determine which plugin to use
-  - if multiple, choice by order
-
----
-
 ### Pod Networking
 
 - **Pod Networking Model**
-
   - Each `Pod` should have an **IP address**
   - Each `Pod` should be able to **communicate** with other `Pod` **in the same node**
   - Each `Pod` can communicate with **other `Pod`** on **other nodes without NAT**.
@@ -649,9 +600,7 @@ netstat -npa | grep -i etcd | grep -i 2380 | wc -l
 ---
 
 - Step2: enable node01 talk to node02
-
   - Lan(192.168.1.0)
-
     - node01, 192.168.1.11
       - subnet, 10.244.1.0/24
       - v-switch: 10.244.1.1
@@ -672,7 +621,6 @@ netstat -npa | grep -i etcd | grep -i 2380 | wc -l
 ### Solution: `WeaveWork`
 
 - install agent on each node, responsible for:
-
   - create bridge interface
   - assign IP for each pod
   - manage routing for pods communication
@@ -760,7 +708,6 @@ cat /etc/cni/net.d/10-flannel.conflist
 ## IP Address Mangement(IPAM)
 
 - `IP Address Mangement(IPAM)`
-
   - a method and software for planning, tracking, and managing a network's Internet Protocol (IP) addresses.
 
 - CNI built-in plugin for IPAM

@@ -19,7 +19,6 @@
 ## Cluster
 
 - [Fundamental](./cluster/fundamental/fundamental.md)
-
   - [Architecture](./cluster/architecture/architecture.md)
   - [YAML File](./cluster/yaml/yaml.md)
   - [`kubectl`](./cluster/kubectl/kubectl.md)
@@ -67,7 +66,6 @@
 ## Container
 
 - [Container](./container/container/container.md)
-
   - [Image](./container/image/image.md)
   - [Back-off Mechanism & Restart Policy](./container/backoff_restart/backoff_restart.md)
   - [`Liveness Probe`](./container/liveness_probe/liveness_probe.md)
@@ -78,13 +76,11 @@
   - [Resources Request, Limit, Quota](./container/resource/resource.md)
 
 - **Multiple Containers**:
-
   - [`Co-located Containers`](./container/colocated/colocated.md)
   - [`Init Containers`](./container/init/init.md)
   - [`Sidecar Containers`](./container/sidecar/sidecar.md)
 
 - **Storage**:
-
   - [Docker Storage](./storage/docker_storage/docker_storage.md)
   - [CSI (Container Storage Interface)](./storage/csi/csi.md)
   - [`Pod Volume`](./storage/volume/volume.md)
@@ -96,7 +92,6 @@
     - [Dynamic Volume Provisioning & `StorageClass`](./storage/dynamic_pv_storageclass/dynamic_pv_storageclass.md)
 
 - **Injected Data**
-
   - [`ConfigMap`](./storage/configmap/configmap.md)
     - [Use `ConfigMap` as Environment Variable](./storage/configmap_env/configmap_env.md)
     - [Use `ConfigMap` as Volume](./storage/configmap_volume/configmap_volume.md)
@@ -109,11 +104,10 @@
   - [`Projected Volumes`](./storage/projected_volume/projected_volume.md)
 
 - **Networking**
-
   - [Networking Fundamental](./networking/networking_fundamental/networking_fundamental.md)
+  - [Container Network Interface (CNI)](./networking/cni/cni.md)
   - [Cluster DNS](./networking/dns/dns.md)
   - [`Service`](./networking/service/service.md)
-
     - [`Endpoint` & `EndpointSlice`](./networking/endpoint/endpoint.md)
     - [`Topology-Aware Routing`](./networking/tar/tar.md)
     - Service Types:
@@ -130,7 +124,6 @@
 ## Workload
 
 - [`Pod`](./pod/pod/pod.md)
-
   - [Lifecycle](./pod/lifecycle/lifecycle.md)
   - [`PriorityClass`](./pod/priorityclass/priorityclass.md)
   - [Affinity](./pod/affinity/affinity.md)
@@ -149,7 +142,6 @@
 - [Troubleshooting](./workload/debuging/debuging.md)
 
 - Scaling
-
   - [Scaling](./scaling/scaling/scaling.md)
   - [Horizontal Pod Autoscaler (HPA)](./scaling/hpa/hpa.md)
   - [Vertical Pod Autoscaling (VPA)](./scaling/vpa/vpa.md)
@@ -213,6 +205,7 @@ https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
   - [Cluster](./cka/cluster.md)
 
 - Common Command
+
 ```sh
 kubectl config set-context --current --namespace=<your-namespace-name>
 ```

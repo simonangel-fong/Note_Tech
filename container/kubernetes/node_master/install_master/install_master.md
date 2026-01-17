@@ -1,17 +1,23 @@
 # Kubernetes - Fundamental
 
-[Back](../index.md)
+[Back](../../index.md)
 
 - [Kubernetes - Fundamental](#kubernetes---fundamental)
   - [Install](#install)
   - [Create VM](#create-vm)
-  - [Setup Controlplane: v](#setup-controlplane-v)
+  - [Setup Controlplane](#setup-controlplane)
     - [Configure VM](#configure-vm)
     - [Install `containerd`](#install-containerd)
     - [Install `kubeadm`](#install-kubeadm)
     - [Create Cluster with `kubeadm`](#create-cluster-with-kubeadm)
-    - [Generate Token for Node to join](#generate-token-for-node-to-join)
+    - [Join Worker Nodes](#join-worker-nodes)
+    - [Install CNI - `Calico`](#install-cni---calico)
+    - [Install CSI - `rancher`](#install-csi---rancher)
+    - [Install Metrics Server](#install-metrics-server)
     - [Install `etcd-client`](#install-etcd-client)
+    - [Install `helm`](#install-helm)
+    - [Install `nginx ingress controller`](#install-nginx-ingress-controller)
+    - [Install Nginx Gateway Fabric](#install-nginx-gateway-fabric)
 
 ---
 
@@ -31,7 +37,6 @@ Steps
 ## Create VM
 
 - Virtual Network
-
   - VMnet2
   - Type: NAT
   - DHCP: enabled
@@ -39,7 +44,6 @@ Steps
   - Gateway: 192.168.10.2
 
 - Master Node:
-
   - Hostname: controlplane
   - OS: Ubuntu 24.04 LTS
   - CPU: 4 vCPU
@@ -48,7 +52,6 @@ Steps
   - IP: 192.168.10.150
 
 - Worker Node 1:
-
   - Hostname: node01
   - OS: Ubuntu 24.04 LTS
   - CPU: 2 vCPU
@@ -66,7 +69,7 @@ Steps
 
 ---
 
-## Setup Controlplane: v
+## Setup Controlplane
 
 ### Configure VM
 
@@ -189,8 +192,8 @@ sudo systemctl enable --now kubelet
 
 # confirm client version
 kubectl version --client
-# Client Version: v1.32.11
-# Kustomize Version: v5.5.0
+# Client Version: v1.31.14
+# Kustomize Version: v5.4.2
 ```
 
 ---
@@ -237,11 +240,6 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# ##############################
-# Deploy pod network (Flannel)
-# ##############################
-kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
-
 # confirm
 kubectl get nodes
 # NAME           STATUS   ROLES           AGE   VERSION
@@ -250,10 +248,209 @@ kubectl get nodes
 
 ---
 
-### Generate Token for Node to join
+### Join Worker Nodes
 
 ```sh
+# ssh master
 kubeadm token create --print-join-command
+kubeadm join 192.168.10.150:6443 --token t66zr2.klkr2r --discovery-token-ca-cert-hash sha256:8e6f959b923206
+
+# ssh worker node
+sudo kubeadm join 192.168.10.150:6443 --token t66zr2.klkr2r --discovery-token-ca-cert-hash sha256:8e6f959b923206
+
+# get node
+kubectl get node
+# NAME           STATUS     ROLES           AGE     VERSION
+# controlplane   NotReady   control-plane   14m     v1.32.11
+# node01         NotReady   <none>          3m34s   v1.32.11
+# node02         NotReady   <none>          3m6s    v1.32.11
+```
+
+---
+
+### Install CNI - `Calico`
+
+```sh
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/operator-crds.yaml
+# customresourcedefinition.apiextensions.k8s.io/apiservers.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/gatewayapis.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/goldmanes.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/imagesets.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/installations.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/managementclusterconnections.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/tigerastatuses.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/whiskers.operator.tigera.io created
+# customresourcedefinition.apiextensions.k8s.io/bgpconfigurations.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/bgpfilters.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/bgppeers.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/blockaffinities.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/caliconodestatuses.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/clusterinformations.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/felixconfigurations.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/globalnetworkpolicies.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/globalnetworksets.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/hostendpoints.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/ipamblocks.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/ipamconfigs.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/ipamhandles.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/ippools.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/ipreservations.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/kubecontrollersconfigurations.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/networkpolicies.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/networksets.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/stagedglobalnetworkpolicies.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/stagedkubernetesnetworkpolicies.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/stagednetworkpolicies.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/tiers.crd.projectcalico.org created
+# customresourcedefinition.apiextensions.k8s.io/adminnetworkpolicies.policy.networking.k8s.io created
+# customresourcedefinition.apiextensions.k8s.io/baselineadminnetworkpolicies.policy.networking.k8s.io created
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+# namespace/tigera-operator created
+# serviceaccount/tigera-operator created
+# clusterrole.rbac.authorization.k8s.io/tigera-operator-secrets created
+# clusterrole.rbac.authorization.k8s.io/tigera-operator created
+# clusterrolebinding.rbac.authorization.k8s.io/tigera-operator created
+# rolebinding.rbac.authorization.k8s.io/tigera-operator-secrets created
+# deployment.apps/tigera-operator created
+
+# get cluster ip cidr
+kubectl cluster-info dump | grep -m 1 cluster-cidr
+# "--cluster-cidr=10.244.0.0/16"
+
+# Download the custom resources necessary to configure Calico.
+curl -O https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/custom-resources.yaml
+#   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#                                  Dload  Upload   Total   Spent    Left  Speed
+# 100  1046  100  1046    0     0   3587      0 --:--:-- --:--:-- --:--:--  3594
+
+# update the manifest with the cluster cidr
+vi custom-resources.yaml
+# find:
+# spec:
+#   calicoNetwork:
+#     ipPools:
+#       - name: default-ipv4-ippool
+#         cidr: 192.168.0.0/16
+# replace:
+# spec:
+#   calicoNetwork:
+#     ipPools:
+#       - name: default-ipv4-ippool
+#         cidr: 10.244.0.0/16
+
+# create resources
+kubectl create -f custom-resources.yaml
+# installation.operator.tigera.io/default created
+# apiserver.operator.tigera.io/default created
+# goldmane.operator.tigera.io/default created
+# whisker.operator.tigera.io/default created
+
+# wait until all available
+watch kubectl get tigerastatus
+# Every 2.0s: kubectl get tigerastatus                        controlplane: Sat Jan 17 00:23:23 2026
+
+# NAME        AVAILABLE   PROGRESSING   DEGRADED   SINCE
+# apiserver   True        False         False      59s
+# calico      True        False         False      9s
+# goldmane    True        False         False      39s
+# ippools     True        False         False      2m19s
+# whisker     True        False         False      54s
+
+# confirm: node status ready
+kubectl get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   23m   v1.32.11
+# node01         Ready    <none>          21m   v1.32.11
+# node02         Ready    <none>          20m   v1.32.11
+```
+
+---
+
+### Install CSI - `rancher`
+
+```sh
+# install
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+# namespace/local-path-storage created
+# serviceaccount/local-path-provisioner-service-account created
+# role.rbac.authorization.k8s.io/local-path-provisioner-role created
+# clusterrole.rbac.authorization.k8s.io/local-path-provisioner-role created
+# rolebinding.rbac.authorization.k8s.io/local-path-provisioner-bind created
+# clusterrolebinding.rbac.authorization.k8s.io/local-path-provisioner-bind created
+# deployment.apps/local-path-provisioner created
+# storageclass.storage.k8s.io/local-path created
+# configmap/local-path-config created
+
+# confirm
+kubectl get sc
+# NAME         PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+# local-path   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  3m3s
+
+# set default
+kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+# storageclass.storage.k8s.io/local-path patched
+
+kubectl get sc
+# NAME                   PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+# local-path (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  20m
+
+```
+
+---
+
+### Install Metrics Server
+
+- ref: https://kubernetes-sigs.github.io/metrics-server/
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+# serviceaccount/metrics-server created
+# clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+# clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+# rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+# clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+# clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+# service/metrics-server created
+# deployment.apps/metrics-server created
+# apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+
+# confirm install
+kubectl get deployment metrics-server -n kube-system
+# NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+# metrics-server   0/1     1            0           6m8s
+
+# update yaml metrics server
+kubectl edit deployment metrics-server -n kube-system
+# find:
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - args:
+# add:
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - args:
+#         - --kubelet-insecure-tls
+#         - --kubelet-preferred-address-types=InternalIP
+
+# restart metric server
+kubectl rollout restart deployment metrics-server -n kube-system
+# deployment.apps/metrics-server restarted
+
+kubectl get deployment metrics-server -n kube-system
+# NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+# metrics-server   1/1     1            1           9m13s
+
+# confirm
+kubectl top node
+# NAME           CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)
+# controlplane   153m         3%       2266Mi          60%
+# node01         29m          2%       941Mi           51%
+# node02         38m          3%       866Mi           47%
 ```
 
 ---
@@ -261,5 +458,107 @@ kubeadm token create --print-join-command
 ### Install `etcd-client`
 
 ```sh
+# install
 sudo apt install etcd-client
+
+# confirm
+etcdctl version
+# etcdctl version: 3.4.30
+# API version: 3.4
+```
+
+---
+
+### Install `helm`
+
+```sh
+sudo apt-get install curl gpg apt-transport-https --yes
+
+# update key
+curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+
+echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+# deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main
+
+# install
+sudo apt-get update
+sudo apt-get install helm
+
+# confirm
+helm version
+# version.BuildInfo{Version:"v3.19.3", GitCommit:"0707f566a3f4ced24009ef14d67fe0ce69db4be9", GitTreeState:"clean", GoVersion:"go1.24.10"}
+```
+
+---
+
+### Install `nginx ingress controller`
+
+```sh
+helm install nginx-ingress oci://ghcr.io/nginx/charts/nginx-ingress --version 0.0.0-edge
+# Pulled: ghcr.io/nginx/charts/nginx-ingress:0.0.0-edge
+# Digest: sha256:a2cb6aa1ad0b7cc64e9250efc24f872beff6a690951a7d4075c7ab02db9ec496
+# NAME: nginx-ingress
+# LAST DEPLOYED: Sat Jan 17 01:32:18 2026
+# NAMESPACE: default
+# STATUS: deployed
+# REVISION: 1
+# TEST SUITE: None
+# NOTES:
+# NGINX Ingress Controller edge has been installed.
+
+# confirm
+kubectl get ingressclass
+# NAME    CONTROLLER                     PARAMETERS   AGE
+# nginx   nginx.org/ingress-controller   <none>       18m
+
+```
+
+---
+
+### Install Nginx Gateway Fabric
+
+```sh
+# install resources
+kubectl kustomize "https://github.com/nginx/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v2.3.0" | kubectl apply -f -
+# customresourcedefinition.apiextensions.k8s.io/backendtlspolicies.gateway.networking.k8s.io created
+# customresourcedefinition.apiextensions.k8s.io/gatewayclasses.gateway.networking.k8s.io created
+# customresourcedefinition.apiextensions.k8s.io/gateways.gateway.networking.k8s.io created
+# customresourcedefinition.apiextensions.k8s.io/grpcroutes.gateway.networking.k8s.io created
+# customresourcedefinition.apiextensions.k8s.io/httproutes.gateway.networking.k8s.io created
+# customresourcedefinition.apiextensions.k8s.io/referencegrants.gateway.networking.k8s.io created
+
+# Deploy the NGINX Gateway Fabric CRDs
+kubectl apply --server-side -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.3.0/deploy/crds.yaml
+# customresourcedefinition.apiextensions.k8s.io/clientsettingspolicies.gateway.nginx.org serverside-applied
+# customresourcedefinition.apiextensions.k8s.io/nginxgateways.gateway.nginx.org serverside-applied
+# customresourcedefinition.apiextensions.k8s.io/nginxproxies.gateway.nginx.org serverside-applied
+# customresourcedefinition.apiextensions.k8s.io/observabilitypolicies.gateway.nginx.org serverside-applied
+# customresourcedefinition.apiextensions.k8s.io/snippetsfilters.gateway.nginx.org serverside-applied
+# customresourcedefinition.apiextensions.k8s.io/upstreamsettingspolicies.gateway.nginx.org serverside-applied
+
+# Deploys NGINX Gateway Fabric with NGINX OSS.
+kubectl apply -f https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/v2.3.0/deploy/default/deploy.yaml
+# namespace/nginx-gateway unchanged
+# serviceaccount/nginx-gateway unchanged
+# serviceaccount/nginx-gateway-cert-generator unchanged
+# role.rbac.authorization.k8s.io/nginx-gateway-cert-generator unchanged
+# clusterrole.rbac.authorization.k8s.io/nginx-gateway unchanged
+# rolebinding.rbac.authorization.k8s.io/nginx-gateway-cert-generator unchanged
+# clusterrolebinding.rbac.authorization.k8s.io/nginx-gateway unchanged
+# service/nginx-gateway unchanged
+# deployment.apps/nginx-gateway unchanged
+# job.batch/nginx-gateway-cert-generator created
+# gatewayclass.gateway.networking.k8s.io/nginx created
+# nginxgateway.gateway.nginx.org/nginx-gateway-config created
+# nginxproxy.gateway.nginx.org/nginx-gateway-proxy-config created
+
+# confirm
+kubectl get deploy -n nginx-gateway
+# NAME            READY   UP-TO-DATE   AVAILABLE   AGE
+# nginx-gateway   1/1     1            1           6m12s
+
+k get gatewayclass
+# NAME    CONTROLLER                                   ACCEPTED   AGE
+# nginx   gateway.nginx.org/nginx-gateway-controller   True       5m13s
+
 ```
