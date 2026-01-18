@@ -3,6 +3,7 @@
 [Back](../../index.md)
 
 - [Kubernetes - YAML File](#kubernetes---yaml-file)
+  - [Vim](#vim)
   - [YAML](#yaml)
   - [Basic Syntax](#basic-syntax)
   - [Common Data Structure](#common-data-structure)
@@ -14,10 +15,22 @@
 
 ---
 
+## Vim
+
+| Shortcut  | Action                         |
+| --------- | ------------------------------ |
+| `:set nu` | Show Line Numbers              |
+| `V + >`   | Indent visually selected lines |
+| `>>`      | Indent current line            |
+| `<<`      | Outdent current line           |
+| `5>>`     | Indent the next 5 lines        |
+| `=`       | Auto-align selected lines      |
+
+---
+
 ## YAML
 
 - `YAML` / `yet another markup language` / `YAML ain't markup language`
-
   - a human-readable **data serialization language** that is often used for **writing configuration files**.
 
 ---
@@ -68,7 +81,6 @@ published: true
 ### Scalar - Strings, numbers, boolean, ...
 
 - `scalar`
-
   - literals Unicode characters.
   - can be strings, numbers, boolean, etc.
 
@@ -102,7 +114,6 @@ message: |
 ### Mapping - Maps/Dictionaries
 
 - `mapping`
-
   - an **unordered** set of **key/value** node pairs
   - each of the **keys** is **unique**
 
@@ -130,7 +141,6 @@ Grapes:
 ### Sequences - Arrays/Lists
 
 - `sequences`
-
   - an ordered series of zero or more nodes.
   - each of the **keys** is **unique**
   - a leading hyphen (`-`).

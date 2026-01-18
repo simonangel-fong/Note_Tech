@@ -4,20 +4,82 @@
 
 - [CKA - Storage](#cka---storage)
   - [PV + PVC](#pv--pvc)
+    - [Task: PV](#task-pv)
     - [Task: Create a PV](#task-create-a-pv)
+    - [Task: PVC](#task-pvc)
     - [Task: PV hostpath](#task-pv-hostpath)
     - [Task: PVC + pod mount](#task-pvc--pod-mount)
     - [Task: PVC + pod](#task-pvc--pod)
     - [Task: PVC + pod mount](#task-pvc--pod-mount-1)
-    - [\*\*\*Task: PV + PVC](#task-pv--pvc)
+    - [Task: PV + PVC](#task-pv--pvc)
   - [StorageClass](#storageclass)
-    - [\*\*\*\*Task: StorageClass + PV](#task-storageclass--pv)
-  - [Task: PVC](#task-pvc)
+    - [Task: StorageClass + PV](#task-storageclass--pv)
     - [Task: SC](#task-sc)
 
 ---
 
 ## PV + PVC
+
+### Task: PV
+
+Create a Persistent Volume with the given specification: -
+
+Volume name: pv-analytics
+Storage: 100Mi
+Access mode: ReadWriteMany
+Host path: /pv/data-analytics
+
+---
+
+- Solution
+
+```yaml
+# pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-analytics
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/pv/data-analytics"
+```
+
+```sh
+k apply -f pv.yaml
+# persistentvolume/pv-analytics created
+
+# confirm
+k get pv
+# NAME           CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# pv-analytics   100Mi      RWX            Retain           Available                          <unset>                          11s
+
+# confirm
+k describe pv
+# Name:            pv-analytics
+# Labels:          <none>
+# Annotations:     <none>
+# Finalizers:      [kubernetes.io/pv-protection]
+# StorageClass:
+# Status:          Available
+# Claim:
+# Reclaim Policy:  Retain
+# Access Modes:    RWX
+# VolumeMode:      Filesystem
+# Capacity:        100Mi
+# Node Affinity:   <none>
+# Message:
+# Source:
+#     Type:          HostPath (bare host directory volume)
+#     Path:          /pv/data-analytics
+#     HostPathType:
+# Events:            <none>
+```
+
+---
 
 ### Task: Create a PV
 
@@ -53,6 +115,160 @@ k get pv rompv
 ```
 
 > if pv type is not specified, use hostPath
+
+---
+
+### Task: PVC
+
+A user accidentally deleted the MariaDB Deployment in the mariadb namespace, which was configured with persistent storage. Your responsibility is to re-establish the Deployment while ensuring data is preserved by reusing the available PersistentVolume.
+
+Task:
+A PersistentVolume already exists and is retained for reuse. only one pv exist.
+
+Create a PersistentVolumeClaim (PVC) named mariadb in the mariadb NS with the spec: Access mode ReadWriteOnce and Storage 250Mi
+
+Edit the MariaDB Deploy file located at ~/mariadb-deploy.yaml to use PVC created in the previous step.
+
+Apply the updated Deployment file to the cluster.
+
+Ensure the MariaDB Deployment is running and Stable
+
+- Create Env
+
+```sh
+ssh node02
+sudo mkdir -p /mnt/data/mariadb
+sudo chmod 777 /mnt/data/mariadb
+
+ssh controlplane
+kubectl create namespace mariadb
+
+# create pv
+cat <<'EOF' | kubectl apply -f -
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mariadb-pv
+spec:
+  capacity:
+    storage: 250Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  hostPath:
+    path: /mnt/data/mariadb
+EOF
+
+kubectl get pv mariadb-pv
+
+# Create the MariaDB deploy YAML file
+cat <<'EOF' > ~/mariadb-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        image: mariadb:11.4
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          value: "rootpass"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: data
+        # Intentionally wrong for your task: not using PVC yet
+        emptyDir: {}
+EOF
+
+
+# “accidentally deleted”
+kubectl -n mariadb delete deployment mariadb --ignore-not-found
+kubectl -n mariadb delete pvc mariadb --ignore-not-found
+
+# Confirm
+kubectl -n mariadb get deploy,pods,pvc
+kubectl get pv
+ls -l ~/mariadb-deploy.yaml
+
+```
+
+---
+
+- Solution
+
+```sh
+# get pv storageClass
+kubectl get pv
+# NAME         CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# mariadb-pv   250Mi      RWO            Retain           Available           local-path     <unset>                          6s
+```
+
+```yaml
+# pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  storageClassName: local-path # match the pv sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 250Mi
+```
+
+```sh
+
+
+kubectl apply -f pvc.yaml
+# persistentvolumeclaim/mariadb created
+
+# confirm
+kubectl get pvc mariadb -n mariadb
+# NAME      STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# mariadb   Bound    mariadb-pv   250Mi      RWO            local-path     <unset>                 6s
+
+vi mariadb-deploy.yaml
+# volumes:
+# - name: data
+#   persistentVolumeClaim:
+#     claimName: mariadb
+
+kubectl apply -f mariadb-deploy.yaml
+# deployment.apps/mariadb created
+
+kubectl get pod -n mariadb
+# NAME                       READY   STATUS    RESTARTS   AGE
+# mariadb-586c877688-f5bbd   1/1     Running   0          77s
+
+kubectl describe pod mariadb-586c877688-f5bbd -n mariadb
+# Containers:
+#   mariadb:
+#     Mounts:
+#       /var/lib/mysql from data (rw)
+# Volumes:
+#   data:
+#     Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+#     ClaimName:  mariadb
+```
 
 ---
 
@@ -380,7 +596,7 @@ k describe pod rwopod
 
 ---
 
-### \*\*\*Task: PV + PVC
+### Task: PV + PVC
 
 Manually create a PersistentVolume that:
 · is named static-pv-example
@@ -456,7 +672,7 @@ kubectl get pvc static-pvc-example
 
 ## StorageClass
 
-### \*\*\*\*Task: StorageClass + PV
+### Task: StorageClass + PV
 
 Create a StorageClass:
 . named fast-storage
@@ -554,160 +770,6 @@ kubectl apply -f task-sc-pvc.yaml
 kubectl get pvc fast-storage-pvc
 # NAME               STATUS   VOLUME            CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
 # fast-storage-pvc   Bound    fast-storage-pv   100Mi      RWO            fast-storage   <unset>                 11s
-```
-
----
-
-## Task: PVC
-
-A user accidentally deleted the MariaDB Deployment in the mariadb namespace, which was configured with persistent storage. Your responsibility is to re-establish the Deployment while ensuring data is preserved by reusing the available PersistentVolume.
-
-Task:
-A PersistentVolume already exists and is retained for reuse. only one pv exist.
-
-Create a PersistentVolumeClaim (PVC) named mariadb in the mariadb NS with the spec: Access mode ReadWriteOnce and Storage 250Mi
-
-Edit the MariaDB Deploy file located at ~/mariadb-deploy.yaml to use PVC created in the previous step.
-
-Apply the updated Deployment file to the cluster.
-
-Ensure the MariaDB Deployment is running and Stable
-
-- Create Env
-
-```sh
-ssh node02
-sudo mkdir -p /mnt/data/mariadb
-sudo chmod 777 /mnt/data/mariadb
-
-ssh controlplane
-kubectl create namespace mariadb
-
-# create pv
-cat <<'EOF' | kubectl apply -f -
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mariadb-pv
-spec:
-  capacity:
-    storage: 250Mi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-path
-  hostPath:
-    path: /mnt/data/mariadb
-EOF
-
-kubectl get pv mariadb-pv
-
-# Create the MariaDB deploy YAML file
-cat <<'EOF' > ~/mariadb-deploy.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mariadb
-  namespace: mariadb
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mariadb
-  template:
-    metadata:
-      labels:
-        app: mariadb
-    spec:
-      containers:
-      - name: mariadb
-        image: mariadb:11.4
-        ports:
-        - containerPort: 3306
-        env:
-        - name: MARIADB_ROOT_PASSWORD
-          value: "rootpass"
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: data
-        # Intentionally wrong for your task: not using PVC yet
-        emptyDir: {}
-EOF
-
-
-# “accidentally deleted”
-kubectl -n mariadb delete deployment mariadb --ignore-not-found
-kubectl -n mariadb delete pvc mariadb --ignore-not-found
-
-# Confirm
-kubectl -n mariadb get deploy,pods,pvc
-kubectl get pv
-ls -l ~/mariadb-deploy.yaml
-
-```
-
----
-
-- Solution
-
-```sh
-# get pv storageClass
-kubectl get pv
-# NAME         CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
-# mariadb-pv   250Mi      RWO            Retain           Available           local-path     <unset>                          6s
-```
-
-```yaml
-# pvc.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mariadb
-  namespace: mariadb
-spec:
-  storageClassName: local-path # match the pv sc
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 250Mi
-```
-
-```sh
-
-
-kubectl apply -f pvc.yaml
-# persistentvolumeclaim/mariadb created
-
-# confirm
-kubectl get pvc mariadb -n mariadb
-# NAME      STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-# mariadb   Bound    mariadb-pv   250Mi      RWO            local-path     <unset>                 6s
-
-vi mariadb-deploy.yaml
-# volumes:
-# - name: data
-#   persistentVolumeClaim:
-#     claimName: mariadb
-
-kubectl apply -f mariadb-deploy.yaml
-# deployment.apps/mariadb created
-
-kubectl get pod -n mariadb
-# NAME                       READY   STATUS    RESTARTS   AGE
-# mariadb-586c877688-f5bbd   1/1     Running   0          77s
-
-kubectl describe pod mariadb-586c877688-f5bbd -n mariadb
-# Containers:
-#   mariadb:
-#     Mounts:
-#       /var/lib/mysql from data (rw)
-# Volumes:
-#   data:
-#     Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-#     ClaimName:  mariadb
 ```
 
 ---

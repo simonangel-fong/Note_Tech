@@ -5,6 +5,9 @@
 - [CKA - Cluster](#cka---cluster)
   - [kubeadm](#kubeadm)
     - [Task: join a node](#task-join-a-node)
+    - [Task: Install CNI](#task-install-cni)
+    - [Task: Install runtime](#task-install-runtime)
+    - [Task: install runtime](#task-install-runtime-1)
   - [Cluster](#cluster)
     - [Task: Upgrade controlplane](#task-upgrade-controlplane)
     - [Task: Snapshot etcd](#task-snapshot-etcd)
@@ -12,6 +15,7 @@
     - [Task: upgrade cluster](#task-upgrade-cluster)
     - [Task: backup and restore etcd](#task-backup-and-restore-etcd)
     - [Task: Troubleshooting worker node](#task-troubleshooting-worker-node)
+    - [Task: fix cluster connection](#task-fix-cluster-connection)
     - [Task: Troubleshooting API server](#task-troubleshooting-api-server)
   - [Scheduling](#scheduling)
     - [Task: Node selector](#task-node-selector)
@@ -20,9 +24,6 @@
     - [Task: Taints](#task-taints)
     - [Task: available node](#task-available-node)
     - [Task: Cordon](#task-cordon)
-    - [Task: fix cluster connection](#task-fix-cluster-connection)
-  - [Task: install](#task-install)
-    - [Task: Install CNI](#task-install-cni)
 
 ---
 
@@ -72,6 +73,250 @@ k get node
 ```
 
 > if error, reset the kubelet: `kubeadm reset`
+
+---
+
+### Task: Install CNI
+
+Install and configure a Container Network Interface (CNI) of your choice that meets the specified requirements. Choose one of the following CNI options:
+
+- Flannel using the manifest:
+  - https://github.com/flannel-io/flannel/releases/download/v0.26.1/kube-flannel.yml
+- Calico using the manifest:
+  - crds: https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/operator-crds.yaml
+  - Tigera Operator:https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
+
+Ensure the selected CNI is properly installed and configured in the Kubernetes cluster.
+
+- The CNI you choose must:
+  - Let Pods communicate with each other
+  - Support Network Policy enforcement
+  - Install from manifest files (do not use Helm)
+
+---
+
+- Solution
+
+```sh
+# install operator
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/operator-crds.yaml
+# namespace/tigera-operator created
+# serviceaccount/tigera-operator created
+# clusterrole.rbac.authorization.k8s.io/tigera-operator-secrets created
+# clusterrole.rbac.authorization.k8s.io/tigera-operator created
+# clusterrolebinding.rbac.authorization.k8s.io/tigera-operator created
+# rolebinding.rbac.authorization.k8s.io/tigera-operator-secrets created
+# deployment.apps/tigera-operator created
+
+# confirm
+kubectl get pod -n tigera-operator
+# NAME                              READY   STATUS    RESTARTS   AGE
+# tigera-operator-7d4578d8d-hb6sg   1/1     Running   0          2m50s
+
+# install customer resources
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/custom-resources.yaml
+# installation.operator.tigera.io/default created
+# apiserver.operator.tigera.io/default created
+# goldmane.operator.tigera.io/default created
+# whisker.operator.tigera.io/default created
+
+kubectl get tigerastatus
+# NAME        AVAILABLE   PROGRESSING   DEGRADED   SINCE
+# apiserver                             True
+# calico                                True
+# goldmane                              True
+# ippools                               True
+# whisker                               True
+
+# test
+kubectl run web2test --image=nginx
+kubectl expose pod web2test --port=80 --name=web2test-svc
+
+kubectl get pod,svc
+# NAME           READY   STATUS    RESTARTS   AGE
+# pod/web2test   1/1     Running   0          22m
+
+# NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+# service/kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP   3d22h
+# service/web2test-svc   ClusterIP   10.107.175.223   <none>        80/TCP    2m31s
+
+kubectl run --rm -it tester --image=busybox --restart=Never -- wget -qO- http://web2test-svc
+# <!DOCTYPE html>
+# <html>
+# <head>
+# <title>Welcome to nginx!</title>
+# <style>
+# html { color-scheme: light dark; }
+# body { width: 35em; margin: 0 auto;
+# font-family: Tahoma, Verdana, Arial, sans-serif; }
+# </style>
+# </head>
+# <body>
+# <h1>Welcome to nginx!</h1>
+# <p>If you see this page, the nginx web server is successfully installed and
+# working. Further configuration is required.</p>
+
+# <p>For online documentation and support please refer to
+# <a href="http://nginx.org/">nginx.org</a>.<br/>
+# Commercial support is available at
+# <a href="http://nginx.com/">nginx.com</a>.</p>
+
+# <p><em>Thank you for using nginx.</em></p>
+# </body>
+# </html>
+# pod "tester" deleted
+
+# test network policy
+tee netpol.yaml<<'EOF'
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+EOF
+
+kubectl apply -f netpol.yaml
+# networkpolicy.networking.k8s.io/deny-all created
+
+kubectl describe netpol deny-all
+# Name:         deny-all
+# Namespace:    default
+# Created on:   2026-01-16 18:01:26 -0500 EST
+# Labels:       <none>
+# Annotations:  <none>
+# Spec:
+#   PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)
+#   Allowing ingress traffic:
+#     <none> (Selected pods are isolated for ingress connectivity)
+#   Allowing egress traffic:
+#     <none> (Selected pods are isolated for egress connectivity)
+#   Policy Types: Ingress, Egress
+
+# test networkpolicy
+kubectl run --rm -it tester --image=busybox --restart=Never -- wget -qO- http://web2test-svc
+# <!DOCTYPE html>
+# <html>
+# <head>
+# <title>Welcome to nginx!</title>
+# <style>
+# html { color-scheme: light dark; }
+# body { width: 35em; margin: 0 auto;
+# font-family: Tahoma, Verdana, Arial, sans-serif; }
+# </style>
+# </head>
+# <body>
+# <h1>Welcome to nginx!</h1>
+# <p>If you see this page, the nginx web server is successfully installed and
+# working. Further configuration is required.</p>
+
+# <p>For online documentation and support please refer to
+# <a href="http://nginx.org/">nginx.org</a>.<br/>
+# Commercial support is available at
+# <a href="http://nginx.com/">nginx.com</a>.</p>
+
+# <p><em>Thank you for using nginx.</em></p>
+# </body>
+# </html>
+# pod "tester" deleted
+```
+
+---
+
+### Task: Install runtime
+
+This question needs to be solved on node node01. To access the node using SSH, use the credentials below:
+
+username: bob
+password: caleston123
+
+As an administrator, you need to prepare node01 to install kubernetes. One of the steps is installing a container runtime. Install the cri-dockerd_0.3.22.3-0.ubuntu-jammy_amd64.deb package located in /root and ensure that the cri-docker service is running and enabled to start on boot.
+
+---
+
+- Solution
+
+```sh
+sudo -i
+dpkg -i /root/cri-dockerd_0.3.22.3-0.ubuntu-jammy_amd64.deb
+
+apt-get update
+apt-get install -f -y
+
+systemctl daemon-reload
+systemctl enable --now cri-docker
+
+systemctl status cri-docker
+# Warning: The unit file, source configuration file or drop-ins of cri-docker.service changed on di>
+# ● cri-docker.service - CRI Interface for Docker Application Container Engine
+#      Loaded: loaded (/usr/lib/systemd/system/cri-docker.service; enabled; preset: enabled)
+#      Active: active (running) since Sat 2026-01-17 20:43:32 EST; 1min 42s ago
+# TriggeredBy: ● cri-docker.socket
+#        Docs: https://docs.mirantis.com
+#    Main PID: 2403 (cri-dockerd)
+#       Tasks: 10
+#      Memory: 9.8M (peak: 10.2M)
+#         CPU: 77ms
+#      CGroup: /system.slice/cri-docker.service
+#              └─2403 /usr/bin/cri-dockerd --container-runtime-endpoint fd://
+```
+
+---
+
+### Task: install runtime
+
+Prepare a Linux system for Kubernetes. Docker is already installed, but you
+need to configure it for kubeadm.
+Task
+
+Complete these tasks to prepare the system for Kubernetes :
+
+- Set up cri-dockerd:
+  - Install the Debian package `~/cri-dockerd_0.3.9.3-0.ubuntu-jammy_amd64.deb`
+  - Debian packages are installed using dpkg.
+
+Enable and start the cri-docker service
+
+- Configure these system parameters:
+  - Set net.bridge.bridge-nf-call-iptables to 1
+  - Set net.ipv6.conf.all.forwarding to 1
+  - Set net.ipv4.ip_forward to 1
+  - Set net.netfilter.nf_conntrack max to 131072
+
+- Setup Env
+
+```sh
+wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.22/cri-dockerd_0.3.22.3-0.ubuntu-jammy_amd64.deb
+ls ~/cri-dockerd_0.3.22.3-0.ubuntu-jammy_amd64.deb
+
+
+```
+
+---
+
+- Solution
+
+```sh
+sudo dpkg -i ~/cri-dockerd_0.3.9.3-0.ubuntu-jammy_amd64.deb
+sudo apt-get -f install -y
+cri-dockerd --version
+
+sudo systemctl daemon-reload
+sudo systemctl enable cri-docker
+sudo systemctl start cri-docker
+
+sudo tee /etc/sysctl.d/99-kubernetes-cri.conf <<EOF
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv6.conf.all.forwarding = 1
+net.ipv4.ip_forward = 1
+net.netfilter.nf_conntrack_max = 131072
+EOF
+
+sudo sysctl --system
+```
 
 ---
 
@@ -204,7 +449,6 @@ TASK :
 - Solution
 
 - ref:
-
   - https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
 
 - Dangous Step
@@ -831,6 +1075,47 @@ kubectl get node
 
 ---
 
+### Task: fix cluster connection
+
+the command `kubectl get po` return "The connection to the server 192.168.10.150:6443 was refused - did you specify the right host or port?"
+
+---
+
+- Solution
+  - detail errer `journalctl -u kubelet --no-pager`
+
+1. Confirm the `kubelet` is running
+
+```sh
+sudo systemctl status kubelet
+
+# if not, start kubelet
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+```
+
+2. Checkt the manifests to ensure the configurations are correct.
+
+```sh
+# check all manifests
+ls /etc/kubernetes/manifests/
+# etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
+
+# check api server manifest
+sudo cat /etc/kubernetes/manifests/kube-apiserver.yaml
+# spec:
+#   containers:
+#   - command:
+#     - kube-apiserver
+#     - --etcd-servers=https://127.0.0.1:2379
+
+# restart the kubelet whenever manifests updates
+sudo systemctl restart kubelet
+```
+
+---
+
 ### Task: Troubleshooting API server
 
 A kubeadm provisioned cluster was migrated to a new machine. Requires configuration changes to run successfully.
@@ -1205,231 +1490,3 @@ kubectl get pod | grep node02
 ```
 
 ---
-
-### Task: fix cluster connection
-
-the command `kubectl get po` return "The connection to the server 192.168.10.150:6443 was refused - did you specify the right host or port?"
-
----
-
-- Solution
-  - detail errer `journalctl -u kubelet --no-pager`
-
-1. Confirm the `kubelet` is running
-
-```sh
-sudo systemctl status kubelet
-
-# if not, start kubelet
-sudo systemctl daemon-reload
-sudo systemctl restart kubelet
-
-```
-
-2. Checkt the manifests to ensure the configurations are correct.
-
-```sh
-# check all manifests
-ls /etc/kubernetes/manifests/
-# etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
-
-# check api server manifest
-sudo cat /etc/kubernetes/manifests/kube-apiserver.yaml
-# spec:
-#   containers:
-#   - command:
-#     - kube-apiserver
-#     - --etcd-servers=https://127.0.0.1:2379
-
-# restart the kubelet whenever manifests updates
-sudo systemctl restart kubelet
-```
-
----
-
-## Task: install
-
-Prepare a Linux system for Kubernetes. Docker is already installed, but you
-need to configure it for kubeadm.
-Task
-
-Complete these tasks to prepare the system for Kubernetes :
-Set up cri-dockerd:
-Install the Debian package ~/cri-dockerd_0.3.9.3-0.ubuntu-
-jammy_amd64.deb
-Debian packages are installed using dpkg.
-Enable and start the cri-docker service
-Configure these system parameters:
-Set net.bridge.bridge-nf-call-iptables to 1
-Set net.ipv6.conf.all.forwarding to 1
-Set net.ipv4.ip_forward to 1
-Set net.netfilter.nf_conntrack max to 131072
-
-```sh
-sudo dpkg -i ~/cri-dockerd_0.3.9.3-0.ubuntu-jammy_amd64.deb
-sudo apt-get -f install -y
-cri-dockerd --version
-
-sudo systemctl daemon-reload
-sudo systemctl enable cri-docker
-sudo systemctl start cri-docker
-
-sudo tee /etc/sysctl.d/99-kubernetes-cri.conf <<EOF
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv6.conf.all.forwarding = 1
-net.ipv4.ip_forward = 1
-net.netfilter.nf_conntrack_max = 131072
-EOF
-
-sudo sysctl --system
-```
-
----
-
-### Task: Install CNI
-
-Install and configure a Container Network Interface (CNI) of your choice that meets the specified requirements. Choose one of the following CNI options:
-
-- Flannel using the manifest:
-  - https://github.com/flannel-io/flannel/releases/download/v0.26.1/kube-flannel.yml
-- Calico using the manifest:
-  - crds: https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/operator-crds.yaml
-  - Tigera Operator:https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/tigera-operator.yaml
-
-Ensure the selected CNI is properly installed and configured in the Kubernetes cluster.
-
-The CNI you choose must:
-Let Pods communicate with each other
-Support Network Policy enforcement
-Install from manifest files (do not use Helm)
-
----
-
-- Solution
-
-```sh
-# install operator
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/operator-crds.yaml
-# namespace/tigera-operator created
-# serviceaccount/tigera-operator created
-# clusterrole.rbac.authorization.k8s.io/tigera-operator-secrets created
-# clusterrole.rbac.authorization.k8s.io/tigera-operator created
-# clusterrolebinding.rbac.authorization.k8s.io/tigera-operator created
-# rolebinding.rbac.authorization.k8s.io/tigera-operator-secrets created
-# deployment.apps/tigera-operator created
-
-# confirm
-kubectl get pod -n tigera-operator
-# NAME                              READY   STATUS    RESTARTS   AGE
-# tigera-operator-7d4578d8d-hb6sg   1/1     Running   0          2m50s
-
-# install customer resources
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.31.3/manifests/custom-resources.yaml
-# installation.operator.tigera.io/default created
-# apiserver.operator.tigera.io/default created
-# goldmane.operator.tigera.io/default created
-# whisker.operator.tigera.io/default created
-
-kubectl get tigerastatus
-# NAME        AVAILABLE   PROGRESSING   DEGRADED   SINCE
-# apiserver                             True
-# calico                                True
-# goldmane                              True
-# ippools                               True
-# whisker                               True
-
-# test
-kubectl run web2test --image=nginx
-kubectl expose pod web2test --port=80 --name=web2test-svc
-
-kubectl get pod,svc
-# NAME           READY   STATUS    RESTARTS   AGE
-# pod/web2test   1/1     Running   0          22m
-
-# NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-# service/kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP   3d22h
-# service/web2test-svc   ClusterIP   10.107.175.223   <none>        80/TCP    2m31s
-
-kubectl run --rm -it tester --image=busybox --restart=Never -- wget -qO- http://web2test-svc
-# <!DOCTYPE html>
-# <html>
-# <head>
-# <title>Welcome to nginx!</title>
-# <style>
-# html { color-scheme: light dark; }
-# body { width: 35em; margin: 0 auto;
-# font-family: Tahoma, Verdana, Arial, sans-serif; }
-# </style>
-# </head>
-# <body>
-# <h1>Welcome to nginx!</h1>
-# <p>If you see this page, the nginx web server is successfully installed and
-# working. Further configuration is required.</p>
-
-# <p>For online documentation and support please refer to
-# <a href="http://nginx.org/">nginx.org</a>.<br/>
-# Commercial support is available at
-# <a href="http://nginx.com/">nginx.com</a>.</p>
-
-# <p><em>Thank you for using nginx.</em></p>
-# </body>
-# </html>
-# pod "tester" deleted
-
-# test network policy
-tee netpol.yaml<<'EOF'
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: deny-all
-spec:
-  podSelector: {}
-  policyTypes:
-  - Ingress
-  - Egress
-EOF
-
-kubectl apply -f netpol.yaml
-# networkpolicy.networking.k8s.io/deny-all created
-
-kubectl describe netpol deny-all
-# Name:         deny-all
-# Namespace:    default
-# Created on:   2026-01-16 18:01:26 -0500 EST
-# Labels:       <none>
-# Annotations:  <none>
-# Spec:
-#   PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)
-#   Allowing ingress traffic:
-#     <none> (Selected pods are isolated for ingress connectivity)
-#   Allowing egress traffic:
-#     <none> (Selected pods are isolated for egress connectivity)
-#   Policy Types: Ingress, Egress
-
-# test networkpolicy
-kubectl run --rm -it tester --image=busybox --restart=Never -- wget -qO- http://web2test-svc
-# <!DOCTYPE html>
-# <html>
-# <head>
-# <title>Welcome to nginx!</title>
-# <style>
-# html { color-scheme: light dark; }
-# body { width: 35em; margin: 0 auto;
-# font-family: Tahoma, Verdana, Arial, sans-serif; }
-# </style>
-# </head>
-# <body>
-# <h1>Welcome to nginx!</h1>
-# <p>If you see this page, the nginx web server is successfully installed and
-# working. Further configuration is required.</p>
-
-# <p>For online documentation and support please refer to
-# <a href="http://nginx.org/">nginx.org</a>.<br/>
-# Commercial support is available at
-# <a href="http://nginx.com/">nginx.com</a>.</p>
-
-# <p><em>Thank you for using nginx.</em></p>
-# </body>
-# </html>
-# pod "tester" deleted
-```

@@ -20,6 +20,7 @@
     - [Task: API GATEWAY + Routhttp](#task-api-gateway--routhttp)
     - [Task: Service](#task-service)
     - [Task: gateway](#task-gateway)
+    - [Task: Create Gateway API](#task-create-gateway-api)
 
 ---
 
@@ -860,3 +861,125 @@ EOF
 
 
 ```
+
+---
+
+
+### Task: Create Gateway API
+
+
+
+Create a Kubernetes Gateway resource with the following specifications:
+
+Name: web-gateway
+Namespace: nginx-gateway
+Gateway Class Name: nginx
+Listeners:
+Protocol: HTTP
+Port: 80
+Name: http
+
+---
+
+- Solution
+
+```yaml
+# gtw.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+  namespace: nginx-gateway
+spec:
+  gatewayClassName: nginx-gateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+```
+
+```sh
+k apply -f gtw.yaml
+# gateway.gateway.networking.k8s.io/web-gateway created
+
+# confirm
+k get gtw web-gateway -n nginx-gateway
+# NAME          CLASS   ADDRESS   PROGRAMMED   AGE
+# web-gateway   nginx             True         77s
+
+k describe gtw web-gateway -n nginx-gateway
+# Name:         web-gateway
+# Namespace:    nginx-gateway
+# Labels:       <none>
+# Annotations:  <none>
+# API Version:  gateway.networking.k8s.io/v1
+# Kind:         Gateway
+# Metadata:
+#   Creation Timestamp:  2026-01-18T02:46:52Z
+#   Generation:          1
+#   Resource Version:    20952
+#   UID:                 a8bb2632-d268-4858-855b-567213e94d9a
+# Spec:
+#   Gateway Class Name:  nginx
+#   Listeners:
+#     Allowed Routes:
+#       Namespaces:
+#         From:  Same
+#     Name:      http
+#     Port:      80
+#     Protocol:  HTTP
+# Status:
+#   Conditions:
+#     Last Transition Time:  2026-01-18T02:46:52Z
+#     Message:               The Gateway is accepted
+#     Observed Generation:   1
+#     Reason:                Accepted
+#     Status:                True
+#     Type:                  Accepted
+#     Last Transition Time:  2026-01-18T02:46:52Z
+#     Message:               The Gateway is programmed
+#     Observed Generation:   1
+#     Reason:                Programmed
+#     Status:                True
+#     Type:                  Programmed
+#   Listeners:
+#     Attached Routes:  0
+#     Conditions:
+#       Last Transition Time:  2026-01-18T02:46:52Z
+#       Message:               The Listener is accepted
+#       Observed Generation:   1
+#       Reason:                Accepted
+#       Status:                True
+#       Type:                  Accepted
+#       Last Transition Time:  2026-01-18T02:46:52Z
+#       Message:               The Listener is programmed
+#       Observed Generation:   1
+#       Reason:                Programmed
+#       Status:                True
+#       Type:                  Programmed
+#       Last Transition Time:  2026-01-18T02:46:52Z
+#       Message:               All references are resolved
+#       Observed Generation:   1
+#       Reason:                ResolvedRefs
+#       Status:                True
+#       Type:                  ResolvedRefs
+#       Last Transition Time:  2026-01-18T02:46:52Z
+#       Message:               No conflicts
+#       Observed Generation:   1
+#       Reason:                NoConflicts
+#       Status:                False
+#       Type:                  Conflicted
+#     Name:                    http
+#     Supported Kinds:
+#       Group:  gateway.networking.k8s.io
+#       Kind:   HTTPRoute
+#       Group:  gateway.networking.k8s.io
+#       Kind:   GRPCRoute
+# Events:       <none>
+
+```
+
+---

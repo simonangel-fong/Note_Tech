@@ -20,7 +20,7 @@
 
 - [Fundamental](./cluster/fundamental/fundamental.md)
   - [Architecture](./cluster/architecture/architecture.md)
-  - [YAML File](./cluster/yaml/yaml.md)
+  - [YAML & Vim](./cluster/yaml/yaml.md)
   - [`kubectl`](./cluster/kubectl/kubectl.md)
     - [KubeConfig](./cluster/kube_config/kube_config.md)
 
@@ -169,6 +169,7 @@
 ## Configuration
 
 - [`Helm Charts`](./config/helm/helm.md)
+  - [Lab: Hello world](./config/helm_lab_helloworld/helm_lab_helloworld.md)
 - [`Kustomize`](./config/kustomize/kustomize.md)
 
 ---
@@ -204,8 +205,10 @@ https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
   - [Security](./cka/security.md)
   - [Cluster](./cka/cluster.md)
 
-- Common Command
+- alias
 
 ```sh
-kubectl config set-context --current --namespace=<your-namespace-name>
+export do="--dry-run=client -o yaml"
+alias k=kubectl
+alias kcn="kubectl config set-context --current --namespace"
 ```
