@@ -97,7 +97,6 @@ spec:
 ## Custom Controller
 
 - role
-
   - monitor the data in ETCD
   - implement based on the data change
 
@@ -114,8 +113,9 @@ spec:
 
 ### Imperative Commands
 
-|
-k get crd
+| CMD               | DESC     |
+| ----------------- | -------- |
+| `kubectl get crd` | List crd |
 
 ---
 

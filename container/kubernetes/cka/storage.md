@@ -6,15 +6,22 @@
   - [PV + PVC](#pv--pvc)
     - [Task: PV](#task-pv)
     - [Task: Create a PV](#task-create-a-pv)
-    - [Task: PVC](#task-pvc)
+    - [Task: \*\*PVC](#task-pvc)
     - [Task: PV hostpath](#task-pv-hostpath)
     - [Task: PVC + pod mount](#task-pvc--pod-mount)
-    - [Task: PVC + pod](#task-pvc--pod)
+    - [Task: \*\*\*PVC + pod](#task-pvc--pod)
     - [Task: PVC + pod mount](#task-pvc--pod-mount-1)
-    - [Task: PV + PVC](#task-pv--pvc)
+    - [Task: \*\*\*PV + PVC\*\*\*](#task-pv--pvc)
+    - [Task: PVC](#task-pvc-1)
   - [StorageClass](#storageclass)
+    - [Task: create StorageClass](#task-create-storageclass)
     - [Task: StorageClass + PV](#task-storageclass--pv)
     - [Task: SC](#task-sc)
+    - [Task: sc](#task-sc-1)
+    - [Comprehensive: PV + PVC + pod](#comprehensive-pv--pvc--pod)
+    - [Task: \*\*\*list pv](#task-list-pv)
+    - [Task: Sort pvc](#task-sort-pvc)
+  - [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -118,7 +125,7 @@ k get pv rompv
 
 ---
 
-### Task: PVC
+### Task: \*\*PVC
 
 A user accidentally deleted the MariaDB Deployment in the mariadb namespace, which was configured with persistent storage. Your responsibility is to re-establish the Deployment while ensuring data is preserved by reusing the available PersistentVolume.
 
@@ -144,7 +151,7 @@ ssh controlplane
 kubectl create namespace mariadb
 
 # create pv
-cat <<'EOF' | kubectl apply -f -
+tee pv.yaml<<'EOF'
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -160,10 +167,12 @@ spec:
     path: /mnt/data/mariadb
 EOF
 
+kubectl apply -f pv.yaml
+
 kubectl get pv mariadb-pv
 
 # Create the MariaDB deploy YAML file
-cat <<'EOF' > ~/mariadb-deploy.yaml
+tee ~/mariadb-deploy.yaml<<'EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -192,10 +201,10 @@ spec:
           mountPath: /var/lib/mysql
       volumes:
       - name: data
-        # Intentionally wrong for your task: not using PVC yet
         emptyDir: {}
 EOF
 
+kubectl apply -f ~/mariadb-deploy.yaml
 
 # “accidentally deleted”
 kubectl -n mariadb delete deployment mariadb --ignore-not-found
@@ -417,7 +426,7 @@ kubectl describe pod task-pvc-pod
 
 ---
 
-### Task: PVC + pod
+### Task: \*\*\*PVC + pod
 
 设置配置环境：
 [candidate@node-1] $ kubectl config use-context ok8s
@@ -596,7 +605,7 @@ k describe pod rwopod
 
 ---
 
-### Task: PV + PVC
+### Task: \*\*\*PV + PVC\*\*\*
 
 Manually create a PersistentVolume that:
 · is named static-pv-example
@@ -650,7 +659,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: static-pvc-example
 spec:
-  storageClassName: ""
+  storageClassName: "" # specify bind with the static pv
   volumeName: static-pv-example
   accessModes:
     - ReadWriteOnce
@@ -670,7 +679,160 @@ kubectl get pvc static-pvc-example
 
 ---
 
+### Task: PVC
+
+A PersistentVolumeClaim named app-pvc exists in the namespace storage-ns, but it is not getting bound to the available PersistentVolume named app-pv.
+
+Inspect both the PVC and PV and identify why the PVC is not being bound and fix the issue so that the PVC successfully binds to the PV. Do not modify the PV resource.
+
+- setup env
+
+```sh
+k create ns storage-ns
+
+tee pv.yaml<<EOF
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: app-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+EOF
+
+tee pvc.yaml<<EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-pvc
+  namespace: storage-ns
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+EOF
+
+k apply -f pv.yaml
+k apply -f pvc.yaml
+
+```
+
+---
+
+- Solution:
+
+```sh
+k get pv
+# NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# app-pv   1Gi        RWO            Retain           Available                          <unset>                          21s
+
+k get pvc -n storage-ns
+# NAME      STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# app-pvc   Pending                                      local-path     <unset>                 43s
+
+# debug
+k describe pv
+# Name:            app-pv
+# Labels:          <none>
+# Annotations:     <none>
+# Finalizers:      [kubernetes.io/pv-protection]
+# StorageClass:
+# Status:          Available
+# Claim:
+# Reclaim Policy:  Retain
+# Access Modes:    RWO
+# VolumeMode:      Filesystem
+# Capacity:        1Gi
+# Node Affinity:   <none>
+# Message:
+# Source:
+#     Type:          HostPath (bare host directory volume)
+#     Path:          /mnt/data
+#     HostPathType:
+# Events:            <none>
+
+k get pvc app-pvc -n storage-ns -o yaml
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   annotations:
+#     kubectl.kubernetes.io/last-applied-configuration: |
+#       {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"app-pvc","namespace":"storage-ns"},"spec":{"accessModes":["ReadWriteMany"],"resources":{"requests":{"storage":"1Gi"}}}}
+#   creationTimestamp: "2026-01-21T19:55:57Z"
+#   finalizers:
+#   - kubernetes.io/pvc-protection
+#   name: app-pvc
+#   namespace: storage-ns
+#   resourceVersion: "34861"
+#   uid: 40242e27-4d47-49a9-a106-f1d750c0f8f3
+# spec:
+#   accessModes:
+#   - ReadWriteMany   <============== not match
+#   resources:
+#     requests:
+#       storage: 1Gi
+#   storageClassName: local-path
+#   volumeMode: Filesystem
+# status:
+#   phase: Pending
+
+# fix
+k edit pvc app-pvc -n storage-ns
+# spec:
+#   accessModes:
+#   - ReadWriteOnce
+
+# confirm
+ get pvc -n storage-ns
+# NAME      STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# app-pvc   Bound    app-pv   1Gi        RWO                           <unset>                 10s
+
+```
+
+---
+
 ## StorageClass
+
+### Task: create StorageClass
+
+Create a StorageClass named local-sc with the following specifications and set it as the default storage class:
+
+The provisioner should be kubernetes.io/no-provisioner
+The volume binding mode should be WaitForFirstConsumer
+Volume expansion should be enabled
+
+---
+
+- Solution
+
+```yaml
+# sc.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-sc
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+```
+
+```sh
+kubectl apply -f sc.yaml
+
+kubectl get sc
+```
+
+---
 
 ### Task: StorageClass + PV
 
@@ -812,3 +974,97 @@ kubectl get sc
 # local-path              rancher.io/local-path   Delete          WaitForFirstConsumer   false                  2d22h
 # low-latency (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  5s
 ```
+
+---
+
+### Task: sc
+
+Create a StorageClass named rancher-sc with the following specifications:
+
+The provisioner should be rancher.io/local-path.
+The volume binding mode should be WaitForFirstConsumer.
+Volume expansion should be enabled.
+
+---
+
+- solution
+
+```sh
+tee sc.yaml<<EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rancher-sc
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+EOF
+
+kubectl apply -f sc.yaml
+# storageclass.storage.k8s.io/rancher-sc created
+
+```
+
+---
+
+### Comprehensive: PV + PVC + pod
+
+pv: web-pv; rwo, 100mi, hostpath /vol/data
+pvc: web-pvc, ns=production, use pv,
+deploy: web-deploy, ns=production, nginx:1.14.2, use pvc, /tmp/web-data
+
+- Tricky: note the sc
+  - if default sc exists, pvc.storageCLassName=''
+
+---
+
+### Task: \*\*\*list pv
+
+list all pv sorted by capacity, saving the full kubectl output to /op/pv/pv_list.txt
+
+---
+
+- solution
+
+```sh
+kubectl get pv --sort-by=.spec.capacity.storage
+# NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# web-pv   2Gi        RWO            Retain           Bound    production/web-pvc                  <unset>                          114m
+
+kubectl get pv --sort-by=.spec.capacity.storage > /op/pv/pv_list.txt
+
+# Reversely
+kubectl get pv --sort-by=.spec.capacity.storage | tac
+```
+
+---
+
+### Task: Sort pvc
+
+```sh
+k get pvc --sort-by=.spec.resources.requests.storage
+# NAME                 STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# pv-volume            Bound    pvc-07c491d2-dbf2-4095-99e2-ec935381b79b   10Mi       RWO            local-path     <unset>                 63m
+# q01-pvc              Bound    pvc-2fb142b8-7ae4-442a-a338-999a924fd2a3   100Mi      RWO            local-path     <unset>                 67m
+# static-pvc-example   Bound    static-pv-example                          200Mi      RWO                           <unset>                 43m
+# rwopvc               Bound    pvc-43f71f51-9499-4e4c-8f84-80d90eb18702   400Mi      RWO            local-path     <unset>                 58m
+
+k get pvc --sort-by=.spec.resources.requests.storage | tac
+# rwopvc               Bound    pvc-43f71f51-9499-4e4c-8f84-80d90eb18702   400Mi      RWO            local-path     <unset>                 58m
+# static-pvc-example   Bound    static-pv-example                          200Mi      RWO                           <unset>                 43m
+# q01-pvc              Bound    pvc-2fb142b8-7ae4-442a-a338-999a924fd2a3   100Mi      RWO            local-path     <unset>                 67m
+# pv-volume            Bound    pvc-07c491d2-dbf2-4095-99e2-ec935381b79b   10Mi       RWO            local-path     <unset>                 63m
+# NAME                 STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+```
+
+---
+
+## Troubleshooting
+
+- Common Error:
+  - pod uses wrong pvc name
+  - pvc <> pv
+    - size
+    - access mode
+    - sc
+  - static pv need pvc scname=""

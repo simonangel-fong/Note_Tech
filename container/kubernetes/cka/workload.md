@@ -4,50 +4,91 @@
 
 - [CKA - Workload](#cka---workload)
   - [POD, Deployment, STS](#pod-deployment-sts)
+    - [Task: \*\*\*filter object](#task-filter-object)
+    - [Task: list all image](#task-list-all-image)
     - [Task: Pod - Log](#task-pod---log)
     - [Task: Pod - log](#task-pod---log-1)
     - [Task: Pod - Multiple Containers](#task-pod---multiple-containers)
     - [Task: Pod - multiple container](#task-pod---multiple-container)
     - [Task: Pod - Sidecar Pod](#task-pod---sidecar-pod)
-    - [Task: Pod - Volume + Sidercar](#task-pod---volume--sidercar)
-    - [Task: Pod - volume + sidecar](#task-pod---volume--sidecar)
-    - [Task: Pod - volume + sidecar + env](#task-pod---volume--sidecar--env)
+    - [Task: \*\*\*Pod - Volume + Sidercar](#task-pod---volume--sidercar)
+    - [Task: \*\*\*Pod - volume + sidecar](#task-pod---volume--sidecar)
+    - [Task: \*\*\*Pod - volume + sidecar + env](#task-pod---volume--sidecar--env)
+    - [sidecar + vol](#sidecar--vol)
     - [Task: Deployment - scale](#task-deployment---scale)
     - [Task: Deployment - scale](#task-deployment---scale-1)
     - [Task: Deployment Rollback](#task-deployment-rollback)
+    - [Task: deployment set image](#task-deployment-set-image)
     - [Task: StatefulSets \& Headless Services](#task-statefulsets--headless-services)
     - [Task: Deployment](#task-deployment)
     - [Task: svc - nodeport](#task-svc---nodeport)
     - [Task: svc](#task-svc)
     - [Task: troubleshooting pod](#task-troubleshooting-pod)
+    - [Task: daemonset](#task-daemonset)
+    - [Task: replicas](#task-replicas)
   - [ConfigMap \& Secret](#configmap--secret)
     - [Task: ConfigMap](#task-configmap)
+    - [Task: \*\*\*Troubleshooting - deploy scale out](#task-troubleshooting---deploy-scale-out)
     - [Task: CM](#task-cm)
     - [Task: ConfigMaps \& Secrets](#task-configmaps--secrets)
+    - [Task: cm + pod](#task-cm--pod)
   - [Scaling](#scaling)
     - [Task: VPA](#task-vpa)
     - [Task: Autoscaling](#task-autoscaling)
     - [Task: HPA](#task-hpa)
     - [Task: HPA](#task-hpa-1)
+    - [Task: HPA memory](#task-hpa-memory)
+    - [Task: HPA](#task-hpa-2)
   - [Helm](#helm)
-    - [Task: Install Argo](#task-install-argo)
+    - [Task: \*\*\*Install Argo](#task-install-argo)
     - [Task: Deploy with helm](#task-deploy-with-helm)
     - [Task: Helm](#task-helm)
     - [Task: Upgrade Helm Release](#task-upgrade-helm-release)
+    - [Task: uninstall release with error image](#task-uninstall-release-with-error-image)
+    - [Task: helm install](#task-helm-install)
   - [Kustomize](#kustomize)
-    - [Task: Kustomize](#task-kustomize)
+    - [Task: \*\*\*Kustomize](#task-kustomize)
     - [Task: CRD](#task-crd)
     - [Task: list CRDs](#task-list-crds)
   - [Resources](#resources)
     - [Task: PriorityClass](#task-priorityclass)
+    - [Task: priorityClass](#task-priorityclass-1)
     - [Task: Limit range](#task-limit-range)
     - [Task: query resource usage](#task-query-resource-usage)
     - [Task: Query pod 的 CPU](#task-query-pod-的-cpu)
-    - [Task: Resources](#task-resources)
+    - [Task: \*\*\*Resources](#task-resources)
 
 ---
 
 ## POD, Deployment, STS
+
+### Task: \*\*\*filter object
+
+list all po that is not in default ns, output to /opt/non-default.txt
+
+- solution
+
+```sh
+
+### Task: list pv
+kubectl get pods -A --field-selector metadata.namespace!=default
+```
+
+---
+
+### Task: list all image
+
+list all images in the kube-system ns and output to /opt/image.txt
+
+- solution
+
+```sh
+kubectl get pods -n kube-system -o jsonpath="{..image}" > /opt/image.txt
+
+kubectl get pods -n kube-system -o jsonpath="{range .items[*].spec.containers[*]}{.image}{'\n'}{end}" > /opt/image.txt
+```
+
+---
 
 ### Task: Pod - Log
 
@@ -200,8 +241,8 @@ Task
 
 - Config env
 
-```yaml
-# task-sidecar01-env.yaml
+```sh
+tee task-sidecar01-env.yaml<<EOF
 apiVersion: v1
 kind: Pod
 metadata:
@@ -222,9 +263,8 @@ spec:
            i=$((i+1));
            sleep 1;
           done
-```
+EOF
 
-```sh
 kubectl apply -f task-sidecar01-env.yaml
 # pod/11-factor-app created
 
@@ -316,14 +356,14 @@ kubectl logs 11-factor-app -c sidecar
 
 ---
 
-### Task: Pod - Volume + Sidercar
+### Task: \*\*\*Pod - Volume + Sidercar
 
 A legacy app needs to be integrated into the Kubernetes built-in logging architecture (i.e. kubectl logs). Adding a streaming co-located container is a good and common way to accomplish this requirement.
 
 Task
 
 Update the existing Deployment synergy-deployment, adding a co-located container named sidecar using the busybox:stable image to the existing Pod.
-The new co-located container has to run the following command: `/bin/sh-c "tail -n+l -f /var/log/synergy-deployment.log"`
+The new co-located container has to run the following command: `/bin/sh-c "tail -n+1 -f /var/log/synergy-deployment.log"`
 Use a Volume mounted at /var/log to make the log file synergy-deployment.log available to the co located container.
 Do not modify the specification of the existing container other than adding the required.
 Hint: Use a shared volume to expose the log file between the main application container and the sidecar
@@ -365,7 +405,7 @@ kubectl apply -f env-deploy.yaml
 
 ---
 
-### Task: Pod - volume + sidecar
+### Task: \*\*\*Pod - volume + sidecar
 
 CKA EXAM OBJECTIVE: Configure volume types [ ... ]
 Task:
@@ -375,8 +415,8 @@ Task:
 
 - setup env
 
-```yaml
-# task-sidecar-env.yaml
+```sh
+tee task-sidecar-env.yaml<<EOF
 apiVersion: v1
 kind: Pod
 metadata:
@@ -399,9 +439,8 @@ spec:
            i=$((i+1));
            sleep 1;
           done
-```
+EOF
 
-```sh
 kubectl apply -f task-sidecar-env.yaml
 ```
 
@@ -458,7 +497,7 @@ k apply -f task-sidecar.yaml
 
 ---
 
-### Task: Pod - volume + sidecar + env
+### Task: \*\*\*Pod - volume + sidecar + env
 
 Create a Pod mc-pod in the mc-namespace namespace with three containers. The first container should be named mc-pod-1, run the nginx:1-alpine image, and set an environment variable NODE_NAME to the node name. The second container should be named mc-pod-2, run the busybox:1 image, and continuously log the output of the date command to the file /var/log/shared/date.log every second. The third container should have the name mc-pod-3, run the image busybox:1, and print the contents of the date.log file generated by the second container to stdout. Use a shared, non-persistent volume.
 
@@ -512,6 +551,72 @@ spec:
       volumeMounts:
         - name: shared-vol
           mountPath: /var/log/shared
+```
+
+---
+
+### sidecar + vol
+
+Create a deployment named logging-deployment in the namespace logging-ns with 1 replica, with the following specifications:
+
+- The main container should be named app-container, use the image busybox, and should run the following command to simulate writing logs: `sh -c "while true; do echo 'Log entry' >> /var/log/app/app.log; sleep 5; done"`
+
+- Add a sidecar container named log-agent that also uses the busybox image and runs the command: `tail -f /var/log/app/app.log`
+
+- log-agent logs should display the entries logged by the main app-container
+
+- Setup env
+
+```sh
+k create ns logging-ns
+```
+
+---
+
+- solution
+
+```yaml
+# sidecar.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logging-deployment
+  namespace: logging-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logging-deployment
+  template:
+    metadata:
+      labels:
+        app: logging-deployment
+    spec:
+      containers:
+        - name: app-container
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              'while true; do echo "Log entry" >> /var/log/app/app.log; sleep 5; done',
+            ]
+          volumeMounts:
+            - name: data
+              mountPath: /var/log/app/
+        - name: log-agent
+          image: busybox
+          command: ["sh", "-c", "tail -f /var/log/app/app.log"]
+          volumeMounts:
+            - name: data
+              mountPath: /var/log/app
+      volumes:
+        - name: data
+          emptyDir: {}
+```
+
+```sh
+kubectl apply -f sidecar.yaml
 ```
 
 ---
@@ -613,6 +718,61 @@ k rollout history deploy mufasa -n king-of-lions
 
 
 kubectl rollout undo deploy mufasa --to-revision=1 -n king-of-lions
+```
+
+---
+
+### Task: deployment set image
+
+Create a new deployment called nginx-deploy, with image nginx:1.16 and 1 replica. Next, upgrade the deployment to version 1.17 using rolling update.
+the rollout history show the image change
+
+---
+
+- Solution
+
+```sh
+kubectl create deploy nginx-deploy --image=nginx:1.16
+
+kubectl get deploy
+# NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+# nginx-deploy               1/1     1            1           11s
+
+kubectl rollout history deploy nginx-deploy --revision=1
+# deployment.apps/nginx-deploy with revision #1
+# Pod Template:
+#   Labels:       app=nginx-deploy
+#         pod-template-hash=794f94f75f
+#   Containers:
+#    nginx:
+#     Image:      nginx:1.16
+#     Port:       <none>
+#     Host Port:  <none>
+#     Environment:        <none>
+#     Mounts:     <none>
+#   Volumes:      <none>
+#   Node-Selectors:       <none>
+#   Tolerations:  <none>
+
+# update image
+kubectl set image deploy nginx-deploy nginx=nginx:1.17
+# deployment.apps/nginx-deploy image updated
+
+kubectl rollout history deploy nginx-deploy --revision=2
+# deployment.apps/nginx-deploy with revision #2
+# Pod Template:
+#   Labels:       app=nginx-deploy
+#         pod-template-hash=6c879966f8
+#   Containers:
+#    nginx:
+#     Image:      nginx:1.17
+#     Port:       <none>
+#     Host Port:  <none>
+#     Environment:        <none>
+#     Mounts:     <none>
+#   Volumes:      <none>
+#   Node-Selectors:       <none>
+#   Tolerations:  <none>
 ```
 
 ---
@@ -875,6 +1035,67 @@ k get pod orange
 
 ---
 
+### Task: daemonset
+
+Q12. Use Namespace project-1 for the following. Create a DaemonSet named daemon-imp with image httpd:2.4-alpine and labels id= daemon-imp and uuid=18426a0b-5f59-4e10-923f-c0e078e82233. The Pods of that DaemonSet should run on all nodes, also in controlplanes.
+
+- Solution:
+
+```yaml
+# ds.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemon-imp
+  namespace: project-1
+spec:
+  selector:
+    matchLabels:
+      id: daemon-imp
+      uuid: 18426a0b-5f59-4e10-923f-c0e078e82233
+  template:
+    metadata:
+      labels:
+        id: daemon-imp
+        uuid: 18426a0b-5f59-4e10-923f-c0e078e82233
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: daemon-imp
+          image: httpd:2.4-alpine
+```
+
+```sh
+# get controlplane taint
+kubectl describe node controlplane | grep -i taint
+# Taints:             node-role.kubernetes.io/control-plane:NoSchedule
+
+kubectl apply -f ds.yaml
+
+kubectl get po -l id=daemon-imp -o wide
+# NAME               READY   STATUS    RESTARTS   AGE     IP               NODE           NOMINATED NODE   READINESS GATES
+# daemon-imp-55vgx   1/1     Running   0          6m19s   10.244.196.158   node01         <none>           <none>
+# daemon-imp-b7n9j   1/1     Running   0          6m19s   10.244.140.94    node02         <none>           <none>
+# daemon-imp-b9x9r   1/1     Running   0          6m19s   10.244.49.71     controlplane   <none>           <none>
+
+```
+
+---
+
+### Task: replicas
+
+Q11. create a replicaset with below specifications
+Name = web-app
+Image= nginx
+Replicas= 3
+
+Please note, there is already a pod running in our cluster named web-frontend , please make sure the total number of pods running in the cluster is not more than 3.
+
+---
+
 ## ConfigMap & Secret
 
 ### Task: ConfigMap
@@ -979,13 +1200,99 @@ k describe pod enter-sandman-866c78fd8b-nrbsq -n metallica
 
 ---
 
+### Task: \*\*\*Troubleshooting - deploy scale out
+
+We have created a new deployment called nginx-deploy. Scale the deployment to 3 replicas. Has the number of replicas increased? Troubleshoot and fix the issue.
+
+- setup env
+
+```sh
+k create deploy nginx-deploy --image=nginx -n default
+
+# change controller manager
+sudo vi /etc/kubernetes/manifests/kube-controller-manager.yaml
+# finds
+# spec:
+#   containers:
+#   - command:
+#     - kube-controller-manager
+# replace
+# spec:
+#   containers:
+#   - command:
+#     - kube-contro1ler-manager
+
+k get pod -n kube-system
+# kube-controller-manager-controlplane   0/1     CrashLoopBackOff   1 (14s ago)     15s
+```
+
+---
+
+- solution
+
+```sh
+# try scale out
+k scale deploy nginx-deploy -n default --replicas=3
+# deployment.apps/nginx-deploy scaled
+
+k get deploy nginx-deploy
+# NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+# nginx-deploy   1/3     1            1           3h2m
+
+# check deploy event
+k describe deploy nginx-deploy
+# Events:
+#   Type    Reason             Age    From                   Message
+#   ----    ------             ----   ----                   -------
+#   Normal  ScalingReplicaSet  2m48s  deployment-controller  Scaled up replica set nginx-deploy-c9d9f6c6c from 0 to 1
+
+# check controlplane component: controller manager fails
+k get pod -n kube-system
+# kube-controller-manager-controlplane   0/1     CrashLoopBackOff   3 (79s ago)     2m29s
+
+# try to check log for detail info
+k logs kube-contro1ler-manager-controlplane -n kube-system
+# error: error from server (NotFound): pods "kube-contro1ler-manager-controlplane" not found in namespace "kube-system"
+
+# try to check: manifest
+sudo vi /etc/kubernetes/manifests/kube-controller-manager.yaml
+
+# debug: replace with correct command
+sudo vi /etc/kubernetes/manifests/kube-controller-manager.yaml
+# finds
+# spec:
+#   containers:
+#   - command:
+#     - kube-contro1ler-manager
+# replace
+# spec:
+#   containers:
+#   - command:
+#     - kube-controller-manager
+
+# confirm: components
+k get po -n kube-system
+# kube-controller-manager-controlplane   1/1     Running   0               12s
+
+# confirm: deploy scale out
+k get deploy
+# NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+# nginx-deploy               3/3     3            3           6m28s
+```
+
+---
+
 ### Task: CM
 
 An NGINX Deploy named nginx-static is Running in the nginx-static NS. It is configured using a CfgMap named nginx-
-config. Update the nginx-config CfgMap to allow only TLSv1.3 connections. re-create, restart, or scale resources as necessary. By using command to test the changes:
+config. Update the nginx-config CfgMap to allow only TLSv1.3 connections. re-create, restart, or scale resources as necessary.
 
-[candidate@cka2025] $ curl -- tls-max 1.2 https://web.k8s.local
-As TLSV1.2 should not be allowed anymore, the command should fail
+Add the ip address of the servic3e in /etc/hosts and name it web.k8s.local.
+
+verify:
+
+- fail: `curl -vk --tls-max 1.2 https://web.k8s.local`
+- success: `curl -vk --tlsv1.3 https://web.k8s.local`
 
 - Setup env
 
@@ -1182,6 +1489,75 @@ spec:
 
 ```sh
 k replace --force -f task-secret-pod.yaml
+```
+
+---
+
+### Task: cm + pod
+
+Create a ConfigMap named app-config in the namespace cm-namespace with the following key-value pairs:
+
+ENV=production
+LOG_LEVEL=info
+
+Then, modify the existing Deployment named cm-webapp in the same namespace to use the app-config ConfigMap by setting the environment variables ENV and LOG_LEVEL in the container from the ConfigMap.
+
+- setup
+
+```sh
+kubectl create ns cm-namespace
+
+k create deploy cm-webapp -n cm-namespace --image=nginx
+```
+
+---
+
+- Solution
+
+```sh
+kubectl create configmap app-config --from-literal=ENV=production --from-literal=LOG_LEVEL=info -n cm-namespace
+# configmap/app-config created
+
+k describe cm app-config -n cm-namespace
+# Name:         app-config
+# Namespace:    cm-namespace
+# Labels:       <none>
+# Annotations:  <none>
+
+# Data
+# ====
+# ENV:
+# ----
+# production
+
+# LOG_LEVEL:
+# ----
+# info
+
+
+# BinaryData
+# ====
+
+# Events:  <none>
+
+# edit existing deploy
+kubectl edit deployment cm-webapp -n cm-namespace
+# deployment.apps/cm-webapp edited
+
+kubectl rollout restart deploy cm-webapp -n cm-namespace
+# deployment.apps/cm-webapp restarted
+
+k get po -n cm-namespace
+# NAME                        READY   STATUS    RESTARTS   AGE
+# cm-webapp-646666688-94k9v   1/1     Running   0          22s
+
+# confirm
+k exec -it cm-webapp-646666688-94k9v -n cm-namespace -- sh
+# echo $ENV
+# production
+# echo $LOG_LEVEL
+# info
+
 ```
 
 ---
@@ -1392,6 +1768,8 @@ kubectl -n autoscale set resources deploy/apache-server --requests=cpu=100m,memo
 
 ---
 
+---
+
 - Solution
 
 ```sh
@@ -1467,9 +1845,145 @@ kubectl describe hpa apache-server -n autoscale
 
 ---
 
+### Task: HPA memory
+
+Create a Horizontal Pod Autoscaler with name backend-hpa for the deployment named backend-deployment in the backend namespace with the ~/webapp-hpa.yaml file
+
+Ensure that the HPA scales the deployment based on memory utilization, maintaining an average memory usage of 65% across all pods.
+
+Configure the HPA with a minimum of 3 replicas and a maximum of 15.
+
+- setup env:
+
+```sh
+k create ns backend
+k create deploy backend-deployment -n backend --image=nginx
+touch webapp-hpa.yaml
+```
+
+---
+
+- Solution:
+
+```yaml
+# webapp-hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+  namespace: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend-deployment
+  minReplicas: 3
+  maxReplicas: 15
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 65
+```
+
+```sh
+k apply -f webapp-hpa.yaml
+# horizontalpodautoscaler.autoscaling/backend-hpa created
+
+k describe hpa backend-hpa -n backend
+# Name:                                                     backend-hpa
+# Namespace:                                                backend
+# Labels:                                                   <none>
+# Annotations:                                              <none>
+# CreationTimestamp:                                        Mon, 19 Jan 2026 00:03:59 -0500
+# Reference:                                                Deployment/backend-deployment
+# Metrics:                                                  ( current / target )
+#   resource memory on pods  (as a percentage of request):  <unknown> / 65%
+# Min replicas:                                             3
+# Max replicas:                                             15
+# Deployment pods:                                          1 current / 3 desired
+# Conditions:
+#   Type         Status  Reason            Message
+#   ----         ------  ------            -------
+#   AbleToScale  True    SucceededRescale  the HPA controller was able to update the target scale to 3
+# Events:
+#   Type    Reason             Age   From                       Message
+#   ----    ------             ----  ----                       -------
+#   Normal  SuccessfulRescale  11s   horizontal-pod-autoscaler  New size: 3; reason: Current number of replicas below Spec.MinReplicas
+```
+
+---
+
+### Task: HPA
+
+Create a Horizontal Pod Autoscaler (HPA) api-hpa for the deployment named api-deployment located in the api namespace.
+The HPA should scale the deployment based on a custom metric named requests_per_second, targeting an average value of 1000 requests per second across all pods.
+Set the minimum number of replicas to 1 and the maximum to 20.
+
+Note: Deployment named api-deployment is available in api namespace. Ignore errors due to the metric requests_per_second not being tracked in metrics-server
+
+- Setup env
+
+```sh
+k create ns api
+k create deploy api-deployment --image=nginx -n api
+```
+
+---
+
+- Solution
+
+```sh
+tee hpa.yaml<<EOF
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-hpa
+  namespace: api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-deployment
+  minReplicas: 1
+  maxReplicas: 20
+  metrics:
+  - type: Pods
+    pods:
+      metric:
+        name: requests_per_second
+      target:
+        type: AverageValue
+        averageValue: 1k
+EOF
+
+k apply -f hpa.yaml
+# horizontalpodautoscaler.autoscaling/api-hpa created
+
+kubectl get hpa -n api
+# NAME      REFERENCE                   TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+# api-hpa   Deployment/api-deployment   <unknown>/1k   1         20        0          11s
+
+kubectl describe hpa api-hpa -n api
+# Name:                             api-hpa
+# Namespace:                        api
+# Labels:                           <none>
+# Annotations:                      <none>
+# CreationTimestamp:                Wed, 21 Jan 2026 19:35:15 -0500
+# Reference:                        Deployment/api-deployment
+# Metrics:                          ( current / target )
+#   "requests_per_second" on pods:  <unknown> / 1k
+# Min replicas:                     1
+# Max replicas:                     20
+```
+
+---
+
 ## Helm
 
-### Task: Install Argo
+### Task: \*\*\*Install Argo
 
 Install Argo CD in cluster:
 Add the official Argo CD Helm repository with the name argo. url: https://argoproj.github.io/argo-helm
@@ -1488,52 +2002,68 @@ You do not need to configure access to the Argo CD server UI.
 - https://argoproj.github.io/argo-helm/
 
 ```sh
-# add repo
-helm repo add argo https://argoproj.github.io/argo-helm
-# "argo" has been added to your repositories
-
-helm repo list
-# NAME    URL
-# argo    https://argoproj.github.io/argo-helm
-
-
-helm search repo argo
-# NAME                            CHART VERSION   APP VERSION     DESCRIPTION
-# argo/argo                       1.0.0           v2.12.5         A Helm chart for Argo Workflows
-# argo/argo-cd                    9.3.4           v3.2.5          A Helm chart for Argo CD, a declarative, GitOps...
-# argo/argo-ci                    1.0.0           v1.0.0-alpha2   A Helm chart for Argo-CI
-# ...
-
-# update
-helm repo update
-# Hang tight while we grab the latest from your chart repositories...
-# ...Successfully got an update from the "argo" chart repository
-# Update Complete. ⎈Happy Helming!⎈
-
 # create ns
 kubectl create ns argocd
 # namespace/argocd created
 
-# render Helm chart templates locally
-helm template myargocd argo/argo-cd -n argocd --version 7.7.3 --set crds.install=false > ./argo-helm.yaml
+# add repo
+helm repo add argocd https://argoproj.github.io/argo-helm
+# "argocd" has been added to your repositories
 
-helm install argocd argo/argo-cd --version 7.7.3 --namespace argocd --set crds.install=false
+helm repo list
+# NAME    URL
+# argocd    https://argoproj.github.io/argo-helm
+
+# update
+helm repo update
+# Hang tight while we grab the latest from your chart repositories...
+# ...Successfully got an update from the "argocd" chart repository
+# Update Complete. ⎈Happy Helming!⎈
+
+# find chart within repo
+helm search repo argo --version 7.7.3
+# NAME            CHART VERSION   APP VERSION     DESCRIPTION
+# argocd/argo-cd  7.7.3           v2.13.0         A Helm chart for Argo CD, a declarative, GitOps..
+
+# get values for crd within the chart: crds.install
+helm show values argocd/argo-cd --version 7.7.3 | grep -i -A5 crd
+# crds:
+#   # -- Install and upgrade CRDs
+#   install: true
+#   # -- Keep CRDs on chart uninstall
+#   keep: true
+#   # -- Annotations to be added to all CRDs
+#   annotations: {}
+#   # -- Addtional labels to be added to all CRDs
+#   additionalLabels: {}
+
+# ## Globally shared configuration
+# global:
+#   # -- Default domain used by all components
+
+# render Helm chart templates locally, with value
+helm template argocd argocd/argo-cd -n argocd --version 7.7.3 --set crds.install=false > ./argo-helm.yaml
+
+# confirm
+cat ./argo-helm.yaml | grep argocd
+cat ./argo-helm.yaml | grep 7.7.3
+
+# install
+helm install argocd argocd/argo-cd --version 7.7.3 --namespace argocd --set crds.install=false
 # NAME: argocd
-# LAST DEPLOYED: Fri Jan 16 16:00:11 2026
+# LAST DEPLOYED: Tue Jan 20 14:19:46 2026
 # NAMESPACE: argocd
 # STATUS: deployed
 # REVISION: 1
-# DESCRIPTION: Install complete
 # TEST SUITE: None
 # NOTES:
 
 # Verify
-helm -n argocd list
+helm list -n argocd
 # NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART             APP VERSION
-# argocd  argocd          1               2026-01-16 16:00:11.919253784 -0500 EST deployed        argo-cd-7.7.3     v2.13.0
+# argocd  argocd          1               2026-01-20 14:19:46.76485447 -0500 EST  deployed        argo-cd-7.7.3     v2.13.0
 
-kubectl -n argocd get pods
-
+kubectl get pods -n argocd
 ```
 
 ---
@@ -1551,40 +2081,68 @@ Could be from a url, could be from local
 - Solution
 
 ```sh
+kubectl create ns traefik
+
 # add repo url
-helm repo add traekfik https://traefik.github.io/charts
-# "traekfik" has been added to your repositories
+helm repo add traefik https://traefik.github.io/charts
+# "traefik" has been added to your repositories
 
 # update repo
 helm repo update
+# Hang tight while we grab the latest from your chart repositories...
+# ...Successfully got an update from the "traefik" chart repository
 # Update Complete. ⎈Happy Helming!⎈
 
+# confirm
+helm repo list
+# NAME    URL
+# traefik https://traefik.github.io/charts
+
+# search for chart within repo
+helm search repo traefik
+# NAME                    CHART VERSION   APP VERSION     DESCRIPTION
+# traefik/traefik         38.0.2          v3.6.6          A Traefik based Kubernetes ingress controller
+# ...
+
+# search for value of kubernetesGateway: kubernetesGateway.enabled
+helm show values traefik/traefik | grep -i -A5 kubernetesGateway:
+#   kubernetesGateway:
+#     # -- Enable traefik experimental GatewayClass CRD
+#     enabled: false
+#   # -- Enable experimental plugins
+#   plugins: {}
+#   # -- Enable experimental local plugins
+# --
+#   kubernetesGateway:
+#     # -- Enable Traefik Gateway provider for Gateway API
+#     enabled: false
+#     # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+#     # This option currently enables support for TCPRoute and TLSRoute.
+#     experimentalChannel: false
+
 # install
-helm install traefik-app traefik/traefik -n traefik --create-namespace --set providers.kubernetesGateway.enabled=true
-# NAME: traefik-app
-# LAST DEPLOYED: Sat Jan 10 15:14:18 2026
+helm install traefik traefik/traefik -n traefik --set providers.kubernetesGateway.enabled=true
+# NAME: traefik
+# LAST DEPLOYED: Tue Jan 20 14:53:30 2026
 # NAMESPACE: traefik
 # STATUS: deployed
 # REVISION: 1
 # TEST SUITE: None
 # NOTES:
-# traefik-app with docker.io/traefik:v3.6.6 has been deployed successfully on traefik namespace!
+# traefik with docker.io/traefik:v3.6.6 has been deployed successfully on traefik namespace!
 
 # confirm
-helm list -A
-# NAME            NAMESPACE       REVISION        UPDATED                                STATUS          CHART           APP VERSION
-# traefik-app     traefik         1               2026-01-10 15:14:18.847579643 -0500 ESTdeployed        traefik-38.0.2  v3.6.6
+helm list -n traefik
+# NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART             APP VERSION
+# traefik traefik         1               2026-01-20 14:53:30.825103532 -0500 EST deployed        traefik-38.0.2    v3.6.6
 
 # confirm values
-helm get values traefik-app -n traefik
+h get values traefik -n traefik
 # USER-SUPPLIED VALUES:
-# experimental:
+# providers:
 #   kubernetesGateway:
 #     enabled: true
 ```
-
-> Additional feature of a helm release depends on the values
-> `helm show values REPO/RELEASE > app.yaml`: output values and find the value
 
 ---
 
@@ -1593,57 +2151,224 @@ helm get values traefik-app -n traefik
 CKA EXAM OBJECTIVE: Use Helm to install cluster components
 Task:
 
-1. Modify the Helm chart configuration located at ~/ckad-helm-task to ensure the deployment creates 3 replicas of a pod ...
+1. Modify the Helm chart configuration located at ~/demo to ensure the deployment creates 3 replicas of a pod ...
 2. ... then install the chart into the cluster.
 3. The resources will be created in the battleofhelmsdeep namespace.
+
+- setup env
+
+```sh
+cd ~/cka
+helm create demo
+```
+
+---
 
 - Solution
 
 ```sh
-# find the value "template/deployment.yaml"
-# {{replicaCount}}
+# explore local dir
+cd ~/cka/demo
+ls
 
-# install
-helm install NAME ~/ckad-helm-task --set replicaCount=3 -n NAMESPACE
+# find the value "template/deployment.yaml"
+grep -i replica values.yaml
+# replicaCount: 1
+#   minReplicas: 1
+#   maxReplicas: 100
+
+# create ns
+kubectl create ns battleofhelmsdeep
+# namespace/battleofhelmsdeep created
+
+# install with setting parameters
+helm install demo ~/cka/demo --set replicaCount=3 -n battleofhelmsdeep
+# NAME: demo
+# LAST DEPLOYED: Tue Jan 20 15:08:41 2026
+# NAMESPACE: battleofhelmsdeep
+# STATUS: deployed
+# REVISION: 1
+
+helm list -n battleofhelmsdeep
+# NAME    NAMESPACE               REVISION        UPDATED                                 STATUS   CHART            APP VERSION
+# demo    battleofhelmsdeep       1               2026-01-20 15:08:41.370316625 -0500 EST deployed demo-0.1.0       1.16.0
+
+# confirm
+k get deploy -n battleofhelmsdeep
+# NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+# demo   3/3     3            3           31s
 ```
 
 ---
 
 ### Task: Upgrade Helm Release
 
-One co-worker deployed an nginx helm chart kk-mock1 in the kk-ns namespace on the cluster. A new update is pushed to the helm chart, and the team wants you to update the helm repository to fetch the new changes.
+One co-worker deployed an nginx helm chart `web` in the `kk-ns` namespace on the cluster. A new update is pushed to the helm chart, and the team wants you to update the helm repository to fetch the new changes.
 
-After updating the helm chart, upgrade the helm chart version to 18.1.15.
+After updating the helm chart, upgrade the helm chart version to 38.0.2.
+
+- seteup env
+
+```sh
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+
+# find the latest version
+helm search repo traefik
+# NAME                    CHART VERSION   APP VERSION     DESCRIPTION
+# traefik/traefik         38.0.2          v3.6.6          A Traefik based Kubernetes ingress controller
+
+# find the previous version
+helm search repo traefik --version ^36.0.0
+# NAME            CHART VERSION   APP VERSION     DESCRIPTION
+# traefik/traefik 36.3.0          v3.4.3          A Traefik based Kubernetes ingress controller
+
+# install previous version
+helm install web traefik/traefik --version 36.3.0
+# NAME: web
+# LAST DEPLOYED: Tue Jan 20 15:19:12 2026
+# NAMESPACE: backend
+# STATUS: deployed
+# REVISION: 1
+# TEST SUITE: None
+# NOTES:
+
+helm list
+# NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART             APP VERSION
+# web     backend         1               2026-01-20 15:19:12.161116507 -0500 EST deployed        traefik-36.3.0    v3.4.3
+```
+
+---
+
+- Solution
 
 ```sh
 # get existing release
-helm ls -A
-# NAME            NAMESPACE       REVISION        UPDATED                                      STATUS          CHART           APP VERSION
-# kk-mock1        kk-ns           1               2026-01-17 23:10:53.002548969 +0000 UTC      deployed        nginx-18.1.0    1.27.0
+helm list
+# NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART             APP VERSION
+# web     backend         1               2026-01-20 15:19:12.161116507 -0500 EST deployed        traefik-36.3.0    v3.4.3
 
-# get existing repo
-helm repo ls
-# NAME            URL
-# kk-mock1        https://charts.bitnami.com/bitnami
+# update traefik repo
+helm repo update traefik
+# Hang tight while we grab the latest from your chart repositories...
+# ...Successfully got an update from the "traefik" chart repository
+# Update Complete. ⎈Happy Helming!⎈
 
-# update repo
-helm repo update kk-mock1 -n kk-ns
+# find the latest version
+helm search repo traefik
+# NAME                    CHART VERSION   APP VERSION     DESCRIPTION
+# traefik/traefik         38.0.2          v3.6.6          A Traefik based Kubernetes ingress controller
 
-# search for available charts
-helm search repo kk-mock1/nginx -n kk-ns
-
-# Upgrade the helm chart to 18.1.15
-helm upgrade kk-mock1 kk-mock1/nginx -n kk-ns --version=18.1.15
+# Upgrade the helm chart to latest
+helm upgrade web traefik/traefik --version=38.0.2
+# Release "web" has been upgraded. Happy Helming!
+# NAME: web
+# LAST DEPLOYED: Tue Jan 20 15:23:03 2026
+# NAMESPACE: backend
+# STATUS: deployed
+# REVISION: 2
+# TEST SUITE: None
+# NOTES:
 
 # confirm
-helm ls -n kk-ns
+helm ls
+# NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART             APP VERSION
+# web     backend         2               2026-01-20 15:23:03.64113228 -0500 EST  deployed        traefik-38.0.2    v3.6.6
+```
+
+> upgrade:
+> `helm upgrade RELEASE CHART_VERSION`
+> `helm history RELEASE`
+> `helm rollback RELEASE RELEASE_VERSION`
+
+---
+
+### Task: uninstall release with error image
+
+On the cluster, the team has installed multiple helm charts on a different namespace. By mistake, those deployed resources include one of the vulnerable images called kodekloud/webapp-color:v1. Find out the release name and uninstall it.
+
+---
+
+- solution
+
+```sh
+# check one by one
+helm get manifest RELEASE -n NAMESPACE | grep -i webapp-color:v1
+
+# uninstall
+heml uninstall RELEASE -n NAMESPACE
+```
+
+---
+
+### Task: helm install
+
+One application, webpage-server-01, is currently deployed on the Kubernetes cluster using Helm. A new version of the application is available in a Helm chart located at ~/webpage-server.
+
+Validate this new Helm chart, then install it as a new release named webpage-server-02. After confirming the new release is installed, uninstall the old release webpage-server-01.
+
+- Setup env
+
+```sh
+helm create ~/webpage-server
+# Creating /home/ubuntuadmin/webpage-server
+
+helm install webpage-server-01 ~/webpage-server -n default
+# NAME: webpage-server-01
+# LAST DEPLOYED: Wed Jan 21 20:19:36 2026
+# NAMESPACE: default
+# STATUS: deployed
+# REVISION: 1
+
+# update value
+sed -i 's/repository: nginx/repository: redis/g' ~/webpage-server/values.yaml
+
+sed -i 's/version: 0.1.0/version: 0.2.0/g'  ~/webpage-server/Chart.yaml
+```
+
+---
+
+- Solution:
+
+```sh
+# validate
+helm lint ~/webpage-server
+# ==> Linting /home/ubuntuadmin/webpage-server
+# [INFO] Chart.yaml: icon is recommended
+
+# 1 chart(s) linted, 0 chart(s) failed
+
+helm list
+# NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS    CHART                           APP VERSION
+# webpage-server-01       default         1               2026-01-21 20:19:36.623440716 -0500 EST deployed  webpage-server-0.1.0            1.16.0
+
+helm install webpage-server-02 ~/webpage-server -n default
+# NAME: webpage-server-02
+# LAST DEPLOYED: Wed Jan 21 20:26:17 2026
+# NAMESPACE: default
+# STATUS: deployed
+# REVISION: 1
+
+# confirm
+helm list
+# NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS    CHART                           APP VERSION
+# webpage-server-01       default         1               2026-01-21 20:19:36.623440716 -0500 EST deployed  webpage-server-0.1.0            1.16.0
+# webpage-server-02       default         1               2026-01-21 20:26:17.429373573 -0500 EST deployed  webpage-server-0.2.0            1.16.0
+
+helm uninstall webpage-server-01
+# release "webpage-server-01" uninstalled
+
+# confirm
+helm list
+# NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS    CHART                           APP VERSION
+# webpage-server-02       default         1               2026-01-21 20:26:17.429373573 -0500 EST deployed  webpage-server-0.2.0            1.16.0
 ```
 
 ---
 
 ## Kustomize
 
-### Task: Kustomize
+### Task: \*\*\*Kustomize
 
 You have base manifests for an app in ~/kustomize/base.
 Use Kustomize to deploy a production variant of this app:
@@ -1656,34 +2381,36 @@ Use Kustomize to deploy a production variant of this app:
 
 ```sh
 # base manifest
-sudo mkdir -pv ~/kustomize/base
+mkdir -pv ~/kustomize/base
 
-sudo vi ~/kustomize/base/deployment.yaml
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: hello-app
-#   labels:
-#     app: hello
-# spec:
-#   selector:
-#     matchLabels:
-#       app: hello
-#   template:
-#     metadata:
-#       labels:
-#         app: hello
-#     spec:
-#       containers:
-#       - name: hello
-#         image: nginx:1.19
-#         ports:
-#         - containerPort: 80
+tee ~/kustomize/base/deployment.yaml<<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app
+  labels:
+    app: hello
+spec:
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello
+        image: nginx:1.19
+        ports:
+        - containerPort: 80
+EOF
 
 # create kustomization
-sudo vi ~/kustomize/base/kustomization.yaml
+tee ~/kustomize/base/kustomization.yaml<<'EOF'
 resources:
 - deployment.yaml
+EOF
 ```
 
 ---
@@ -1739,7 +2466,7 @@ Task:
 
 Verify the cert-manager application which has been deployed in the cluster.
 
-Create a list of all cert-manager Custom Resource Definitions (CRDs) and save it to ~/resources.yaml. make sure kubectl's default output format and use kubectl to list CRD's
+Create a list of all tiger Custom Resource Definitions (CRDs) and save it to ~/tiger.yaml. make sure kubectl's default output format and use kubectl to list CRD's
 
 Do not set an output format.
 Failure to do so will result in a reduced score.
@@ -1748,11 +2475,33 @@ You may use any output format that kubecl supports.
 
 ---
 
-- Solution:
+- Solution
 
 ```sh
-kubectl get crd | grep cert-manager
-kubectl get crd | grep cert-manager > ~/resources.yaml
+# get the list of crd with app
+k get crds | grep tiger
+# apiservers.operator.tigera.io                           2026-01-17T05:05:50Z
+# gatewayapis.operator.tigera.io                          2026-01-17T05:05:51Z
+# goldmanes.operator.tigera.io                            2026-01-17T05:05:51Z
+# imagesets.operator.tigera.io                            2026-01-17T05:05:51Z
+# installations.operator.tigera.io                        2026-01-17T05:05:51Z
+# managementclusterconnections.operator.tigera.io         2026-01-17T05:05:51Z
+# tigerastatuses.operator.tigera.io                       2026-01-17T05:05:51Z
+# whiskers.operator.tigera.io                             2026-01-17T05:05:51Z
+
+# output the list
+k get crds | grep tiger > ~/tiger.yaml
+
+# confirm
+cat ~/tiger.yaml
+# apiservers.operator.tigera.io                           2026-01-17T05:05:50Z
+# gatewayapis.operator.tigera.io                          2026-01-17T05:05:51Z
+# goldmanes.operator.tigera.io                            2026-01-17T05:05:51Z
+# imagesets.operator.tigera.io                            2026-01-17T05:05:51Z
+# installations.operator.tigera.io                        2026-01-17T05:05:51Z
+# managementclusterconnections.operator.tigera.io         2026-01-17T05:05:51Z
+
+# #################
 
 kubectl explain certificate.spec.subject > ~/subject.yaml
 kubectl explain certificate.spec.subject --format=plain > ~/subject.yaml
@@ -1762,7 +2511,7 @@ kubectl explain certificate.spec.subject --format=plain > ~/subject.yaml
 
 ### Task: list CRDs
 
-On controlplane node, identify all CRDs related to VerticalPodAutoscaler and save their names into the file /root/vpa-crds.txt.
+On controlplane node, identify all CRDs related to VerticalPodAutoscaler and save their names into the file ~/vpa-crds.txt.
 
 ---
 
@@ -1773,39 +2522,10 @@ k get crds -A | grep -i VerticalPodAutoscaler
 # verticalpodautoscalercheckpoints.autoscaling.k8s.io   2026-01-17T22:26:07Z
 # verticalpodautoscalers.autoscaling.k8s.io             2026-01-17T22:26:07Z
 
-k get crds -A | grep -i VerticalPodAutoscaler > /root/vpa-crds.txt
+k get crds -A | grep -i VerticalPodAutoscaler > ~/vpa-crds.txt
 
 # confirm
 sudo cat /root/vpa-crds.txt
-```
-
----
-
-- Solution
-
-```sh
-# get the list of crd with app
-kubectl get crds | grep cert-manager
-
-# output the list
-kubectl get crds | grep cert-manager > ~/resources.yaml
-
-# confirm
-cat ~/resources.yaml
-
-# ################
-
-# get the app Certificate
-kubectl get crd | grep certificate
-
-# get the document using explain
-kubectl explain certificate.**.spec.subject
-
-# output
-kubectl explain certificate.**.spec.subject > ~/subject.vaml
-
-cat ~/subject.vaml
-
 ```
 
 ---
@@ -1990,6 +2710,53 @@ k get deploy -n priority1
 
 ---
 
+### Task: priorityClass
+
+Create a PriorityClass named low-priority with a value of 50000. A pod named lp-pod exists in the namespace low-priority. Modify the pod to use the priority class you created. Recreate the pod if necessary.
+
+- Setup env
+
+```sh
+k create ns low-priority
+k run lp-pod -n low-priority --image=nginx
+```
+
+---
+
+- Solution
+
+```sh
+# create pc
+kubectl create priorityclass low-priority --value=50000 -n low-priority
+# priorityclass.scheduling.k8s.io/low-priority created
+
+k describe priorityclass low-priority -n low-priority
+# Name:              low-priority
+# Value:             50000
+# GlobalDefault:     false
+# PreemptionPolicy:  PreemptLowerPriority
+# Description:
+# Annotations:       <none>
+# Events:            <none>
+
+k edit pod lp-pod -n low-priority
+# add:
+# spec.priorityClassName: low-priority
+# remove:
+# spec.priority: 0
+
+k get po -n low-priority
+# NAME     READY   STATUS    RESTARTS   AGE
+# lp-pod   1/1     Running   0          19s
+
+# confirm
+k describe pod lp-pod -n low-priority | grep -i priority
+# Priority:             50000
+# Priority Class Name:  low-priority
+```
+
+---
+
 ### Task: Limit range
 
 In the namespace limit-test, enforce default resource limits and requests for containers:
@@ -2109,7 +2876,7 @@ kubectl top pod -l name=cpu-loader --sort-by=cpu -A
 
 ---
 
-### Task: Resources
+### Task: \*\*\*Resources
 
 Task
 
@@ -2166,11 +2933,13 @@ EOF
 kubectl apply -f env-deploy.yaml
 ```
 
+---
+
 - Solution
-  - find the node where the app is scheduled, find the capacity: cpu+memory
-  - caculate:
-    - save 25% for system
-    - 75% / 3 =25% total cpu
+  - pod resource = (allocatable \* (1-reserve) - allocated) / replicas
+  - reserve:
+    - cpu: 10%
+    - memory: 20%
 
 ```sh
 # find the
@@ -2181,20 +2950,21 @@ kubectl -n relative-fawn get pod -o wide
 # wordpress-6b77fdbd49-hkw7z   1/1     Running   0          5m19s   10.244.2.24   node02   <none>           <none>
 
 # get the resource
-kubectl describe node node02
-# Capacity:
+kubectl describe node node2
+# Allocatable:
 #   cpu:                1
-#   ephemeral-storage:  30784420Ki
-#   hugepages-1Gi:      0
-#   hugepages-2Mi:      0
-#   memory:             1965484Ki
+#   memory:             1863088Ki
+# Allocated resources:
+#   Resource           Requests      Limits
+#   --------           --------      ------
+#   cpu                400m (40%)    400m (40%)
+#   memory             1060Mi (58%)  1670Mi (91%)
+
 ```
 
-- Caculation:
-  - 1000m \* (1-25%) = 750
-  - 750/3 = 250m
-  - 2Gi \* (1-25%) = 1500Mi
-  - 1500Mi / 3 = 500Mi
+- Calculation:
+  - cpu = 1000 \* 1-10% - 400 = 500m
+  - memory = (1800 - 1-20%) - 1060 = 380
 
 ```sh
 # scale down
@@ -2209,18 +2979,18 @@ k edit deploy wordpress -n relative-fawn
 
 # confirm
 k get deploy wordpress -n relative-fawn -o yaml
-# containers:
-#   name: nginx
-#   resources:
-#     requests:
-#       cpu: 250m
-#       memory: 800Mi
-# initContainers:
-#   name: init-container
-#   resources:
-#     requests:
-#       cpu: 250m
-#       memory: 800Mi
+containers:
+  name: nginx
+  resources:
+    requests:
+      cpu: 250m
+      memory: 800Mi
+initContainers:
+  name: init-container
+  resources:
+    requests:
+      cpu: 250m
+      memory: 800Mi
 
 # scale out
 kubectl scale deploy wordpress -n relative-fawn --replicas=3
@@ -2232,3 +3002,8 @@ k get deploy wordpress -n relative-fawn
 ```
 
 ---
+
+```sh
+kubectl set resources deployment nginx -c=nginx --limits=cpu=200m,memory=512Mi
+
+```

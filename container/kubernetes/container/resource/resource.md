@@ -6,6 +6,7 @@
   - [Resource](#resource)
     - [Request + Limit Strategy](#request--limit-strategy)
   - [Container Resource](#container-resource)
+    - [Imperative Command](#imperative-command)
     - [Declarative Manifest](#declarative-manifest)
   - [Pod Resource](#pod-resource)
     - [Declarative Manifest](#declarative-manifest-1)
@@ -21,25 +22,21 @@
 ## Resource
 
 - **CPU Resources**:
-
   - 1 AWS vCPU
   - 1 GCP
   - 1 Azure Core
   - 1 Hyperthread
 
 - **Memory Resources**:
-
   - `1 Ki`: 1,024 bytes
   - `1 K`: 1,000 bytes
   - `1 Mi`: 1,048,576 bytes
   - `1 M`: 1,000,000 bytes
 
 - **Scheduling**:
-
   - The `Scheduler` looks for a node that **has enough unallocated capacity** to satisfy the entire Pod's total request.
 
 - **Exceed Limit**
-
   - CPU **cannot** exceed
   - memory **can** execeed
     - if memory is constantly over the limit, the pod will be terminated due to `OOMKilled` (out of memory error)
@@ -87,6 +84,14 @@
     - If a `container` **hits** this, it is "**throttled**" (slowed down).
   - `Memory Limit`:
     - If a `container` **hits** this, it is **"OOMKilled" (Out of Memory)** and **restarted**.
+
+---
+
+### Imperative Command
+
+| CMD                                                                               | DESC           |
+| --------------------------------------------------------------------------------- | -------------- |
+| `kubectl set resources deploy DEPLOY -c=CONTAINER --limits=cpu=200m,memory=512Mi` | Set resrources |
 
 ---
 
@@ -360,7 +365,6 @@ kubectl describe ns limit-resource
 ## Edit a pod
 
 - **CANNOT** edit specifications of an existing POD other than the below:
-
   - `spec.containers[*].image`
   - `spec.initContainers[*].image`
   - `spec.activeDeadlineSeconds`

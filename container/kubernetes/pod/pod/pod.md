@@ -29,11 +29,9 @@
 ## Pod
 
 - `pod`
-
   - the **smallest deployable unit** in Kubernetes that represents a **single instance** of an **application**.
     - the smallest object that can be created in k8s
   - a collection of **containers** and its **storage** inside a **node** of a Kubernetes cluster.
-
     - a **single** `pod` instance **never spans** **multiple** `nodes`.
 
   - a design to **run related processes** together even when divided into multiple containers.
@@ -42,7 +40,6 @@
   - A `pod` makes these **interconnected** `containers` manageable as one unit.
 
 - All `containers` in a `pod` **share**:
-
   - the **same** `Network namespace` and thus the `network interfaces`, `IP address(es)` and `port space`
     - 2 `containers` cannot bind to the same `port`
     - Inter-container communication is enbled through the loopback device.
@@ -51,7 +48,6 @@
   - the same single **process tree**, because using the single `PID namespace`.
 
 - each `container` always has its **own** `Mount namespace`
-
   - container has its own file system.
   - if **sharing file system** is required, can mount a **shared volumes** with individual `mount namespace`
 
@@ -63,7 +59,6 @@
 ### Lifecycle
 
 - Pod Phases
-
   - `Pending`: The pod is **accepted** by Kubernetes, but containers **aren't created** or are **waiting for resources**.
   - `Running`: The pod is **bound to a node**, all containers are created, and **at least one** is running.
   - `Succeeded`: All containers **finished successfully** and **won't restart**.
@@ -94,13 +89,11 @@
   -
 
 1. `kubectl` (client)
-
    - Reads `kubeconfig` (cluster endpoint + credentials).
    - Builds a Pod `manifest` (name mynginx, image nginx, default namespace, restartPolicy depending on version/flags).
    - Sends an HTTPS request to the API server via `POST .../api/v1/namespaces/<ns>/pods` with the Pod JSON/YAML.
 
 2. `API Server` (kube-apiserver)
-
    - **Authenticates** you (TLS client cert / token / OIDC).
    - **Authorizes** the request (RBAC).
    - Runs admission control:
@@ -108,12 +101,10 @@
      - **Validating** (schema, policies, quota checks, PodSecurity, etc.)
 
 3. `etcd`
-
    - **Stores** the Pod object (desired state + metadata).
    - Now the Pod exists but is typically **Pending** (no node assigned yet).
 
 4. `Scheduler` (kube-scheduler)
-
    - Watches for Pods with:
      - `spec.nodeName` empty (unscheduled).
    - Runs **scheduling algorithm**:
@@ -123,27 +114,23 @@
      - Sets `spec.nodeName = <chosen-node>`
 
 5. `kubelet` (on the chosen node)
-
    - **Watches** the `API server` for Pods assigned to this node.
    - Sees `mynginx` and begins to make reality match desired state:
      - Prepares directories, volumes, secrets/configmaps (if any).
      - **Calls** the `container runtime` via `CRI`.
 
 6. `Container runtime` (containerd / CRI-O)
-
    - **Pulls** the image (nginx) from a registry:
      - Handles image layers, caching, authentication (if private registry).
      - Creates the Pod sandbox (pause container) and networking.
      - Creates and starts the nginx container.
 
 7. **CNI plugin** (networking)
-
    - Sets up Pod networking:
      - **Attaches** Pod to **cluster network**, assigns `Pod IP`.
      - Programs **routes/iptables/eBPF rules** depending on the `CNI` (Calico, Cilium, Flannel, etc.)
 
 8. `kube-proxy` (service networking)
-
    - Programs node-level **forwarding rules** for `Services`.
 
 9. Status updates back to API server
@@ -155,18 +142,28 @@
 
 ### Imperative Commands
 
-| **Command**                                          | **Description**                                             |
-| ---------------------------------------------------- | ----------------------------------------------------------- |
-| `kubectl get pods`                                   | List all pods in the current namespace                      |
-| `kubectl get pods -A`                                | List pods across **all namespaces**                         |
-| `kubectl get pods -o wide`                           | List pods with extra details                                |
-| `kubectl get pods --watch`                           | Streams updates as Pod states change.                       |
-| `kubectl describe pod pod_name`                      | Show detailed information about a specific pod              |
-| `kubectl logs pod_name`                              | View logs from a pod's main container                       |
-| `kubectl logs pod_name -c container_name`            | View logs for a specific container in a multi-container pod |
-| `kubectl exec -it pod_name -- commands`              | Execute a command inside the pod (e.g., get a shell)        |
-| `kubectl delete pod pod_name`                        | Delete a specific pod                                       |
-| `kubectl port-forward <pod> <local-port>:<pod-port>` | Forward ports from a Pod to your local machine.             |
+| **Command**                                                | **Description**                                               |
+| ---------------------------------------------------------- | ------------------------------------------------------------- |
+| `kubectl get pods`                                         | List all pods in the current namespace                        |
+| `kubectl get pods -A`                                      | List pods across **all namespaces**                           |
+| `kubectl get pods -o wide`                                 | List pods with extra details                                  |
+| `kubectl get pods --watch`                                 | Streams updates as Pod states change.                         |
+| `kubectl describe pod pod_name`                            | Show detailed information about a specific pod                |
+| `kubectl logs pod_name`                                    | View logs from a pod's main container                         |
+| `kubectl logs pod_name -c container_name`                  | View logs for a specific container in a multi-container pod   |
+| `kubectl exec -it pod_name -- commands`                    | Execute a command inside the pod (e.g., get a shell)          |
+| `kubectl attach pod_name -i`                               | Attach to Running Container                                   |
+| `kubectl debug pod_name -it --image=IMG`                   | Attach within existing pod                                    |
+| `kubectl delete pod pod_name`                              | Delete a specific pod                                         |
+| `kubectl port-forward <pod> <local-port>:<pod-port>`       | Forward ports from a Pod to your local machine.               |
+| `kubectl top pod`                                          | Show metrics for all pods in the default namespace            |
+| `kubectl top pod POD_NAME --containers`                    | Show metrics for a given pod and its containers               |
+| `kubectl top pod POD_NAME --sort-by=cpu`                   | Show metrics for a given pod and sort it by 'cpu' or 'memory' |
+| `kubectl cp LOCAL_FILE_DIR pod_name:POD_path`              | Copy local files or dir to pod path                           |
+| `kubectl cp LOCAL_FILE_DIR pod_name:POD_path -c CONTAINER` | Copy local files or dir to pod's container path               |
+| `kubectl cp LOCAL_FILE_DIR pod_name:POD_path -c CONTAINER` | Copy local files or dir to pod's container path               |
+| `kubectl cp LOCAL_FILE_DIR NAMESPACE/pod_name:POD_path`    | Copy local files or dir to namespace's pod's container path   |
+| `kubectl cp NAMESPACE/pod_name:POD_path LOCAL_FILE_DIR`    | Copy from a pod to local path                                 |
 
 - Run
 
@@ -181,7 +178,6 @@
 | `kubectl run pod_name --image=image_name --dry-run=client -o yaml -command -- sleep 1000 > yaml_file` | View full YAML configuration of a pod with command            |
 
 - List Pod: `kubectl list pod`
-
   - NAME:
     - e.g., kiada-9d785b578-58vhc
   - READY
@@ -348,7 +344,6 @@ kubectl get pods
 ## Pod Network
 
 - Methods to find the pod ip
-
   - `kubectl get pod NAME -o wide`
   - `kubectl describe pod NAME`
   - `kubectl get pod NAME -o yaml`
@@ -356,7 +351,6 @@ kubectl get pods
 ---
 
 - Pod connection
-
   - By default
     - **Every** `Pod` can communicate with every other `Pod` without NAT (Network Address Translation).
       - Each pod is accessible for other pod whenever it is in the same node.
@@ -458,7 +452,6 @@ curl 127.0.0.1:8081
 ## Log File
 
 - `log file`
-
   - Kubernetes keeps a **separate log file** for **each** `container`.
   - default path:
     - `/var/log/containers` **on the node** that runs the container
@@ -470,7 +463,6 @@ curl 127.0.0.1:8081
     - Further configuration is required if the log file needs to be stored centrally and permanently.
 
 - `lof file` may also be **rotated** when they reach a **certain size**.
-
   - when the log is rotated, the streaming log `kubectl logs -f` needs to restart.
 
 ---
@@ -720,11 +712,9 @@ kubectl exec -it multi-container-log-demo -c redis -- redis-cli -v
 ## Multi-containers Pod
 
 - `multi-containers pod`
-
   - the pod that runs multiple containers to compose a single, tightly-coupled workload.
 
 - features:
-
   - share the same network (IP address)
   - share volumes (files/directories)
   - have coordinated Pod lifecycle

@@ -17,7 +17,9 @@
     - [Install `etcd-client`](#install-etcd-client)
     - [Install `helm`](#install-helm)
     - [Install `nginx ingress controller`](#install-nginx-ingress-controller)
-    - [Install Nginx Gateway Fabric](#install-nginx-gateway-fabric)
+    - [Install `Nginx Gateway Fabric`](#install-nginx-gateway-fabric)
+    - [Install VPA](#install-vpa)
+    - [Install `MetalLB`](#install-metallb)
 
 ---
 
@@ -194,6 +196,19 @@ sudo systemctl enable --now kubelet
 kubectl version --client
 # Client Version: v1.31.14
 # Kustomize Version: v5.4.2
+
+cat <<EOF | sudo tee /etc/crictl.yaml
+runtime-endpoint: unix:///run/containerd/containerd.sock
+image-endpoint: unix:///run/containerd/containerd.sock
+timeout: 2
+debug: false
+pull-image-on-create: false
+EOF
+
+# confirm
+sudo crictl ps
+# CONTAINER           IMAGE               CREATED             STATE               NAME                ATTEMPT             POD ID              POD                 NAMESPACE
+
 ```
 
 ---
@@ -231,7 +246,7 @@ sysctl net.ipv4.ip_forward
 # ##############################
 # Initialize control plane
 # ##############################
-sudo kubeadm init --apiserver-advertise-address=192.168.10.150 --pod-network-cidr=10.244.0.0/16
+sudo kubeadm init --apiserver-advertise-address=192.168.10.150 --pod-network-cidr=10.244.0.0/16 --cri-socket=unix:///var/run/containerd/containerd.sock
 
 # ##############################
 # Configure kubectl for current user
@@ -494,28 +509,41 @@ helm version
 ### Install `nginx ingress controller`
 
 ```sh
-helm install nginx-ingress oci://ghcr.io/nginx/charts/nginx-ingress --version 0.0.0-edge
-# Pulled: ghcr.io/nginx/charts/nginx-ingress:0.0.0-edge
-# Digest: sha256:a2cb6aa1ad0b7cc64e9250efc24f872beff6a690951a7d4075c7ab02db9ec496
-# NAME: nginx-ingress
-# LAST DEPLOYED: Sat Jan 17 01:32:18 2026
-# NAMESPACE: default
-# STATUS: deployed
-# REVISION: 1
-# TEST SUITE: None
-# NOTES:
-# NGINX Ingress Controller edge has been installed.
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.14.1/deploy/static/provider/cloud/deploy.yaml
+# namespace/ingress-nginx created
+# serviceaccount/ingress-nginx created
+# serviceaccount/ingress-nginx-admission created
+# role.rbac.authorization.k8s.io/ingress-nginx created
+# role.rbac.authorization.k8s.io/ingress-nginx-admission created
+# clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+# clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+# rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+# rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+# clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+# clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+# configmap/ingress-nginx-controller created
+# service/ingress-nginx-controller created
+# service/ingress-nginx-controller-admission created
+# deployment.apps/ingress-nginx-controller created
+# job.batch/ingress-nginx-admission-create created
+# job.batch/ingress-nginx-admission-patch created
+# ingressclass.networking.k8s.io/nginx created
+# validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
 
 # confirm
+kubectl get deploy --namespace=ingress-nginx
+# NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+# ingress-nginx-controller   1/1     1            1           16m
+
 kubectl get ingressclass
-# NAME    CONTROLLER                     PARAMETERS   AGE
-# nginx   nginx.org/ingress-controller   <none>       18m
+# NAME    CONTROLLER             PARAMETERS   AGE
+# nginx   k8s.io/ingress-nginx   <none>       16m
 
 ```
 
 ---
 
-### Install Nginx Gateway Fabric
+### Install `Nginx Gateway Fabric`
 
 ```sh
 # install resources
@@ -557,8 +585,154 @@ kubectl get deploy -n nginx-gateway
 # NAME            READY   UP-TO-DATE   AVAILABLE   AGE
 # nginx-gateway   1/1     1            1           6m12s
 
-k get gatewayclass
+kubectl get gatewayclass
 # NAME    CONTROLLER                                   ACCEPTED   AGE
 # nginx   gateway.nginx.org/nginx-gateway-controller   True       5m13s
 
 ```
+
+---
+
+### Install VPA
+
+```sh
+# Install VPA Custom Resource Definitions (CRDs)
+# allow Kubernetes to recognize the custom resources that VPA uses to function properly.
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/vpa-release-1.0/vertical-pod-autoscaler/deploy/vpa-v1-crd-gen.yaml
+# customresourcedefinition.apiextensions.k8s.io/verticalpodautoscalercheckpoints.autoscaling.k8s.io created
+# customresourcedefinition.apiextensions.k8s.io/verticalpodautoscalers.autoscaling.k8s.io created
+
+# Install VPA Role-Based Access Control (RBAC)
+# ensures that VPA has the appropriate permissions to operate within your Kubernetes cluster.
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/vpa-release-1.0/vertical-pod-autoscaler/deploy/vpa-rbac.yaml
+# clusterrole.rbac.authorization.k8s.io/system:metrics-reader created
+# clusterrole.rbac.authorization.k8s.io/system:vpa-actor created
+# clusterrole.rbac.authorization.k8s.io/system:vpa-status-actor created
+# clusterrole.rbac.authorization.k8s.io/system:vpa-checkpoint-actor created
+# clusterrole.rbac.authorization.k8s.io/system:evictioner created
+# clusterrolebinding.rbac.authorization.k8s.io/system:metrics-reader created
+# clusterrolebinding.rbac.authorization.k8s.io/system:vpa-actor created
+# clusterrolebinding.rbac.authorization.k8s.io/system:vpa-status-actor created
+# clusterrolebinding.rbac.authorization.k8s.io/system:vpa-checkpoint-actor created
+# clusterrole.rbac.authorization.k8s.io/system:vpa-target-reader created
+# clusterrolebinding.rbac.authorization.k8s.io/system:vpa-target-reader-binding created
+# clusterrolebinding.rbac.authorization.k8s.io/system:vpa-evictioner-binding created
+# serviceaccount/vpa-admission-controller created
+# serviceaccount/vpa-recommender created
+# serviceaccount/vpa-updater created
+# clusterrole.rbac.authorization.k8s.io/system:vpa-admission-controller created
+# clusterrolebinding.rbac.authorization.k8s.io/system:vpa-admission-controller created
+# clusterrole.rbac.authorization.k8s.io/system:vpa-status-reader created
+# clusterrolebinding.rbac.authorization.k8s.io/system:vpa-status-reader-binding created
+
+# Clone the repository
+git clone https://github.com/kubernetes/autoscaler.git
+
+# Run the setup script
+cd autoscaler/vertical-pod-autoscaler
+./hack/vpa-up.sh
+
+# confirm
+kubectl get deploy -n kube-system
+# NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+# vpa-admission-controller   1/1     1            1           4h37m
+# vpa-recommender            1/1     1            1           4h37m
+# vpa-updater                1/1     1            1           4h37m
+```
+
+---
+
+### Install `MetalLB`
+
+```sh
+# update config
+kubectl edit configmap -n kube-system kube-proxy
+# find:
+# ipvs:
+#   strictARP: false
+# replace: 
+# ipvs:
+#   strictARP: true
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.3/config/manifests/metallb-native.yaml
+# namespace/metallb-system created
+# customresourcedefinition.apiextensions.k8s.io/bfdprofiles.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/bgpadvertisements.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/bgppeers.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/communities.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/configurationstates.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/ipaddresspools.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/l2advertisements.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/servicebgpstatuses.metallb.io created
+# customresourcedefinition.apiextensions.k8s.io/servicel2statuses.metallb.io created
+# serviceaccount/controller created
+# serviceaccount/speaker created
+# role.rbac.authorization.k8s.io/controller created
+# role.rbac.authorization.k8s.io/pod-lister created
+# clusterrole.rbac.authorization.k8s.io/metallb-system:controller created
+# clusterrole.rbac.authorization.k8s.io/metallb-system:speaker created
+# rolebinding.rbac.authorization.k8s.io/controller created
+# rolebinding.rbac.authorization.k8s.io/pod-lister created
+# clusterrolebinding.rbac.authorization.k8s.io/metallb-system:controller created
+# clusterrolebinding.rbac.authorization.k8s.io/metallb-system:speaker created
+# configmap/metallb-excludel2 created
+# secret/metallb-webhook-cert created
+# service/metallb-webhook-service created
+# deployment.apps/controller created
+# daemonset.apps/speaker created
+# validatingwebhookconfiguration.admissionregistration.k8s.io/metallb-webhook-configuration created
+
+# confirm
+kubectl get pods -n metallb-system
+# NAME                         READY   STATUS    RESTARTS   AGE
+# controller-9c6cff498-bxxf7   1/1     Running   0          50s
+# speaker-9xdrj                1/1     Running   0          50s
+# speaker-fh4fg                1/1     Running   0          50s
+# speaker-lr7qg                1/1     Running   0          50s
+
+# Create IPAddressPool that MetalLB can assign from.
+tee ~/metallb-ip-pool.yaml <<EOF
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: web-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.10.210-192.168.10.220
+EOF
+
+kubectl apply -f ~/metallb-ip-pool.yaml
+# ipaddresspool.metallb.io/web-pool created
+
+kubectl get IPAddressPool web-pool -n metallb-system
+# NAME       AUTO ASSIGN   AVOID BUGGY IPS   ADDRESSES
+# web-pool   true          false             ["192.168.10.210-192.168.10.220"]
+
+# Create L2Advertisement to announce those IPs via ARP.
+tee ~/metallb-l2adv.yaml <<EOF
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: web-l2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - web-pool
+EOF
+
+kubectl apply -f ~/metallb-l2adv.yaml
+# l2advertisement.metallb.io/web-l2 created
+
+kubectl get L2Advertisement web-l2 -n metallb-system
+# NAME     IPADDRESSPOOLS   IPADDRESSPOOL SELECTORS   INTERFACES
+# web-l2   ["web-pool"]
+
+
+# confirm: MetalLB assign an external IP to Nginx Gateway Service
+kubectl get svc -n nginx-gateway
+# NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+# nginx-gateway   ClusterIP   10.111.194.40   <none>        443/TCP   34m
+```
+
+---

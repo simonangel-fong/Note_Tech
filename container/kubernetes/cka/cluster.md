@@ -17,6 +17,13 @@
     - [Task: Troubleshooting worker node](#task-troubleshooting-worker-node)
     - [Task: fix cluster connection](#task-fix-cluster-connection)
     - [Task: Troubleshooting API server](#task-troubleshooting-api-server)
+    - [Task: high cpu request for controller manager](#task-high-cpu-request-for-controller-manager)
+    - [Task: config sysctl](#task-config-sysctl)
+    - [kubectl config](#kubectl-config)
+    - [Task: kubeadm + cm + podSubnet](#task-kubeadm--cm--podsubnet)
+    - [Task: node pod cidr](#task-node-pod-cidr)
+    - [Task: Join a worker node](#task-join-a-worker-node)
+    - [Task: run pod and troubleshooting kubelet](#task-run-pod-and-troubleshooting-kubelet)
   - [Scheduling](#scheduling)
     - [Task: Node selector](#task-node-selector)
     - [Task: node selector](#task-node-selector-1)
@@ -24,6 +31,10 @@
     - [Task: Taints](#task-taints)
     - [Task: available node](#task-available-node)
     - [Task: Cordon](#task-cordon)
+    - [Task: static pod](#task-static-pod)
+    - [Task: taint node](#task-taint-node)
+    - [Task: taint \& toleration](#task-taint--toleration)
+    - [Task: Reschedule pod to another node](#task-reschedule-pod-to-another-node)
 
 ---
 
@@ -34,8 +45,7 @@
 CKA EXAM OBJECTIVE: Create and manage Kubernetes clusters using kubeadm
 TASK:
 
-1. Join node02 to your existing kubeadm cluster. It has already been pre-provisioned with all necessary inst
-   allations.
+1. Join node02 to your existing kubeadm cluster. It has already been pre-provisioned with all necessary installations.
 
 ---
 
@@ -240,6 +250,8 @@ As an administrator, you need to prepare node01 to install kubernetes. One of th
 - Solution
 
 ```sh
+# if tgz, using tar -xvzf
+
 sudo -i
 dpkg -i /root/cri-dockerd_0.3.22.3-0.ubuntu-jammy_amd64.deb
 
@@ -268,8 +280,7 @@ systemctl status cri-docker
 
 ### Task: install runtime
 
-Prepare a Linux system for Kubernetes. Docker is already installed, but you
-need to configure it for kubeadm.
+Prepare a Linux system for Kubernetes. Docker is already installed, but you need to configure it for kubeadm.
 Task
 
 Complete these tasks to prepare the system for Kubernetes :
@@ -1116,6 +1127,52 @@ sudo systemctl restart kubelet
 
 ---
 
+```sh
+crictl ps -a | grep -i api`
+
+sudo crictl ps -a | grep -i api
+# 60c4b62e5a3c8       021d1ceeffb11       14 seconds ago      Running             kube-apiserver              5                   327e3ae9f506e       kube-apiserver-controlplane            kube-system
+# 65b763e01ae34       021d1ceeffb11       2 minutes ago       Exited              kube-apiserver              4                   327e3ae9f506e       kube-apiserver-controlplane            kube-system
+
+crictl logs 65b763e01ae34
+# W0125 20:52:33.296127       1 logging.go:55] [core] [Channel #3 SubChannel #4]grpc: addrConn.createTransport failed to connect to {Addr: "127.0.0.1:2378", ServerName: "127.0.0.1:2378", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:2378: connect: connection refused"
+# W0125 20:52:33.837073       1 logging.go:55] [core] [Channel #5 SubChannel #6]grpc: addrConn.createTransport failed to connect to {Addr: "127.0.0.1:2378", ServerName: "127.0.0.1:2378", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:2378: connect: connection refused"
+# F0125 20:52:37.357963       1 instance.go:226] Error creating leases: error creating storage factory: context deadline exceeded
+```
+
+> it indicates that api tried to connect with 127.0.0.1:2378 but fails.
+> then try to find the what entry of api server manifest is this ip+port involved, finding what component fails.
+
+```sh
+# identify the failure component
+sudo vi /etc/kubernetes/manifests/kube-apisever.yaml
+# - --etcd-servers=https://127.0.0.1:2378
+```
+
+> the etcd-server is the cause, then verify the correct ip+port with the etcd manifest
+
+```sh
+sudo vi /etc/kubernetes/manifests/etcd.yaml
+# - --listen-client-urls=https://127.0.0.1:2379,https://192.168.10.150:2379
+```
+
+> therefore, the correct etcd address using port `2379`, not `2378`
+
+```sh
+# debugging
+sudo vi /etc/kubernetes/manifests/kube-apisever.yaml
+# - --etcd-servers=https://127.0.0.1:2379
+
+# confirm
+k get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   8d    v1.33.7
+# node01         Ready    <none>          8d    v1.32.11
+# node02         Ready    <none>          8d    v1.32.11
+```
+
+---
+
 ### Task: Troubleshooting API server
 
 A kubeadm provisioned cluster was migrated to a new machine. Requires configuration changes to run successfully.
@@ -1182,6 +1239,227 @@ kubectl get node
 >   - `/etc/kubernetes/manifests/kube-scheduler.yaml`: check ip
 > - deployment/sts can created but pod cannot create:
 >   - scheduler manager error: check the bind-address
+
+---
+
+### Task: high cpu request for controller manager
+
+The kube-controller-manager static pod is not starting because its CPU request is set too high.
+
+Modify the CPU request to an appropriate value based on the node's available resources.
+Hint: The CPU request should not exceed 10% of the node capacity.
+
+- solution
+
+```sh
+# check the container status
+crictl ps -a | grep controller
+
+# check the capacity cpu
+k describe node | grep -i cpu
+
+# check the manifest
+vi /etc/kubernetes/manifests/kube-controller-manager.yaml
+# update resources
+# spec.containers.resources
+
+```
+
+---
+
+### Task: config sysctl
+
+You are an administrator preparing your environment to deploy a Kubernetes cluster using kubeadm. Adjust the following network parameters on the system to the following values, and make sure your changes persist reboots:
+
+net.ipv4.ip_forward = 1
+net.bridge.bridge-nf-call-iptables = 1
+
+---
+
+- Solution
+
+- Ref: https://kubernetes.io/docs/setup/production-environment/container-runtimes/#prerequisite-ipv4-forwarding-optional
+
+```sh
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.ipv4.ip_forward = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+# Apply sysctl params without reboot
+sudo sysctl --system
+
+# Verify
+sysctl net.ipv4.ip_forward
+```
+
+---
+
+### kubectl config
+
+A kubeconfig file called super.kubeconfig has been created under /tmp/super.kubeconfig. There is something wrong with the configuration. Troubleshoot and fix it.
+
+- Setup env
+
+```sh
+# copy the config
+cp ~/.kube/config /tmp/super.kubeconfig
+
+# change config
+sed -i 's/6443/8888/g' /tmp/super.kubeconfig
+```
+
+---
+
+- solution
+  - using `--kubeconfig=local_config_file` to verify the config
+
+```sh
+# confirm the current config is available
+k get node
+# NAME           STATUS   ROLES           AGE     VERSION
+# controlplane   Ready    control-plane   4d15h   v1.32.11
+# node01         Ready    <none>          4d15h   v1.32.11
+# node02         Ready    <none>          4d15h   v1.32.11
+
+# check config
+k get node  --kubeconfig=/tmp/super.kubeconfig
+# E0121 15:15:26.793277   32576 memcache.go:265] "Unhandled Error" err="couldn't get current server API group list: Get \"https://192.168.10.150:8888/api?timeout=32s\": dial tcp 192.168.10.150:8888: connect: connection refused"
+# The connection to the server 192.168.10.150:8888 was refused - did you specify the right host or port?
+
+# identify the correct ip and port
+kubectl config view
+# apiVersion: v1
+# clusters:
+# - cluster:
+#     certificate-authority-data: DATA+OMITTED
+#     server: https://192.168.10.150:6443
+
+# check
+vi /tmp/super.kubeconfig
+# find:
+# server: https://192.168.10.150:8888
+# change:
+# server: https://192.168.10.150:6443
+
+# confirm
+k get node  --kubeconfig=/tmp/super.kubeconfig
+# NAME           STATUS   ROLES           AGE     VERSION
+# controlplane   Ready    control-plane   4d15h   v1.32.11
+# node01         Ready    <none>          4d15h   v1.32.11
+# node02         Ready    <none>          4d15h   v1.32.11
+```
+
+---
+
+### Task: kubeadm + cm + podSubnet
+
+While preparing to install a CNI plugin on your Kubernetes cluster, you typically need to confirm the cluster-wide Pod network CIDR. Identify the Pod subnet configured for the cluster (the value specified under podSubnet in the kubeadm configuration). Output this CIDR in the format x.x.x.x/x to a file located at /root/pod-cidr.txt.
+
+---
+
+- Solution
+
+```sh
+kubectl -n kube-system get cm
+# kubeadm-config                                         1      4d21h
+
+kubectl describe cm kubeadm-config -n kube-system | grep -i podSubnet
+  # podSubnet: 10.244.0.0/16
+```
+
+---
+
+### Task: node pod cidr
+
+Get pod cidr for each node
+
+```sh
+kubectl describe node controlplane | grep -i cidr
+# PodCIDRs:                     10.244.0.0/24
+
+kubectl describe node node01 | grep -i cidr
+# PodCIDRs:                     10.244.1.0/24
+```
+
+---
+
+### Task: Join a worker node
+
+join node01, then create a pod named web-pod with a container named web using nginx to be scheduled on node01.
+
+```sh
+kubeadm token create --print-join-command
+
+# if join command error, check the kubelet on the worker node is running
+sudo systemctl status kubelet
+sudo systemctl enable --now kubelet
+sudo systemctl status kubelet
+
+# confirm
+k get node
+
+k run web-pod --image=nginx --dry-run=client -o yaml > po.yaml
+
+vi po.yaml
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: web-pod
+# spec:
+#   nodeName: node01
+#   containers:
+#   - image: nginx
+#     name: web
+
+k apply -f po.yaml
+
+# confirm
+k get pod web-pod -o wide
+```
+
+---
+
+### Task: run pod and troubleshooting kubelet
+
+create a pod name web-pod using nginx and schedule on node01
+
+```sh
+# 1. create pod. But pod pending
+# 2. check node, node01 NotReady
+# 3. check kubelet on node01, not started
+# 4. try to start, give error.
+# 5. check status for
+systemctl status kubelet
+# ● kubelet.service - kubelet: The Kubernetes Node Agent
+#      Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; preset: enabled)
+#     Drop-In: /usr/lib/systemd/system/kubelet.service.d
+#              └─10-kubeadm.conf
+
+# 6. check kubelet path
+# verify cf's ExecStart == kubelet path
+# for exmaple:
+cat /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+# ExecStart=/usr/local/kubelet
+which kubelet
+# /usr/bin/kubelet
+
+# 7. update the service cf
+sudo vi /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+# ExecStart=/usr/bin/kubelet
+
+# 8. restart kubelet
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+sudo systemctl status kubelet
+# ● kubelet.service - kubelet: The Kubernetes Node Agent
+#      Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; preset: enabled)
+#     Drop-In: /usr/lib/systemd/system/kubelet.service.d
+#              └─10-kubeadm.conf
+#      Active: active (running) since Mon 2026-01-26 21:48:38 EST; 13s ago
+
+
+```
 
 ---
 
@@ -1490,3 +1768,195 @@ kubectl get pod | grep node02
 ```
 
 ---
+
+### Task: static pod
+
+Create a static pod on node01 called nginx-critical with the image nginx. Make sure that it is recreated/restarted automatically in case of a failure.
+
+For example, use /etc/kubernetes/manifests as the static Pod path.
+
+---
+
+- solution
+
+```sh
+k get node node01 -o wide
+# NAME     STATUS   ROLES    AGE   VERSION    INTERNAL-IP      EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+# node01   Ready    <none>   47h   v1.32.11   192.168.10.151   <none>        Ubuntu 24.04.3 LTS   6.14.0-37-generic   containerd://1.7.28
+
+kubectl run nginx-critical --image=nginx --dry-run=client -o yaml > static.yaml
+
+scp static.yaml ubuntuadmin@192.168.10.151:~
+# static.yaml                                                     100%  259    40.8KB/s   00:00
+
+ssh ubuntuadmin@192.168.10.151
+sudo cp ~/static.yaml /etc/kubernetes/manifests/
+
+ssh ubuntuadmin@controlplane
+k get pod
+# NAME                                        READY   STATUS    RESTARTS       AGE
+# nginx-critical-node01                       1/1     Running   0              14s
+```
+
+---
+
+### Task: taint node
+
+Taint the worker node node01 to be Unschedulable. Once done, create a pod called dev-redis, image redis:alpine, to ensure workloads are not scheduled to this worker node. Finally, create a new pod called prod-redis and image: redis:alpine with toleration to be scheduled on node01.
+
+key: env_type, value: production, operator: Equal and effect: NoSchedule
+
+---
+
+- Solution
+
+```sh
+kubectl taint node node01 env_type=production:NoSchedule
+# node/node01 tainted
+
+# confirm
+k describe node node01
+# Taints:             env_type=production:NoSchedule
+
+k run dev-redis --image=redis:alpine
+# pod/dev-redis created
+k get pod dev-redis -o wide
+# NAME        READY   STATUS    RESTARTS   AGE   IP              NODE     NOMINATED NODE   READINESS GATES
+# dev-redis   1/1     Running   0          14s   10.244.140.76   node02   <none>           <none>
+
+k run prod-redis --image=redis:alpine --dry-run=client -o yaml > tol-pod.yaml
+
+vi tol-pod.yaml
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: prod-redis
+# spec:
+#   containers:
+#   - image: redis:alpine
+#     name: prod-redis
+#   tolerations:
+#     - key: "env_type"
+#       operator: "Equal"
+#       value: "production"
+#       effect: "NoSchedule"
+
+k apply -f tol-pod.yaml
+# pod/prod-redis created
+
+# confirm
+k get pod -o wide
+```
+
+---
+
+### Task: taint & toleration
+
+Add a taint to `node01` so tht no normal pods can be scheduled in this node. key=`PERMISSION`, value=`granted`, Type=`NoSchedule`
+
+Schedule a Pod on node01 adding the correct toleration to the spec so it can be deployed
+
+- Solution
+
+```sh
+kubectl taint nodes node01 PERMISSION=granted:NoSchedule
+
+kd node node01 | grep -i taint
+# Taints:             PERMISSION=granted:NoSchedule
+
+tee pod.yaml<<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: toleration
+spec:
+  nodeName: node01    # <=============
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "PERMISSION"
+    operator: "Equal"
+    value: "granted"
+    effect: "NoSchedule"
+EOF
+
+k apply -f pod.yaml
+
+k get po toleration -o wide
+# NAME         READY   STATUS    RESTARTS   AGE   IP               NODE     NOMINATED NODE   READINESS GATES
+# toleration   1/1     Running   0          30s   10.244.196.166   node01   <none>           <no
+```
+
+---
+
+### Task: Reschedule pod to another node
+
+mark the worker node node01 as unschedulable and reschedule all the pods running on it.
+
+- setup env:
+
+```sh
+k create deploy web --image=nginx --replicas=20
+```
+
+---
+
+- Solution
+
+```sh
+k cordon node01
+# confirm
+k get node
+# NAME           STATUS                     ROLES           AGE   VERSION
+# controlplane   Ready                      control-plane   9d    v1.32.11
+# node01         Ready,SchedulingDisabled   <none>          40m   v1.32.11
+# node02         Ready                      <none>          9d    v1.32.11
+
+k describe node node01 | grep -i unschedulable
+# Taints:             node.kubernetes.io/unschedulable:NoSchedule
+# Unschedulable:      true
+
+k drain node01
+# drain node01 --ignore-daemonsets --delete-emptydir-data --force
+# node/node01 already cordoned
+# Warning: ignoring DaemonSet-managed Pods: calico-system/calico-node-9kc4r, calico-system/csi-node-driver-6j4x7, kube-system/kube-proxy-6pnx2; deleting Pods that declare no controller: default/web
+# evicting pod tigera-operator/tigera-operator-7d4578d8d-nhpq6
+# evicting pod default/web-65d846d465-m99l4
+# evicting pod default/web-65d846d465-c8vgh
+# evicting pod default/web-65d846d465-czfdd
+# evicting pod default/web-65d846d465-gsx2f
+# evicting pod default/web-65d846d465-kpdxp
+# evicting pod default/web-65d846d465-8gpqm
+# evicting pod default/web-65d846d465-8ph9h
+# evicting pod ingress-nginx/ingress-nginx-controller-964fbf44f-5bpkt
+# evicting pod default/web-65d846d465-vbkms
+# evicting pod default/web-65d846d465-zpzfr
+# evicting pod kube-system/vpa-admission-controller-77f9b89f68-6t6xr
+# evicting pod kube-system/metrics-server-5f65756975-nkmnq
+# evicting pod kube-system/vpa-updater-c4b976bd8-r6r5c
+# evicting pod default/web-65d846d465-6x6ps
+# evicting pod default/web
+# I0126 21:56:49.224195   18951 request.go:729] Waited for 1.200457901s due to client-side throttling, not priority and fairness, request: POST:https://192.168.10.150:6443/api/v1/namespaces/kube-system/pods/vpa-updater-c4b976bd8-r6r5c/eviction
+# pod/tigera-operator-7d4578d8d-nhpq6 evicted
+# pod/vpa-admission-controller-77f9b89f68-6t6xr evicted
+# pod/web-65d846d465-vbkms evicted
+# pod/metrics-server-5f65756975-nkmnq evicted
+# pod/web-65d846d465-zpzfr evicted
+# pod/web-65d846d465-gsx2f evicted
+# pod/web evicted
+# pod/web-65d846d465-8gpqm evicted
+# pod/vpa-updater-c4b976bd8-r6r5c evicted
+# pod/web-65d846d465-c8vgh evicted
+# pod/web-65d846d465-8ph9h evicted
+# pod/web-65d846d465-czfdd evicted
+# pod/web-65d846d465-6x6ps evicted
+# pod/web-65d846d465-m99l4 evicted
+# I0126 21:56:59.398696   18951 request.go:729] Waited for 2.994984718s due to client-side throttling, not priority and fairness, request: GET:https://192.168.10.150:6443/api/v1/namespaces/default/pods/web-65d846d465-kpdxp
+# pod/web-65d846d465-kpdxp evicted
+# pod/ingress-nginx-controller-964fbf44f-5bpkt evicted
+# node/node01 drained
+
+# confirm: all on node02
+k get po -o wide
+```

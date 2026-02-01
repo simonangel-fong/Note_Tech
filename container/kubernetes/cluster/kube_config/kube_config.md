@@ -1,161 +1,135 @@
-# Kubernetes - KubeConfig
+# Kubernetes - `kubectl config`
 
-[Back](../index.md)
+[Back](../../index.md)
 
-- [Kubernetes - KubeConfig](#kubernetes---kubeconfig)
-  - [KubeConfig](#kubeconfig)
-  - [Declarative method](#declarative-method)
-  - [Imperative Commands](#imperative-commands)
-
----
-
-## KubeConfig
-
-- `kubeconfig file`
-
-  - the configuration file used by `kubectl`, **client libraries**, and **automation tools** to **connect** to a Kubernetes cluster.
-  - primarily used by the `kubectl` command-line tool to authenticate and interact with a Kubernetes cluster's `API server`.
-  - used to specify which the user starts the connection with what cluster.
-
-- Default path: `$HOME/.kube/config`.
-
-  - can specify a different location using the `--kubeconfig` flag or the `KUBECONFIG` environment variable.
-  - Order of precedence (highest → lowest):
-    - `--kubeconfig` flag
-    - `$KUBECONFIG` environment variable
-    - `~/.kube/config`
-
-- 3 sections:
-
-  - **Clusters**:
-    - Defines the details of the Kubernetes clusters to access
-    - `certificate-authority-data` / `certificate-authority`:
-      - The **CA certificate** data or path to the file containing it, used to **verify the API server's authenticity**.
-    - `server`:
-      - The URL of the Kubernetes API server.
-    - `name`:
-      - A unique name for the cluster.
-  - **Users**:
-    - Defines the **authentication credentials** for users interacting with the clusters
-    - `client-certificate-data`/`client-certificate`:
-      - The **client certificate** data or path to the file containing it.
-    - `client-key-data` / `client-key`:
-      - The client **key data** or path to the file containing it.
-    - `token`:
-      - An authentication token.
-    - `name`:
-      - A unique name for the user.
-  - **Contexts**:
-    - **Links a specific user** to a **specific cluster** and optionally a **namespace**, defining a particular **access environment**.
-    - Each context includes:
-      - `cluster`: The name of the cluster to use.
-      - `user`: The name of the user to authenticate with.
-      - `namespace` (optional): The default namespace to use for commands.
-      - `name`: A unique name for the context.
-
-- Purpose and Usage:
-
-  - **Authentication and Authorization**:
-    - It provides the **necessary credentials** for kubectl to authenticate with the Kubernetes API server and perform authorized actions.
-  - **Managing Multiple Clusters**:
-    - A **single** kubeconfig file can **define access to multiple** Kubernetes clusters, allowing users to easily switch between them using kubectl config use-context.
-  - **Organizing Access**:
-    - It helps organize cluster access information, making it easier for administrators and developers to manage and interact with various Kubernetes environments.
+- [Kubernetes - `kubectl config`](#kubernetes---kubectl-config)
+  - [Configuration](#configuration)
+    - [Imperative Command](#imperative-command)
+    - [Lab: `config` file](#lab-config-file)
+    - [Lab: `kube config` set context](#lab-kube-config-set-context)
 
 ---
 
-- Example:
+## Configuration
+
+- Config file
+  - default:
+    - `$HOME/.kube/config`
+  - can be specified:
+    - env var `KUBECONFIG`
+    - `--kubeconfig` option:
+      - e.g.: `kubectl get node --kubeconfig`
+- Context entries:
+  - cluster
+  - user
+  - credentials
+
+---
+
+### Imperative Command
+
+| CMD                                                | DESC                                                              |
+| -------------------------------------------------- | ----------------------------------------------------------------- |
+| `kubectl config get-contexts`                      | Describe one or many contexts                                     |
+| `kubectl config view`                              | Display merged kubeconfig settings or a specified kubeconfig file |
+| `kubectl config current-context`                   | Display the current-context                                       |
+| `kubectl config use-context CONTEXT`               | Set the current-context in a kubeconfig file                      |
+| `kubectl config rename-context OLD NEW`            | Rename a context from the kubeconfig file                         |
+| `kubectl config set-context --current --key=value` | Set the current context entry in kubeconfig                       |
+| `kubectl config set-context CONTEXT --key=value`   | Set a context entry in kubeconfig                                 |
+| `kubectl config delete-context CONTEXT`            | Delete the specified context from the kubeconfig                  |
+| `kubectl config get-users`                         | Display users defined in the kubeconfig                           |
+| `kubectl config delete-user`                       | Delete the specified user from the kubeconfig                     |
+| `kubectl config set`                               | Set an individual value in a kubeconfig file                      |
+| `kubectl config unset KEY.VALUE`                   | Unset an individual value in a kubeconfig file                    |
+| `kubectl config get-clusters`                      | Display clusters defined in the kubeconfig                        |
+| `kubectl config set-cluster`                       | Set a cluster entry in kubeconfig                                 |
+| `kubectl config delete-cluster`                    | Delete the specified cluster from the kubeconfig                  |
+| `kubectl config set-credentials`                   | Set a user entry in kubeconfig                                    |
+
+---
+
+### Lab: `config` file
 
 ```sh
-# access api server via url with cert and key
-curl https://my-kube-playground:6443/api/v1/pods \
---key admin.key
---cert admin.crt
---cacert ca.crt
-
-# issue kubectl command with cert and key
-kubectl get pods --server my-kube-playground:6443 --client-key admin.key --client-certificate admin.crt --certificate-authority ca.crt
-```
-
-- The cert and key can be organize with a kubefig file, making it easy for authentication
-
-```sh
-tee config fiel<<EOF
---server my-kube-playground:6443
---client-key admin.key
---client-certificate admin.crt
---certificate-authority ca.crt
-EOF
-
-kubectl get pods --kubeconfig config
+cat ~/.kube/config
+# apiVersion: v1
+# kind: Config
+# users:
+# - name: kubernetes-admin
+#   user:
+#     client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tC...
+#     client-key-data: LS0tLS1CRUdJTiBSU0EgUFJJV...
+# clusters:
+# - cluster:
+#     certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0...
+#     server: https://192.168.10.150:6443
+#   name: kubernetes
+# contexts:
+# - context:
+#     cluster: kubernetes
+#     user: kubernetes-admin
+#   name: kubernetes-admin@kubernetes
+# current-context: kubernetes-admin@kubernetes
+# preferences: {}
 ```
 
 ---
 
-## Declarative method
-
-- Example
-
-```yaml
-apiVersion: v1
-kind: Config
-# define default context
-current-context: my-kube-admin@my-kube
-clusters:
-  - name: my-kube
-    cluster:
-      # can be a full path
-      certificate-authority: /etc/kubernetes/pki/ca.crt
-      # can be the base64 code
-      certificate-authority-data: base64_code
-      server: https://my-kube:6443
-
-contexts:
-  - name: my-kube-admin@my-kube
-    context:
-      cluster: my-kube
-      user: my-kube-admin
-      # option: specify a ns
-      namespace: dev
-
-users:
-  - name: my-kube-admin
-    user:
-      client-certificate: admin.crt
-      client-key: admin.key
-```
-
----
-
-## Imperative Commands
-
-| **CMD**                                                                                | **DESC**                                              |
-| -------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `kubectl config get-contexts`                                                          | List all contexts in the kubeconfig.                  |
-| `kubectl config current-context`                                                       | Show the currently active context.                    |
-| `kubectl config view`                                                                  | View the default kubeconfig.                          |
-| `kubectl config use-context context_name`                                              | Switch to a specific context.                         |
-| `kubectl config set-context <name> --cluster=<c> --user=<u> --namespace=<ns>`          | Create or update a context.                           |
-| `kubectl config set-context --current --namespace=<ns>`                                | Change the default namespace for the current context. |
-| `kubectl config delete-context <ctx>`                                                  | Remove a context from kubeconfig.                     |
-| `kubectl config set-cluster <name> --server=<url> --certificate-authority=<file>`      | Add or modify a cluster entry.                        |
-| `kubectl config delete-cluster <name>`                                                 | Delete a cluster entry.                               |
-| `kubectl config set-credentials <name> --client-certificate=<cert> --client-key=<key>` | Add or update user credentials.                       |
-| `kubectl config delete-user <name>`                                                    | Delete a user entry.                                  |
-| `kubectl config rename-context <old> <new>`                                            | Rename a context.                                     |
-| `kubectl config unset <key>`                                                           | Remove a specific property (advanced).                |
-| `kubectl config set <key> <value>`                                                     | Set arbitrary kubeconfig fields (advanced).           |
-| `kubectl config view --merge --flatten > ~/.kube/config`                               | Permanently merge multiple kubeconfig files.          |
-
----
+### Lab: `kube config` set context
 
 ```sh
-# specify and persist a custom config file
-echo 'export KUBECONFIG=/root/my-kube-config' >> ~/.bashrc
-source ~/.bashrc
-
-# confirm
-echo $KUBECONFIG
-# view default config
+# view current context
 kubectl config view
+# apiVersion: v1
+# kind: Config
+# users:
+# - name: kubernetes-admin
+#   user:
+#     client-certificate-data: DATA+OMITTED
+#     client-key-data: DATA+OMITTED
+# clusters:
+# - cluster:
+#     certificate-authority-data: DATA+OMITTED
+#     server: https://192.168.10.150:6443
+#   name: kubernetes
+# contexts:
+# - context:
+#     cluster: kubernetes
+#     user: kubernetes-admin
+#   name: kubernetes-admin@kubernetes
+# current-context: kubernetes-admin@kubernetes
+# preferences: {}
+
+# list context
+kubectl config get-contexts
+# CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+# *         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin
+
+# list contexts names
+kubectl config get-contexts -o name
+# kubernetes-admin@kubernetes
+
+# set namespace
+kubectl config set-context --current --namespace kube-system
+# Context "kubernetes-admin@kubernetes" modified.
+
+kubectl config view
+# - context:
+#     cluster: kubernetes
+#     namespace: kube-system
+
+kubectl get po
+# NAME                                   READY   STATUS    RESTARTS      AGE
+# coredns-668d6bf9bc-7g786               1/1     Running   2 (20m ago)   7d21h
+# coredns-668d6bf9bc-m8qmh               1/1     Running   2 (20m ago)   7d21h
+# etcd-controlplane                      1/1     Running   2 (20m ago)   7d22h
+# kube-apiserver-controlplane            1/1     Running   2 (20m ago)   7d22h
+# kube-controller-manager-controlplane   1/1     Running   2 (20m ago)   7d22h
+# kube-proxy-5kcw4                       1/1     Running   2 (20m ago)   7d21h
+# kube-proxy-6pnx2                       1/1     Running   0             7d21h
+# kube-proxy-kfjxb                       1/1     Running   0             7d21h
+# kube-scheduler-controlplane            1/1     Running   2 (20m ago)   7d22h
 ```
+
+---

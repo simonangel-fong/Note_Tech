@@ -4,43 +4,77 @@
 
 - [Kubernetes - kubectl](#kubernetes---kubectl)
   - [`kubectl`](#kubectl)
-  - [kubectl apply](#kubectl-apply)
+    - [Imperative Command](#imperative-command)
+    - [Lab: Cluster Info](#lab-cluster-info)
 
 ---
 
 ## `kubectl`
 
 - `kubectl`:
-  - the command line utilities
-  - used to **deploy and manage applications** on a kubernetes cluster, to get cluster information, get the status of nodes in the cluster and many other things.
+  - a **command line** tool for **communicating** with a Kubernetes cluster's `control plane`, using the `Kubernetes API`.
 
-| CMD                    | DESC                                   |
-| ---------------------- | -------------------------------------- |
-| `kubectl cluster-info` | view information about the cluster     |
-| `kubectl run app_name` | deploy an application on the cluster   |
-| `kubectl get nodes`    | list all the nodes part of the cluster |
+### Imperative Command
+
+- Get object info
+
+| CMD                                             | DESC                                            |
+| ----------------------------------------------- | ----------------------------------------------- |
+| `kubectl get RESOURCE`                          | List all objects of a resource                  |
+| `kubectl get RESOURCE --sort-by=.metadata.name` | List and sort objects by name                   |
+| `kubectl get pods --selector=key=value`         | List objects with a label                       |
+| `kubectl get RESOURCE -A`                       | List all objects of a resource in all namespace |
+| `kubectl get RESOURCE -o wide`                  | List all objects of a resource with more info   |
+| `kubectl get RESOURCE NAME -o yaml`             | Output a resource object in yaml file           |
+| `kubectl describe RESOURCE NAME`                | Output a resource object details                |
+| `kubectl events --types=Warning`                | Get warning evernts                             |
+| `kubectl diff -f ./MANIFEST`                    | Compares the current state against the manifest |
+
+- Mange
+
+| CMD                                   | DESC                                                 |
+| ------------------------------------- | ---------------------------------------------------- |
+| `kubectl api-resources`               | List all supported resource types                    |
+| `kubectl explain RESOURCE`            | Show the documentation for a resource                |
+| `kubectl create -f MANIFEST MANIFEST` | creates resources from a manifest                    |
+| `kubectl replace --force -f MANIFEST` | force to replace a resource                          |
+| `kubectl apply -f MANIFEST MANIFEST`  | creates and updates resources from manifests         |
+| `kubectl apply -f DIR`                | creates and updates resources from a dir             |
+| `kubectl apply -f REMOTE_URL`         | creates and updates resources from a remote manifest |
+| `kubectl delete -f MANIFEST MANIFEST` | delete and updates resources                         |
+| `kubectl create RESOURCE NAME`        | creates a resource                                   |
+| `kubectl edit RESOURCE NAME`          | Edit resource's definition                           |
+| `kubectl delete RESOURCE NAME`        | Delete a resource                                    |
+| `kubectl patch RESOURCE NAME -p '{}'` | Patching resources                                   |
+
+- Cluster
+
+| CMD                                                | DESC                                                              |
+| -------------------------------------------------- | ----------------------------------------------------------------- |
+| `kubectl version`                                  | Display the Kubernetes version                                    |
+| `kubectl cluster-info`                             | Print the address of the control plane and cluster services       |
+| `kubectl cluster-info dump`                        | Exports the entire state of the cluster                           |
+| `kubectl cluster-info dump --output-directory=DIR` | Exports the entire state of the cluster to a dir                  |
+| `kubectl cluster-info dump --namespace NAMESPACE`  | Exports the entire state of a ns                                  |
+| `kubectl api-versions`                             | List the supported API versions, in the form of "group/version".  |
+| `kubectl options`                                  | List of global command-line options, which apply to all commands. |
+| `kubectl proxy`                                    | Run a proxy to the Kubernetes API server.                         |
+
+- Security
+
+| CMD                                            | DESC                                 |
+| ---------------------------------------------- | ------------------------------------ |
+| `kubectl auth can-i VERB RESOURCE`             | Inspect authorization.               |
+| `kubectl auth reconcile -f my-rbac-rules.yaml` | Reconcile RBAC resources from a file |
 
 ---
 
-## kubectl apply
+### Lab: Cluster Info
 
-- kubectl apply
-
-  - the local yaml file will also convert to a json file in the `last applied configuration`
-  - the local yaml file will convert to a yaml file in the `live object configuration` in the control plane
-
-- e.g., the image of a pod get changed in the local yaml
-
-  - then API server compares and update `last applied configuration` and update it
-  - API server compares with `live object configuration` and update the image
-
-- `live object configuration`
-  - reside in the k8s memory
-  - the actual object status
-- `last applied configuration`
-  - reside in the `live object configuration` as annotation
-  - helps compare with the local yaml file to identify the changes
-  - only apply to `kubectl apply` command
-    - not to `kubectl create/replace` (not store last applied config)
+```sh
+kubectl cluster-info
+# Kubernetes control plane is running at https://192.168.10.150:6443
+# CoreDNS is running at https://192.168.10.150:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+```
 
 ---

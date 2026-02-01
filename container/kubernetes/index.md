@@ -22,17 +22,20 @@
   - [Architecture](./cluster/architecture/architecture.md)
   - [YAML & Vim](./cluster/yaml/yaml.md)
   - [`kubectl`](./cluster/kubectl/kubectl.md)
-    - [KubeConfig](./cluster/kube_config/kube_config.md)
+    - [`kubectl config`](./cluster/kube_config/kube_config.md)
+    - [`kubectl apply`](./cluster/kube_apply/kube_apply.md)
+  - [`kubeadm` & init cluster](./cluster/kubeadm/kubeadm.md)
+  - [`crictl`](./cluster/crictl/crictl.md)
 
-- [Upgrade](./cluster/upgrade/upgrade.md)
-- [Backup](./cluster/backup/backup.md)
-- [Logging](./cluster/logging/logging.md)
+- [Cluster Upgrade](./cluster/cluster_upgrade/cluster_upgrade.md)
+- [`etcd` Backup](./cluster/etcd_backup/etcd_backup.md)
 
-- [API Object](./api_object/api_object/api_object.md)
-  - [Namespace](./api_object/namespace/namespace.md)
-  - [Label and Selector](./api_object/label_selector/label_selector.md)
-  - [Annotation](./api_object/annotation/annotation.md)
-  - [Custom Resource Definition(CRD)](./api_object/crd/crd.md)
+- [`api server` & API Object](./api/api_object/api_object.md)
+  - [Namespace](./api/namespace/namespace.md)
+  - [Label and Selector](./api/label_selector/label_selector.md)
+  - [Annotation](./api/annotation/annotation.md)
+  - [Logging & Event](./api/logging_event/logging_event.md)
+  - [Custom Resource Definition(CRD)](./api/crd/crd.md)
 
 ---
 
@@ -115,9 +118,14 @@
       - [`NodePort`](./networking/nodeport/nodeport.md)
       - [`LoadBalancer`](./networking/loadbalancer/loadbalancer.md)
       - [`Headless Service`](./networking/headless_svc/headless_svc.md)
+    - Load Balancing:
+      - [`MetalLB`](./load_balancing/metalb/metalb.md)
 
-  - [`Ingress`](./networking/ingress/ingress.md)
+  - [`Ingress` & `IngressClass`](./networking/ingress/ingress.md)
+    - [Lab: `nginx` server with `Ingress`](./networking/ingress_lab/ingress_lab.md)
   - [`Gateway API` & `GatewayClass`](./networking/gw_api/gw_api.md)
+    - [Lab: `Gateway` Use Cases](./networking/gw_api_use/gw_api_use.md)
+    - [Lab: `nginx` server with `Gateway`](./networking/gw_api_lab/gw_api_lab.md)
 
 ---
 
@@ -201,7 +209,7 @@ https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad
 - [Curriculum](./cka/exam.md)
   - [Network](./cka/network.md)
   - [Storage](./cka/storage.md)
-  - [workload](./cka/workload.md)
+  - [Workload](./cka/workload.md)
   - [Security](./cka/security.md)
   - [Cluster](./cka/cluster.md)
 
@@ -212,3 +220,57 @@ export do="--dry-run=client -o yaml"
 alias k=kubectl
 alias kcn="kubectl config set-context --current --namespace"
 ```
+
+---
+
+- Vim
+
+- until the end of the line:
+  - select: `v$`
+  - delete: `d$`
+
+- from the begining of the line:
+  - select: `v0`
+  - delete: `d0`
+
+- until the end of the file
+  - select: `vG`
+  - delete: `dG`
+
+- `:set past`
+
+---
+
+todo:
+
+- troubleshooting:
+  - kubectl command fails
+
+---
+
+- troubleshooting: `Pending` pod
+  - `describe` pod for event
+  - `get node` for status:
+    - if node status == `SchedulingDisabled`, `k uncordon`
+    - if node status == `NotReady`, `kubelet` stop
+  - `kubectl get events -n production --field-selector involvedObject.name=web`
+
+---
+
+- common errors
+  - gateway httproute
+    - `sectionName`
+  - pvc
+    - `storageClassName=''`: static pv
+    - omit `storageClassName` = default `storageClassName`
+    - `storageClassName` == PV `storageClassName`
+  - rolebinding
+    - `k auth can-i get pod --as`
+
+---
+
+- Command:
+  - `kubectl set env deployment NAME STORAGE_DIR=/local`
+  - `kubectl set resources deployment NAME -c=nginx --limits=cpu=200m,memory=512Mi`
+  - `kubectl set image deployment/nginx busybox=busybox nginx=nginx:1.9.1`
+  - `kubectl set serviceaccount deployment nginx-deployment serviceaccount1`

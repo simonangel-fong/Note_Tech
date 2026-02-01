@@ -7,20 +7,26 @@
     - [Task: NetworkPolicy](#task-networkpolicy)
     - [Task: NetworkPolicy](#task-networkpolicy-1)
     - [Task: Network Policy](#task-network-policy)
+    - [Task: netpol](#task-netpol)
   - [Service](#service)
     - [Task: svc + Deploy](#task-svc--deploy)
   - [Ingress](#ingress)
     - [Task: Ingress + SVC](#task-ingress--svc)
     - [Task: ingress + svc](#task-ingress--svc-1)
     - [Task: Ingres + svc](#task-ingres--svc)
+    - [Task: ing + svc](#task-ing--svc)
   - [CoreDNS](#coredns)
     - [Task: CoreDNS config error](#task-coredns-config-error)
     - [Task: \*\*\*CoreDNS map DNS to IP](#task-coredns-map-dns-to-ip)
+    - [Task: \*\*\*svc \& ip.pod lookupd](#task-svc--ippod-lookupd)
   - [Gateway API](#gateway-api)
-    - [Task: API GATEWAY + Routhttp](#task-api-gateway--routhttp)
+    - [Task: \*API GATEWAY + Routhttp](#task-api-gateway--routhttp)
     - [Task: Service](#task-service)
-    - [Task: gateway](#task-gateway)
+    - [Task: \*\*\*tls gateway](#task-tls-gateway)
     - [Task: Create Gateway API](#task-create-gateway-api)
+    - [Task: \*\*\*TLS Gateway](#task-tls-gateway-1)
+    - [Task: Gateway API + httproute](#task-gateway-api--httproute)
+    - [Task: \*\*\*Migrate from Ingress to Gateway API](#task-migrate-from-ingress-to-gateway-api)
 
 ---
 
@@ -221,6 +227,45 @@ kubectl apply -f ./netpol/deny-all.yaml
 ```sh
 
 ```
+
+---
+
+### Task: netpol
+
+We have deployed a new pod called np-test-1 and a service called np-test-service. Incoming connections to this service are not working. Troubleshoot and fix it.
+Create NetworkPolicy, by the name ingress-to-nptest that allows incoming connections to the service over port 80.
+
+Important: Don't delete any current objects deployed.
+
+```sh
+k run np-test-1 --image=nginx
+k expose pod np-test-1 --name=np-test-service --port=80
+```
+
+---
+
+- solution:
+
+```yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-nptest
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      run: np-test-1
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 80
+```
+
+---
 
 ---
 
@@ -465,7 +510,7 @@ Exposing Service echoserver-service on http://example.org/echo using Service por
 The availability of Service echoserver-service can be checked
 
 using the following command, which should return 200:
-[candidate@cka2025] $ curl -o /dev/null -s -w "%{http_code)\n" http://example.org/echo
+[candidate@cka2025] $ curl -o /dev/null -s -w "%(http_code)\n" http://example.org/echo
 
 - Setup environment
 
@@ -522,6 +567,83 @@ kubectl describe ing echo -n echo-sound
 #                /echo   echoserver-service:8080 (10.244.1.12:80)
 # Annotations:   <none>
 # Events:        <none>
+```
+
+---
+
+### Task: ing + svc
+
+A Deployment named webapp-deploy is running in the ingress-ns namespace and is exposed via a Service named webapp-svc.
+
+Create an Ingress resource called webapp-ingress in the same namespace that will route traffic to the service. The Ingress must:
+
+Use pathType: Prefix
+Route requests sent to path / to the backend service
+Forward traffic to port 80 of the service
+Be configured for the host kodekloud-ingress.app
+Test app availablility using the following command:
+
+curl -s http://kodekloud-ingress.app/
+
+- Setup env
+
+```sh
+k create ns ingress-ns
+k create deploy webapp-deploy -n ingress-ns --image=nginx
+k expose deploy webapp-deploy -n ingress-ns --name=webapp-svc --port=80
+```
+
+---
+
+- Solution
+
+```sh
+k get ingressclass
+# NAME    CONTROLLER                     PARAMETERS   AGE
+# nginx   nginx.org/ingress-controller   <none>       44h
+```
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp-ingress
+  namespace: ingress-ns
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: kodekloud-ingress.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webapp-svc
+                port:
+                  number: 80
+```
+
+```sh
+k apply -f ing.yaml
+
+k describe ing -n ingress-ns
+# Name:             webapp-ingress
+# Labels:           <none>
+# Namespace:        ingress-ns
+# Address:
+# Ingress Class:    nginx
+# Default backend:  <default>
+# Rules:
+#   Host                   Path  Backends
+#   ----                   ----  --------
+#   kodekloud-ingress.app
+#                          /   webapp-svc:80 (10.244.196.143:80)
+# Annotations:             <none>
+# Events:
+#   Type    Reason          Age    From                      Message
+#   ----    ------          ----   ----                      -------
+#   Normal  AddedOrUpdated  4m58s  nginx-ingress-controller  Configuration for ingress-ns/webapp-ingress was added or updated
 ```
 
 ---
@@ -611,9 +733,63 @@ kubectl run --rm -it dns-client --image=busybox --restart=Never -- nslookup myap
 
 ---
 
+### Task: \*\*\*svc & ip.pod lookupd
+
+Create an nginx pod named nginx-resolver using the nginx image and expose it internally using a ClusterIP service called nginx-resolver-service.
+
+From within the cluster, verify:
+
+DNS resolution of the service name
+
+Network reachability of the pod using its IP address
+
+Use the busybox:1.28 image to perform the lookups.
+
+Save the service DNS lookup output to ~/nginx.svc and the pod IP lookup output to ~/nginx.pod.
+
+---
+
+- solution
+
+```sh
+kubectl run nginx-resolver --image=nginx
+# pod/nginx-resolver created
+
+kubectl expose pod nginx-resolver --name=nginx-resolver-service --port=80
+# service/nginx-resolver-service exposed
+
+kubectl run --rm -it test --image=busybox:1.28 --restart=Never -- nslookup nginx-resolver-service > ~/nginx.svc
+
+# confirm
+cat ~/nginx.svc
+# Server:    10.96.0.10
+# Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+# Name:      nginx-resolver-service
+# Address 1: 10.100.179.14 nginx-resolver-service.default.svc.cluster.local
+# pod "test" deleted
+
+kubectl get pod -o wide
+# NAME                                        READY   STATUS    RESTARTS       AGE     IP               NODE     NOMINATED NODE   READINESS GATES
+# nginx-resolver                              1/1     Running   0              4m45s   10.244.196.145   node01   <none>           <none>
+
+
+kubectl run --rm -it test --image=busybox:1.28 --restart=Never -- nslookup 10-244-196-145.default.pod > ~/nginx.pod
+
+cat ~/nginx.pod
+# Server:    10.96.0.10
+# Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+# Name:      10-244-196-145.default.pod
+# Address 1: 10.244.196.145 10-244-196-145.nginx-resolver-service.default.svc.cluster.local
+# pod "test" deleted
+```
+
+---
+
 ## Gateway API
 
-### Task: API GATEWAY + Routhttp
+### Task: \*API GATEWAY + Routhttp
 
 Your cluster uses the Gateway API for ingress traffic.
 A service named web-service is running in the default namespace on port 80.
@@ -757,7 +933,7 @@ kubectl describe svc front-end-svc -n sp-culator
 
 ---
 
-### Task: gateway
+### Task: \*\*\*tls gateway
 
 Migrate an existing web application from Ingress to Gateway API.
 We must maintain HTTPSaccess.
@@ -864,10 +1040,7 @@ EOF
 
 ---
 
-
 ### Task: Create Gateway API
-
-
 
 Create a Kubernetes Gateway resource with the following specifications:
 
@@ -891,7 +1064,7 @@ metadata:
   name: web-gateway
   namespace: nginx-gateway
 spec:
-  gatewayClassName: nginx-gateway
+  gatewayClassName: nginx
   listeners:
     - name: http
       protocol: HTTP
@@ -983,3 +1156,446 @@ k describe gtw web-gateway -n nginx-gateway
 ```
 
 ---
+
+### Task: \*\*\*TLS Gateway
+
+Modify the existing web-gateway on cka5673 namespace to handle HTTPS traffic on port 443 for kodekloud.com, using a TLS certificate stored in a secret named kodekloud-tls.
+
+- Setup env
+
+```sh
+kubectl create ns cka5673
+# simulate tls secret
+mkdir -p ~/cka5673-gw && cd ~/cka5673-gw
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tls.key -out tls.crt \
+  -subj "/CN=kodekloud.com/O=kodekloud"
+
+kubectl -n cka5673 create secret tls kodekloud-tls --cert=tls.crt --key=tls.key
+```
+
+```yaml
+# gtw.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+  namespace: cka5673
+spec:
+  gatewayClassName: nginx
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+```
+
+```sh
+k apply -f gtw.yaml
+
+k get gtw -n cka5673
+# NAME          CLASS   ADDRESS   PROGRAMMED   AGE
+# web-gateway   nginx             True         13s
+```
+
+---
+
+- solution
+  - ref: https://gateway-api.sigs.k8s.io/guides/tls/#listeners-and-tls
+
+```sh
+# check secret
+kubectl get secret -n cka5673
+# NAME                          TYPE                DATA   AGE
+# kodekloud-tls                 kubernetes.io/tls   2      7m46s
+
+k get gtw -n cka5673
+# NAME          CLASS   ADDRESS   PROGRAMMED   AGE
+# web-gateway   nginx             True         13s
+
+# output and backup old gtw
+k get gtw web-gateway -n cka5673 -o yaml > gtw-tls.yaml
+k get gtw web-gateway -n cka5673 -o yaml > gtw.yaml.bak
+
+vi gtw-tls.yaml
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: Gateway
+# metadata:
+#   name: web-gateway
+#   namespace: cka5673
+# spec:
+#   gatewayClassName: nginx
+#   listeners:
+#   - name: https
+#     protocol: HTTPS
+#     port: 443
+#     hostname: kodekloud.com
+#     tls:
+#       certificateRefs:
+#       - kind: Secret
+#         name: kodekloud-tls
+
+# replace
+k replace --force -f gtw-tls.yaml
+# gateway.gateway.networking.k8s.io/web-gateway replaced
+
+k get gtw -n cka5673
+# NAME          CLASS   ADDRESS   PROGRAMMED   AGE
+# web-gateway   nginx             True         18s
+
+k describe gtw web-gateway -n cka5673
+# Name:         web-gateway
+# Namespace:    cka5673
+# Labels:       <none>
+# Annotations:  <none>
+# API Version:  gateway.networking.k8s.io/v1
+# Kind:         Gateway
+# Metadata:
+#   Creation Timestamp:  2026-01-19T05:52:11Z
+#   Generation:          1
+#   Resource Version:    50069
+#   UID:                 bb4a24f8-4ed0-45ec-9b10-e2e4ffa7ecab
+# Spec:
+#   Gateway Class Name:  nginx
+#   Listeners:
+#     Allowed Routes:
+#       Namespaces:
+#         From:  Same
+#     Hostname:  kodekloud.com
+#     Name:      https
+#     Port:      443
+#     Protocol:  HTTPS
+#     Tls:
+#       Certificate Refs:
+#         Group:
+#         Kind:   Secret
+#         Name:   kodekloud-tls
+#       Mode:     Terminate
+# Status:
+#   Conditions:
+#     Last Transition Time:  2026-01-19T05:52:11Z
+#     Message:               The Gateway is accepted
+#     Observed Generation:   1
+#     Reason:                Accepted
+#     Status:                True
+#     Type:                  Accepted
+#     Last Transition Time:  2026-01-19T05:52:11Z
+#     Message:               The Gateway is programmed
+#     Observed Generation:   1
+#     Reason:                Programmed
+#     Status:                True
+#     Type:                  Programmed
+#   Listeners:
+#     Attached Routes:  0
+#     Conditions:
+#       Last Transition Time:  2026-01-19T05:52:11Z
+#       Message:               The Listener is accepted
+#       Observed Generation:   1
+#       Reason:                Accepted
+#       Status:                True
+#       Type:                  Accepted
+#       Last Transition Time:  2026-01-19T05:52:11Z
+#       Message:               The Listener is programmed
+#       Observed Generation:   1
+#       Reason:                Programmed
+#       Status:                True
+#       Type:                  Programmed
+#       Last Transition Time:  2026-01-19T05:52:11Z
+#       Message:               All references are resolved
+#       Observed Generation:   1
+#       Reason:                ResolvedRefs
+#       Status:                True
+#       Type:                  ResolvedRefs
+#       Last Transition Time:  2026-01-19T05:52:11Z
+#       Message:               No conflicts
+#       Observed Generation:   1
+#       Reason:                NoConflicts
+#       Status:                False
+#       Type:                  Conflicted
+#     Name:                    https
+#     Supported Kinds:
+#       Group:  gateway.networking.k8s.io
+#       Kind:   HTTPRoute
+#       Group:  gateway.networking.k8s.io
+#       Kind:   GRPCRoute
+# Events:       <none>
+
+```
+
+---
+
+### Task: Gateway API + httproute
+
+Configure the web-route to split traffic between web-service and web-service-v2.The configuration should ensure that 80% of the traffic is routed to web-service and 20% is routed to web-service-v2.
+
+Note: web-gateway, web-service, and web-service-v2 have already been created and are available on the cluster.
+
+- setup env
+
+```sh
+k create deploy web --image=nginx
+k expose deploy web --name=web-service --port=80
+k create deploy web-v2 --image=nginx
+k expose deploy web-v2 --name=web-service-v2 --port=80
+
+tee gtw.yaml<<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+  namespace: default
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: Same
+EOF
+
+k apply -f gtw.yaml
+
+k get gtw
+# NAME          CLASS   ADDRESS   PROGRAMMED   AGE
+# web-gateway   nginx             True         8s
+```
+
+---
+
+- solution
+
+```sh
+tee httproute.yaml<<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: web-gateway
+    namespace: default
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: web-service
+      port: 80
+      weight: 80
+    - name: web-service-v2
+      port: 80
+      weight: 20
+
+EOF
+
+k apply -f httproute.yaml
+# httproute.gateway.networking.k8s.io/web-route created
+
+k describe gtw web-route
+# Name:         web-route
+# Namespace:    default
+# Labels:       <none>
+# Annotations:  <none>
+# API Version:  gateway.networking.k8s.io/v1
+# Kind:         HTTPRoute
+# Metadata:
+#   Creation Timestamp:  2026-01-22T01:06:42Z
+#   Generation:          1
+#   Resource Version:    65276
+#   UID:                 a89623d7-4a70-4c74-b47a-84c283090742
+# Spec:
+#   Parent Refs:
+#     Group:      gateway.networking.k8s.io
+#     Kind:       Gateway
+#     Name:       web-gateway
+#     Namespace:  default
+#   Rules:
+#     Backend Refs:
+#       Group:
+#       Kind:    Service
+#       Name:    web-service
+#       Port:    80
+#       Weight:  80
+#       Group:
+#       Kind:    Service
+#       Name:    web-service-v2
+#       Port:    80
+#       Weight:  20
+#     Matches:
+#       Path:
+#         Type:   PathPrefix
+#         Value:  /
+
+```
+
+---
+
+### Task: \*\*\*Migrate from Ingress to Gateway API
+
+You have an existing web application deployed in a Kubernetes cluster using an Ingress resource named `web`. You must migrate the existing Ingress configuration to the new Kubernetes Gateway API, maintaining theexisting HTTPS access configuration
+
+Tasks
+Create a Gateway Resource named `web-gateway` with hostname `gateway.web.k8s.local` that maintains the exisiting TLS and listener configuration from the existing Ingress resource named web
+
+Create a HTTPRoute resource named `web-route` with hostname `gateway.web.k8s.local` that maintains the existing routing rules from the current Ingress resource named web.
+
+Note: A GatewayClass named nginx is already installed in the cluster
+
+- Setup env
+
+```sh
+mkdir ingress-migrate
+cd ingress-migrate
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tls.key -out tls.crt \
+  -subj "/CN=gateway.web.k8s.local" \
+  -addext "subjectAltName=DNS:gateway.web.k8s.local"
+
+kubectl create secret tls web-tls --cert=tls.crt --key=tls.key
+
+kubectl create deploy web-deploy --image=nginx --replicas=3
+kubectl expose deploy web-deploy --name=web-svc --port=80
+
+tee ingress.yaml<<EOF
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - gateway.web.k8s.local
+    secretName: web-tls
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-svc
+            port:
+              number: 80
+EOF
+
+kubectl apply -f ingress.yaml
+```
+
+---
+
+- Solution
+
+```sh
+cat > gtw.yaml<<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    tls:
+      certificateRefs:
+      - kind: Secret
+        name: web-tls
+    hostname: "gateway.web.k8s.local"
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-route
+spec:
+  parentRefs:
+  - name: web-gateway
+    sectionName: https
+  hostnames:
+  - "gateway.web.k8s.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: web-svc
+      port: 80
+
+EOF
+
+kubectl apply -f gtw.yaml
+
+kd gtw web-gateway
+# Name:         web-gateway
+# Namespace:    default
+# Labels:       <none>
+# Annotations:  <none>
+# API Version:  gateway.networking.k8s.io/v1
+# Kind:         Gateway
+# Metadata:
+#   Creation Timestamp:  2026-01-25T23:15:29Z
+#   Generation:          1
+#   Resource Version:    88371
+#   UID:                 fb04dda5-cf98-45f8-810a-39c0de8e63c2
+# Spec:
+#   Gateway Class Name:  nginx
+#   Listeners:
+#     Allowed Routes:
+#       Namespaces:
+#         From:  Same
+#     Hostname:  gateway.web.k8s.local
+#     Name:      https
+#     Port:      443
+#     Protocol:  HTTPS
+#     Tls:
+#       Certificate Refs:
+#         Group:
+#         Kind:   Secret
+#         Name:   web-tls
+#       Mode:     Terminate
+
+kd httproute web-route
+# Name:         web-route
+# Namespace:    default
+# Labels:       <none>
+# Annotations:  <none>
+# API Version:  gateway.networking.k8s.io/v1
+# Kind:         HTTPRoute
+# Metadata:
+#   Creation Timestamp:  2026-01-25T23:15:29Z
+#   Generation:          1
+#   Resource Version:    88370
+#   UID:                 f5a9a4c8-3100-4b63-bd95-b67bf8303c6c
+# Spec:
+#   Hostnames:
+#     gateway.web.k8s.local
+#   Parent Refs:
+#     Group:         gateway.networking.k8s.io
+#     Kind:          Gateway
+#     Name:          web-gateway
+#     Section Name:  https
+#   Rules:
+#     Backend Refs:
+#       Group:
+#       Kind:    Service
+#       Name:    web-svc
+#       Port:    80
+#       Weight:  1
+#     Matches:
+#       Path:
+#         Type:   PathPrefix
+#         Value:  /
+```

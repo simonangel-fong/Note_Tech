@@ -33,7 +33,6 @@
 
 - Understand connectivity between Pods
 - Define and enforce **Network Policies**
-  - ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
 - Use ClusterIP, NodePort, LoadBalancer service types and endpoints
 - Use the Gateway API to manage Ingress traffic
 - Know how to use Ingress controllers and Ingress resources
@@ -47,7 +46,8 @@
 - Prepare underlying infrastructure for installing a Kubernetes cluster
 - Create and manage Kubernetes clusters using kubeadm
 - Manage the lifecycle of Kubernetes clusters
-- Implement and configure a highly-available control plane
+- Implement and configure a **highly-available** control plane
+  - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
 - Use Helm and Kustomize to install cluster components
 - Understand extension interfaces (CNI, CSI, CRI, etc.)
 - Understand CRDs, install and configure operators
