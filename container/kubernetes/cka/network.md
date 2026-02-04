@@ -18,7 +18,7 @@
   - [CoreDNS](#coredns)
     - [Task: CoreDNS config error](#task-coredns-config-error)
     - [Task: \*\*\*CoreDNS map DNS to IP](#task-coredns-map-dns-to-ip)
-    - [Task: \*\*\*svc \& ip.pod lookupd](#task-svc--ippod-lookupd)
+    - [Task: \*\*\*svc \& ip.pod lookup](#task-svc--ippod-lookup)
   - [Gateway API](#gateway-api)
     - [Task: \*API GATEWAY + Routhttp](#task-api-gateway--routhttp)
     - [Task: Service](#task-service)
@@ -733,7 +733,7 @@ kubectl run --rm -it dns-client --image=busybox --restart=Never -- nslookup myap
 
 ---
 
-### Task: \*\*\*svc & ip.pod lookupd
+### Task: \*\*\*svc & ip.pod lookup
 
 Create an nginx pod named nginx-resolver using the nginx image and expose it internally using a ClusterIP service called nginx-resolver-service.
 

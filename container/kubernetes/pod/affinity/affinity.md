@@ -14,8 +14,11 @@
   - [Inter-pod Affinity and Anti-Affinity](#inter-pod-affinity-and-anti-affinity)
     - [Scheduling Types](#scheduling-types-1)
     - [Vs nodeAffinity](#vs-nodeaffinity)
-    - [Lab: Pod Affinity - Required](#lab-pod-affinity---required)
-    - [Lab: Pod Anti Affinity - Required](#lab-pod-anti-affinity---required)
+    - [Lab: Pod Affinity vs Pod Anti-affinity](#lab-pod-affinity-vs-pod-anti-affinity)
+      - [Create Target Pod](#create-target-pod)
+      - [Pod Affinity](#pod-affinity)
+      - [Pod Anti-Affinity](#pod-anti-affinity)
+      - [One pod per node](#one-pod-per-node)
   - [Good Pratices: Schedule Pods to a Node](#good-pratices-schedule-pods-to-a-node)
 
 ---
@@ -23,16 +26,13 @@
 ## Affinity
 
 - `Affinity`
-
   - a scheduling rule that **attract or repel** `pods` from specific `nodes` or other `pods`.
 
 - 2 primary types of affinity:
-
   - `Node Affinity`
   - `Inter-pod Affinity`.
 
 - `pod.spec.affinity` field:
-
   - specify the pod's **scheduling constraints**
 
 ---
@@ -40,14 +40,12 @@
 ## Node Affinity
 
 - `Node Affinity`
-
   - A `Pod`'s attribute.
   - used to **constrain** which `nodes` the `pod` can be **scheduled** on based on `node labels`.
     - not repelling Pods
     - **attracting** `Pods` to `Nodes` with **matching labels**.
 
 - Example Use Case
-
   - ensure that a **machine-learning workload** only runs on nodes with specific `GPU` hardware.
 
 ---
@@ -79,7 +77,6 @@
 - `Node Affinity`:
   - `Pod` **attraction** to `Nodes` with labels.
 - `Taints/Tolerations`:
-
   - `Node` **repelling** `Pods` unless tolerated.
 
 - Often used together:
@@ -266,19 +263,27 @@ kubectl get pod -l app=nginx -o wide
 - allows to **constrain** `pod scheduling` based on the **labels** of `pods` that are **already running** on the `nodes`.
 
 - `Pod Affinity`
+  - a scheduling rule that `pod` is **scheduled close to** certain target `Pods`.
+  - “Put me with these Pods”
 
-  - Use this when needs to keep "buddy" services together.
-  - e.g,: You have a web server and a cache (like Redis). Since they communicate frequently, you want them on the **same node** or in the same availability zone to reduce latency.
+- `pod.spec.affinity.podAffinity` field
+  - `labelSelector`: used to specify the target pods
+  - `topologyKey`: Defines the scope
 
 ---
 
 - `Pod Anti-Affinity`
+  - a scheduling rule that a `pod` is **not scheduled close to** certain target `Pods`.
+  - “Keep me away from these Pods”
 
-  - Use this when need to keep `pods` **apart**.
-  - e.g.: You have three replicas of a database. You want to ensure that **no two replicas** sit **on the same node**. This way, if one node fails, your entire service doesn't go down.
+- `pod.spec.affinity.podAntiAffinity` field
 
-- `Topology Key`
-  - What is the "boundary" for being considered "together"?
+---
+
+- fields to specify the target pod:
+  - `labelSelector`: used to specify the target pods
+  - `topologyKey`:
+    - Defines the scope
     - `kubernetes.io/hostname`: the same node.
     - `topology.kubernetes.io/zone`: the same availability zone.
 
@@ -303,15 +308,61 @@ kubectl get pod -l app=nginx -o wide
 
 ---
 
-### Lab: Pod Affinity - Required
+### Lab: Pod Affinity vs Pod Anti-affinity
 
-```yaml
-# demo-podaffinity-required.yaml
+#### Create Target Pod
+
+```sh
+k get node
+# NAME           STATUS   ROLES           AGE   VERSION
+# controlplane   Ready    control-plane   16d   v1.32.11
+# node01         Ready    <none>          16d   v1.32.11
+# node02         Ready    <none>          16d   v1.32.11
+
+# ##############################
+# create target pod
+# ##############################
+tee > target-pod.yaml<<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: web
+  name: target
+  labels:
+    app: target
 spec:
+  nodeName: node02
+  containers:
+  - image: nginx
+    name: target
+EOF
+
+k apply -f target-pod.yaml
+# pod/target created
+
+k get po target -o wide --show-labels
+# NAME     READY   STATUS    RESTARTS   AGE   IP              NODE     NOMINATED NODE   READINESS GATES   LABELS
+# target   1/1     Running   0          4s    10.244.140.79   node02   <none>           <none>            app=target
+```
+
+---
+
+#### Pod Affinity
+
+```sh
+# ##############################
+# create Pod Affinity
+# ##############################
+tee >pod-affinity.yaml<<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-affinity
+  labels:
+    app: pod-affinity
+spec:
+  containers:
+    - name: nginx
+      image: nginx
   affinity:
     podAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -320,43 +371,38 @@ spec:
               - key: app
                 operator: In
                 values:
-                  - web
+                  - target
           topologyKey: "kubernetes.io/hostname"
-  containers:
-    - name: nginx
-      image: nginx
-```
 
-```sh
-kubectl apply -f demo-podaffinity-required.yaml
-# pod/web created
+EOF
 
-kubectl get pod web
-# NAME   READY   STATUS    RESTARTS   AGE
-# web    0/1     Pending   0          20s
+k apply -f pod-affinity.yaml
+# pod/pod-affinity created
 
-# create web pod
-
-kubectl run nginx --image=nginx -l app=web
-# pod/nginx created
-
-# confirm: web running after nginx created
-kubectl get pod web
-# NAME   READY   STATUS    RESTARTS   AGE
-# web    1/1     Running   0          5m
+k get pod pod-affinity -o wide
+# NAME           READY   STATUS    RESTARTS   AGE   IP              NODE     NOMINATED NODE   READINESS GATES
+# pod-affinity   1/1     Running   0          4s    10.244.140.80   node02   <none>           <none>
 ```
 
 ---
 
-### Lab: Pod Anti Affinity - Required
+#### Pod Anti-Affinity
 
-```yaml
-# demo-podantiaffinity-required.yaml
+```sh
+# ##############################
+# create Pod Anti-affinity
+# ##############################
+tee >pod-anti-affinity.yaml<<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: demo-podantiaffinity-required
+  name: pod-anti-affinity
+  labels:
+    app: pod-anti-affinity
 spec:
+  containers:
+    - name: nginx
+      image: nginx
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -365,29 +411,66 @@ spec:
               - key: app
                 operator: In
                 values:
-                  - web
+                  - target
           topologyKey: "kubernetes.io/hostname"
-  containers:
-    - name: nginx
-      image: nginx
+EOF
+
+k apply -f pod-anti-affinity.yaml
+# pod/pod-anti-affinity created
+
+k get po pod-anti-affinity -o wide
+# NAME                READY   STATUS    RESTARTS   AGE   IP               NODE     NOMINATED NODE   READINESS GATES
+# pod-anti-affinity   1/1     Running   0          18s   10.244.196.143   node01   <none>           <none>
 ```
 
+---
+
+#### One pod per node
+
+- To schedule a pod per node, like daemonset
+  - podAntiAffinity label = pod label
+
 ```sh
-kubectl run web --image=nginx -l app=web
-# pod/web created
+tee > pod-node.yaml<<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-node
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pod-node
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: pod-node
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - pod-node
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+EOF
 
-kubectl get pod -o wide
-# NAME   READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
-# web    1/1     Running   0          16s   10.244.2.69   node02   <none>           <none>
+k apply -f pod-node.yaml
+# deployment.apps/pod-node created
 
-kubectl apply -f demo-podantiaffinity-required.yaml
-# pod/demo-podantiaffinity-required created
-
-# confirm: deploy on node01
-kubectl get pod
-# NAME                            READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
-# demo-podantiaffinity-required   1/1     Running   0          13s     10.244.1.87   node01   <none>           <none>
-# web                             1/1     Running   0          3m18s   10.244.2.69   node02   <none>           <none>
+k get pod -o wide -l app=pod-node
+# NAME                        READY   STATUS    RESTARTS   AGE   IP               NODE     NOMINATED NODE   READINESS GATES
+# pod-node-68f6d885f6-b9vg8   1/1     Running   0          68s   10.244.140.83    node02   <none>           <none>
+# pod-node-68f6d885f6-ctdsx   1/1     Running   0          13s   10.244.196.144   node01   <none>           <none>
 ```
 
 ---

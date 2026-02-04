@@ -8,6 +8,7 @@
   - [CoreDNS](#coredns)
     - [Lab: CoreDNS](#lab-coredns)
     - [Lab: Explore DNS](#lab-explore-dns)
+    - [Lab: access Pod with DNS](#lab-access-pod-with-dns)
 
 ---
 
@@ -17,7 +18,6 @@
 - By default:
   - K8s deploys **built-in DNS**
 - Whenever a `service` is **created**, k8s **creates a records** in `cluster DNS`, mapping `DNS name` to `IP`
-
   - any pod within the cluster can access the `service` **using `service name`**
 
 ### Services & Namespace:
@@ -26,7 +26,6 @@
   - `svc_name`
   - e.g., `curl http://web-service`
 - different ns:
-
   - `svc_name.ns_name`: service name act as subdomain, the namespace is the domain
   - e.g., `curl http://web-service.apps`
 
@@ -36,7 +35,6 @@
 - All resources are grouped in the `root domain` for the cluster `cluster.local`
 
 - A `CNAME record` is a DNS record that **maps** an `alias` to an **existing DNS name** instead of an IP address.
-
   - Can create an **alias** in k8s DNS
 
 - Example of an `Fully Qaullify Domain Name` in a cluster
@@ -47,6 +45,14 @@
 | pod         | 10-244-2-5  | default   | pod  | cluster.local | `10-244-2-5.default.pod.cluster.local` | 10.244.2.5    |
 
 - `curl http://web-service.apps.svc.cluster.local`
+
+---
+
+- Service:
+  - `<service-name>.<namespace-name>.svc.cluster.local`
+- Pod:
+  - with headless service: `<pod-name>.<headless-service-name>.<namespace-name>.svc.cluster.local`
+  - `<pod-ip-address-replace-dots-with-hyphens>.<namespace-name>.pod.cluster.local`
 
 ---
 
@@ -250,3 +256,36 @@ nslookup -query=SR any.any.svc.cluster.local
 ```
 
 ---
+
+### Lab: access Pod with DNS
+
+```sh
+tee > dns-pod.yaml<<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-pod
+  namespace: default
+  labels:
+    run: dns-pod
+spec:
+  hostname: dns-pod
+  subdomain: dns-svc  # same as service name
+  containers:
+    - name: pod
+      image: nginx
+EOF
+
+k apply -f dns-pod.yaml
+
+k expose po dns-pod --name=dns-svc --port=80
+
+k run tester --image=busybox --restart=Never -- sleep 1d
+k exec -it tester -- sh
+nslookup dns-pod.dns-svc.default.svc.cluster.local
+# Server:         10.96.0.10
+# Address:        10.96.0.10:53
+
+# Name:   dns-pod.dns-svc.default.svc.cluster.local
+# Address: 10.244.196.148
+```

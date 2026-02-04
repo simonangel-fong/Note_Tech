@@ -241,13 +241,6 @@ alias kcn="kubectl config set-context --current --namespace"
 
 ---
 
-todo:
-
-- troubleshooting:
-  - kubectl command fails
-
----
-
 - troubleshooting: `Pending` pod
   - `describe` pod for event
   - `get node` for status:
@@ -274,3 +267,8 @@ todo:
   - `kubectl set resources deployment NAME -c=nginx --limits=cpu=200m,memory=512Mi`
   - `kubectl set image deployment/nginx busybox=busybox nginx=nginx:1.9.1`
   - `kubectl set serviceaccount deployment nginx-deployment serviceaccount1`
+
+---
+
+[killer01](./cka/killer_01.md)
+[killer02](./cka/killer_02.md)
