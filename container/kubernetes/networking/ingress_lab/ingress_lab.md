@@ -264,8 +264,8 @@ kubectl apply -f ~/web-app/web-ingress.yaml
 # ingress.networking.k8s.io/web-ing created
 
 kubectl get ingress -n web-ns
-# NAME      CLASS   HOSTS                           ADDRESS   PORTS   AGE
-# web-ing   nginx   app.mysite.com,web.mysite.com             80      7s
+# NAME      CLASS   HOSTS                           ADDRESS          PORTS   AGE
+# web-ing   nginx   app.mysite.com,web.mysite.com   192.168.10.200   80      71s   7s
 ```
 
 - Test

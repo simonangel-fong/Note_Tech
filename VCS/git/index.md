@@ -10,9 +10,9 @@
 - [git Staging Area](./staging/staging.md)
 - [git Commmit](./commit/commit.md)
 - [git Branch](./branch/branch.md)
+- [Lab: Reset GitHub Repo](./lab_reset_githu_repo.md)
 
 ---
-
 
 ---
 

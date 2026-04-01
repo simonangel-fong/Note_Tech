@@ -5,13 +5,11 @@
 ## Catelog
 
 - [Fundamental](./fundamental/linux_fundamental/linux_fundamental.md)
-
   - [Kernel](./fundamental/kernel/kernel.md)
   - [System Information](./fundamental/systeminfo/systeminfo.md)
   - [Hardware Info](./fundamental/hardware/hardware.md)
 
 - System
-
   - [Boot Process & Recover Root Password](./system/boot/boot.md)
   - [Shutdown Options](./system/shutdown/shutdown.md)
   - [Tune System Performance](./system/tune_perform/tune_perform.md)
@@ -20,7 +18,6 @@
   - [System Setting](./system/setting/setting.md)
 
 - [Storage Fundamental](./storage/storage_fun/storage_fun.md)
-
   - Local Storage
     - [Partition](./storage/partition/partition.md)
     - [Logical Volume Manager](./storage/lvm/lvm.md)
@@ -30,19 +27,16 @@
   - [Server Message Block (SMB)](./storage/samba/samba.md)
 
 - Package, Process, & App
-
   - [Packages Management](./software/package/package.md)
   - [Process Mangement](./software/process/process.md)
   - [Service Mangement](./software/service/service.md)
 
 - Shell
-
   - [Shell Fundamental](./shell/shell_fundamental/shell_fundamental.md)
   - [Shell Script](./shell/shell_script/shell_script.md)
   - [Automation](./shell/automation/automation.md)
 
 - File System
-
   - [File Fundamental](./filesystem/file_fundamental/file_fundamental.md)
   - [File Permission](./filesystem/file_permission/file_permission.md)
   - [Directory Fundamental](./filesystem/directory/directory.md)
@@ -53,14 +47,12 @@
   - [Access Control List](./filesystem/acl/acl.md)
 
 - User and Group Management
-
   - [User](./user_group/user/user.md)
   - [User Password](./user_group/pwd/pwd.md)
   - [Group](./user_group/group/group.md)
   - [`root` & `sudo`](./user_group/root_sudo/root_sudo.md)
 
 - Network Management
-
   - [Network Configuration](./network/network_config/network_config.md)
     - [Package `NetworkManager`](./network/NetworkManager/NetworkManager.md)
     - [Package `iproute`](./network/iproute/iproute.md)
@@ -86,7 +78,6 @@
 ## Service Deployments
 
 - Web App
-
   - [Wordpress-Mysql-Nginx-Ubuntu](./project/wordpress_mysql_nginx_ubuntu.md)
   - [!Wordpress-Mysql-Nginx-Redhat](./project/wordpress_mysql_nginx_redhat.md)
   - [!Wordpress-Mysql-Appache2-Redhat](./project/wordpress_mysql_appache2_redhat.md)
@@ -102,7 +93,6 @@
   - [`nginx` on `Redhat8`](./server_web/nginx-redhat8/nginx-redhat8.md)
   - [](./server_web/nginx-redhat8/nginx-redhat8.md)
 - Database Server
-
   - [!Oracle 19c on `Redhat9`](./server_db/orcl19_redhat9/orcl19_redhat9.md)
   - [Oracle 19c on `Redhat8.10`](./server_db/orcl19_redhat8/orcl19_redhat8.md)
   - [`mysql` on `Ubuntu24`](./server_db/mysql_ubuntu24/mysql_ubuntu24.md)

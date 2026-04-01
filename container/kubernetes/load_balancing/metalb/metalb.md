@@ -61,7 +61,7 @@ EOF
 kubectl apply -f ~/metallb-ip-pool.yaml
 # ipaddresspool.metallb.io/web-pool created
 
-k get IPAddressPool web-pool -n metallb-system
+kubectl get IPAddressPool web-pool -n metallb-system
 # NAME       AUTO ASSIGN   AVOID BUGGY IPS   ADDRESSES
 # web-pool   true          false             ["192.168.10.200-192.168.10.210"]
 

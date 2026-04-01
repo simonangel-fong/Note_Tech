@@ -5,44 +5,38 @@
 - [HomeLab](./homelab/index.md)
 
 - Container
-
   - [ ] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
 
 - DevOps & Cloud
-
   - [x] [\*Terraform](./cloud/terraform/index.md)
   - [ ] [\*Ansible](./devops/ansible/ansible.md)
   - [ ] [Jenkins](./devops/jenkins/jenkins.md)
   - [x] [Prometheus](./devops/prometheus/index.md)
 
 - Testing
-
   - [ ] [Locust](./testing/locust/index.md)
   - [ ] [K6](./testing/k6/index.md)
 
 - Version Control
-
   - [ ] [Git](./VCS/git/index.md)
   - [ ] [GitHub](./VCS/github/index.md)
   - [ ] [GitLab](./VCS/gitlab/index.md)
 
 - Virtual Machine
-
   - [x] [Proxmox](./vm/proxmox/proxmox.md)
 
 ---
 
 - OS
-
   - [ ] [Computer Architecture](./Operating_System/computer_architecture/index.md)
   - [ ] [Linux](./Operating_System/linux/index.md)
   - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
   - [ ] [Airflow](./Operating_System/airflow/index.md)
   - [ ] [WSL](./Operating_System/wsl/wsl.md)
+  - [x] [tmux](./tmux/tmux.md)
 
 - Database
-
   - [x] [SQL](./Database/sql/index.md)
   - [x] [Oracle DBA - Fundamental](./Database/dba/index.md)
   - [x] [Oracle DBA - Backup and Recovery](./Database/dba_backup_recovery/index.md)
@@ -53,7 +47,6 @@
   - [ ] [Redis](./Database/redis/index.md)
 
 - AI
-
   - [ ] [Pytorch](./AI/PyTorch/index.md)
   - [ ] [Deep Learning](./AI/Deep_learning/index.md)
   - [ ] [Machine Learning](./AI/Machine_learning/index.md)
@@ -62,19 +55,16 @@
 ---
 
 - Fundamental
-
   - [ ] Statictics
   - [ ] [Data Structure & Algorithm](./Fundamental/Data_Structure/index.md)
 
 - Programming Language
-
   - [x] [Python](./Programming_Language/python/index.md)
   - [x] [JavaScript](./Programming_Language/javascript/index.md)
   - [ ] Java
   - [ ] [R](./Programming_Language/r/index.md)
 
 - [AWS](./AWS/aws/index.md)
-
   - [x] [AWS CCP](./AWS/ccp/index.md)
   - [x] [AWS SAA](./AWS/saa/index.md)
   - [ ] [AWS DEA](./AWS/dea/index.md)
@@ -83,12 +73,10 @@
     - [x] Project: [Import VM into AMI](./AWS/Projects/vm2ami.md)
 
 - Mobile
-
   - [ ] [iOS](./Mobile/ios/index.md)
   - [ ] [Flutter](./Mobile/flutter/index.md)
 
 - Web
-
   - [x] [HTML](./Web/html/index.md)
   - [x] [CSS](./Web/css/index.md)
   - [x] [Bootstrap](./Web/bootstrap/index.md)
@@ -100,7 +88,6 @@
   - [ ] React
 
 - Data Analytics
-
   - [ ] Matplotlib
   - [ ] Numpy
   - [ ] Panda
