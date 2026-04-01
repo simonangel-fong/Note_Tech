@@ -34,7 +34,7 @@
   - [ ] [Linux - Networking](./Operating_System/linux/networking/networking.md)
   - [ ] [Airflow](./Operating_System/airflow/index.md)
   - [ ] [WSL](./Operating_System/wsl/wsl.md)
-  - [x] [tmux](./tmux/tmux.md)
+  - [x] [tmux](./Operating_System/tmux/tmux.md)
 
 - Database
   - [x] [SQL](./Database/sql/index.md)
