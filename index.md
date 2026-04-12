@@ -4,6 +4,9 @@
 
 - [HomeLab](./homelab/index.md)
 
+- AI
+- [OpenClaw](./ai/openclaw/index.md)
+
 - Container
   - [ ] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
