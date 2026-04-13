@@ -21,3 +21,10 @@
 ## Project
 
 - [Import VM into AMI](./Projects/vm2ami.md)
+
+---
+
+## Common Services
+
+- [API Gateway](./apigw/apigw.md)
+- [Lambda](./lambda/lambda.md)
