@@ -1,6 +1,6 @@
 # MCP
 
-[Back](../fundamental.md)
+[Back](../index.md)
 
 - [MCP](#mcp)
   - [Model Context Protocol (MCP)](#model-context-protocol-mcp)

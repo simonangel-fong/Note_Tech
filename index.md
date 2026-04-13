@@ -5,7 +5,8 @@
 - [HomeLab](./homelab/index.md)
 
 - AI
-- [OpenClaw](./ai/openclaw/index.md)
+  - [ ] [OpenClaw](./ai/openclaw/index.md)
+  - [ ] [Fundamental](./ai/fundamental/index.md)
 
 - Container
   - [ ] [Docker](./container/docker/index.md)

@@ -1,6 +1,6 @@
 # Amazon Bedrock - Fundamental
 
-[Back](./fundamental.md)
+[Back](./index.md)
 
 - [Amazon Bedrock - Fundamental](#amazon-bedrock---fundamental)
   - [Amazon Bedrock](#amazon-bedrock)

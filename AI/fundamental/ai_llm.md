@@ -1,6 +1,6 @@
 # Basic Concept - AI & LLM
 
-[Back](./fundamental.md)
+[Back](./index.md)
 
 - [Basic Concept - AI \& LLM](#basic-concept---ai--llm)
   - [AI Overview](#ai-overview)
