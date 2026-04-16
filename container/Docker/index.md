@@ -6,7 +6,8 @@
 - [Docker Image](./image/image/image.md)
 - [Docker Container](./container/container.md)
   - [`ENTRYPOINT` vs `CMD` vs `RUN`](./image/entrypoint_cmd_run/entrypoint_cmd_run.md)
-- [Docker Network](./docker_network/docker_network.md)
+- [Docker Storage](./storage/storage.md)
+- [Docker Network](./network/network.md)
 - [Docker Compose](./compose/compose.md)
 
 ---
@@ -29,21 +30,6 @@
 | `docker kill container_id`      | Kill one or more running containers, sending sigkill signal       |
 | `docker system prune`           | Remove all unused containers, networks, images                    |
 | `docker logs container_id`      | RFetch the logs of a container                                    |
-
----
-
-## Volume
-
-| Command                         | Description                            |
-| ------------------------------- | -------------------------------------- |
-| `docker volume ls`              | List volumes                           |
-| `docker volume create vol_name` | Create a volume                        |
-| `docker volume update`          | Update a volume (cluster volumes only) |
-| `docker volume rm vol_name`     | Remove one or more volumes             |
-
----
-
-
 
 ---
 

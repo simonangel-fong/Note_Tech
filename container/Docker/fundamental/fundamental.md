@@ -7,8 +7,6 @@
   - [Docker Engine Architecture](#docker-engine-architecture)
     - [Components](#components)
     - [Container runtime architecture](#container-runtime-architecture)
-    - [Storage architecture](#storage-architecture)
-    - [Networking architecture](#networking-architecture)
     - [Example: `docker run -d nginx`](#example-docker-run--d-nginx)
   - [Implement Container](#implement-container)
     - [Feature: `linux namespace`](#feature-linux-namespace)
@@ -16,6 +14,8 @@
     - [Feature: `syscall`](#feature-syscall)
     - [Feature: `Linux capabilities`](#feature-linux-capabilities)
     - [Feature: `Seccomp (secure computing mode)`](#feature-seccomp-secure-computing-mode)
+  - [Common Admin Commands](#common-admin-commands)
+  - [Docker orchestration](#docker-orchestration)
 
 ---
 
@@ -82,34 +82,6 @@ Containers (isolated processes)
    - Limit CPU
    - Limit memory
    - Limit disk I/O
-
----
-
-### Storage architecture
-
-- uses a `Union File System` (like OverlayFS).
-- How it works:
-  - Image layers = `read-only`
-  - Container adds a `read-write layer` on top
-
-- Benefits:
-  - Modify a file: `copy-on-write`
-  - Original image stays unchanged
-
----
-
-### Networking architecture
-
-Common network types:
-
-- `bridge` (default)
-  containers communicate on a virtual network
-- `host`
-  shares host network
-- `overlay`
-  multi-host networking (used in Swarm/K8s)
-- `none`
-  no networking
 
 ---
 
@@ -292,3 +264,54 @@ getpcaps 1569
   - Container runtimes like `Docker`, `containerd`, and `CRI-O` ship with default `seccomp profiles` that **block** around 40+ dangerous `syscalls` by default while allowing common ones.
 
 ---
+
+---
+
+## Common Admin Commands
+
+| Command                                 | Description                                                |
+| --------------------------------------- | ---------------------------------------------------------- |
+| `docker system info`                    | Display system-wide information                            |
+| `docker system df`                      | Show disk usage (images, containers, volumes)              |
+| `docker system prune`                   | Remove unused data (containers, networks, dangling images) |
+| `docker system prune -a`                | Remove **all unused images** (not just dangling)           |
+| `docker system prune -a --volumes`      | Aggressive cleanup (includes volumes ⚠️ data loss risk)    |
+| `docker volume ls`                      | List volumes                                               |
+| `docker volume rm <volume>`             | Remove a volume                                            |
+| `docker volume prune`                   | Remove unused volumes                                      |
+| `docker network ls`                     | List networks                                              |
+| `docker network prune`                  | Remove unused networks                                     |
+| `docker inspect <container/image>`      | Show detailed metadata (JSON)                              |
+| `docker logs <container>`               | View container logs                                        |
+| `docker exec -it <container> /bin/bash` | Enter a running container                                  |
+| `docker top <container>`                | Show running processes inside container                    |
+| `docker stats`                          | Real-time CPU/memory usage of containers                   |
+
+---
+
+## Docker orchestration
+
+- `Docker orchestration`
+  - the automated process of managing, scaling, and networking containers across a cluster of host machines.
+- While `Docker Engine` handles **individual containers**, **orchestration tools** are required to **coordinate** complex, multi-container applications in production environments.
+
+- **Key Orchestration Functions**
+  - `Scheduling`:
+    - Automatically **placing containers** on the most suitable **nodes** based on available CPU, memory, and resource constraints.
+  - `Scaling`:
+    - Increasing or decreasing the **number of container replicas** to handle fluctuating traffic demands.
+  - `Health Monitoring`:
+    - Continuously **checking the state of containers** and **automatically replacing** those that fail or become unresponsive.
+  - `Service Discovery & Load Balancing`:
+    - Assigning unique `DNS names` to services and distributing **incoming traffic** across healthy container instances.
+
+- **Core Orchestration Tools**
+  - `Kubernetes (k8s)`:
+    - The industry-standard orchestrator for large-scale, distributed applications.
+    - It offers advanced features like `horizontal auto-scaling`, `self-healing` (restarting failed containers), and automated `rollouts`.
+  - `Docker Swarm`:
+    - Docker’s native clustering tool integrated directly into the Docker Engine.
+    - It is highly valued for its **simplicity** and ease of use, using familiar `Docker CLI` commands to manage a swarm of nodes.
+  - `Docker Compose`:
+    - Primarily used for defining and running **multi-container applications on a single host**.
+    - While not a full orchestrator for large clusters, it is the standard for local development and simple production setups.

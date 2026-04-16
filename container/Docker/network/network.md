@@ -1,53 +1,17 @@
-## Types of Networks in Docker
+# Docker - Network
 
-- Default network for container
+[Back](../index.md)
 
-| Driver  | Description                                                                  |
-| ------- | ---------------------------------------------------------------------------- |
-| bridge  | The **default** network driver.                                              |
-| host    | Remove network isolation between the **container** and the **Docker host**.  |
-| none    | **Completely isolate** a container from the host and other containers.       |
-| overlay | Overlay networks **connect multiple** Docker daemons together.               |
-| ipvlan  | IPvlan networks provide **full control** over both IPv4 and IPv6 addressing. |
-| macvlan | Assign a MAC address to a container.                                         |
-
----
-
-### Host Network
-
-- It **removes** the network **isolation** between the `container` and the `host`.
-- The `container` uses the `host`'s network **namespace**, **IP** address, and network **ports**.
-- This can be useful if a container **needs to access host `network interfaces`** or very **low latency** is required for network access.
-
----
-
-### None Network
-
-- It provides **complete isolation** from **all other** networks.
-- Containers on **none** network have **no** `network interfaces`.
-- Handy to use for running containers that do **not need any access** to the network.
-
----
-
-### Overlay Network
-
-- designed for **multi-host networking** in a `Docker swarm cluster`.
-- Allows containers running on different `Docker hosts` to **communicate with each other**.
-- It creates a **virtual overlay network** across several hosts.
-
----
-
-### Macvlan Network
-
-- **Assigns** a `MAC address` to the `container`, thus making it appear on the network as **if it were an actual device**.
-- This is useful in scenarios where you need to **integrate** `Docker containers` into **existing networks** that require specific `MAC addresses` or when the containers are supposed to communicate directly with some `physical devices`.
-
----
-
-### IPvlan Network
-
-- It provides finer control of `IPv4` and `IPv6` addressing for containers.
-- It provides different **modes** like `L2` or `L3` to serve different isolation and routing needs.
+- [Docker - Network](#docker---network)
+  - [Docker Commands](#docker-commands)
+  - [Types of Networks in Docker](#types-of-networks-in-docker)
+    - [Bridge Network (Default)](#bridge-network-default)
+    - [Host Network](#host-network)
+    - [None Network](#none-network)
+    - [Overlay Network](#overlay-network)
+    - [Macvlan Network](#macvlan-network)
+    - [IPvlan Network](#ipvlan-network)
+    - [Lab: Bridge Network](#lab-bridge-network)
 
 ---
 
@@ -96,15 +60,99 @@ docker network create --driver macvlan `
 
 ---
 
+## Types of Networks in Docker
+
+- Default network for container
+
+| Driver  | Description                                                                  |
+| ------- | ---------------------------------------------------------------------------- |
+| bridge  | The **default** network driver.                                              |
+| host    | Remove network isolation between the **container** and the **Docker host**.  |
+| none    | **Completely isolate** a container from the host and other containers.       |
+| overlay | Overlay networks **connect multiple** Docker daemons together.               |
+| ipvlan  | IPvlan networks provide **full control** over both IPv4 and IPv6 addressing. |
+| macvlan | Assign a MAC address to a container.                                         |
+
+---
+
 ### Bridge Network (Default)
 
-- **Default network** created automatically when installing Docker.
-- Offers an essential **isolation** between `containers` on the same `host`.
-- allows it to **communicate between `containers` on the same network** by their **IP addresses** or **names** of the `containers`.
-- possible for `containers` to **use the `host`'s network connection** to obtain access to **external networks**.
+- **Default network**
+  - uses the `172.17.0.0/16` subnet
+- **Key features:**
+  - isolate `containers` from the `host`
+  - Containers can **talk to each other** (same network)
+    - Use container IP / name
+  - External access via `port mapping`
+    - iptables (NAT)
 
-- By default, Docker uses the `172.17.0.0/16` subnet for its **default bridge network**.
-  - This means containers connected to the default bridge network will typically be assigned IP addresses within this range.
+- How it works:
+  - Docker creates a virtual bridge: docker0
+  - Each container connects via a veth pair
+  - Containers get private IPs (e.g., 172.17.x.x)
+
+```txt
+Container A ──┐
+              ├── docker0 (bridge) ── Host ── Internet
+Container B ──┘
+```
+
+---
+
+### Host Network
+
+- **Key features:**
+  - Container **shares host network stack**
+    - `container` uses the `host`'s network **namespace**, **IP** address, and network **ports**.
+  - No separate IP
+- Pros:
+  - No NAT → better performance
+- Cons:
+  - No isolation
+  - Port conflicts
+- Use case:
+  - if a container **needs to access host `network interfaces`**
+  - very **low latency** is required for network access
+
+---
+
+### None Network
+
+- **Key features:**
+  - No network access at all
+- Used for:
+  - security isolation
+  - batch jobs
+
+---
+
+### Overlay Network
+
+- **Key features:**
+  - Connect containers across **multiple hosts**
+  - creates a **virtual overlay network** across several hosts.
+
+```txt
+Host A (Container A) ←→ Overlay Network ←→ Host B (Container B)
+```
+
+- Use case:
+  - Docker Swarm
+  - Kubernetes (conceptually similar)
+
+---
+
+### Macvlan Network
+
+- **Assigns** a `MAC address` to the `container`, thus making it appear on the network as **if it were an actual device**.
+- This is useful in scenarios where you need to **integrate** `Docker containers` into **existing networks** that require specific `MAC addresses` or when the containers are supposed to communicate directly with some `physical devices`.
+
+---
+
+### IPvlan Network
+
+- It provides finer control of `IPv4` and `IPv6` addressing for containers.
+- It provides different **modes** like `L2` or `L3` to serve different isolation and routing needs.
 
 ---
 
