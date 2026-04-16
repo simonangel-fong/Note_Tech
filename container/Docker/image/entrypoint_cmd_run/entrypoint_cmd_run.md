@@ -13,20 +13,23 @@
 
 ## `ENTRYPOINT`, `CMD`, `RUN`
 
-- `ENTRYPOINT`:
-
-  - the **instruction** that defines the **executable** that always starts as `PID 1(Docker namespace)` when the container starts.
-  - can pair with `CMD` for default **args**.
-
-- `CMD`:
-
-  - the **instruction** that sets the **default command** or **default arguments** used at **container start**.
-  - If `ENTRYPOINT` **exists**, `CMD` is its **default args**;
-    - otherwise `CMD` is the **command**.
-
 - `RUN`
   - the **instruction** that **executes during image build** to bake changes into **layers** (install packages, compile, etc.).
   - Doesn’t run when the container starts.
+
+- `ENTRYPOINT`:
+  - the **instruction** that defines the **executable** that **always** starts as `PID 1(Docker namespace)` when the container starts.
+  - Images can **only** have **one** `ENTRYPOINT`
+    - If **repeat**, the last one will apply.
+  - Cat be overriden by `docker run --entrypoint`
+    - but rarely
+  - can pair with `CMD` for default **args**.
+
+- `CMD`:
+  - the **instruction** that sets the **default command** or **default arguments** used at **container start**.
+    - can be overriden in runtime: `docker run <img> <cmd_runtime>`
+  - If `ENTRYPOINT` **exists**, `CMD` is its **default args**;
+    - otherwise `CMD` is the **command**.
 
 ---
 

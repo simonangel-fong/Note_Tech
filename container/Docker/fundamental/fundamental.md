@@ -4,6 +4,12 @@
 
 - [Docker - Fundamental](#docker---fundamental)
   - [Fundamental](#fundamental)
+  - [Docker Engine Architecture](#docker-engine-architecture)
+    - [Components](#components)
+    - [Container runtime architecture](#container-runtime-architecture)
+    - [Storage architecture](#storage-architecture)
+    - [Networking architecture](#networking-architecture)
+    - [Example: `docker run -d nginx`](#example-docker-run--d-nginx)
   - [Implement Container](#implement-container)
     - [Feature: `linux namespace`](#feature-linux-namespace)
     - [Linux kernel feature: `cgroups`](#linux-kernel-feature-cgroups)
@@ -26,6 +32,107 @@
   - a normal process running in the host operating system
     - isolated from other processes
 
+## Docker Engine Architecture
+
+- client–server
+
+```txt
+Docker Client (CLI / API)
+        ↓
+Docker Daemon (dockerd)
+        ↓
+Container Runtime (containerd → runc)
+        ↓
+Containers (isolated processes)
+```
+
+---
+
+### Components
+
+1. Docker Client
+   - The docker CLI you use (docker build, docker run)
+   - Sends commands via REST API
+
+2. Docker Daemon (`dockerd`)
+   - The brain of Docker
+   - Responsible for:
+     - building images
+     - managing containers
+     - handling networks & volumes
+
+3. Container Runtime
+   - `containerd`: manages container lifecycle
+   - `runc`: actually creates the container using Linux kernel features
+
+4. Containers
+   - Lightweight, isolated `processes` (not full VMs)
+
+---
+
+### Container runtime architecture
+
+1. `Namespaces` (isolation)
+   - Process isolation (PID)
+   - Network isolation
+   - File system isolation
+   - User isolation
+
+2. `cgroups` (resource control)
+   - Limit CPU
+   - Limit memory
+   - Limit disk I/O
+
+---
+
+### Storage architecture
+
+- uses a `Union File System` (like OverlayFS).
+- How it works:
+  - Image layers = `read-only`
+  - Container adds a `read-write layer` on top
+
+- Benefits:
+  - Modify a file: `copy-on-write`
+  - Original image stays unchanged
+
+---
+
+### Networking architecture
+
+Common network types:
+
+- `bridge` (default)
+  containers communicate on a virtual network
+- `host`
+  shares host network
+- `overlay`
+  multi-host networking (used in Swarm/K8s)
+- `none`
+  no networking
+
+---
+
+### Example: `docker run -d nginx`
+
+Docker does:
+
+1. `CLI` sends request
+2. `Daemon` checks image locally
+   - If not found → pulls from registry
+3. Creates container:
+   - adds `read-write layer`
+   - sets up `namespaces`:
+     - `PID namespace`: **Process** identifiers and capabilities
+     - `IPC namespace`: **Process** communication over shared memory
+     - `UTS namespace`: **Host and domain** name
+     - `NET namespace`: **Network** access and structure
+     - `USR namespace`: **User names** and identifiers
+     - `MNT namespace`: **Filesystem** access and structure
+   - applies `cgroups`
+   - configures **network**
+4. `runc` starts the process
+
 ---
 
 ## Implement Container
@@ -33,7 +140,6 @@
 ### Feature: `linux namespace`
 
 - `Linux Namespaces`
-
   - a linux feature ensures that each process has its own view of the system.
     - a process running in a container will only see some of the files, processes and network interfaces on the system,
     - The process only sees resources that are in this namespace and none in the other namespaces.
@@ -100,7 +206,6 @@ ip a
 ### Linux kernel feature: `cgroups`
 
 - `Linux Control Groups (cgroups)`
-
   - a Linux kernel feature that organizes `processes` into **hierarchical groups** to **manage and limit system resources** like CPU, memory, disk I/O, and network bandwidth,
     - e.g.,a process or group of processes can only use the allotted CPU time, memory, and network bandwidth
     - processes cannot occupy resources that are reserved for other processes.
@@ -118,12 +223,10 @@ ip a
 ### Feature: `syscall`
 
 - `system call (syscall)`
-
   - serves as the essential interface that allows user-level applications to request services from the operating system's kernel.
   - a program's request for a service from the operating system (OS), acting as a **secure bridge** between **user applications** and the **privileged kernel**
 
 - How it works:
-
   - **Request**:
     - A user program needs a `privileged service` (e.g., writing to a file).
   - **Transition**:
@@ -140,11 +243,9 @@ ip a
 ### Feature: `Linux capabilities`
 
 - `Linux capabilities`
-
   - a kernel feature that **break down** the traditional, monolithic `root (superuser) privileges` into smaller, distinct **units of permission**.
 
 - `Principle of Least Privilege`:
-
   - Instead of an "all-or-nothing" root/non-root model, processes are **granted only the specific capabilities** they require to perform their intended tasks.
 
 - Common Capabilities
@@ -185,8 +286,9 @@ getpcaps 1569
 ### Feature: `Seccomp (secure computing mode)`
 
 - `Seccomp (secure computing mode)`
-
   - a Linux kernel security feature used to **restrict** the `system calls (syscalls)` a process can make, thereby reducing the attack surface of an application.
 
 - **Default Profiles**:
   - Container runtimes like `Docker`, `containerd`, and `CRI-O` ship with default `seccomp profiles` that **block** around 40+ dangerous `syscalls` by default while allowing common ones.
+
+---

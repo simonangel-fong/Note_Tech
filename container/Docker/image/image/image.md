@@ -7,6 +7,11 @@
   - [Dockerfile Instructions](#dockerfile-instructions)
   - [Example](#example)
   - [Example: Create Container manually](#example-create-container-manually)
+  - [Layered architecture](#layered-architecture)
+    - [Characteristics](#characteristics)
+    - [Common Mistake](#common-mistake)
+  - [Multi-stage](#multi-stage)
+  - [ENTRYPOINT/CMD:](#entrypointcmd)
 
 ---
 
@@ -23,16 +28,24 @@
 | `docker image tag old_tag new_tag`               | Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE |
 | `docker container commit con_name img_tag`       | Create a new image from a container's changes         |
 
+- Alias
+
+| Command                | Description     |
+| ---------------------- | --------------- |
+| `docker images`        | List Images     |
+| `docker rmi img_name`  | Remove an image |
+| `docker pull img_name` | Pull an image   |
+
+---
+
 ## Docker Image
 
 - `Docker Image`:
-
   - a **snapshot** or blueprint of the libraries and dependencies required inside a container for an application to run, along with **startup command**.
 
   - = file system snapshot + startup command
 
 - Steps:
-
   - create docker file
   - Docker Clent(CLI)
   - Docker Server
@@ -48,11 +61,9 @@
 ## Dockerfile Instructions
 
 - `Docker File`:
-
   - a **text document** that contains all instructions to **automatically** assemble an **image**.
 
 - Dockerfile Instructions
-
   - not case-sensitive
     - convention is for them to be **UPPERCASE**
   - run in a `Dockerfile` **in order**.
@@ -183,3 +194,111 @@ docker run image_hash
 ```
 
 ---
+
+## Layered architecture
+
+- `Layered architecture`
+  - how Docker images are built as a **stack of immutable layers**, where **each layer represents a change** (like installing packages, copying files, or setting environment variables).
+  - benefits: efficiency, speed, and reusability.
+
+- `layer`
+  - a **read-only filesystem snapshot** created from each instruction in a `Dockerfile`.
+  - Each instruction creates a new layer.
+  - When you run a container:
+    - Docker adds a **thin writable layer on top**
+    - All lo**wer layers** remain **read-only**
+
+---
+
+### Characteristics
+
+1. **Immutable Layers**
+   - Once created, a **layer never changes**
+   - If something changes → a new layer is created
+
+2. **Layer Caching**
+   - Docker **caches layers** during build
+     - If **nothing** changes, Docker **reuses** `cached layers`, making rebuilds much faster.
+     - But if you modify a layer: **All layers after** it must rebuild
+
+3. **Layer Reuse** (Storage Efficiency)
+   - Multiple images can **share layers**.
+   - e.g., base image
+
+4. Copy-on-Write (CoW)
+   - When a container modifies a file:
+   - It **copies the file** from a `read-only layer` to the `writable layer`, then modifies it
+
+---
+
+### Common Mistake
+
+- **Too Many Layers**
+  - Each RUN, COPY, ADD adds a layer
+  - Can **increase image size**
+
+- **Cache Busting Mistakes**
+
+```dockerfile
+# mistake
+# if changed, following layer rebuild
+COPY . /app
+RUN pip install -r requirements.txt
+
+# better
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . /app
+```
+
+- **Large Layers (Inefficient Images)**
+  - Installing **unnecessary packages** increases layer size
+  - Use:
+    - `--no-install-recommends`
+    - Multi-stage builds
+
+---
+
+## Multi-stage
+
+- `Docker multi-stage build`
+  - a method for optimizing Dockerfiles to create **smaller**, more **secure**, and more **efficient** container images.
+  - It allows you to use **multiple** `FROM` statements in a **single** `Dockerfile`, where each stage begins a new build environment.
+
+- **building an app** often needs:
+  - compilers (e.g., gcc, maven, npm)
+  - dev dependencies
+  - temporary files
+- runtime container **does NOT need these**.
+
+- **Without multi-stage:**
+  - ship everything → large image, security risk
+- **With multi-stage:**
+  - build in one stage
+  - copy only the final artifact → small, secure image
+
+```txt
+[ Stage 1: Build ]  --->  [ Stage 2: Runtime ]
+   (heavy tools)              (lightweight)
+```
+
+```dockerfile
+# Uses full Node.js environment
+FROM node:18 AS builder
+WORKDIR /app
+COPY . .
+# Installs dependencies, Builds static files
+RUN npm install && npm run build
+
+# Lightweight image
+FROM nginx:alpine
+# Only gets /app/build: just static files + nginx
+COPY --from=builder /app/build /usr/share/nginx/html
+```
+
+---
+
+## ENTRYPOINT/CMD:
+
+- `ENTRYPOINT`: sets the **process executed** when container **starts**
+- `CMD`: set the **default command** to run when a container **starts**
