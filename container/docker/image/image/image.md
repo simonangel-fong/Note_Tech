@@ -12,6 +12,9 @@
     - [Common Mistake](#common-mistake)
   - [Multi-stage](#multi-stage)
   - [ENTRYPOINT/CMD:](#entrypointcmd)
+  - [HEALTHCHECK](#healthcheck)
+  - [Image tag](#image-tag)
+  - [Save and Load](#save-and-load)
 
 ---
 
@@ -302,3 +305,67 @@ COPY --from=builder /app/build /usr/share/nginx/html
 
 - `ENTRYPOINT`: sets the **process executed** when container **starts**
 - `CMD`: set the **default command** to run when a container **starts**
+
+---
+
+## HEALTHCHECK
+
+- `HEALTHCHECK`: a command that Docker **runs inside the container** periodically to **determine health**.
+  - `start-period`: Grace period after container starts
+  - `interval`: How often to run check
+  - `timeout`: Max time for a check
+  - `retries`: How many failures before marking unhealthy
+
+| Health States | Description                 |
+| ------------- | --------------------------- |
+| healthy       | check passed                |
+| unhealthy     | check failed multiple times |
+| starting      | still initializing          |
+
+```dockerfile
+HEALTHCHECK CMD curl -f http://localhost/ || exit 1
+
+HEALTHCHECK --interval=30s \
+            --timeout=5s \
+            --retries=3 \
+            --start-period=10s \
+            CMD curl -f http://localhost/ || exit 1
+```
+
+- works with app
+
+```py
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+```
+
+---
+
+## Image tag
+
+- for version control
+  - default: `latest`
+- best practices:
+  - specify a tag
+  - git SHA tags
+
+---
+
+## Save and Load
+
+- `docker save`: Save one or more images to a tar archive
+- `docker load`: Load an image from a tar archive or STDIN
+
+- Use cases:
+  - move image to another machine (offline)
+  - backup an image
+  - share image without Docker registry (like ECR/Docker Hub)
+
+- example
+
+```sh
+docker save -o myimage.tar myimage:latest
+
+docker load -i myimage.tar
+```

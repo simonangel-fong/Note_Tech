@@ -177,21 +177,6 @@ docker logs jenkins
 
 ### Docker Run
 
-
 ```sh
-docker network create jenkins
-
-docker run \
-  --name jenkins-docker \
-  --rm \
-  -d \
-  --privileged \
-  --network jenkins \
-  --network-alias docker \
-  --env DOCKER_TLS_CERTDIR=/certs \
-  --volume jenkins-docker-certs:/certs/client \
-  --volume jenkins-data:/var/jenkins_home \
-  --publish 2376:2376 \
-  docker:dind \
-  --storage-driver overlay2
+docker run -d --name jenkins -p 8080:8080 -p 50000:50000 --restart=on-failure -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts-jdk21
 ```

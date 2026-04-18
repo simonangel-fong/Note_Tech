@@ -16,6 +16,7 @@
     - [Feature: `Seccomp (secure computing mode)`](#feature-seccomp-secure-computing-mode)
   - [Common Admin Commands](#common-admin-commands)
   - [Docker orchestration](#docker-orchestration)
+  - [Rootless Docker](#rootless-docker)
 
 ---
 
@@ -315,3 +316,30 @@ getpcaps 1569
   - `Docker Compose`:
     - Primarily used for defining and running **multi-container applications on a single host**.
     - While not a full orchestrator for large clusters, it is the standard for local development and simple production setups.
+
+---
+
+## Rootless Docker
+
+- `Rootless Docker`
+  - running Docker **without root (administrator) privileges** on the host.
+    - run Docker entirely in `user space`
+    - avoid needing **root privileges**
+  - If container is escaped, attacker only has non-root privileges
+
+- Rootless mode runs both as a regular user:
+  - Docker daemon
+  - containers
+
+| Feature          | Root Docker | Rootless Docker |
+| ---------------- | ----------- | --------------- |
+| Daemon privilege | root        | non-root        |
+| Security risk    | higher      | lower           |
+| Performance      | native      | slightly slower |
+| Networking       | full        | limited         |
+| Port binding     | any port    | >1024 only      |
+
+- Use Cases
+  - **CI/CD pipelines**: avoids giving root access to build system
+  - **Shared servers**: multiple developers on same machine
+  - **Security-sensitive environments**: reduces attack surface

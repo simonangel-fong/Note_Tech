@@ -15,7 +15,7 @@
 - DevOps & Cloud
   - [x] [\*Terraform](./cloud/terraform/index.md)
   - [ ] [\*Ansible](./devops/ansible/ansible.md)
-  - [ ] [Jenkins](./devops/jenkins/jenkins.md)
+  - [ ] [Jenkins](./devops/jenkins/index.md)
   - [x] [Prometheus](./devops/prometheus/index.md)
 
 - Testing

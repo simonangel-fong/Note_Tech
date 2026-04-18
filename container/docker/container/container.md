@@ -10,6 +10,8 @@
   - [Port Mapping](#port-mapping)
   - [Volume Mapping](#volume-mapping)
   - [Environment Variable](#environment-variable)
+  - [Restart Policy](#restart-policy)
+  - [Export](#export)
 
 ---
 
@@ -157,3 +159,42 @@ Why:
 - `docker insepct con_name`: inspect env var
 
 ---
+
+## Restart Policy
+
+| Policy           | Crash | Docker restart | Manual stop       |
+| ---------------- | ----- | -------------- | ----------------- |
+| `no`             | N     | N              | stays off         |
+| `on-failure`     | Y     | N              | stays off         |
+| `always`         | Y     | Y              | may restart later |
+| `unless-stopped` | Y     | Y              | stays off         |
+
+```sh
+docker run -d \
+  --name my-api \
+  --restart=unless-stopped \
+  -p 80:80 nginx
+
+docker update --restart=unless-stopped my-container
+```
+
+---
+
+## Export
+
+- `docker export`: exports the filesystem of a running/stopped container
+- does NOT include:
+  - image layers
+  - history
+  - metadata (CMD, ENV, etc.)
+- Risk:
+  - Flattens everything into one layer, losing Dockerfile info
+
+- Example
+
+```sh
+docker run --name mycontainer myimage
+docker export mycontainer > container.tar
+# restore
+cat container.tar | docker import - myimage:latest
+```

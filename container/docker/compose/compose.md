@@ -6,11 +6,11 @@
   - [Compose](#compose)
   - [Compose](#compose-1)
   - [Docker compose file](#docker-compose-file)
+  - [Docker Compose profiles](#docker-compose-profiles)
 
 ---
 
 ## Compose
-
 
 ## Compose
 
@@ -34,13 +34,13 @@
 services:
   # The web application service
   web:
-    build: .             # Build the image from a Dockerfile in the current directory
+    build: . # Build the image from a Dockerfile in the current directory
     ports:
-      - "8000:5000"      # Map host port 8000 to container port 5000
+      - "8000:5000" # Map host port 8000 to container port 5000
     environment:
       - DATABASE_URL=postgres://user:password@db:5432/myapp
     depends_on:
-      - db               # Ensure 'db' service starts before 'web'
+      - db # Ensure 'db' service starts before 'web'
 
   # The database service
   db:
@@ -53,6 +53,33 @@ services:
       POSTGRES_DB: myapp
 
 volumes:
-  db_data:               # Named volume to persist database data
+  db_data: # Named volume to persist database data
+```
 
+## Docker Compose profiles
+
+- `Docker Compose profiles`
+  - let you **selectively start only certain services** in a `docker-compose.yml` file.
+
+```yaml
+services:
+  web:
+    image: nginx
+
+  db:
+    image: mysql
+
+  adminer:
+    image: adminer
+    profiles: ["dev"]
+```
+
+```sh
+# without profile
+docker compose up 
+# web + db
+
+# with profile
+docker compose --profile dev up
+# web db adminer
 ```
