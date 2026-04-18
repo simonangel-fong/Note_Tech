@@ -1,6 +1,6 @@
 # Jenkins - Fundamental
 
-[Back](./index.md)
+[Back](../index.md)
 
 - [Jenkins - Fundamental](#jenkins---fundamental)
   - [Architecture](#architecture)
@@ -9,6 +9,12 @@
     - [Jenkins Agents (Workers)](#jenkins-agents-workers)
     - [How It Works (Execution Flow)](#how-it-works-execution-flow)
     - [Common Deployment Patterns](#common-deployment-patterns)
+  - [Environment Variables](#environment-variables)
+  - [Jenkins URL](#jenkins-url)
+  - [Trigger](#trigger)
+    - [Cron Job](#cron-job)
+    - [API Call](#api-call)
+      - [Lab: triger a job via API](#lab-triger-a-job-via-api)
 
 ---
 
@@ -142,3 +148,74 @@
 3. **Cloud-Native Jenkins**
    Controller in VM/container
    Agents dynamically provisioned (Kubernetes)
+
+---
+
+## Environment Variables
+
+- **Built-in global variable env**
+  - ref: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables
+- **Custome global env var**
+  - Manage Jenkins > System > Global properties > check `Environment variables`
+- **Pipeline env var**
+
+```groovy
+pipeline {
+    agent {
+        label '!windows'
+    }
+
+    environment {
+        DISABLE_AUTH = 'true'
+        DB_ENGINE    = 'sqlite'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo "Database engine is ${DB_ENGINE}"
+                echo "DISABLE_AUTH is ${DISABLE_AUTH}"
+                sh 'printenv'
+            }
+        }
+    }
+}
+```
+
+---
+
+## Jenkins URL
+
+- Manage Jenkins > System > Jenkins Location
+  - Jenkins URL:
+
+---
+
+## Trigger
+
+### Cron Job
+
+- job > configure > Triggers > Build periodically
+
+---
+
+### API Call
+
+- Job can be invoked by API call
+
+#### Lab: triger a job via API
+
+- Create user: jenkins_trigger
+- Create global role: trigger
+  - Overall: Read
+  - Job: Build, Read
+- Assign role
+- Login as new user
+- Create API token: User profile > Security > API Token > Add new token
+- Test: build a job
+
+```sh
+curl \
+-u jenkins_trigger:<api_toke> \
+-X POST http://<jenkins_host>/job/<job_name>/build?delay=0sec
+```

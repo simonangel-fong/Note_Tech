@@ -4,7 +4,11 @@
 
 ---
 
-- [Fundamental](./fundamental.md)
-- [Install](./install/install.md)
-- [Job](./job/job.md)
+- [Fundamental](./fundamental/fundamental.md)
+- [Security](./security/security.md)
 - [Agent](./agent/agent.md)
+- [Job](./job/job.md)
+
+---
+
+- [Install](./install/install.md)
