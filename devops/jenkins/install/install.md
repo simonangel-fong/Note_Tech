@@ -1,6 +1,6 @@
 # Jenkins - Installation
 
-[Back](../jenkins.md)
+[Back](../index.md)
 
 - [Jenkins - Installation](#jenkins---installation)
   - [Installation](#installation)
