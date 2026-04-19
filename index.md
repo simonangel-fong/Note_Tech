@@ -9,8 +9,11 @@
   - [ ] [Fundamental](./AI/fundamental/index.md)
 
 - Container
-  - [ ] [Docker](./container/docker/index.md)
+  - [x] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
+
+- [CI/CD](./cicd/cicd.md)
+  -
 
 - DevOps & Cloud
   - [x] [\*Terraform](./cloud/terraform/index.md)

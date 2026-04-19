@@ -3,11 +3,19 @@
 [Back](../index.md)
 
 - [Jenkins - Agent](#jenkins---agent)
-  - [Deploy Agent](#deploy-agent)
+  - [Dedicated Docker Agent (long-running)](#dedicated-docker-agent-long-running)
+  - [Ephemeral Docker Agents](#ephemeral-docker-agents)
+  - [Kubernetes Agents](#kubernetes-agents)
 
 ---
 
-## Deploy Agent
+## Dedicated Docker Agent (long-running)
+
+- Architecture:
+  - Jenkins controller (Docker)
+  - Separate container running:
+    - long-running
+    - jenkins-agent image
 
 ```sh
 docker network create jenkins-net
@@ -54,3 +62,70 @@ pipeline {
 ```
 
 ![pic](./pic/agent_docker03.png)
+
+---
+
+## Ephemeral Docker Agents
+
+- need:
+  - mount host Docker socket: `-v /var/run/docker.sock:/var/run/docker.sock`
+- Spins up a fresh container per build
+- production standard
+
+- Example:
+
+```groovy
+pipeline {
+    agent {
+        docker {
+            image 'node:18'
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'node -v'
+                sh 'npm install'
+            }
+        }
+    }
+}
+```
+
+---
+
+## Kubernetes Agents
+
+- MOST COMMON in production
+  - EKS / GKE / AKS environments
+- With Kubernetes plugin:
+  - Jenkins dynamically creates pods as agents
+
+```groovy
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: node
+    image: node:18
+    command:
+    - cat
+    tty: true
+"""
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                container('node') {
+                    sh 'node -v'
+                }
+            }
+        }
+    }
+}
+```

@@ -9,12 +9,15 @@
     - [Jenkins Agents (Workers)](#jenkins-agents-workers)
     - [How It Works (Execution Flow)](#how-it-works-execution-flow)
     - [Common Deployment Patterns](#common-deployment-patterns)
+    - [Plugins](#plugins)
   - [Environment Variables](#environment-variables)
   - [Jenkins URL](#jenkins-url)
   - [Trigger](#trigger)
     - [Cron Job](#cron-job)
     - [API Call](#api-call)
       - [Lab: triger a job via API](#lab-triger-a-job-via-api)
+  - [Notification](#notification)
+    - [Email](#email)
 
 ---
 
@@ -151,6 +154,16 @@
 
 ---
 
+### Plugins
+
+- `Jenkins plugins`
+  - **add-on modules** that **extend the functionality** of the core Jenkins automation server, allowing it to integrate with thousands of tools for CI/CD, source control (Git), cloud platforms (Docker, Kubernetes), and build tools (Maven).
+
+- Common plugins:
+  - `Pipeline: Stage ViewVersion`
+
+---
+
 ## Environment Variables
 
 - **Built-in global variable env**
@@ -201,7 +214,12 @@ pipeline {
 
 ### API Call
 
+- ref: https://www.jenkins.io/doc/book/using/remote-access-api/
 - Job can be invoked by API call
+- Common paths:
+  - `/job/<job_name>/build`: build a job
+  - `/job/<folder>/job/<job_name>/build`: with folder
+  - `/job/<pipeline>/job/<branch>/build`: with pipeline and branch
 
 #### Lab: triger a job via API
 
@@ -213,9 +231,38 @@ pipeline {
 - Login as new user
 - Create API token: User profile > Security > API Token > Add new token
 - Test: build a job
+- enable CSRF protection:
+  - Manage Jenkins > Security: CSRF Protection = Crumb Issuer
+
+- Trigger non-parameterized job
 
 ```sh
-curl \
--u jenkins_trigger:<api_toke> \
--X POST http://<jenkins_host>/job/<job_name>/build?delay=0sec
+# Step 1: Get crumb
+CRUMB=$(curl -u jenkins_trigger:<api_token> \
+  http://<jenkins_host>/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb))
+
+# Step 2: Use crumb
+curl -u jenkins_trigger:<api_token> \
+  -H "$CRUMB" \
+  -X POST http://<jenkins_host>/job/<job_name>/build?delay=0sec
 ```
+
+- Parameterized jobs
+
+```sh
+curl -u jenkins_trigger:<api_token> \
+  -X POST "http://<jenkins_host>/job/<job_name>/buildWithParameters"
+  --data param1=value1 --data param2=value2
+```
+
+![pic](./pic/trigger_api01.png)
+
+---
+
+## Notification
+
+### Email
+
+- Plugin: `Email Extension Plugin`
+
+---
