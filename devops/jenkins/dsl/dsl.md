@@ -13,7 +13,7 @@
 
 - `Domain-Specific Language (DSL)`
   - a specialized, Groovy-based programming language used to **define and manage** `Jenkins configurations as code`
-
+  - an extension of `Groovy`
 - 2 types:
   - `Job DSL` (Plugin):
     - Used to create and manage `Jenkins jobs` programmatically.

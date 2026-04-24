@@ -4,11 +4,14 @@
 
 - [Jenkins - Job](#jenkins---job)
   - [Job](#job)
+    - [Trigger](#trigger)
   - [Lab: Execute a bash script](#lab-execute-a-bash-script)
   - [Lab: Parameterized](#lab-parameterized)
     - [String Parameters](#string-parameters)
     - [Choose Parameters](#choose-parameters)
     - [Boolean Parameters](#boolean-parameters)
+  - [API Call](#api-call)
+    - [Lab: triger a job via API](#lab-triger-a-job-via-api)
 
 ---
 
@@ -19,6 +22,30 @@ When creating a job in Jenkins, it creates a new directory in the `/var/jenkins_
 - `/var/jenkins_home/workspace/<job_name>`
 
 ![pic](./pic/job01.png)
+
+---
+
+### Trigger
+
+| Trigger Method                  | Description                                                                                               |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Manual trigger**              | clicks **Build Now** in Jenkins. Common for test, staging, or production deployment approval.             |
+| **SCM polling**                 | Jenkins checks Git **regularly** for changes, such as every 5 minutes.                                    |
+| **Webhook trigger**             | Repo **sends a request** to Jenkins when code is pushed or a PR is created.                               |
+| **Scheduled trigger**           | Runs by **cron schedule**, such as nightly builds or **weekly security scans**.                           |
+| **Upstream/downstream trigger** | One Jenkins **job triggers another job** after success or failure.                                        |
+| **Parameterized trigger**       | User or another system starts a **job with parameters**, such as `env=dev` or `version=1.2.0`.            |
+| **Remote/API trigger**          | External tools call Jenkins `REST API` to start a job.                                                    |
+| **Pull request trigger**        | Jenkins runs checks automatically when a **PR is opened or updated**. Common for validation before merge. |
+
+- `Poll SCM`
+  - a build **trigger mechanism** that **periodically checks** (polls) your `Source Control Management system` (like Git or SVN) for code changes.
+
+- Cron syntax:
+
+```txt
+Minute Hour Date Month weekday
+```
 
 ---
 
@@ -155,3 +182,53 @@ echo "FLAG: $FLAG"
 
 ![pic](./pic/job08.png)
 
+---
+
+## API Call
+
+- ref: https://www.jenkins.io/doc/book/using/remote-access-api/
+- Job can be invoked by API call
+- Common paths:
+  - `/job/<job_name>/build`: build a job
+  - `/job/<folder>/job/<job_name>/build`: with folder
+  - `/job/<pipeline>/job/<branch>/build`: with pipeline and branch
+
+---
+
+### Lab: triger a job via API
+
+- Create user: jenkins_trigger
+- Create global role: trigger
+  - Overall: Read
+  - Job: Build, Read
+- Assign role
+- Login as new user
+- Create API token: User profile > Security > API Token > Add new token
+- Test: build a job
+- enable CSRF protection:
+  - Manage Jenkins > Security: CSRF Protection = Crumb Issuer
+
+- Trigger non-parameterized job
+
+```sh
+# Step 1: Get crumb
+CRUMB=$(curl -u jenkins_trigger:<api_token> \
+  http://<jenkins_host>/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb))
+
+# Step 2: Use crumb
+curl -u jenkins_trigger:<api_token> \
+  -H "$CRUMB" \
+  -X POST http://<jenkins_host>/job/<job_name>/build?delay=0sec
+```
+
+- Parameterized jobs
+
+```sh
+curl -u jenkins_trigger:<api_token> \
+  -X POST "http://<jenkins_host>/job/<job_name>/buildWithParameters"
+  --data param1=value1 --data param2=value2
+```
+
+![pic](./pic/trigger_api01.png)
+
+---

@@ -3,13 +3,31 @@
 [Back](../index.md)
 
 - [Jenkins - Agent](#jenkins---agent)
-  - [Dedicated Docker Agent (long-running)](#dedicated-docker-agent-long-running)
-  - [Ephemeral Docker Agents](#ephemeral-docker-agents)
-  - [Kubernetes Agents](#kubernetes-agents)
+  - [Jenkins Agent](#jenkins-agent)
+  - [Static Docker Agent](#static-docker-agent)
+  - [Dynamic Agents](#dynamic-agents)
+    - [Docker Agents](#docker-agents)
+    - [Kubernetes Agents](#kubernetes-agents)
 
 ---
 
-## Dedicated Docker Agent (long-running)
+## Jenkins Agent
+
+- `Jenkins agent`
+  - formerly "slave" or simply "node"
+  - a **separate machine, virtual machine, or container** that connects to a `Jenkins controller` to **execute build, test, and deployment jobs**
+
+| Agent Type         | Description                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------- |
+| **Built-in agent** | Runs jobs directly on the **Jenkins controller** itself Jenkins controller runs jobs locally |
+| **Static agent**   | A **fixed** VM, physical server, or long-running machine connected to Jenkins                |
+| **Dynamic agent**  | An agent created **on demand** when a job starts and removed after the job finishes          |
+
+- Docker agent needs to mount host Docker socket: `-v /var/run/docker.sock:/var/run/docker.sock`
+
+---
+
+## Static Docker Agent
 
 - Architecture:
   - Jenkins controller (Docker)
@@ -65,7 +83,9 @@ pipeline {
 
 ---
 
-## Ephemeral Docker Agents
+## Dynamic Agents
+
+### Docker Agents
 
 - need:
   - mount host Docker socket: `-v /var/run/docker.sock:/var/run/docker.sock`
@@ -94,7 +114,7 @@ pipeline {
 
 ---
 
-## Kubernetes Agents
+### Kubernetes Agents
 
 - MOST COMMON in production
   - EKS / GKE / AKS environments

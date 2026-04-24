@@ -21,6 +21,12 @@
     - `built-in node`: Jenkins controller itself — the machine where Jenkins is running.
     - Do NOT run any build jobs on the controller node.
 
+- Common practices:
+  - Regularly **back up** Jenkins data.
+  - Use SSL/TLS **encryption** for data transfer.
+  - Keep Jenkins and its **plugins** updated.
+  - Develop an incident response plan.
+
 ---
 
 ## Role-based Authorization Strategy

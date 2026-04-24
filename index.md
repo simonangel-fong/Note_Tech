@@ -19,6 +19,7 @@
   - [x] [\*Terraform](./cloud/terraform/index.md)
   - [ ] [\*Ansible](./devops/ansible/ansible.md)
   - [ ] [Jenkins](./devops/jenkins/index.md)
+  - [ ] [GitHub Actions](./devops/github_action/index.md)
   - [x] [Prometheus](./devops/prometheus/index.md)
 
 - Testing

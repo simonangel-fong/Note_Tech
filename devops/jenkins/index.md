@@ -4,6 +4,8 @@
 
 ---
 
+## Fundamental
+
 - [Fundamental](./fundamental/fundamental.md)
 - [Security](./security/security.md)
 - [Agent](./agent/agent.md)
@@ -13,4 +15,10 @@
 
 ---
 
+## Hands-on
+
 - [Install](./install/install.md)
+- [Kubernetes](./k8s/k8s.md)
+- Create a Jenkins plugin
+- Host on EC2
+- Setup for slack

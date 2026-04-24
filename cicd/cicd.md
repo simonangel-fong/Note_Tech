@@ -15,7 +15,7 @@
 ---
 
 - `Continuous integration (CI)`
-  - a **software development practice** where developers **frequently—often** multiple times a **day—merge code** changes into **a central, shared repository**.
+  - a **software development practice** where developers **frequently—often multiple times a day—merge code** changes into **a central, shared repository**.
 
 - Key features:
   - **Frequent Merging**:

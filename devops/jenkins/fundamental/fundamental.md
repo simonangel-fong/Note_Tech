@@ -3,6 +3,9 @@
 [Back](../index.md)
 
 - [Jenkins - Fundamental](#jenkins---fundamental)
+  - [Fundamental](#fundamental)
+    - [Items](#items)
+    - [Build](#build)
   - [Architecture](#architecture)
   - [Core Components](#core-components)
     - [Jenkins Controller (Master)](#jenkins-controller-master)
@@ -10,14 +13,77 @@
     - [How It Works (Execution Flow)](#how-it-works-execution-flow)
     - [Common Deployment Patterns](#common-deployment-patterns)
     - [Plugins](#plugins)
-  - [Environment Variables](#environment-variables)
-  - [Jenkins URL](#jenkins-url)
-  - [Trigger](#trigger)
-    - [Cron Job](#cron-job)
-    - [API Call](#api-call)
-      - [Lab: triger a job via API](#lab-triger-a-job-via-api)
-  - [Notification](#notification)
-    - [Email](#email)
+  - [Common Configurations](#common-configurations)
+    - [Environment Variables](#environment-variables)
+    - [Jenkins URL](#jenkins-url)
+    - [Notification](#notification)
+  - [Common Practices](#common-practices)
+    - [Blue-Green deployment strategy](#blue-green-deployment-strategy)
+    - [Backup](#backup)
+
+---
+
+## Fundamental
+
+- default path:
+  - Windows: `C:\Program Files (x86)\Jenkins\`
+  - Linux: `/var/lib/jenkins`
+
+- Restart:
+  - manually on control panel
+  - cli: sudo systemctl restart jenkins
+
+- Default **Port Number**: `8080`
+- `Jenkins Build Executor`:
+  - a **processing slot** on a build **agent (or controller)** that runs a single concurrent **build task**, effectively acting as a worker thread.
+
+- `Jenkins Pipeline as Code`
+  - the practice of defining a project’s entire build, test, and deployment process through code rather than manual configuration in the Jenkins web UI.
+
+---
+
+### Items
+
+| Items                  | Description                                                                               |
+| ---------------------- | ----------------------------------------------------------------------------------------- |
+| `Pipeline`             | A continuous delivery pipeline, which is configured via a Jenkinsfile (Pipeline as Code). |
+| `Freestyle Project`    | General-purpose job type.                                                                 |
+| `Folder`               | A container that stores nested items                                                      |
+| `Multibranch Pipeline` | managing CI/CD pipelines for **multiple branches** in **one** version control repository. |
+| `Organization Folders` | Creates a set of multibranch project subfolders by scanning for repositories.             |
+
+---
+
+### Build
+
+- `build`
+  - a **single execution instance** of a Jenkins job or project.
+
+**Jenkins build lifecycle**:
+
+1. **Triggering a Build**:
+   - Initiating the build process through manual, scheduled, or event-driven triggers.
+2. **Initialization**:
+   - Setting up the build environment and resources.
+3. **Source Code Checkout**:
+   - Getting the latest code from version control.
+4. **Build Process**:
+   - Executing build scripts, compiling code, and performing necessary tasks.
+5. **Testing**:
+   - Running test suites and reporting results.
+6. **Deployment**:
+   - Releasing built artifacts to target environments.
+7. **Post-Build Actions**:
+   - Archiving artifacts, publishing reports, and sending notifications.
+8. **Recording and Reporting**:
+   - Collecting and storing build data and results.
+9. **Clean-Up**:
+   - Managing resources and resetting the environment.
+
+- **Notifications**: Keeping stakeholders informed of build status.
+- **Artifact Storage**: Storing generated artifacts for future use.
+- **Logging and Auditing**: Maintaining detailed logs for auditing and troubleshooting.
+- **Post-Build Analysis and Continuous Improvement**: Analyzing build results for process enhancement.
 
 ---
 
@@ -164,7 +230,9 @@
 
 ---
 
-## Environment Variables
+## Common Configurations
+
+### Environment Variables
 
 - **Built-in global variable env**
   - ref: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables
@@ -197,72 +265,43 @@ pipeline {
 
 ---
 
-## Jenkins URL
+### Jenkins URL
 
 - Manage Jenkins > System > Jenkins Location
   - Jenkins URL:
 
 ---
 
-## Trigger
+### Notification
 
-### Cron Job
-
-- job > configure > Triggers > Build periodically
-
----
-
-### API Call
-
-- ref: https://www.jenkins.io/doc/book/using/remote-access-api/
-- Job can be invoked by API call
-- Common paths:
-  - `/job/<job_name>/build`: build a job
-  - `/job/<folder>/job/<job_name>/build`: with folder
-  - `/job/<pipeline>/job/<branch>/build`: with pipeline and branch
-
-#### Lab: triger a job via API
-
-- Create user: jenkins_trigger
-- Create global role: trigger
-  - Overall: Read
-  - Job: Build, Read
-- Assign role
-- Login as new user
-- Create API token: User profile > Security > API Token > Add new token
-- Test: build a job
-- enable CSRF protection:
-  - Manage Jenkins > Security: CSRF Protection = Crumb Issuer
-
-- Trigger non-parameterized job
-
-```sh
-# Step 1: Get crumb
-CRUMB=$(curl -u jenkins_trigger:<api_token> \
-  http://<jenkins_host>/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb))
-
-# Step 2: Use crumb
-curl -u jenkins_trigger:<api_token> \
-  -H "$CRUMB" \
-  -X POST http://<jenkins_host>/job/<job_name>/build?delay=0sec
-```
-
-- Parameterized jobs
-
-```sh
-curl -u jenkins_trigger:<api_token> \
-  -X POST "http://<jenkins_host>/job/<job_name>/buildWithParameters"
-  --data param1=value1 --data param2=value2
-```
-
-![pic](./pic/trigger_api01.png)
+- **Email**
+  - Plugin: `Email Extension Plugin`
 
 ---
 
-## Notification
+## Common Practices
 
-### Email
+### Blue-Green deployment strategy
 
-- Plugin: `Email Extension Plugin`
+- Implementing a Blue-Green deployment in Jenkins involves:
+  - Setting up **two identical environments**: `blue` and `green`.
+  - Deploying the **new version** to the `green` environment.
+  - **Testing** in the `green` environment.
+  - **Switching traffic** to green if testing succeeds.
+  - Monitoring and potential **rollback** if issues arise.
+
+- Key benefits:
+  - zero downtime,
+  - quick rollback,
+  - reduced risk,
+  - safe testing,
+  - continuous delivery, scalability, enhanced monitoring, and improved confidence in deploying changes.
 
 ---
+
+### Backup
+
+- Backup `JENKINS_HOME` directory
+- Use ThinBackup plugin
+- Use Backup plugin
+- Version control job configurations
