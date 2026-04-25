@@ -626,10 +626,9 @@ jobs:
               run: echo "status=${{ inputs.build-status }}" >> "$GITHUB_OUTPUT"
             
             - name: Accidentally change github_output
-              id: build
               run: |
-                echo "key1=val1 >> "$GITHUB_OUTPUT"
-                echo "key2=val2 >> "$GITHUB_OUTPUT"
+                echo "key1=val1" >> "$GITHUB_OUTPUT"
+                echo "key2=val2" >> "$GITHUB_OUTPUT"
                 cat "$GITHUB_OUTPUT"
     deploy:
         runs-on: ubuntu-latest
