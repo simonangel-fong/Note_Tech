@@ -625,11 +625,15 @@ jobs:
               id: build
               run: echo "status=${{ inputs.build-status }}" >> "$GITHUB_OUTPUT"
             
-            - name: Accidentally change github_output
+            - name: Pass multiple k-v github_output, and Accidentally remove
               run: |
                 echo "key1=val1" >> "$GITHUB_OUTPUT"
                 echo "key2=val2" >> "$GITHUB_OUTPUT"
                 cat "$GITHUB_OUTPUT"
+
+                echo "key3=val3" > "$GITHUB_OUTPUT"
+                cat "$GITHUB_OUTPUT"
+
     deploy:
         runs-on: ubuntu-latest
         needs: build
