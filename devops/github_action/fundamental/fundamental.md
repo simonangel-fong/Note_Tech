@@ -17,6 +17,7 @@
     - [Lab: Control Build-deploy flow by inputs](#lab-control-build-deploy-flow-by-inputs)
   - [Outputs](#outputs)
     - [Lab: output](#lab-output)
+  - [Environment](#environment)
 
 ---
 
@@ -576,7 +577,6 @@ jobs:
 3. Specify key and value in the `outputs` key
 4. refer to outputs by `needs.<job-id>.outputs.<key-name>`
 
-
 - Example
 
 ```yaml
@@ -603,45 +603,66 @@ jobs:
 name: 12 - Outputs
 
 on:
-    workflow_dispatch:
-        inputs:
-            build-status:
-                type: choice
-                options:
-                    - success
-                    - failure
-                default: success
+  workflow_dispatch:
+    inputs:
+      build-status:
+        type: choice
+        options:
+          - success
+          - failure
+        default: success
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        outputs:
-            build-status: ${{ steps.build.outputs.status }}
-        steps:
-            - name: Print GITHUB_OUTPUT path
-              run: echo "$GITHUB_OUTPUT"
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      build-status: ${{ steps.build.outputs.status }}
+      key2: ${{ steps.key2.outputs.key2 }}
+    steps:
+      - name: Print GITHUB_OUTPUT path
+        run: echo "$GITHUB_OUTPUT"
 
-            - name: Build
-              id: build
-              run: echo "status=${{ inputs.build-status }}" >> "$GITHUB_OUTPUT"
-            
-            - name: Pass multiple k-v github_output, and Accidentally remove
-              run: |
-                echo "key1=val1" >> "$GITHUB_OUTPUT"
-                echo "key2=val2" >> "$GITHUB_OUTPUT"
-                cat "$GITHUB_OUTPUT"
+      - name: Build
+        id: build
+        run: |
+          echo "$GITHUB_OUTPUT"
+          echo "status=${{ inputs.build-status }}" >> "$GITHUB_OUTPUT"
 
-                echo "key3=val3" > "$GITHUB_OUTPUT"
-                cat "$GITHUB_OUTPUT"
+      - name: Pass multiple k-v github_output, and Accidentally remove
+        id: key2
+        run: |
+          echo "key1=val1" >> "$GITHUB_OUTPUT"
+          echo "key2=val2" >> "$GITHUB_OUTPUT"
+          cat "$GITHUB_OUTPUT"
 
-    deploy:
-        runs-on: ubuntu-latest
-        needs: build
-        if: ${{ needs.build.outputs.build-status == 'success' }}
-        steps:
-            - name: Deploy
-              run: echo "Deploying"
+          echo "key3=val3" > "$GITHUB_OUTPUT"
+          cat "$GITHUB_OUTPUT"
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ needs.build.outputs.build-status == 'success' }}
+    steps:
+      - name: Deploy
+        run: echo "Deploying"
+      - name: Print kv2
+        run: echo "${{ needs.build.outputs.key2 }}
+        # unexpected EOF while looking for matching `"'Error: Process completed with exit code 2.
 ```
-> GITHUB_OUTPUT path: /home/runner/work/_temp/_runner_file_commands/set_output_uuid
-> they are the files different across steps, that is why it needs to specify the step id in the outputs key
+
+> 1. GITHUB_OUTPUT path: /home/runner/work/\_temp/\_runner_file_commands/set_output_uuid
+>    they are the files different across steps, that is why it needs to specify the step id in the outputs key
+> 2. "key3=val3" > "$GITHUB_OUTPUT": remove the kv2, leading to error in deploy job
+> 3. Deploy job executed: build-status can be fethed, because GITHUB_OUTPUT are independent per step.
+
+---
+
+## Environment
+
+- `Environment`
+  - Create multiple environments with **different rules** for multiple deployments
+
+- Rule example:
+  - Required approvers
+  - Branch restrictions
+  - Variables

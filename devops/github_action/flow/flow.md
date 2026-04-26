@@ -6,7 +6,10 @@
   - [Control Execution Flow](#control-execution-flow)
     - [Step Execution](#step-execution)
     - [Job Execution](#job-execution)
-  - [Lab: Control Execution Flow](#lab-control-execution-flow)
+    - [Lab: Control Execution Flow](#lab-control-execution-flow)
+  - [Matrices](#matrices)
+    - [Lab: Matrix](#lab-matrix)
+    - [Lab: Matrix Exclude](#lab-matrix-exclude)
 
 ---
 
@@ -47,7 +50,7 @@
 
 ---
 
-## Lab: Control Execution Flow
+### Lab: Control Execution Flow
 
 ```yaml
 name: 10 - Execution Flow
@@ -109,3 +112,128 @@ jobs:
 ```
 
 ![pic](./flow.png)
+
+---
+
+## Matrices
+
+- `Matrices`:
+  - Run several variations of the same job
+
+- `fail fast strategy` key
+  - By default, if one job fails, all fail.
+- `exclude`:
+  - specify a combination to be excluded.
+  - process before `include`
+- `include`:
+  - specify additional combination
+
+- Use-case:
+  - Run test suits **in parallel** in multiple Node versions before publishing an NPM package to ensure backward compatibility.
+
+- Example
+
+```yaml
+name: My NPM package workflow
+on: push
+jobs:
+  backwards-compatibility:
+    name: ${{ matrix.os }}-${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+```
+
+---
+
+### Lab: Matrix
+
+```yaml
+name: 15 - matrices
+
+on:
+  workflow_dispatch:
+
+jobs:
+  backwards-compatibility:
+    name: ${{ matrix.os }} - ${{ matrix.node-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22.x, 23.x, 24.x]
+        os:
+          - ubuntu-latest
+          - windows-latest
+        include:
+          - os: ubuntu-latest
+            node-version: 20.x
+            tag: beta
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Fails a version
+        if: ${{ matrix.tag == 'beta' }}
+        run: exit 1
+
+      - name: Execute testing
+        run: echo "Testing against on OS ${{ matrix.os }}" and Node.js ${{
+          matrix.node-version }}
+```
+
+![pic](./matrices01.png)
+> fail-fast: false
+> matrix.include
+
+![pic](./matrices02.png)
+> fail-fast: true
+
+---
+
+### Lab: Matrix Exclude
+
+```yaml
+name: 15 - matrices exclude
+
+on:
+  workflow_dispatch:
+
+jobs:
+  backwards-compatibility:
+    name: ${{ matrix.os }} - ${{ matrix.node-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # fail-fast: false
+      matrix:
+        node-version: [ 22.x, 23.x, 24.x ]
+        os:
+          - ubuntu-latest
+          - windows-latest
+        exclude:
+          - os: windows-latest
+            node-version: 23.x
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Execute testing
+        run: echo "Testing against on OS ${{ matrix.os }}" and Node.js ${{
+          matrix.node-version }}
+
+```
+
+![pic](./matrices03.png)
