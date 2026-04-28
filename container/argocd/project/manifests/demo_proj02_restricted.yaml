@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: restricted-project
+  namespace: argocd
+
+spec:
+  description: Only allow applications to deploy into the app namespace
+
+  sourceRepos:
+    - https://github.com/argoproj/argocd-example-apps.git
+
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: app    # only allow app ns
+
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: demo-project
+  namespace: argocd
+
+spec:
+  description: Permissive demo project
+
+  sourceRepos:
+    - "*"
+
+  destinations:
+    - server: "*"
+      namespace: "*"
+
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kustomize-app
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kustomize-app
+  source:
+    repoURL: "https://github.com/argoproj/argocd-example-apps.git"
+    targetRevision: master
+    path: kustomize-guestbook
+    # kustomize
+    kustomize:
+      namePrefix: staging-
+      commonLabels:
+        app: demo
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

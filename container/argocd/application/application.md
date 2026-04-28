@@ -3,7 +3,7 @@
 [Back](../index.md)
 
 - [ArgoCD - Application](#argocd---application)
-  - [GitOps](#gitops)
+  - [Application](#application)
     - [Supported Tools](#supported-tools)
   - [Common Commands](#common-commands)
   - [Lab: Create Application](#lab-create-application)
@@ -14,11 +14,13 @@
     - [Common Options](#common-options)
     - [Lab: Create App with Helm](#lab-create-app-with-helm)
   - [Tools: Directory manifests](#tools-directory-manifests)
-    - [Lab: Create App with Directory manifests](#lab-create-app-with-directory-manifests)
+  - [Tools: Kustomize](#tools-kustomize)
+    - [Lab: Create App with Kustomize](#lab-create-app-with-kustomize)
+  - [Tools: Multiple Sources](#tools-multiple-sources)
 
 ---
 
-## GitOps
+## Application
 
 - `Application`
   - a Kubernetes `Custom Resource Definition (CRD)` that defines the **desired state of an application** in a target cluster, **sourcing** its configuration (YAML, Helm, Kustomize) from a Git repository.
@@ -388,34 +390,91 @@ argocd app delete helm-app
 - Options:
   - `directory.recurse`:
     - `true`: Recursive, include all files in sub-directories.
-  - Jsonnet
+  - `directory.jsonnet.extVars`:
     - External Vars : list of external variables for Jsonnet.
+  - `directory.jsonnet.tlas`:
     - Top level Arguments
 
 ---
 
-### Lab: Create App with Directory manifests
+- example:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: helm-app
+  name: dir-app
   namespace: argocd
 spec:
   project: default
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: helm-app
+    namespace: dir-app
   source:
     repoURL: "https://github.com/argoproj/argocd-example-apps.git"
-    path: helm-guestbook
     targetRevision: master
-    helm:
-      # release name
-      releaseName: helm-guestbook
+    path: apps
+    # dir
+    directory:
+      recurse: true
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-
 ```
+
+---
+
+## Tools: Kustomize
+
+- `kustomize`key:
+  - `namePrefix`: overrides the namePrefix in the kustomization.yaml for Kustomize apps
+  - `nameSuffix`: overrides the nameSuffix in the kustomization.yaml for Kustomize apps
+  - `images`: a list of Kustomize image overrides
+  - `replicas`: a list of Kustomize replica overrides
+  - `commonLabels`: a string map of additional labels
+  - `commonAnnotations`: string map of additional annotations
+  - `version`: explicitly set kustomize version.
+
+---
+
+### Lab: Create App with Kustomize
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kustomize-app
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kustomize-app
+  source:
+    repoURL: "https://github.com/argoproj/argocd-example-apps.git"
+    targetRevision: master
+    path: kustomize-guestbook
+    # kustomize
+    kustomize:
+      namePrefix: staging-
+      commonLabels:
+        app: demo
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+```
+
+```sh
+kubectl apply -f demo_kustomize.yaml
+# application.argoproj.io/kustomize-app created
+```
+
+---
+
+## Tools: Multiple Sources
+
+- Craete application stored in multiple repositories
+
+- Use cases:
+  - remote helm chart + git-hosted values file
+    - e.g., nginx helm chart from helm repo + values.yaml from git
