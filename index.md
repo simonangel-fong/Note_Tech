@@ -11,15 +11,14 @@
 - Container
   - [x] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
-
-- [CI/CD](./cicd/cicd.md)
-  -
+  - [ ] [ArgoCD](./container/argocd/index.md)
 
 - DevOps & Cloud
+  - [CI/CD](./cicd/cicd.md)
   - [x] [\*Terraform](./cloud/terraform/index.md)
   - [ ] [\*Ansible](./devops/ansible/ansible.md)
   - [x] [Jenkins](./devops/jenkins/index.md)
-  - [ ] [GitHub Actions](./devops/github_action/index.md)
+  - [x] [GitHub Actions](./devops/github_action/index.md)
   - [x] [Prometheus](./devops/prometheus/index.md)
 
 - Testing

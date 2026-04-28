@@ -1,0 +1,20 @@
+# ArgoCD CRD
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+# meta data
+metadata:
+  name: guestbook
+  namespace: argocd
+spec:
+  project: default
+  
+  # source of manifests
+  source:
+    repoURL: "https://github.com/argoproj/argocd-example-apps.git"
+    targetRevision: HEAD
+    path: guestbook
+
+  # destination cluster
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: guestbook

@@ -18,6 +18,9 @@
   - [Outputs](#outputs)
     - [Lab: output](#lab-output)
   - [Environment](#environment)
+  - [Concurrency](#concurrency)
+    - [Common Examples](#common-examples)
+    - [Lab: Concurrency](#lab-concurrency)
 
 ---
 
@@ -666,3 +669,99 @@ jobs:
   - Required approvers
   - Branch restrictions
   - Variables
+
+---
+
+## Concurrency
+
+- `Concurrency`
+  - allows to **control the simultaneous execution** of workflows and jobs.
+  - primarily used to **prevent race conditions** during deployments and to save runner minutes by **canceling outdated tasks**.
+
+- Can be both workflow level and job level.
+
+- **Key Components**
+  - `group` key:
+    - A group name or key used to **identify a set of runs**. e.g., a branch name or PR number
+    - ensures that **only one job or workflow** in a group is active at any time.
+  - `cancel-in-progress` key:
+    - A boolean setting that determines **what happens when a new run starts**.
+    - `true`: any currently running task in the same group is **canceled** to make room for the new one.
+
+- **Queueing Behavior**:
+  - When a group is already **in use**, the **new run** is placed **in a "pending" state**.
+  - GitHub maintains a maximum of **one active** and **one pending** run per group; any older pending runs are **automatically canceled** when a newer one arrives.
+
+---
+
+### Common Examples
+
+- **Auto-canceling CI on Pull Requests**
+
+```yaml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+
+> **cancels older test runs** if you push several commits to the same PR in quick succession.
+
+- **Serializing Production Deploys:**
+
+```yaml
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+```
+
+> ensures **only one deployment** happens at a time without interrupting a run that is already mid-deploy.
+
+---
+
+### Lab: Concurrency
+
+```yaml
+name: 19 concurrency - jobs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ping-url-concurrency:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ping URL
+        id: ping-url
+        uses: ./.github/actions/docker-ping-url
+        with:
+          url: "https://www.invalid.url"
+          max_trials: 20
+          delay: 5
+
+  ping-url-without-concurrency:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ping URL
+        id: ping-url
+        uses: ./.github/actions/docker-ping-url
+        with:
+          url: "https://www.invalid.url"
+          max_trials: 20
+          delay: 5
+```
+
+![pic](../fundamental/concurrency.png)
+
+> Job level concurrency
+> without concurrency control, incoming workflow is executed without waiting
+> with concurrency control, incoming workflow is suspended and waiting.
+
+---
