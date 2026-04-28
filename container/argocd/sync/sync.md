@@ -4,8 +4,10 @@
 
 - [ArgoCD - Sync](#argocd---sync)
   - [Sync](#sync)
+    - [Pruning](#pruning)
   - [Imparative](#imparative)
   - [Declarative](#declarative)
+  - [Lab: Create app with auto sync](#lab-create-app-with-auto-sync)
 
 ---
 
@@ -23,11 +25,25 @@
 
 ---
 
+### Pruning
+
+- no prune:
+  - default
+  - when automated sync is enabled, **by default** for safety automated sync will **not delete resources** when Argo CD detects the resource is no longer defined in Git
+
+- Pruning can be enabled to delete resources automatically as part of the automated sync.
+
+```sh
+argocd app create --auto-prune
+```
+
+---
+
 ## Imparative
 
 | Command                                                | Description                                                       |
 | ------------------------------------------------------ | ----------------------------------------------------------------- |
-| `argocd create app <app-name> --sync-policy automated` | Create app with automated sync policy                             |
+| `argocd app create <app-name> --sync-policy automated` | Create app with automated sync policy                             |
 | `argocd app sync <app-name>`                           | Manually sync one application.                                    |
 | `argocd app sync <app-name> --dry-run`                 | Preview sync **without applying changes**.                        |
 | `argocd app sync <app-name> --prune`                   | Sync and **delete** resources that are no longer defined in Git.  |
@@ -50,11 +66,22 @@
 ## Declarative
 
 ```yaml
+# auto sync
 spec:
   syncPolicy:
     automated: {}
+
+# auto sync with pruning
+spec:
+  syncPolicy:
+    automated:
+      prune: true
 ```
 
 ---
 
+## Lab: Create app with auto sync
 
+- Create from private repo
+- git commit and push
+- observe changes
