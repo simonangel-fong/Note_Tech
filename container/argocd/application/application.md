@@ -17,6 +17,7 @@
   - [Tools: Kustomize](#tools-kustomize)
     - [Lab: Create App with Kustomize](#lab-create-app-with-kustomize)
   - [Tools: Multiple Sources](#tools-multiple-sources)
+  - [Tracking Strategies](#tracking-strategies)
 
 ---
 
@@ -478,3 +479,69 @@ kubectl apply -f demo_kustomize.yaml
 - Use cases:
   - remote helm chart + git-hosted values file
     - e.g., nginx helm chart from helm repo + values.yaml from git
+
+---
+
+## Tracking Strategies
+
+- **Git repos tracking**:
+  - Commit SHA (good for production).
+  - Tags (good for production).
+  - Branch tracking (ex: main branch).
+  - Symbolic reference (HEAD).
+- **Helm repos tracking** : Helm always use semantic versioning
+  - Specific version `v1.2`
+  - Range `1.2.*` or `>=1.2.0 <1.3.0`.
+  - Latest `*` or `>=0.0.0`
+
+---
+
+- Sample
+
+```yaml
+# git: tag name
+spec:
+  source:
+    path: guestbook
+    repoURL: "https://github.com/mabusaa/argocd-example-apps.git"
+    targetRevision: v1 # tag name
+
+# git: sha value
+spec:
+  source:
+    repoURL: "https://github.com/mabusaa/argocd-example-apps.git"
+    targetRevision: 2455bb6 # using the short commit id
+
+# git: branch name
+spec:
+  source:
+    repoURL: "https://github.com/mabusaa/argocd-example-apps.git"
+    targetRevision: main  # branch name
+
+# git: symbolic reference
+spec:
+  source:
+    repoURL: "https://github.com/mabusaa/argocd-example-apps.git"
+    targetRevision: HEAD  # symbolic reference
+
+# Helm: symbolic reference
+spec:
+  source:
+    chart: sealed-secret
+    repoURL: "https://bitnami-labs.github.io/sealed-secrets"
+    targetRevision: 1.16.1   # symbolic reference
+
+# Helm: Range
+spec:
+  source:
+    chart: sealed-secret
+    repoURL: "https://bitnami-labs.github.io/sealed-secrets"
+    targetRevision: '>=3.0.0 <4.1.0' # symbolic reference
+
+# Helm: Latest version
+spec:
+  source:
+    chart: sealed-secret
+    repoURL: "https://bitnami-labs.github.io/sealed-secrets"
+    targetRevision: *   # Latest version
+```

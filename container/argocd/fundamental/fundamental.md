@@ -4,6 +4,7 @@
 
 - [ArgoCD - Fundamental](#argocd---fundamental)
   - [GitOps](#gitops)
+    - [Pull Model](#pull-model)
   - [ArgoCD](#argocd)
     - [Core Concepts](#core-concepts)
   - [Architecture](#architecture)
@@ -11,6 +12,12 @@
     - [Repo Server](#repo-server)
     - [Application controller](#application-controller)
     - [Additional Components](#additional-components)
+  - [Remote Cluster](#remote-cluster)
+    - [Authentication](#authentication)
+  - [Best Practices](#best-practices)
+    - [Repositories Separation](#repositories-separation)
+    - [Environments Manifest](#environments-manifest)
+    - [Common Practices](#common-practices)
 
 ---
 
@@ -31,6 +38,42 @@
 
 ---
 
+### Pull Model
+
+- `pull model`
+  - a deployment strategy where an **in-cluster agent** (like Argo CD or Flux) continuously **monitors** a Git repository for changes and **pulls** them to **synchronize** the environment's actual state with the desired state. I
+
+![pic](./pic/argocd_pull_model.png)
+
+- Sample flow: Full release
+
+- dev commit changes to main branch
+- Trigger main pipeline
+  - build
+  - test
+  - code analysis
+  - docker build
+  - docker push
+  - update test manifests
+- Argo sync changes to test env
+- postsysnc trigger test-staging pipeline
+  - integration test
+  - security test
+  - dast testing
+  - update staging manifests
+- if pass, create merge request to update staging env
+- Argo sync changes to staging env
+- postsysnc trigger staging-prod pipeline
+  - performance test
+  - pen test
+  - manual test
+  - UAT
+  - update prod manifests
+- if pass, create a merge request to update prod env
+- if Approval, Argo sync changes to prod env
+
+---
+
 ## ArgoCD
 
 - `ArgoCD`
@@ -39,8 +82,6 @@
 - Not a CI tool
 
 ![pic](./pic/vs_push_model.png)
-
-![pic](./pic/argocd_pull_model.png)
 
 - Features
   - `Git` as the **source of truth**.
@@ -160,3 +201,112 @@
 - `ApplicationSet Controller`: It automates the **generation of Argo CD Applications**
 
 ![pic](./pic/architecture_components.png)
+
+---
+
+## Remote Cluster
+
+- By **default**, ArgoCD has the **permission to deploy** into the **local cluster** where its running.
+- can add remote k8s clusters information including **credentials** as `k8s secrets`.
+  - Each secret must have label of `argocd.argoproj.io/secret-type: cluster`
+- Each cluster must have the below data:
+  - Name.
+  - Server (cluster api server url).
+  - Config (an option to authenticate to the cluster).
+  - namespaces (optional): comma-separated list of namespaces which are accessible in that cluster.
+- can add remote clusters declarativly or using cli.
+
+---
+
+### Authentication
+
+- options to authenticate to remote clusters:
+  - Basic authentication (username and password)
+  - Bearer token authentication.
+  - IAM authentication configuration (suitable for cloud k8s clusters).
+  - External provider command to supply client credentials.
+
+---
+
+## Best Practices
+
+### Repositories Separation
+
+Separating `application config repo` from `application code repo`
+
+- Cleaner Git history of what changes were made
+- The application might consist of services that are distributed in multiple Git repositories, but is **deployed as a single unit**.
+- Separation of access. **Maintainers of application source code** maybe not be the same as the **maintainers of application config**.
+- **Smaller overhead** on Argo CD repo-controller, cloning config repo without the source code.
+
+---
+
+### Environments Manifest
+
+Types of environments:
+
+- Static environments:
+  - Test
+  - Staging
+  - Production
+- On-demand environments :
+  - created for a **small period** for feature testing.
+  - Can be created once a **pull request** created and destroyed once the pull request is closed.
+
+---
+
+How to handle on-demand environments creation/deletion:
+
+- On-demand environments can be created by two options
+  - Option-1:
+    - Use `ApplicationSet Pull Request Generator`, it will handle creating ArgoCD applications per open pull request. And it will be Argo CD application will be **destroyed once Pull request is closed**.
+  - Option-2:
+    - Single branch for on-demand environments, and a folder per environment and each folder will contain the related manifests. (You need to write a script using CI pipeline to create theses folders and manifests per Pull request).
+
+---
+
+How to handle static environments config?
+
+- **Approach #1: Single branch** all static environments:
+  - e.g, Main branch, contains the helm chart values files for-each static environment:
+    - Values-test.yaml.
+    - Values-staging.yaml.
+    - Values-prod.yaml.
+- **Approach #2**: Branch per static environment
+  - Test branch.
+  - Staging branch.
+  - Production branch. (You can use tags or commits SHA for production environments)
+
+---
+
+### Common Practices
+
+- Immutable manifests
+  - Use immutable manifests in production
+  - Avoid using `HEAD` revision and **use tags or commits SHA**.
+
+- Replicas and HPA
+  - If you want HPA to control the number of replicas , then **don’t include replicas in Git**.
+
+- Plan for secrets management
+  - Don’t store plain secrets in git.
+  - There are several solutions for secrets:
+    - Within Git
+      - `Sealed secrets`.
+      - `SOPS`
+    - External secrets store:
+      - `Hashicorp Vault`
+      - `External Secrets Operator`
+      - Cloud secrets store
+        - `Aws secret operator`
+
+- Plan for ArgoCD Instances
+  - Use a **separated** ArgoCD instance for **production**.
+  - Use **HA setup** for production.
+  - Its recommended to have **at least two instances**:
+    - Non-prod instance.
+    - Prod instance.
+
+- App of Apps and ApplicationSet
+  - Use `app of apps` to manage ArgoCD application.
+  - Use `Application Set` and the power of generators to generate applications.

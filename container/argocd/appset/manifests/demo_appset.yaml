@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+
+metadata:
+  name: guestbook-appset
+  namespace: argocd
+
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: guestbook-dev
+          - env: prod
+            namespace: guestbook-prod
+
+  template:
+    metadata:
+      name: '{{.env}}-guestbook'
+
+    spec:
+      project: default
+
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps.git
+        targetRevision: HEAD
+        path: guestbook
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
