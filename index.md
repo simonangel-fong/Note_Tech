@@ -12,6 +12,8 @@
   - [x] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
   - [ ] [ArgoCD](./container/argocd/index.md)
+  - [ ] [ArgoRollout](./container/argorollout/argorollout.md)
+  - [ ] [Portainer](./container/portainer/index.md)
 
 - DevOps & Cloud
   - [CI/CD](./cicd/cicd.md)
@@ -20,6 +22,7 @@
   - [x] [Jenkins](./devops/jenkins/index.md)
   - [x] [GitHub Actions](./devops/github_action/index.md)
   - [x] [Prometheus](./devops/prometheus/index.md)
+  - [x] [Linux Diagnosis Handbook](./devops/linux.md)
 
 - Testing
   - [ ] [Locust](./testing/locust/index.md)

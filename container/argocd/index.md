@@ -16,3 +16,5 @@
 
 - [Install](./install/install.md)
 - CICD Demo: Deploy React + FastAPI
+- Demo: Canary deploy
+- Demo: Green-blue deploy
