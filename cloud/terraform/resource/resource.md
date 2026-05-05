@@ -18,12 +18,8 @@
 
 - `Resources`
 
-  - the most important element in the Terraform language.
-  - Each `resource block` **describes** one or more **infrastructure objects**, such as virtual networks, compute instances, or higher-level components such as DNS records.
+  - **describes** one or more **infrastructure objects**, such as virtual networks, compute instances, or higher-level components such as DNS records.
 
-- `Resource Blocks`
-
-  - used to document the syntax for declaring resources.
 
 - `Resource Behavior`
 

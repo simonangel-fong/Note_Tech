@@ -3,21 +3,58 @@
 [Back](../index.md)
 
 - [ArgoCD - Fundamental](#argocd---fundamental)
+  - [traditional deployment flow](#traditional-deployment-flow)
   - [GitOps](#gitops)
     - [Pull Model](#pull-model)
   - [ArgoCD](#argocd)
     - [Core Concepts](#core-concepts)
-  - [Architecture](#architecture)
-    - [ArgoCD Server](#argocd-server)
-    - [Repo Server](#repo-server)
-    - [Application controller](#application-controller)
-    - [Additional Components](#additional-components)
   - [Remote Cluster](#remote-cluster)
     - [Authentication](#authentication)
   - [Best Practices](#best-practices)
     - [Repositories Separation](#repositories-separation)
     - [Environments Manifest](#environments-manifest)
     - [Common Practices](#common-practices)
+
+---
+
+## traditional deployment flow
+
+- Key steps:
+  - starts with `git push`
+    - Developers commit and push changes to the remote repo, which triggers the execution of a CI/CD pipeline.
+  - trigger CI/CD pipeline
+    - build > test > audit > push
+  - Apply to cluster
+    - the CI/CD pipeline proceeds with executing commands such as helm upgrade or kubectl apply
+
+---
+
+- drawbacks
+  - **Configuration Drift**
+    - What happens if a developer runs kubectl scale deployment my-app --replicas=0 directly in the cluster?
+      - The **live state of** the cluster is now different from the configuration stored in Git.
+      - Nobody knows what the real desired state is.
+      - Git says one thing, but the cluster is doing another.
+
+  - **Poor Auditability**
+    - How do you know who scaled the deployment and why? There's little to no **audit trail**.
+    - The **"source of truth"** is just the **current state** of the cluster, with no history.
+
+  - **Difficult Rollbacks**
+    - Reverting a bad deployment is often not straightforward, especially when multiple services are involved.
+    - It often requires a high-stress, manual process of finding the last good artifact and re-running a pipeline.
+    - This is slow and highly prone to **human error** during an outage.
+
+  - **Inconsistent Deployments and Configuration**
+    - Since configuration might drift, it becomes increasingly harder to have a clear view of each environment configuration, also opening the door to bigger problems when promoting a certain release from a lower to a higher environment.
+
+- **Traditional**
+
+![pic](./pic/gitops_vs_tradition01.png)
+
+- **GitOps**
+
+![pic](./pic/gitops_vs_tradition02.png)
 
 ---
 
@@ -30,7 +67,7 @@
   - **Declarative Infrastructure**:
     - The **desired state** of the system is defined **declaratively** (e.g., Kubernetes YAML files) rather than through manual, imperative commands.
   - **Versioned and Immutable**:
-    - All infrastructure and application configurations are **stored in Git**, ensuring a complete, versioned history for auditing and easy rollbacks.
+    - The desired state is stored in a way that enforces **immutability, versioning** and **retains a complete version history**.
   - **Automated Synchronization**:
     - Software agents (e.g., in the cluster) **automatically pull changes from the Git** repository and **update** the live environment, eliminating manual deployment steps.
   - **Continuous Reconciliation**:
@@ -132,75 +169,6 @@
 - `Refresh` (`Compare`)
   - **updates** the application's **status** by **comparing** the desired Git state with the live cluster state, **without changing cluster resources**.
   - By default, automatically refreshes every 3 minutes.
-
----
-
-## Architecture
-
-3 main components:
-
-- ArgoCD Server (API + Web Server).
-- ArgoCD Repo Server.
-- ArgoCD Application Controller.
-
----
-
-### ArgoCD Server
-
-- Its a gRPC/REST server which **exposes the API** consumed by the **Web UI, CLI**.
-  - Application management (Create, Update, Delete).
-  - Application operations (ex: Sync, Rollback)
-  - Repos and clusters management.
-  - Authentication.
-
-![pic](./pic/architecture_components_api_server.png)
-
----
-
-### Repo Server
-
-- `Repo Server`
-  - acts as the bridge between `Git repositories` and `Kubernetes`.
-  - roles:
-    - **Clones** and keeps Git repositories **up-to-date**.
-    - **generates** Kubernetes manifests (via Helm, Kustomize, etc.),
-    - and **caches** them
-
-![pic](./pic/architecture_components_repo_server.png)
-
----
-
-### Application controller
-
-- `Application controller`
-  - a Kubernetes controller which **continuously monitors** running applications and **compares** the current, live state against the desired target state.
-
-- Roles:
-  - Communicate with `Repo server` to get the generated manifests.
-  - Communicate with `k8s API` to get actual cluster state.
-  - **Deploy** apps manifests to destination clusters.
-  - **Detects** OutofSync Apps and take corrective actions “If needed”.
-  - Invoking **user-defined hooks** for lifecycle events (PreSync, Sync, PostSync).
-
-- How it Works:
-  - **Observes**:
-    - It looks at the `Argo CD Application CRD` and the target cluster.
-  - **Compares**:
-    - It **fetches the desired manifests** from the repo server and **compares** them to the `actual state`.
-  - **Acts**:
-    - It **updates** the Application status and **synchronizes** the cluster if enabled.
-
-![pic](./pic/architecture_components_application_controller.png)
-
----
-
-### Additional Components
-
-- `Redis`: used for caching.
-- `Dex`: **identity service** to integrate with **external identity providers**.
-- `ApplicationSet Controller`: It automates the **generation of Argo CD Applications**
-
-![pic](./pic/architecture_components.png)
 
 ---
 

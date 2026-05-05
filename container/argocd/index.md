@@ -5,12 +5,21 @@
 ---
 
 - [Fundamental](./fundamental/fundamental.md)
-- [Application](./application/application.md)
-- [Project](./project/project.md)
-- [Repository](./repo/repo.md)
-- [sync](./sync/sync.md)
-- [ApplicationSet](./appset/appset.md)
-- [App of Apps](./app_of_apps/app_of_apps.md)
+  - [Architecture](./architecture/architecture.md)
+
+- Components
+  - [Repository](./repo/repo.md)
+
+- Core Concepts
+  - [Project](./project/project.md)
+  - [Application](./application/application.md)
+    - [with `Helm Charts`](./helm/helm.md)
+    - [Sync](./sync/sync.md)
+  - [ApplicationSet](./appset/appset.md)
+  - [App of Apps](./app_of_apps/app_of_apps.md)
+
+- Account management
+  - [Account](./account/account.md)
 
 ---
 
@@ -18,3 +27,4 @@
 - CICD Demo: Deploy React + FastAPI
 - Demo: Canary deploy
 - Demo: Green-blue deploy
+- Demo: EKS + Argocd

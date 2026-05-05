@@ -2,19 +2,10 @@
 
 [Back](../index.md)
 
----
-
-## Workspace
-
-## Common Commands
-
-| Command                           | Description                            |
-| --------------------------------- | -------------------------------------- |
-| `terraform delete`                | Delete a workspace                     |
-| `terraform show`                  | Show the name of the current workspace |
-| `terraform list`                  | List Workspaces                        |
-| `terraform new workspace_name`    | Create a new workspace                 |
-| `terraform select workspace_name` | Select a workspace                     |
+- [Terraform - Workspace](#terraform---workspace)
+  - [Terraform Workspace](#terraform-workspace)
+    - [Common Commands](#common-commands)
+  - [Lab: Local Workspace](#lab-local-workspace)
 
 ---
 
@@ -52,6 +43,18 @@ instance_type = terraform.workspace == "prod" ? "t3.medium" : "t3.micro"
   - Projects requiring **separate credentials**
   - Projects requiring strong access control
   - Large infrastructure decomposition
+
+---
+
+### Common Commands
+
+| Command                                     | Description                            |
+| ------------------------------------------- | -------------------------------------- |
+| `terraform workspace delete`                | Delete a workspace                     |
+| `terraform workspace show`                  | Show the name of the current workspace |
+| `terraform workspace list`                  | List Workspaces                        |
+| `terraform workspace new workspace_name`    | Create a new workspace                 |
+| `terraform workspace select workspace_name` | Select a workspace                     |
 
 ---
 

@@ -3,6 +3,7 @@
 [Back](../index.md)
 
 - [ArgoCD - Sync](#argocd---sync)
+  - [Sync and Health Statuses](#sync-and-health-statuses)
   - [Sync](#sync)
   - [Imparative](#imparative)
   - [Declarative](#declarative)
@@ -22,6 +23,38 @@
     - [Hook Deletion Policies](#hook-deletion-policies)
   - [Sync Waves](#sync-waves)
     - [Example: Sync Phases + Sync Waves](#example-sync-phases--sync-waves)
+
+---
+
+## Sync and Health Statuses
+
+- `Sync status`
+  - whether the **live state**, or the deployed kubernetes resources, match the **desired state**, or the configuration files in the application repository.
+
+| Sync status   | Description                                                                            |
+| ------------- | -------------------------------------------------------------------------------------- |
+| `Synced`      | The Live State **matches** the Desired State                                           |
+| `OutOfSync`   | The Live State **does not match** the Desired State. Configuration drift has happened. |
+| `Progressing` | The Application is **currently undergoing a sync operation**. Is temporary.            |
+
+---
+
+- `Health status`
+  - whether the **live state**, or the deployed kubernetes resources, is in a **healthy status**.
+  - Argo CD has built-in **health checks** for different Kubernetes resources.
+
+| Health status | Description                                                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `Healthy`     | All the resources associated with the application are **in a good state**.                                                     |
+| `Degraded`    | At **least one** resource is in a failed or unhealthy state. The application might be perfectly Synced, but still be Degraded. |
+
+---
+
+- Example of sync status vs health status
+  - manifest defines k8s deployments
+  - sync status applies to deployments, but not replicaset/pod, since they are not defined in the manifest.
+  - health status applies to deployments, rs, and po, since they are health checked by cluster.
+
 
 ---
 

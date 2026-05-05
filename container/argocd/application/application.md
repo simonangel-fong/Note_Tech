@@ -4,6 +4,7 @@
 
 - [ArgoCD - Application](#argocd---application)
   - [Application](#application)
+    - [`Application` CRD vs Kubernetes Manifests](#application-crd-vs-kubernetes-manifests)
     - [Supported Tools](#supported-tools)
   - [Common Commands](#common-commands)
   - [Lab: Create Application](#lab-create-application)
@@ -27,21 +28,31 @@
   - a Kubernetes `Custom Resource Definition (CRD)` that defines the **desired state of an application** in a target cluster, **sourcing** its configuration (YAML, Helm, Kustomize) from a Git repository.
   - **the unit of deployment** and tracking, enabling GitOps by monitoring for differences between the Git repository and the cluster.
 
-- two key pieces of information:
-  - **Source**:
-    - reference to the desired state in Git
-    - e.g.,
-      - Helm charts
-      - Kustomize application
-      - k8s manifests
-      - jsonnet
-  - **Destination**:
-    - reference to the target cluster and namespace.
+- key spec entries:
+  - `spec.project`:
+    - Specify under which `Argo CD project` should the application be managed.
+    - default project: `default`
+  - `spec.source`
+    - specify WHERE is the **desired state defined**
+    - includes a **Git repository URL**, a **branch**, and a **path** or `Helm chart`.
+  - `spec.destination`
+    - Specify WHERE should the manifests from that source be deployed.
+    - which cluster and namespace
+  - `spec.syncPolicy`:
+    - Specify HOW should the deployment be managed
+    - Should it be automated, prune resources, self-heal, etc.?
 
-- Created by:
-  - Declaratively “Yaml”. (Recommended)
-  - Web UI
-  - CL
+---
+
+### `Application` CRD vs Kubernetes Manifests
+
+| Concept                  | Argo CD `Application` CRD                                     | Kubernetes Manifests                                 |
+| ------------------------ | ------------------------------------------------------------- | ---------------------------------------------------- |
+| **Kind**                 | `Application`                                                 | `Deployment`, `Service`, `ConfigMap`, `Secret`, etc. |
+| **Purpose**              | a contract for Argo CD to manage set of Kubernetes manifests. | resources of the running application.                |
+| **Information Included** | Source, Destination,sync policy                               | container image, ports, replicas                     |
+| **Where in the Cluster** | Usually in the `argocd` namespace.                            | In the target application namespace                  |
+| **Who Cares About It?**  | `Argo CD controllers`.                                        | `Kubernetes controllers`                             |
 
 ---
 

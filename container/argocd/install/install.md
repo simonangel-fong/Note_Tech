@@ -26,8 +26,12 @@ helm repo update
 # ...Successfully got an update from the "argo" chart repository
 # Update Complete. ⎈Happy Helming!⎈
 
-helm install argocd argo/argo-cd -n argocd --create-namespace
+helm search repo argo/argo-cd
+# NAME            CHART VERSION   APP VERSION     DESCRIPTION
+# argo/argo-cd    9.5.11          v3.3.9          A Helm chart for Argo CD, a declarative, GitOps...
 
+helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace --version 9.5.11
+  
 kubectl get po -n argocd
 # NAME                                                READY   STATUS    RESTARTS   AGE
 # argocd-application-controller-0                     1/1     Running   0          5m1s
@@ -86,6 +90,9 @@ argocd version
 #   Compiler: gc
 #   Platform: linux/amd64
 # {"level":"fatal","msg":"Argo CD server address unspecified","time":"2026-04-27T15:28:00-04:00"}
+
+hich argocd
+# /usr/local/bin/argocd
 ```
 
 - login

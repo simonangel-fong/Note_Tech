@@ -12,7 +12,7 @@
   - [x] [Docker](./container/docker/index.md)
   - [ ] [Kubernetes](./container/kubernetes/index.md)
   - [ ] [ArgoCD](./container/argocd/index.md)
-  - [ ] [ArgoRollout](./container/argorollout/argorollout.md)
+  - [ ] [Argo Rollout](./container/argorollout/argorollout.md)
   - [ ] [Portainer](./container/portainer/index.md)
 
 - DevOps & Cloud
