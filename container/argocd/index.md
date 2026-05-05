@@ -14,7 +14,8 @@
   - [Project](./project/project.md)
   - [Application](./application/application.md)
     - [with `Helm Charts`](./helm/helm.md)
-    - [Sync](./sync/sync.md)
+    - [Sync Policy](./sync/sync_policy.md)
+    - [Sync Hook](./sync/sync_hook.md)
   - [ApplicationSet](./appset/appset.md)
   - [App of Apps](./app_of_apps/app_of_apps.md)
 
