@@ -7,7 +7,8 @@
     - [Hook Deletion Policies](#hook-deletion-policies)
     - [Lab: Sync Hook](#lab-sync-hook)
   - [Sync Waves](#sync-waves)
-    - [Example: Sync Phases + Sync Waves](#example-sync-phases--sync-waves)
+  - [Sync Phases + Sync Waves](#sync-phases--sync-waves)
+    - [Lab: Sync Phases + Sync Waves](#lab-sync-phases--sync-waves)
 
 ---
 
@@ -136,7 +137,7 @@ spec:
 ```
 
 ```sh
-kubectl apply sync-job.yaml
+kubectl apply -f sync-hook.yaml
 ```
 
 ---
@@ -148,7 +149,7 @@ kubectl apply sync-job.yaml
 
 - `integer wave value`
   - a numerical annotation used to **control the exact deployment order** of Kubernetes resources.
-    - Default Value: 0
+    - **Default Value: 0**
 
 - Behavior:
   - ArgoCD orders waves from the **lowest integer** to the **highest**.
@@ -158,6 +159,8 @@ kubectl apply sync-job.yaml
   - ArgoCD **waits** for all resources in one wave to be **healthy** before proceeding to the next.
     - If a resource in a wave **fails** to become healthy, the **subsequent waves** will **not be deployed**, causing the **sync to "get stuck"**.
 
+![pic](./pic/sync_wave01.png)
+
 - Example:
 
 ```yaml
@@ -166,15 +169,22 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 ```
 
+---
+
+- **Sync waves and phases (hooks) can be combined!**
+  - When specifying both options, Argo CD will apply the manifests and execute the operations following the `Sync Wave` order within each `Sync Phase`!
+
 - Example Scenario (Using Sync Waves):
   - Wave -5: Namespaces, Network Policies.
   - Wave -1: Persistent Volume Claims, ConfigMaps, Secrets.
   - Wave 0 (Default): Database Deployment.
   - Wave 1: Application Deployment.
 
+![pic](./pic/sync_wave02.png)
+
 ---
 
-### Example: Sync Phases + Sync Waves
+## Sync Phases + Sync Waves
 
 Order:
 
@@ -206,3 +216,230 @@ Order:
       - Run a Smoke Test script to verify the website loads.
    2. **Wave 5**:
       - Send a Slack Notification saying "Deployment Complete!"
+
+---
+
+### Lab: Sync Phases + Sync Waves
+
+- presync-10-job.yaml
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: presync-10-data-backup
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: data-backup
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running data-backup ...'; sleep 5; echo 'Done'"
+```
+
+- presync-20-job.yaml
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: presync-20-config-check
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: config-check
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running config-check...'; sleep 5; echo 'Done'"
+```
+
+- presync-30-job.yaml
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: presync-30-db-migrate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-migrate
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running db-migrate...'; sleep 5; echo 'Done'"
+```
+
+- sync-10-cm.yaml
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sync-10-configmap
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+data:
+  db_host: "pgdb"
+```
+
+- sync-20-cm.yaml
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sync-20-configmap-check
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: configmap-check
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running configmap-check...'; sleep 5; echo 'Done'"
+```
+
+- sync-30-cm.yaml
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sync-30-web-app
+  labels:
+    app: nginx
+  annotations:
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+```
+
+- sync-40-cm.yaml
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sync-40-web-check
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "40"
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: web-check
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running web-check...'; sleep 5; echo 'Done'"
+```
+
+- postsync-10-job.yaml
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postsync-10-smoke-testing
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: smoke-testing
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running smoke-testing...'; sleep 5; echo 'Done'"
+```
+
+- postsync-20-job.yaml
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postsync-20-notifications
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: notifications
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running notifications...'; sleep 5; echo 'Done'"
+```
+
+```sh
+kubectl apply -f sync-wave.yaml
+# application.argoproj.io/sync-wave created
+```
+
+![pic](./pic/sync_wave_lab.png)
