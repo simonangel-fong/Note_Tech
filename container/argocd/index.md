@@ -9,6 +9,7 @@
 
 - Components
   - [Repository](./repo/repo.md)
+    - [Private Repository](./private_repo/private_repo.md)
 
 - Core Concepts
   - [Project](./project/project.md)
