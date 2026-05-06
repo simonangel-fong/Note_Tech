@@ -11,6 +11,7 @@
     - [Pruning](#pruning)
     - [Self-Healing](#self-healing)
   - [Sync Otions](#sync-otions)
+    - [Propagation Policies](#propagation-policies)
 
 ---
 
@@ -239,3 +240,33 @@ metadata:
 ```
 
 ---
+
+### Propagation Policies
+
+- `Propagation Policies (PrunePropagationPolicy)`
+  - determine how Kubernetes resources are **deleted (pruned)** when they are removed from Git, specifically handling parent-child dependencies.
+  - default: `foreground` (waits for children to delete)
+
+- `Foreground`
+  - Default
+  - Kubernetes waits for **all dependent resources (children) to be deleted** before removing the parent resource.
+  - ensures safe and consistent cleanup but can be slow.
+  - Usage: `PrunePropagationPolicy=foreground`
+- `Background`:
+  - Kubernetes deletes the **parent resource immediately**, and garbage collects the dependent resources in the background.
+  - This is faster but less orderly.
+  - Usage: `PrunePropagationPolicy=background`
+- `Orphan`:
+  - The **parent** resource is deleted, but all **dependents** are **left running**, losing their ownerReference.
+  - Usage: `PrunePropagationPolicy=orphan`
+
+- Example
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+spec:
+  syncPolicy:
+    syncOptions:
+      - PrunePropagationPolicy=background
+```

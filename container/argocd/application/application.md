@@ -556,3 +556,5 @@ spec:
     repoURL: "https://bitnami-labs.github.io/sealed-secrets"
     targetRevision: *   # Latest version
 ```
+
+---

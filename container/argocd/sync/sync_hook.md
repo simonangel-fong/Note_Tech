@@ -3,36 +3,33 @@
 [Back](../index.md)
 
 - [ArgoCD - Sync Hook](#argocd---sync-hook)
-  - [Sync Hook](#sync-hook)
   - [Sync Phases \& Hook](#sync-phases--hook)
     - [Hook Deletion Policies](#hook-deletion-policies)
+    - [Lab: Sync Hook](#lab-sync-hook)
   - [Sync Waves](#sync-waves)
     - [Example: Sync Phases + Sync Waves](#example-sync-phases--sync-waves)
 
 ---
 
-## Sync Hook
-
 ## Sync Phases & Hook
 
-- `hook`
-  - Kubernetes resources (like Jobs) annotated with `argocd.argoproj.io/hook` that **run custom logic** at specific stages of an application's lifecycle, such as before, during, or after a synchronization (deployment).
-  - enable automation for tasks like database migrations, integration tests, or cleanup without interrupting the main deployment flow.
+- `Sync Phases`
+  - Specific **stages of a sync operation**
 
-| Hook         | Description                                                       |
-| ------------ | ----------------------------------------------------------------- |
-| `PreSync`    | Executes **before** any resources are applied.                    |
-| `Sync`       | Runs **alongside** standard **application syncing**.              |
-| `Skip`       | Indicates to Argo CD to **skip** the application of the manifest. |
-| `PostSync`   | Executes **after** all resources are **synced and healthy**.      |
-| `SyncFail`   | Runs if the synchronization **fails**.**fails**.                  |
-| `PreDelete`  | Executes **before** the application is **deleted**.               |
-| `PostDelete` | Executes **after** the application is deleted.                    |
+| Phases       | Description                                                       | Use cases                                      |
+| ------------ | ----------------------------------------------------------------- | ---------------------------------------------- |
+| `PreSync`    | Executes **before** any resources are applied.                    | DB migrations, schema updates, security checks |
+| `Sync`       | **Default**. Runs **alongside** standard **application syncing**. |                                                |
+| `Skip`       | Indicates to Argo CD to **skip** the application of the manifest. |                                                |
+| `PostSync`   | Executes **after** all resources are **synced and healthy**.      | smoke tests, notifying Slack                   |
+| `SyncFail`   | Runs if the synchronization **fails**.**fails**.                  |                                                |
+| `PreDelete`  | Executes **before** the application is **deleted**.               |                                                |
+| `PostDelete` | Executes **after** the application is deleted.                    |                                                |
 
 ---
 
-- Usage:
-  - use phases using resources hooks annotation `argocd.argoproj.io/hook` on app manifests.
+- `Sync hooks`
+  - the Kubernetes annotations `argocd.argoproj.io/hook` used by resources to **specify custom logic at specific stages** of an sync operation.
 
 - example
 
@@ -65,6 +62,82 @@ metadata:
 
 - How to Use Them:
   - `Annotations` are **added** to the resource metadata, typically to Kubernetes Jobs or Pods used for tasks like migrations, as shown in this Argo CD Resource Hooks Documentation.
+
+---
+
+### Lab: Sync Hook
+
+- sync-hook/
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration-job
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation, HookSucceeded
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running db migration...'; sleep 20; echo 'Done'"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+```
+
+- App
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sync-job
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: "git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git"
+    targetRevision: HEAD
+    path: sync-hook
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+```
+
+```sh
+kubectl apply sync-job.yaml
+```
 
 ---
 

@@ -28,10 +28,12 @@
   - ArgoCD creates a default project once you install it.
 
 - Features:
-  - Enables to create a role with set of policies "permissions" to grant access to a project's applications"
-    - can use it to grant CI system a specific access to project applications.
-      - It must be associated with JWT.
-    - can use it to grant oidc groups a specific access to project applications.
+  - **Organization & Multi-Tenancy**:
+    - Provide a simple and effective way to group related applications (team, business unit).
+  - **Access Control (RBAC)**:
+    - Projects are the central point for configuring `Role-Based Access Control (RBAC)` in Argo CD allowing you to set granular permissions for users.
+  - **Security Guardrails**:
+    - Define guardrails for which source repositories, destinations, and Kubernetes resources applications belonging to the project can access.
 
 - Use case:
   - when ArgoCD is used by multiple teams.
@@ -139,7 +141,7 @@ spec:
       kind: "Deployment"
   # blacklist ns np
   namespaceResourceBlacklist:
-    - group: “”
+    - group: ""
       kind: “NetworkPolicy"
 ```
 
@@ -512,7 +514,7 @@ argocd app list
 ## ??Project role
 
 - `Project Roles`
-  - define fine-grained `RBAC (Role-Based Access Control)` permissions scoped specifically to an `AppProject`. 
+  - define fine-grained `RBAC (Role-Based Access Control)` permissions scoped specifically to an `AppProject`.
   - determine which users, groups, or CI pipelines **can view, sync, or manage** specific applications within a project, enabling secure multi-tenant setups where teams only control their assigned resources.
 
 - controls **who** can do **what** inside that project.

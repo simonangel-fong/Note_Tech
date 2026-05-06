@@ -15,7 +15,7 @@
   - [Application](./application/application.md)
     - [Deploy `Helm Charts`](./helm/helm.md)
     - [Sync Policy](./sync/sync_policy.md)
-    - [Sync Hook](./sync/sync_hook.md)
+    - [Sync Phases & Hook](./sync/sync_hook.md)
   - [ApplicationSet](./appset/appset.md)
   - [App of Apps](./app_of_apps/app_of_apps.md)
 
