@@ -5,12 +5,15 @@
 - [ArgoCD - Repository](#argocd---repository)
   - [Repository](#repository)
     - [Common Commands](#common-commands)
-  - [Lab: add repo](#lab-add-repo)
-  - [Lab: Private Repo with https](#lab-private-repo-with-https)
-  - [Lab: Private Repo with ssh](#lab-private-repo-with-ssh)
-  - [Helm Repos](#helm-repos)
-  - [Lab: add a private helm repos](#lab-add-a-private-helm-repos)
-  - [Credential Templates](#credential-templates)
+  - [Lab: Add Public Repo](#lab-add-public-repo)
+    - [GitHub Repo](#github-repo)
+    - [Helm Repo](#helm-repo)
+  - [Lab: Private Repo](#lab-private-repo)
+    - [GitHub via HTTPS](#github-via-https)
+    - [GitHub via HTTPS - Declarative](#github-via-https---declarative)
+    - [GitHub via SSH](#github-via-ssh)
+    - [GitHub via SSH - Declarative](#github-via-ssh---declarative)
+  - [Lab: Create App with private repo](#lab-create-app-with-private-repo)
 
 ---
 
@@ -32,43 +35,178 @@
 
 ### Common Commands
 
-| Command                                   | Description                                                   |
-| ----------------------------------------- | ------------------------------------------------------------- |
-| `argocd repo list`                        | List repositories registered in Argo CD.                      |
-| `argocd repo get <repo-url>`              | Show details of one registered repository.                    |
-| `argocd repo add <repo-url>`              | Add a Git or Helm repository to Argo CD.                      |
-| `argocd repo rm <repo-url>`               | Remove a repository from Argo CD.                             |
-| `argocd repo update <repo-url>`           | Update repository connection settings.                        |
-| `argocd repo creds list`                  | List repository credential templates.                         |
-| `argocd repo creds add <repo-url-prefix>` | Add reusable credentials for repositories under a URL prefix. |
-| `argocd repo creds rm <repo-url-prefix>`  | Remove repository credential template.                        |
+| Command                                  | Description                                                   |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| `argocd repo list`                       | List repositories registered in Argo CD.                      |
+| `argocd repo get <repo-url>`             | Show details of one registered repository.                    |
+| `argocd repo add <repo-url>`             | Add a Git or Helm repository to Argo CD.                      |
+| `argocd repo rm <repo-url>`              | Remove a repository from Argo CD.                             |
+| `argocd repocreds list`                  | List repository credential templates.                         |
+| `argocd repocreds add <repo-url-prefix>` | Add reusable credentials for repositories under a URL prefix. |
+| `argocd repocreds rm <repo-url-prefix>`  | Remove repository credential template.                        |
 
 ---
 
-## Lab: add repo
+## Lab: Add Public Repo
 
-## Lab: Private Repo with https
+### GitHub Repo
 
-## Lab: Private Repo with ssh
+```sh
+argocd repo add https://github.com/simonangel-fong/Terraform_Demo_AWS_EKS_ArgoCD.git --name eks --project default
+# Repository 'https://github.com/simonangel-fong/Terraform_Demo_AWS_EKS_ArgoCD.git' added
+
+argocd repo list
+# TYPE  NAME  REPO                                                                  INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+# git   eks   https://github.com/simonangel-fong/Terraform_Demo_AWS_EKS_ArgoCD.git  false     false  false  false  Successful           default
+
+argocd repo get  https://github.com/simonangel-fong/Terraform_Demo_AWS_EKS_ArgoCD.git
+# TYPE  NAME  REPO                                                                  INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+# git   eks   https://github.com/simonangel-fong/Terraform_Demo_AWS_EKS_ArgoCD.git  false     false  false  false  Successful           default
+
+argocd repo rm  https://github.com/simonangel-fong/Terraform_Demo_AWS_EKS_ArgoCD.git
+# Repository 'https://github.com/simonangel-fong/Terraform_Demo_AWS_EKS_ArgoCD.git' removed
+```
 
 ---
 
-## Helm Repos
+### Helm Repo
 
-- **Public standard** `Helm repos` can be used directly in application.
-- **Non standard** `Helm repositories` have to be **registered explicitly**.
-- **Private** `Helm repos` needs to be **registered** in ArgoCD with proper authentication before using it in applications.
-- ArgoCD support connecting to **private** Helm repos using **username/password** and tls **cert/key**.
-- Registering Helm repos in ArgoCD can be done declaratively, CLI and Web UI.
+```sh
+argocd repo add https://simonangel-fong.github.io/Demo_Helm_Public_Repo/ --type helm --name web-app --project default
+# Repository 'https://simonangel-fong.github.io/Demo_Helm_Public_Repo/' added
+
+argocd repo list
+# TYPE  NAME     REPO                                                      INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+# helm  web-app  https://simonangel-fong.github.io/Demo_Helm_Public_Repo/  false     false  false  false  Successful           default
+
+argocd repo rm https://simonangel-fong.github.io/Demo_Helm_Public_Repo/
+# Repository 'https://simonangel-fong.github.io/Demo_Helm_Public_Repo/' removed
+```
 
 ---
 
-## Lab: add a private helm repos
+## Lab: Private Repo
 
+### GitHub via HTTPS
+
+```sh
+argocd repo add https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git --name web-app --project default --username simonangel-fong
+# input pwd
+# Repository 'https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git' added
+
+argocd repo list
+# TYPE  NAME     REPO                                                           INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+# git   web-app  https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git  false     false  false  false  Successful           default
+
+argocd repo rm https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git
+# Repository 'https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git' removed
+```
 
 ---
 
-## Credential Templates
+### GitHub via HTTPS - Declarative
+
+- `private_repo_https.yaml`
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: private-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  name: web-app
+  project: default
+  url: https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git
+  type: git
+  username: simonangel-fong
+  password: 
+```
+
+```sh
+# create secret
+kubectl apply -f private_repo_https.yaml
+# secret/private-repo created
+
+argocd repo list
+# TYPE  NAME  REPO                                                           INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+# git         https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git  false     false  false  false  Successful           default
+
+# delete secret
+kubectl delete -f private_repo_https.yaml
+```
+
+---
+
+### GitHub via SSH
+
+- Create key
+
+```sh
+ssh-keygen -t ed25519 -C "simonangelfong@gmail.com" -f ./id_ed25519_argocd
+```
+
+- Upload deploy key
+  - settings > Deploy keys > create > paste pub
+
+```sh
+argocd repo add git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git --ssh-private-key-path ./id_ed25519_argocd --name web-app --project default
+# Repository 'git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git' added
+
+argocd repo list
+# TYPE  NAME     REPO                                                       INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+# git   web-app  git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git  false     false  false  false  Successful           default
+
+argocd repo rm git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git
+# Repository 'git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git' removed
+```
+
+---
+
+### GitHub via SSH - Declarative
+
+- `private_repo_ssh.yaml`
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: private-repo-ssh
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  name: web-app
+  project: default
+  url: git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git
+  type: git
+  sshPrivateKey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    ...
+    -----END OPENSSH PRIVATE KEY-----
+```
+
+```sh
+# create secret
+kubectl apply -f private_repo_ssh.yaml
+# secret/private-repo-ssh created
+
+argocd repo list
+# TYPE  NAME  REPO                                                       INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+# git         git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git  false     false  false  false  Successful
+
+# delete secret
+kubectl delete -f private_repo_ssh.yaml
+# secret "private-repo-ssh" deleted from argocd namespace
+```
+
+---
+
+## Lab: Create App with private repo
+
+```yaml
 
 
-- Used If you want to **use the same credentials** for **multiple repositories** in your organization without having to repeat credential configuration.
+```

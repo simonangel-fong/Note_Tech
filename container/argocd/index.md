@@ -9,12 +9,11 @@
 
 - Components
   - [Repository](./repo/repo.md)
-    - [Private Repository](./private_repo/private_repo.md)
 
 - Core Concepts
   - [Project](./project/project.md)
   - [Application](./application/application.md)
-    - [with `Helm Charts`](./helm/helm.md)
+    - [Deploy `Helm Charts`](./helm/helm.md)
     - [Sync Policy](./sync/sync_policy.md)
     - [Sync Hook](./sync/sync_hook.md)
   - [ApplicationSet](./appset/appset.md)
