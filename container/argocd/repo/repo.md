@@ -122,7 +122,7 @@ stringData:
   url: https://github.com/simonangel-fong/Demo_Helm_Private_Repo.git
   type: git
   username: simonangel-fong
-  password: 
+  password:
 ```
 
 ```sh
@@ -206,7 +206,40 @@ kubectl delete -f private_repo_ssh.yaml
 
 ## Lab: Create App with private repo
 
+- `private_repo_app.yaml`
+
 ```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: private-repo-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: "git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git"
+    targetRevision: HEAD
+    path: web-app
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+```
 
+```sh
+argocd repo add git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git --ssh-private-key-path ./id_ed25519_argocd --name web-app --project default
 
+kubectl apply -f private_repo_app.yaml
+
+argocd app list
+# NAME                     CLUSTER                         NAMESPACE  PROJECT  STATUS     HEALTH   SYNCPOLICY  CONDITIONS  REPO                                                       PATH     TARGET
+# argocd/private-repo-app  https://kubernetes.default.svc  default    default  OutOfSync  Missing  Manual      <none>      git@github.com:simonangel-fong/Demo_Helm_Private_Repo.git  web-app  HEAD
+
+argocd app sync argocd/private-repo-app
+
+kubectl get application -n argocd
+# NAME               SYNC STATUS   HEALTH STATUS
+# private-repo-app   Synced        Healthy
 ```
