@@ -14,7 +14,7 @@
   - [ ] [Kubernetes](./container/kubernetes/index.md)
     - [ ] [Helm](./container/helm/index.md)
     - [ ] [ArgoCD](./container/argocd/index.md)
-    - [ ] [Argo Rollout](./container/argorollout/argorollout.md)
+    - [ ] [Argo Rollout](./container/argorollout/index.md)
 
 - DevOps & Cloud
   - [CI/CD](./cicd/cicd.md)
