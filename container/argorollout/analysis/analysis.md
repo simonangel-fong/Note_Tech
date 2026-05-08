@@ -8,7 +8,7 @@
     - [Create Analysis](#create-analysis)
     - [Add Analysis to Rollout](#add-analysis-to-rollout)
     - [Deploy Good version](#deploy-good-version)
-    - [Deploy Bad Version](#deploy-bad-version)
+    - [Deploy Bad Version???](#deploy-bad-version)
 
 ---
 
@@ -43,71 +43,6 @@
 ---
 
 ## Lab: Analysis Canary
-
-- ns: analysis-canary
-- svc:
-  - name: analysis-canary
-  - ns: analysis-canary
-  - annotation:
-    - prometheus.io/scrape: true
-    - prometheus.io/port: 3000
-    - prometheus.io/path: /metrics
-  - port:
-    - port: 3000
-  - selector:
-    - app: analysis-canary
-- svc:
-  - name: analysis-canary-stable
-  - ns: analysis-canary
-  - annotation:
-    - prometheus.io/scrape: true
-    - prometheus.io/port: 3000
-    - prometheus.io/path: /metrics
-  - port:
-    - port: 3000
-  - selector:
-    - app: analysis-canary
-- svc:
-  - name: analysis-canary-canary
-  - ns: analysis-canary
-  - annotation:
-    - prometheus.io/scrape: true
-    - prometheus.io/port: 3000
-    - prometheus.io/path: /metrics
-  - port:
-    - port: 3000
-  - selector:
-    - app: analysis-canary
-- rollout
-  - name: analysis-canary
-  - ns: analysis-canary
-  - template:
-    - labels: app: analysis-canary
-    - annotation:
-      - prometheus.io/scrape: true
-      - prometheus.io/port: 3000
-      - prometheus.io/path: /metrics
-    - containers:
-      - name: analysis-canary
-      - image: argoproj/rollouts-demo:yellow
-  - strategy:
-    - canary
-      - steps:
-        - setWeight: 20
-        - pause: 60s
-        - setWeight: 40
-        - pause: 60s
-        - setWeight: 80
-        - pause: 60s
-
----
-
-- prometheus metric
-  - caculate the success rate (non 500 requests/total requests)
-
-Deploy a bad version
-
----
 
 ```yaml
 # 00-namespace.yaml
@@ -272,11 +207,14 @@ kubectl argo rollouts get rollout analysis-canary -n analysis-canary
 kubectl port-forward svc/analysis-canary -n analysis-canary 3000:3000
 ```
 
-![pic](./pic/lab_analysis_canary01.png)
+- App page
+  ![pic](./pic/lab_analysis_canary01.png)
 
-![pic](./pic/lab_analysis_canary02.png)
+- Metrics
+  ![pic](./pic/lab_analysis_canary02.png)
 
-![pic](./pic/lab_analysis_canary03.png)
+- Argo rollout
+  ![pic](./pic/lab_analysis_canary03.png)
 
 ---
 
@@ -379,8 +317,6 @@ steps:
 ```sh
 kubectl apply -f 02-rolout.yaml
 # rollout.argoproj.io/analysis-canary configured
-
-kubectl argo rollouts get rollout analysis-canary -n analysis-canary
 ```
 
 ![pic](./pic/lab_analysis_canary05.png)
@@ -389,7 +325,6 @@ kubectl argo rollouts get rollout analysis-canary -n analysis-canary
 > If weight = 20% and app level error rate is 50%, then 0.10 failure = 0.9 success, < 0.95 success
 
 ---
-
 
 ### Deploy Good version
 
@@ -401,35 +336,9 @@ containers:
     image: lmacademy/simple-color-app:1.1.0
     env:
       - name: ERROR_RATE
-        value: "0.01"
+        value: "0" # stable
       - name: APP_COLOR
-        value: green
-```
-
-```sh
-kubectl apply -f 02-rollout.yaml
-# rollout.argoproj.io/analysis-canary configured
-```
-
-![pic](./pic/lab_analysis_canary07.png)
-
----
-
-### Deploy Bad Version
-
-- update error rate
-
-```yaml
-      containers:
-        - name: analysis-canary
-          image: lmacademy/simple-color-app:1.1.0
-          env:
-            - name: ERROR_RATE
-              # value: '0'
-              # value: '0.01'
-              value: '0.5'
-            - name: APP_COLOR
-              value: red
+        value: green # good
 ```
 
 ```sh
@@ -454,40 +363,36 @@ kubectl argo rollouts get rollout analysis-canary -n analysis-canary
 #   Available:     10
 
 # NAME                                         KIND         STATUS         AGE    INFO
-# ⟳ analysis-canary                            Rollout      ◌ Progressing  21m
+# ⟳ analysis-canary                            Rollout      ◌ Progressing  3m32s
 # ├──# revision:2
-# │  ├──⧉ analysis-canary-6bb6d764cb           ReplicaSet   ✔ Healthy      5m38s  canary
-# │  │  ├──□ analysis-canary-6bb6d764cb-s882z  Pod          ✔ Running      5m38s  ready:1/1
-# │  │  └──□ analysis-canary-6bb6d764cb-bns86  Pod          ✔ Running      5m37s  ready:1/1
-# │  └──α analysis-canary-6bb6d764cb-2-2       AnalysisRun  ◌ Running      2m33s  ✔ 31
+# │  ├──⧉ analysis-canary-68d9c6c8dc           ReplicaSet   ✔ Healthy      3m10s  canary
+# │  │  ├──□ analysis-canary-68d9c6c8dc-br96j  Pod          ✔ Running      3m9s   ready:1/1
+# │  │  └──□ analysis-canary-68d9c6c8dc-wcbdf  Pod          ✔ Running      3m9s   ready:1/1
+# │  └──α analysis-canary-68d9c6c8dc-2-2       AnalysisRun  ◌ Running      6s     ✔ 2
 # └──# revision:1
-#    └──⧉ analysis-canary-68d9c6c8dc           ReplicaSet   ✔ Healthy      21m    stable
-#       ├──□ analysis-canary-68d9c6c8dc-6pjwr  Pod          ✔ Running      21m    ready:1/1
-#       ├──□ analysis-canary-68d9c6c8dc-7p6wt  Pod          ✔ Running      21m    ready:1/1
-#       ├──□ analysis-canary-68d9c6c8dc-9764n  Pod          ✔ Running      21m    ready:1/1
-#       ├──□ analysis-canary-68d9c6c8dc-bnv4k  Pod          ✔ Running      21m    ready:1/1
-#       ├──□ analysis-canary-68d9c6c8dc-jzj7s  Pod          ✔ Running      21m    ready:1/1
-#       ├──□ analysis-canary-68d9c6c8dc-n6t96  Pod          ✔ Running      21m    ready:1/1
-#       ├──□ analysis-canary-68d9c6c8dc-r7bwh  Pod          ✔ Running      21m    ready:1/1
-#       └──□ analysis-canary-68d9c6c8dc-4x7hc  Pod          ✔ Running      21m    ready:1/1
+#    └──⧉ analysis-canary-6b97fddfcd           ReplicaSet   ✔ Healthy      3m32s  stable
+#       ├──□ analysis-canary-6b97fddfcd-88w26  Pod          ✔ Running      3m32s  ready:1/1
+#       ├──□ analysis-canary-6b97fddfcd-8qzk2  Pod          ✔ Running      3m32s  ready:1/1
+#       ├──□ analysis-canary-6b97fddfcd-drfvr  Pod          ✔ Running      3m32s  ready:1/1
+#       ├──□ analysis-canary-6b97fddfcd-fbbjp  Pod          ✔ Running      3m32s  ready:1/1
+#       ├──□ analysis-canary-6b97fddfcd-hrshz  Pod          ✔ Running      3m32s  ready:1/1
+#       ├──□ analysis-canary-6b97fddfcd-m6p6t  Pod          ✔ Running      3m32s  ready:1/1
+#       ├──□ analysis-canary-6b97fddfcd-r5f6f  Pod          ✔ Running      3m32s  ready:1/1
+#       └──□ analysis-canary-6b97fddfcd-vm6tr  Pod          ✔ Running      3m32s  ready:1/1
 ```
 
-![pic](./pic/lab_analysis_canary06.png)
+- Argo Rollout - Dashbaord
+  ![pic](./pic/lab_analysis_canary07.png)
 
-> pause for metrics collection
+- Argo Rollout - Analysis
+  ![pic](./pic/lab_analysis_canary08.png)
 
-![pic](./pic/lab_analysis_canary07.png)
+- Argo Rollout - Complete
+  ![pic](./pic/lab_analysis_canary09.png)
 
-> success rate drops
-
-
-
-![pic](./pic/lab_analysis_canary07.png)
-
-> analysis
-
-![pic](./pic/lab_analysis_canary08.png)
-
-> auto rollback
+- App Page
+  ![pic](./pic/lab_analysis_canary10.png)
 
 ---
+
+### Deploy Bad Version???
