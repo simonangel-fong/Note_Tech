@@ -14,6 +14,9 @@
   - [Traffic-Weighted Canary](./traffic_canary/traffic_canary.md)
   - [Header-based routing](./header_based/header_based.md)
 
+- [Automated Analysis](./analysis/analysis.md)
+  - [With Prometheus](./prometheus/prometheus.md)
+
 ---
 
 - [Install](./install/install.md)
