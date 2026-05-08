@@ -26,6 +26,140 @@
 
 ### Deploy Stable Version
 
+```yaml
+# 00-namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gtw-canary
+---
+# 01-gateway.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: rollout-gtw
+  namespace: gtw-canary
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+---
+# 02-httproute.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rollout-gtw-route
+  namespace: gtw-canary
+spec:
+  parentRefs:
+    - name: rollout-gtw
+  hostnames:
+    - "app.localhost"
+  rules:
+    - backendRefs:
+        - name: rollout-gtw-stable
+          port: 80
+          weight: 1
+        - name: rollout-gtw-canary
+          port: 80
+          weight: 1
+---
+# 03-services.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: rollout-gtw-stable
+  namespace: gtw-canary
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: rollout-gtw
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rollout-gtw-canary
+  namespace: gtw-canary
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: rollout-gtw
+---
+# 04-rollout.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollout-gtw
+  namespace: gtw-canary
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: rollout-gtw
+  template:
+    metadata:
+      labels:
+        app: rollout-gtw
+    spec:
+      containers:
+        - name: rollout-gtw
+          image: argoproj/rollouts-demo:yellow
+          # image: argoproj/rollouts-demo:red
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+  strategy:
+    canary:
+      dynamicStableScale: true
+      canaryService: rollout-gtw-canary
+      stableService: rollout-gtw-stable
+      trafficRouting:
+        managedRoutes:
+          - name: qa-override
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: rollout-gtw-route
+            namespace: gtw-canary
+      steps:
+        - setWeight: 1 # set traffic %
+        - pause:
+            duration: 20s
+        - setCanaryScale: # set pod %
+            weight: 40
+        - setHeaderRoute:
+            name: qa-override
+            match:
+              - headerName: x-canary
+                headerValue:
+                  exact: "true"
+        - pause: {}
+        - setWeight: 30
+        - pause: {}
+        - setWeight: 40
+        - pause:
+            duration: 10s
+        - setWeight: 60
+        - pause:
+            duration: 10s
+        - setWeight: 80
+        - pause:
+            duration: 10s
+```
+
 ```sh
 kubectl apply -f .
 # namespace/gtw-canary unchanged

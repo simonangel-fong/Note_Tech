@@ -9,6 +9,7 @@
     - [Add Analysis to Rollout](#add-analysis-to-rollout)
     - [Deploy Good version](#deploy-good-version)
     - [Deploy Bad Version???](#deploy-bad-version)
+  - [Lab: Blue/Green Prepromotion Analysis(Skip)](#lab-bluegreen-prepromotion-analysisskip)
 
 ---
 
@@ -396,3 +397,7 @@ kubectl argo rollouts get rollout analysis-canary -n analysis-canary
 ---
 
 ### Deploy Bad Version???
+
+---
+
+## Lab: Blue/Green Prepromotion Analysis(Skip)

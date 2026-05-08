@@ -5,6 +5,7 @@
 - [Argo Rollout - Fundamental](#argo-rollout---fundamental)
   - [Fundamental](#fundamental)
     - [Limitations of K8s Deployments](#limitations-of-k8s-deployments)
+  - [Argo Rollouts Architecture](#argo-rollouts-architecture)
     - [Common Commands](#common-commands)
 
 ---
@@ -27,6 +28,52 @@
 - **Rollbacks Are Just Another Risky `RollingUpdate`**
   - When you trigger a rollback on a Deployment, Kubernetes **doesn't instantly switch back** to the old version.
   - Instead, it simply starts another RollingUpdate in reverse, replacing the bad pods with the last known-good version.
+
+---
+
+## Argo Rollouts Architecture
+
+- `Argo Rollouts`
+  - a **Kubernetes controller** that **extends** the native Deployment resource to provide advanced deployment strategies (Blue-Green, Canary, etc.).
+
+Key Components
+
+- `Rollout Controller`
+  - The brain — **watches** `Rollout CRDs` and **reconciles** desired vs actual state.
+  - **Replaces** the standard `Deployment controller` for managed workloads.
+- `Rollout CRD`
+  - A **superset** of the Kubernetes `Deployment spec`, with extra fields for strategy configuration (canary steps, traffic weights, analysis hooks, etc.).
+- `ReplicaSets`
+  - Argo still uses standard `ReplicaSets` **under the hood**
+  - it just manages which ones get traffic and how much.
+- `AnalysisTemplate` / `AnalysisRun`
+  - Defines automated rollout **health checks** (Prometheus queries, web hooks, Datadog metrics).
+  - An `AnalysisRun` is the live execution instance — **pass/fail drives promotion or rollback**.
+- **Traffic Management Integration**
+  - Plugs into **ingress/service mesh layers** (Nginx, Istio, Linkerd, AWS ALB, etc.) to do **weighted traffic splitting** between stable and canary ReplicaSets.
+- `Argo Rollouts UI` / `CLI` (kubectl-argo-rollouts)
+  - Observability and manual control — pause, promote, abort, or watch live rollout progress.
+
+---
+
+- Data Flow (Canary Example)
+
+```txt
+New image pushed
+      ↓
+Rollout Controller detects spec change
+      ↓
+Creates new ReplicaSet (canary)
+      ↓
+Shifts traffic: e.g. 10% → canary, 90% → stable
+      ↓
+AnalysisRun fires (checks metrics/webhooks)
+      ↓
+  Pass → promote (increase traffic %)
+  Fail → auto-rollback to stable ReplicaSet
+      ↓
+100% traffic on new → old ReplicaSet scaled to 0
+```
 
 ---
 
