@@ -14,6 +14,8 @@
 
 ---
 
+- [Remote](./remote/remote.md)
+
 ---
 
 ##
