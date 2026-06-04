@@ -11,6 +11,7 @@
 - [Custom Actions](./actions/actions.md)
 - [Reusable workflow](./reusable/reusable.md)
 - [Security](./security/security.md)
+- [GitHub App](./gitHub_app/gitHub_app.md)
 
 ---
 

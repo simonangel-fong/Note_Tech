@@ -45,6 +45,8 @@
   - [ ] [OpenClaw](./AI/openclaw/index.md)
   - [ ] [Fundamental](./AI/fundamental/index.md)
 
+- [System Design](./system_design/system_design.md)
+
 ---
 
 - Database
