@@ -1,12 +1,20 @@
 # Golang
 
-[back](../../README.md)
+[back](../../index.md)
 
 ---
 
-[Install](./install/install.md)
-[hello world](./hello_world/hello_world.md)
-[Package](./package/package.md)
+- [Fundamental](./fundamental/fundamental.md)
+- [Package](./package/package.md)
+- [Variable](./variable/variable.md)
+- [Array](./array/array.md)
+- [Function](./func/func.md)
+
+---
+
+- [project: card](./proj/card.md)
+- [Install](./install/install.md)
+  - [hello world](./hello_world/hello_world.md)
 
 ---
 

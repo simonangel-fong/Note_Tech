@@ -3,6 +3,8 @@
 [Back](../../index.md)
 
 - [Kubernetes Cluster - API Server](#kubernetes-cluster---api-server)
+  - [kube-apiserver Configuration](#kube-apiserver-configuration)
+    - [Installation](#installation)
   - [API Server](#api-server)
   - [API Groups](#api-groups)
     - [`/api`: core group](#api-core-group)
@@ -11,10 +13,163 @@
 
 ---
 
+## kube-apiserver Configuration
+
+- `kube-apiserver`
+  - the front end of the Kubernetes control plane.
+  - It receives API requests, authenticates users/components, authorizes actions, applies admission control, and reads/writes cluster state to etcd.
+
+---
+
+- 1. Network / Serving
+
+| Option                   | Description                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `--advertise-address`    | IP address advertised to other cluster members. Must be reachable by the cluster. |
+| `--secure-port`          | HTTPS port used by the API server, commonly `6443`.                               |
+| `--tls-cert-file`        | TLS certificate used by the API server for HTTPS.                                 |
+| `--tls-private-key-file` | Private key for the API server TLS certificate.                                   |
+| `--allow-privileged`     | Allows privileged containers. Default: `false`.                                   |
+
+- 2. Authentication
+
+| Option                          | Description                                                                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------- |
+| `--client-ca-file`              | CA certificate used to authenticate clients that present client certificates.             |
+| `--enable-bootstrap-token-auth` | Enables bootstrap token authentication, commonly used when worker nodes join the cluster. |
+
+- 3. Authorization
+
+| Option                 | Description                                                          |
+| ---------------------- | -------------------------------------------------------------------- |
+| `--authorization-mode` | Defines authorization mechanisms. Common kubeadm value: `Node,RBAC`. |
+
+- 4. Admission Control
+
+| Option                       | Description                                                                                                 |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `--enable-admission-plugins` | Enables admission plugins such as `NodeRestriction`. Admission runs after authentication and authorization. |
+
+- 5. Etcd Connection
+
+| Option            | Description                                                        |
+| ----------------- | ------------------------------------------------------------------ |
+| `--etcd-servers`  | List of etcd server URLs used by the API server.                   |
+| `--etcd-cafile`   | CA certificate used to verify the etcd server certificate.         |
+| `--etcd-certfile` | Client certificate used by the API server to authenticate to etcd. |
+| `--etcd-keyfile`  | Client private key used with `--etcd-certfile`.                    |
+
+- 6. Kubelet Connection
+
+| Option                              | Description                                                                 |
+| ----------------------------------- | --------------------------------------------------------------------------- |
+| `--kubelet-client-certificate`      | Client certificate used by the API server when connecting to kubelets.      |
+| `--kubelet-client-key`              | Client private key used with `--kubelet-client-certificate`.                |
+| `--kubelet-preferred-address-types` | Preferred node address types used when the API server connects to kubelets. |
+
+- 7. API Aggregation / Front Proxy
+
+| Option                                 | Description                                                                        |
+| -------------------------------------- | ---------------------------------------------------------------------------------- |
+| `--proxy-client-cert-file`             | Client certificate used by the API server when proxying to aggregated API servers. |
+| `--proxy-client-key-file`              | Private key for `--proxy-client-cert-file`.                                        |
+| `--requestheader-client-ca-file`       | CA bundle used to verify front-proxy client certificates.                          |
+| `--requestheader-allowed-names`        | Allowed client certificate Common Names for request-header authentication.         |
+| `--requestheader-extra-headers-prefix` | Header prefixes used for extra user information.                                   |
+| `--requestheader-group-headers`        | Headers used to identify user groups.                                              |
+| `--requestheader-username-headers`     | Headers used to identify the username.                                             |
+
+- 8. Service Account Tokens
+
+| Option                               | Description                                             |
+| ------------------------------------ | ------------------------------------------------------- |
+| `--service-account-issuer`           | Issuer identity placed in service account tokens.       |
+| `--service-account-key-file`         | Key file used to verify service account tokens.         |
+| `--service-account-signing-key-file` | Private key used to sign issued service account tokens. |
+
+- 9. Service Networking
+
+| Option                       | Description                                                                                            |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `--service-cluster-ip-range` | CIDR range used to assign ClusterIP addresses to Services. Must not overlap with node or pod networks. |
+
+---
+
+### Installation
+
+- Option A: use `kubeadm` to run as static pod
+  - 1. configure `/etc/kubernetes/manifests/kube-apiserver.yaml`
+  - 2. `kubelet` watches manifest
+  - 3. `containerd` runs kube-apiserver container
+  - 4. mirror Pod appears in `kube-system`
+- Option B: use binary to run as systemd services
+  - `/etc/systemd/system/kube-apiserver.service`
+  - `systemd starts kube-apiserver`
+  - `kube-apiserver` runs as Linux process
+
+---
+
+- example: kubeadm
+
+```yaml
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: kube-apiserver
+      image: registry.k8s.io/kube-apiserver:v1.32.11
+      command:
+        - kube-apiserver
+        - --advertise-address=192.168.10.150
+        - --allow-privileged=true
+        - --authorization-mode=Node,RBAC
+        - --client-ca-file=/etc/kubernetes/pki/ca.crt
+        - --enable-admission-plugins=NodeRestriction
+        - --enable-bootstrap-token-auth=true
+        - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
+        - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+        - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
+        - --etcd-servers=https://127.0.0.1:2379
+        - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
+        - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
+        - --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key
+        - --requestheader-allowed-names=front-proxy-client
+        - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
+        - --requestheader-extra-headers-prefix=X-Remote-Extra-
+        - --requestheader-group-headers=X-Remote-Group
+        - --requestheader-username-headers=X-Remote-User
+        - --secure-port=6443
+        - --service-account-issuer=https://kubernetes.default.svc.cluster.local
+        - --service-account-key-file=/etc/kubernetes/pki/sa.pub
+        - --service-account-signing-key-file=/etc/kubernetes/pki/sa.key
+        - --service-cluster-ip-range=10.96.0.0/12
+        - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
+        - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+      volumeMounts:
+        - mountPath: /etc/ssl/certs
+          name: ca-certs
+          readOnly: true
+        - mountPath: /etc/ca-certificates
+          name: etc-ca-certificates
+          readOnly: true
+        - mountPath: /etc/kubernetes/pki
+          name: k8s-certs
+          readOnly: true
+        - mountPath: /usr/local/share/ca-certificates
+          name: usr-local-share-ca-certificates
+          readOnly: true
+        - mountPath: /usr/share/ca-certificates
+          name: usr-share-ca-certificates
+          readOnly: true
+```
+
+---
+
 ## API Server
 
 - `API Server`
-
   - A `control plane` component that is the **front-end** to the `cluster`, **exposing** the `Kubernetes API`
     - `kubectl` (CLI) and Kubernetes **dashboard**
     - Other `control plane` **components** (scheduler, controllers)
@@ -43,7 +198,6 @@
 ## API Groups
 
 - K8s API paths are grouped into serveral groups
-
   - `/api`: core group
   - `/apis`: named group, associate with resources
 

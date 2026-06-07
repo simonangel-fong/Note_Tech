@@ -12,6 +12,8 @@
   - [Configuration](#configuration)
   - [Installation](#installation)
   - [CKA](#cka)
+  - [CKS](#cks)
+    - [Cluster Setup](#cluster-setup)
 
 ---
 
@@ -29,7 +31,7 @@
 - [Cluster Upgrade](./cluster/cluster_upgrade/cluster_upgrade.md)
 - [`etcd` Backup](./cluster/etcd_backup/etcd_backup.md)
 
-- [`api server` & API Object](./api/api_object/api_object.md)
+- [API Object](./api/api_object/api_object.md)
   - [Namespace](./api/namespace/namespace.md)
   - [Label and Selector](./api/label_selector/label_selector.md)
   - [Annotation](./api/annotation/annotation.md)
@@ -62,6 +64,7 @@
 - [`kubelet`](./node_worker/kubelet/kubelet.md)
   - [`Static Pod`](./node_worker/kubelet/static_pod.md)
 - [`kube-proxy`](./node_worker/kube_proxy/kube_proxy.md)
+- [Container runtime](./node_worker/runtime/runtime.md)
 
 ---
 
@@ -265,3 +268,16 @@ alias kcn="kubectl config set-context --current --namespace"
 
 [killer01](./cka/killer_01.md)
 [killer02](./cka/killer_02.md)
+
+---
+
+## CKS
+
+https://github.com/zealvora/certified-kubernetes-security-specialist
+
+Discord Community: https://kplabs.in/chat
+
+### Cluster Setup
+
+- [CIS Benchmark]
+  - https://www.cisecurity.org/cis-benchmarks

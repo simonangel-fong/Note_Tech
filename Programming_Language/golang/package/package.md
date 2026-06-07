@@ -88,6 +88,7 @@ func main() {
 - `main package`
   - a special `Go package` used to declear an executable program.
   - Go compiler initializes the executable and invoking `func main()`.
+  - any executable code belongs to the `main package`.
 - `func main()`
   - entry point of an executable program.
   - must defined in main package

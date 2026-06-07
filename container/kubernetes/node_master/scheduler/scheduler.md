@@ -3,6 +3,7 @@
 [Back](../../index.md)
 
 - [Kubernetes - Control Plane: Scheduler](#kubernetes---control-plane-scheduler)
+  - [Configuration](#configuration)
   - [Scheduler](#scheduler)
   - [Scheduler](#scheduler-1)
     - [How it works - From API to Kubelet](#how-it-works---from-api-to-kubelet)
@@ -12,13 +13,53 @@
   - [Imperative Command](#imperative-command)
   - [Lab: Scheduler info](#lab-scheduler-info)
 
+---
+
+## Configuration
+
+| Options                       | Description                                                                              |
+| ----------------------------- | ---------------------------------------------------------------------------------------- |
+| `--authentication-kubeconfig` | Kubeconfig used by the scheduler to connect to the API server for authentication checks. |
+| `--authorization-kubeconfig`  | Kubeconfig used by the scheduler to connect to the API server for authorization checks.  |
+| `--bind-address`              | IP address where the scheduler listens for its secure endpoint and metrics.              |
+| `--kubeconfig`                | Kubeconfig used by the scheduler to connect to the kube-apiserver.                       |
+| `--leader-elect`              | Enables leader election so only one scheduler instance is active in an HA control plane. |
+
+---
+
+- example:
+
+```yaml
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: kube-scheduler
+      command:
+        - kube-scheduler
+        - --authentication-kubeconfig=/etc/kubernetes/scheduler.conf
+        - --authorization-kubeconfig=/etc/kubernetes/scheduler.conf
+        - --bind-address=127.0.0.1
+        - --kubeconfig=/etc/kubernetes/scheduler.conf
+        - --leader-elect=true
+      image: registry.k8s.io/kube-scheduler:v1.32.11
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /etc/kubernetes/scheduler.conf
+          name: kubeconfig
+          readOnly: true
+  volumes:
+    - hostPath:
+        path: /etc/kubernetes/scheduler.conf
+        type: FileOrCreate
+      name: kubeconfig
+```
 
 ---
 
 ## Scheduler
 
 - `scheduler`
-
   - a **control plane** component used to **assign** `pods` to `nodes`.
     - **decides** where a `Pod` should run, based on resource availability, constraints, and scheduling **policies**.
   - just **writes the decision** back to the `API Server`.
@@ -48,7 +89,6 @@ kubectl get pods -n kube-system
 ## Scheduler
 
 - `scheduler`
-
   - a `control plane` component responsible for **deciding** which `node` a newly created `Pod` should run on.
     - **doesn’t run** the `Pod` itself
     - only **makes placement decisions**.
@@ -113,19 +153,15 @@ kubectl get pods -n kube-system
 ### Scheduler Policies & Features
 
 - `NodeSelector`:
-
   - Assign Pod to nodes with **specific labels**.
 
 - `Affinity` / `Anti-Affinity`:
-
   - Place Pods together or apart (e.g., high availability).
 
 - `Taints` and `Tolerations`:
-
   - Control which Pods can run on **“special”** nodes.
 
 - `Resource Requests & Limits`:
-
   - Ensures Pods land where resources are **sufficient**.
 
 - `Priority Classes & Preemption`:
