@@ -9,6 +9,12 @@
 - [Variable](./variable/variable.md)
 - [Array](./array/array.md)
 - [Function](./func/func.md)
+  - [Input & Output](./func/func_io.md)
+- [Conditional statements](./condition/condition.md)
+- [Loop statements](./loop/loop.md)
+- DSA
+  - [Struct](./struct/struct.md)
+  - [Maps](./maps/maps.md)
 
 ---
 
