@@ -155,13 +155,13 @@
 ## Security
 
 - [Security Fundamental](./security/fundamental/fundamental.md)
+- [Authentication](./security/authentication/authentication.md)
 
 - [Admission Controller](./security/admission_controller/admission_controller.md)
 
 - [Network Policy](./security/network_policy/network_policy.md)
 - [User](./security/user/user.md)
   - [ServiceAccount](./security/svc_account/svc_account.md)
-- [Authentication](./security/authentication/authentication.md)
 - [Authorization](./security/authorization/authorization.md)
   - [`Role-based access control (RBAC)`](./security/rbac/rbac.md)
 - [Security Context](./security/security_context/security_context.md)

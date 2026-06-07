@@ -48,6 +48,33 @@
 | Reference     | `[]int (Slice)`  | `var nums []int`           | nil                     |
 | Reference     | `map[string]int` | `var cache map[string]int` | nil                     |
 
+- **Signed Integers**
+
+| Type    | Size                | Range                                                                                                         |
+| ------- | ------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `int`   | Depends on platform | -2147483648 to 2147483647 in 32 bit systems and -9223372036854775808 to 9223372036854775807 in 64 bit systems |
+| `int8`  | 8 bits/1 byte       | -128 to 127                                                                                                   |
+| `int16` | 16 bits/2 byte      | -32768 to 32767                                                                                               |
+| `int32` | 32 bits/4 byte      | -2147483648 to 2147483647                                                                                     |
+| `int64` | 64 bits/8 byte      | -9223372036854775808 to 9223372036854775807                                                                   |
+
+- **Unsigned Integers**
+
+| Type     | Size                | Range                                                                             |
+| -------- | ------------------- | --------------------------------------------------------------------------------- |
+| `uint`   | Depends on platform | 0 to 4294967295 in 32 bit systems and 0 to 18446744073709551615 in 64 bit systems |
+| `uint8`  | 8 bits/1 byte       | 0 to 255                                                                          |
+| `uint16` | 16 bits/2 byte      | 0 to 65535                                                                        |
+| `uint32` | 32 bits/4 byte      | 0 to 4294967295                                                                   |
+| `uint64` | 64 bits/8 byte      | 0 to 18446744073709551615                                                         |
+
+- **Float Data Types**
+
+| Type      | Size    | Range                   |
+| --------- | ------- | ----------------------- |
+| `float32` | 32 bits | -3.4e+38 to 3.4e+38.    |
+| `float64` | 64 bits | -1.7e+308 to +1.7e+308. |
+
 ---
 
 ## Declaring (Creating) Variables
@@ -216,3 +243,42 @@ func main() {
 
 ## Constants
 
+- a variable should have a fixed value that cannot be changed
+  - it is unchangeable and read-only.
+  - names are usually written in uppercase letters
+  - can be declared both inside and outside of a function
+
+- `const` keyword
+  - `const CONSTNAME type = value`
+
+- two types of constants:
+  - Typed constants
+  - Untyped constants
+
+- Example
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+// Untyped Constants
+const PI = 3.14
+
+// Typed Constants
+const A int = 1
+
+// Multiple Constants Declaration
+const (
+	B = 3.14
+	C = "Hi!"
+)
+
+func main() {
+	fmt.Println(PI) // 3.14
+	fmt.Println(A)  // 1
+}
+
+```

@@ -3,20 +3,448 @@
 [Back](../../index.md)
 
 - [Kubernetes Security: Authentication](#kubernetes-security-authentication)
+  - [Certificate management](#certificate-management)
+    - [Certificate Authortity in Kubernetes](#certificate-authortity-in-kubernetes)
+    - [Key and Certificate](#key-and-certificate)
+    - [Sign Certificate Workflow](#sign-certificate-workflow)
+    - [Lab: Generate Client Certificate](#lab-generate-client-certificate)
+      - [Create CSR](#create-csr)
+      - [Create CertificateSigningRequest](#create-certificatesigningrequest)
+      - [Approve the CertificateSigningRequest](#approve-the-certificatesigningrequest)
+      - [Get the certificate](#get-the-certificate)
+      - [Define RBAC permissions](#define-rbac-permissions)
+      - [Configure kubeconfig](#configure-kubeconfig)
+    - [Lab: Certificate Management](#lab-certificate-management)
   - [Authentication](#authentication)
   - [State Token File](#state-token-file)
   - [TLS in k8s](#tls-in-k8s)
     - [Certificates in K8s](#certificates-in-k8s)
     - [Certificate Creation](#certificate-creation)
-  - [Lab: Generate Cert and Key with Openssl](#lab-generate-cert-and-key-with-openssl)
-    - [Cerfiticate Authority(CA) Certificate](#cerfiticate-authorityca-certificate)
     - [Client Certificates](#client-certificates)
     - [Server Certificate](#server-certificate)
     - [Kubelet](#kubelet)
     - [View the certificate](#view-the-certificate)
   - [Troubleshooting `kubeadm` TLS cert](#troubleshooting-kubeadm-tls-cert)
-  - [Certificate Management](#certificate-management)
+  - [Certificate Management](#certificate-management-1)
     - [Lab: CertificateSigninRequest](#lab-certificatesigninrequest)
+
+---
+
+## Certificate management
+
+### Certificate Authortity in Kubernetes
+
+- Kubernetes actually runs **three** separate `CAs` by default, each with its own trust boundary:
+
+- `/etc/kubernetes/pki/ca.crt`:
+  - the main cluster CA.
+  - Signs the `API server` cert, `kubelet` certs, `controller-manager` and `scheduler` client certs.
+- `/etc/kubernetes/pki/etcd/ca.crt`
+  - etcd's own CA.
+  - only the API server should be able to talk to it, and that trust is enforced by a **completely separate** `CA root`.
+- `/etc/kubernetes/pki/front-proxy-ca.crt`
+  - used for the aggregation layer, which is how extension API servers (custom CRDs served by separate processes) plug into the main API server securely.
+
+---
+
+### Key and Certificate
+
+- kubeadm-bootstrapped private key and certificate
+
+```txt
+/etc/kubernetes/pki/
+├── ca.crt                          # cluster root CA (public)
+├── ca.key                          # cluster root CA (private — guard this!)
+│
+├── apiserver.crt                   # API server TLS cert
+├── apiserver.key
+├── apiserver-kubelet-client.crt    # API server → kubelet client cert
+├── apiserver-kubelet-client.key
+├── apiserver-etcd-client.crt       # API server → etcd client cert
+├── apiserver-etcd-client.key
+│
+├── front-proxy-ca.crt              # aggregation layer CA
+├── front-proxy-ca.key
+├── front-proxy-client.crt
+├── front-proxy-client.key
+│
+├── sa.pub                          # service account token signing (public)
+├── sa.key                          # service account token signing (private)
+│
+└── etcd/
+    ├── ca.crt                      # etcd root CA
+    ├── ca.key
+    ├── server.crt                  # etcd server TLS
+    ├── server.key
+    ├── peer.crt                    # etcd peer-to-peer (HA clusters)
+    ├── peer.key
+    ├── healthcheck-client.crt
+    └── healthcheck-client.key
+```
+
+---
+
+### Sign Certificate Workflow
+
+- Ref:
+  - https://kubernetes.io/docs/tasks/tls/certificate-issue-client-csr/
+
+- The signed certificate can be used for
+  - client authentication
+  - TLS connection
+
+- Steps:
+  - Create `private key`
+  - Create `Certificate` based on `private key`
+  - Generate the `Certiticate Signing Request` from `Certificate`
+  - Sign the `CSR` to get the final certificate
+
+---
+
+### Lab: Generate Client Certificate
+
+Context: new developer named John Doe joins cluster and enable to manage pod in default namespace.
+
+#### Create CSR
+
+```sh
+# generate keys
+openssl genrsa -out john.key 2048
+
+# generate CSR
+openssl req -new -key john.key \
+  -subj "/CN=john-doe/O=developers" \
+  -out john.csr
+# ca.csr
+
+# Inspect the CSR
+openssl req -in john.csr -text -noout -verify
+# Certificate request self-signature verify OK
+# Certificate Request:
+#     Data:
+#         Version: 1 (0x0)
+#         Subject: CN = john-doe, O = developers
+#         Subject Public Key Info:
+# ...
+```
+
+---
+
+#### Create CertificateSigningRequest
+
+```sh
+# Encode the CSR document
+cat john.csr | base64 | tr -d "\n"
+
+# Create a CertificateSigningRequest
+cat <<EOF | kubectl apply -f -
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: john-doe
+spec:
+  request: <PASTE_BASE64_CSR_HERE>
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400
+  usages:
+  - client auth
+EOF
+# certificatesigningrequest.certificates.k8s.io/john-doe created
+
+```
+
+---
+
+#### Approve the CertificateSigningRequest
+
+```sh
+# Get the list of CSRs
+kubectl get csr
+# NAME       AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION
+# john-doe   73s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending
+
+# Approve the CSR
+kubectl certificate approve john-doe
+# certificatesigningrequest.certificates.k8s.io/john-doe approved
+
+# Verify
+kubectl get csr
+# NAME       AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION
+# john-doe   5m    kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Approved,Issued
+```
+
+---
+
+#### Get the certificate
+
+```sh
+# Retrieve the certificate from the CSR
+kubectl get csr/john-doe -o yaml
+
+# Export the issued certificate from the CertificateSigningRequest.
+kubectl get csr john-doe \
+  -o jsonpath='{.status.certificate}' \
+  | base64 -d > john.crt
+
+# confirm
+openssl x509 -in john.crt -text -noout
+# Certificate:
+#     Data:
+#         Version: 3 (0x2)
+#         Serial Number:
+#             8c:d6:99:43:97:4c:c0:ae:32:20:13:1e:ed:e7:cc:6f
+#         Signature Algorithm: sha256WithRSAEncryption
+#         Issuer: CN = kubernetes
+#         Validity
+#             Not Before: Jun  7 17:18:52 2026 GMT
+#             Not After : Jun  8 17:18:52 2026 GMT
+#         Subject: O = developers, CN = john-doe
+#         Subject Public Key Info:
+# ...
+
+```
+
+---
+
+#### Define RBAC permissions
+
+```sh
+# create role
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-manager
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get"]
+EOF
+# role.rbac.authorization.k8s.io/pod-manager created
+
+# create rolebinding
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: john-doe-pod-manager
+  namespace: default
+subjects:
+- kind: User
+  name: john-doe
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-manager
+  apiGroup: rbac.authorization.k8s.io
+EOF
+# rolebinding.rbac.authorization.k8s.io/john-doe-pod-manager created
+
+# confirm
+kubectl auth can-i --list --as=john-doe -n default
+# Resources                                       Non-Resource URLs   Resource Names   Verbs
+# selfsubjectreviews.authentication.k8s.io        []                  []               [create]
+# selfsubjectaccessreviews.authorization.k8s.io   []                  []               [create]
+# selfsubjectrulesreviews.authorization.k8s.io    []                  []               [create]
+# globalnetworkpolicies.projectcalico.org         []                  []               [get list watch create update patch delete deletecollection]
+# networkpolicies.projectcalico.org               []                  []               [get list watch create update patch delete deletecollection]
+# pods                                            []                  []               [get list watch create update patch delete]
+#                                                 [/api/*]            []               [get]
+#                                                 [/api]              []               [get]
+#                                                 [/apis/*]           []               [get]
+#                                                 [/apis]             []               [get]
+#                                                 [/healthz]          []               [get]
+#                                                 [/healthz]          []               [get]
+#                                                 [/livez]            []               [get]
+#                                                 [/livez]            []               [get]
+#                                                 [/openapi/*]        []               [get]
+#                                                 [/openapi]          []               [get]
+#                                                 [/readyz]           []               [get]
+#                                                 [/readyz]           []               [get]
+#                                                 [/version/]         []               [get]
+#                                                 [/version/]         []               [get]
+#                                                 [/version]          []               [get]
+#                                                 [/version]          []               [get]
+# pods/log                                        []                  []               [get]
+
+# test
+kubectl auth can-i create pods --as=john-doe -n default
+# yes
+kubectl auth can-i delete pods --as=john-doe -n default
+# yes
+kubectl auth can-i create deployments --as=john-doe -n default
+# no
+kubectl auth can-i get pods --as=john-doe -n kube-system
+# no
+
+```
+
+---
+
+#### Configure kubeconfig
+
+```sh
+# set cluster entry
+kubectl config set-cluster john-cluster \
+  --server=https://192.168.10.150:6443 \
+  --certificate-authority=/etc/kubernetes/pki/ca.crt \
+  --embed-certs=true
+
+# Cluster "john-cluster" set.
+
+k config get-clusters
+# NAME
+# john-cluster
+
+# Set credentials
+kubectl config set-credentials john-doe \
+  --client-certificate=john.crt \
+  --client-key=john.key \
+  --embed-certs=true
+
+# User "john-doe" set.
+
+# Create a context
+kubectl config set-context john-doe@john-cluster \
+  --cluster=john-cluster \
+  --user=john-doe \
+  --namespace=default
+
+# Context "john-doe@john-cluster" created.
+
+# confirm
+kubectl config get-contexts
+# CURRENT   NAME                          CLUSTER        AUTHINFO           NAMESPACE
+          # john-doe@john-cluster         john-cluster   john-doe           default
+# *         kubernetes-admin@kubernetes   kubernetes     kubernetes-admin
+
+# Set that context
+kubectl config use-context john-doe@john-cluster
+# Switched to context "john-doe@john-cluster".
+
+kubectl config get-contexts
+# CURRENT   NAME                          CLUSTER        AUTHINFO           NAMESPACE
+# *         john-doe@john-cluster         john-cluster   john-doe           default
+#           kubernetes-admin@kubernetes   kubernetes     kubernetes-admin
+
+# Test connectivity
+kubectl auth whoami
+# ATTRIBUTE                                           VALUE
+# Username                                            john-doe
+# Groups                                              [developers system:authenticated]
+# Extra: authentication.kubernetes.io/credential-id   [X509SHA256=4417c2bfa1cf63b88000943018e2ece31510a990b018bd6de1d8bdcc7c7cd5a9]
+
+k run web --image=nginx
+# pod/web created
+
+k get po
+# NAME   READY   STATUS              RESTARTS   AGE
+# web    0/1     ContainerCreating   0          3s
+
+k get po
+# NAME   READY   STATUS    RESTARTS   AGE
+# web    1/1     Running   0          5s
+```
+
+---
+
+### Lab: Certificate Management
+
+```sh
+# Check expiry on all certs at once (kubeadm makes this easy)
+sudo kubeadm certs check-expiration
+# [check-expiration] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...
+# [check-expiration] Use 'kubeadm init phase upload-config --config your-config.yaml' to re-upload it.
+
+# CERTIFICATE                EXPIRES                  RESIDUAL TIME   CERTIFICATE AUTHORITY   EXTERNALLY MANAGED
+# admin.conf                 Jan 17, 2027 05:00 UTC   224d            ca                      no
+# apiserver                  Jan 17, 2027 05:00 UTC   224d            ca                      no
+# apiserver-etcd-client      Jan 17, 2027 05:00 UTC   224d            etcd-ca                 no
+# apiserver-kubelet-client   Jan 17, 2027 05:00 UTC   224d            ca                      no
+# controller-manager.conf    Jan 17, 2027 05:00 UTC   224d            ca                      no
+# etcd-healthcheck-client    Jan 17, 2027 05:00 UTC   224d            etcd-ca                 no
+# etcd-peer                  Jan 17, 2027 05:00 UTC   224d            etcd-ca                 no
+# etcd-server                Jan 17, 2027 05:00 UTC   224d            etcd-ca                 no
+# front-proxy-client         Jan 17, 2027 05:00 UTC   224d            front-proxy-ca          no
+# scheduler.conf             Jan 17, 2027 05:00 UTC   224d            ca                      no
+# super-admin.conf           Jan 17, 2027 05:00 UTC   224d            ca                      no
+
+# CERTIFICATE AUTHORITY   EXPIRES                  RESIDUAL TIME   EXTERNALLY MANAGED
+# ca                      Jan 15, 2036 05:00 UTC   9y              no
+# etcd-ca                 Jan 15, 2036 05:00 UTC   9y              no
+# front-proxy-ca          Jan 15, 2036 05:00 UTC   9y              no
+
+# Renew all certs (expire after 1 year by default)
+sudo kubeadm certs renew all
+# [renew] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...
+# [renew] Use 'kubeadm init phase upload-config --config your-config.yaml' to re-upload it.
+
+# certificate embedded in the kubeconfig file for the admin to use and for kubeadm itself renewed
+# certificate for serving the Kubernetes API renewed
+# certificate the apiserver uses to access etcd renewed
+# certificate for the API server to connect to kubelet renewed
+# certificate embedded in the kubeconfig file for the controller manager to use renewed
+# certificate for liveness probes to healthcheck etcd renewed
+# certificate for etcd nodes to communicate with each other renewed
+# certificate for serving etcd renewed
+# certificate for the front proxy client renewed
+# certificate embedded in the kubeconfig file for the scheduler manager to use renewed
+# certificate embedded in the kubeconfig file for the super-admin renewed
+
+# Done renewing certificates. You must restart the kube-apiserver, kube-controller-manager, kube-scheduler and etcd, so that they can use the new certificates.
+
+# Restart control plane components
+# Move manifests away to stop the pods
+mkdir -p /tmp/k8s-manifests
+# move manifests
+sudo mv /etc/kubernetes/manifests/*.yaml /tmp/k8s-manifests/
+
+# confirm server is down
+k get po
+# The connection to the server 192.168.10.150:6443 was refused - did you specify the right host or port?
+
+# move back manifests
+sudo mv /tmp/k8s-manifests/*.yaml /etc/kubernetes/manifests/
+# confirm
+k get po -n kube-system
+# NAME                                        READY   STATUS        RESTARTS      AGE
+# coredns-668d6bf9bc-7g786                    1/1     Running       9 (32h ago)   140d
+# coredns-668d6bf9bc-m8qmh                    1/1     Running       9 (32h ago)   140d
+# etcd-controlplane                           1/1     Running       0             63m
+# kube-apiserver-controlplane                 1/1     Running       0             31h
+# kube-controller-manager-controlplane        1/1     Running       0             29h
+# kube-proxy-cqdvf                            1/1     Running       0             28h
+# kube-proxy-cvhx7                            1/1     Running       0             28h
+# kube-proxy-hdqfv                            1/1     Running       0             28h
+# kube-scheduler-controlplane                 1/1     Running       0             30h
+
+# confirm cert
+sudo kubeadm certs check-expiration
+# [check-expiration] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...
+# [check-expiration] Use 'kubeadm init phase upload-config --config your-config.yaml' to re-upload it.
+
+# CERTIFICATE                EXPIRES                  RESIDUAL TIME   CERTIFICATE AUTHORITY   EXTERNALLY MANAGED
+# admin.conf                 Jun 07, 2027 00:25 UTC   364d            ca                      no
+# apiserver                  Jun 07, 2027 00:25 UTC   364d            ca                      no
+# apiserver-etcd-client      Jun 07, 2027 00:25 UTC   364d            etcd-ca                 no
+# apiserver-kubelet-client   Jun 07, 2027 00:25 UTC   364d            ca                      no
+# controller-manager.conf    Jun 07, 2027 00:25 UTC   364d            ca                      no
+# etcd-healthcheck-client    Jun 07, 2027 00:25 UTC   364d            etcd-ca                 no
+# etcd-peer                  Jun 07, 2027 00:25 UTC   364d            etcd-ca                 no
+# etcd-server                Jun 07, 2027 00:25 UTC   364d            etcd-ca                 no
+# front-proxy-client         Jun 07, 2027 00:25 UTC   364d            front-proxy-ca          no
+# scheduler.conf             Jun 07, 2027 00:25 UTC   364d            ca                      no
+# super-admin.conf           Jun 07, 2027 00:25 UTC   364d            ca                      no
+
+# CERTIFICATE AUTHORITY   EXPIRES                  RESIDUAL TIME   EXTERNALLY MANAGED
+# ca                      Jan 15, 2036 05:00 UTC   9y              no
+# etcd-ca                 Jan 15, 2036 05:00 UTC   9y              no
+# front-proxy-ca          Jan 15, 2036 05:00 UTC   9y              no
+```
 
 ---
 
@@ -46,7 +474,6 @@
 ## State Token File
 
 - Not a recommended method in production env
-
   - only for learning purpose
   - deprecated in v1.19
 
@@ -145,7 +572,6 @@ curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
 
 ---
 
-
 ## TLS in k8s
 
 - `Server certificate` for all servers
@@ -156,7 +582,6 @@ curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
 ### Certificates in K8s
 
 - Server Cerfiticate
-
   - `API server`
     - server certificate: `apiserver.crt`
     - private key: `apiserver.key`
@@ -170,7 +595,6 @@ curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
     - private key: `kubelet.key`
 
 - Client certificate
-
   - `Admin`:
     - connect with `API server` via `kubectl` REST API
     - Client certificate: `admin.crt`
@@ -202,26 +626,6 @@ curl -v -k https://localhost:6443/api/v1/pods -u "user1:password123"
   - openssl
   - easyrsa
   - cfssl
-
----
-
-## Lab: Generate Cert and Key with Openssl
-
-### Cerfiticate Authority(CA) Certificate
-
-```sh
-# generate keys
-openssl genrsa -out ca.key 2048
-# ca.key
-
-# generate CSR
-openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.crs
-# ca.csr
-
-# sign certificate
-openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
-# ca.crt
-```
 
 ---
 
@@ -614,7 +1018,6 @@ crictl logs container_id
 ```
 
 - Common Issues caused by the cert is the in correct path of the certificate.
-
   - update the correct cert path
   - wait until the pod of api server / etcd recreated.
 
@@ -627,11 +1030,9 @@ crictl logs container_id
 ## Certificate Management
 
 - CA server
-
   - server to store the certificate key file and sign certificate.
 
 - Certificate API
-
   - an API to automate the process of rotating certificates.
   - The admin creates CertificateSigningRequest Object
     - when a user sends the CSR to the API
@@ -642,7 +1043,6 @@ crictl logs container_id
 
 - All the certificate operations are handled by the controller manager.
 - The controller in Controller Manager
-
   - `CSR-APPROVING`
   - `CSR-SIGNING`
 
