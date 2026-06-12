@@ -1,15 +1,8 @@
+# mychart/templates/configmap.yaml
+{{- include "mychart.validators.portRange" .Values.port -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-configmap
 data:
-  {{- if .Values.pizzaToppings | default list | len }}
-  toppings: |-
-    {{- range $.Values.pizzaToppings }}
-    - {{ . | title | quote }}
-    {{- end }}
-  {{- end }}
-  sizes: |-
-    {{- range tuple "small" "medium" "large" }}
-    - {{ . }}
-    {{- end }}
+  port: {{ .Values.port }}

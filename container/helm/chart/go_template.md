@@ -20,7 +20,12 @@
 ## Go Templates
 
 - `$`: the root scope
+  - to reference the root object: `$.Values`, `$.Release`
 - `.`: current scope
+  - to debug the issue caused by `.`, can render the comment by
+    ```yaml
+    # The value of the .: {{ . }}
+    ```
 - `# <comment>`: yaml comment, remains in manifest
 - `{{- }}`: special characters to tell the template engine to chomp whitespace.
 - `{{/* */}}`: go template comment, not show in manifestas, but render as an empty line

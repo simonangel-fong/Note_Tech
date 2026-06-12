@@ -4,30 +4,32 @@
 
 - [Ansible - Variable](#ansible---variable)
   - [Variable](#variable)
+    - [Syntax](#syntax)
     - [Variable Types](#variable-types)
-  - [Variable Precedence](#variable-precedence)
+    - [Variable Scope](#variable-scope)
+    - [Variable Precedence](#variable-precedence)
+  - [Define Variable](#define-variable)
+    - [Lab: Variables with `vars` keyword](#lab-variables-with-vars-keyword)
+    - [Lab: Variables with `vars_files` keyword](#lab-variables-with-vars_files-keyword)
+    - [Lab: Variables with `vars-prompt` keyword](#lab-variables-with-vars-prompt-keyword)
   - [Register: Output a varialbe](#register-output-a-varialbe)
-  - [Variable Scope](#variable-scope)
+  - [`host_vars` and `group_vars` Directory](#host_vars-and-group_vars-directory)
   - [Magic variable](#magic-variable)
-    - [Magic variable - `hostvars`](#magic-variable---hostvars)
-    - [Magic variable - `groups`](#magic-variable---groups)
-  - [Ansible Fact](#ansible-fact)
-  - [Lab: Get Fact Data](#lab-get-fact-data)
+    - [`hostvars`](#hostvars)
+    - [`groups`](#groups)
 
 ---
 
 ## Variable
 
 - `Variable`
-
   - store information of the hosts
+  - Can be defined in
+    - playbook file
+    - a separated file
+    - command `-e`
 
-- Can be defined in
-
-  - the playbook file
-  - the a separated file
-
-- Sematic
+### Syntax
 
 ```yaml
 # define
@@ -36,37 +38,6 @@ vars:
 
 # reference var
 line: "nameserver {{ var_name }}" # use Jinja2 Templating format
-```
-
-- Example
-
-```yaml
-# define in variable file
-http_port: 8081
-snmp_port: 161-162
-inter_ip_range: 192.0.2.0
-
-# playbook file
-name: Set firewall configuration
-hosts: web
-task:
-  - firewalld:
-      service: https
-      permanent: true
-      state: enabled
-  - firewalld:
-      port: "{{ http_port }}"/tcp
-      permanent: true
-      state: disabled
-  - firewalld:
-      port: "{{ snmp_port }}"/tcp
-      permanent: true
-      state: disabled
-  - firewalld:
-      source: "{{ inter_ip_range }}"/tcp
-      permanent: internal
-      state: enabled
-
 ```
 
 ---
@@ -89,12 +60,23 @@ task:
 
 ---
 
-## Variable Precedence
+### Variable Scope
+
+- Scope level:
+  - Host, defined within a host.
+    - ie., dns_server for a host.
+  - Play, defined within a play.
+    - ie., ntp_server a play, cannot be accessible in another play.
+  - Global, defined in configuration file, env var, cli extra-vars.
+    - ie., `ansible-playbook playbook.yml --extra-vars "ntp_server=10.0.0.1"`
+
+---
+
+### Variable Precedence
 
 - When same variable is defined in multiple places
 
 - **Precedence:**(highest at the bottom)
-
   - Role Defaults
   - Group Vars
   - Host Vars
@@ -160,6 +142,343 @@ ansible-playbook playbook.yml --extra-vars "dns_server=10.5.5.6"
 
 ---
 
+## Define Variable
+
+- `vars`: define within the playbook
+- `vars_files`: define from yaml file
+- `vars_prompt`: define from user prompt
+- `ansible-playbook -e`: define from command
+  - key-value pair: `ansible-playbook -e var_key="var_value"`
+  - yaml dict: `ansible-playbook -e {var_key: var_value}`
+  - json dict: `ansible-playbook -e {"var_key": "var_value"}`
+- `ansible-playbook -e @yaml_file`: define from command sourced from a file
+  - key-value pair file: `var_key="var_value"`
+  - yaml file: `var_key: var_value`
+  - json file: `{"var_key": "var_value"}`
+
+---
+
+### Lab: Variables with `vars` keyword
+
+```yaml
+# demo_
+- name: demo variable
+  hosts: ubuntu
+  vars:
+    message: "A demo message"
+  tasks:
+    - name: disploy message
+      debug:
+        msg: "{{ message }}"
+```
+
+```sh
+ansible-playbook demo.yaml
+# PLAY [demo variable] *****************************************************************************************************************
+
+# TASK [Gathering Facts] ***************************************************************************************************************
+# ok: [ubuntu3]
+# ok: [ubuntu2]
+# ok: [ubuntu1]
+
+# TASK [disploy message] ***************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": "A demo message"
+# }
+# ok: [ubuntu2] => {
+#     "msg": "A demo message"
+# }
+# ok: [ubuntu3] => {
+#     "msg": "A demo message"
+# }
+
+# PLAY RECAP ***************************************************************************************************************************
+# ubuntu1                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu2                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu3                    : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+---
+
+### Lab: Variables with `vars_files` keyword
+
+```yaml
+# e_vars.yaml
+var_empty_dict: {}
+var_str: this is a string
+var_int: 2
+var_dict:
+  dict_key: dict value
+  dict_key_null:
+  dict_key_empty: {}
+var_list:
+  - itm1
+  - itm2
+  - itm3
+```
+
+```yaml
+# demo.yaml
+- hosts: ubuntu
+  gather_facts: False
+  vars_files:
+    - e_vars.yaml
+  tasks:
+    - name: Test empty dict
+      debug:
+        msg: "{{ var_empty_dict }}"
+
+    - name: Test string value
+      debug:
+        msg: "{{ var_str }}"
+
+    - name: Test integer value
+      debug:
+        msg: "{{ var_int }}"
+
+    - name: Test dictionary key
+      debug:
+        msg: "{{ var_dict['dict_key'] }}"
+
+    - name: Test dictionary empty key
+      debug:
+        msg: "{{ var_dict['dict_key_empty'] }}"
+
+    - name: Test dictionary null key
+      debug:
+        msg: "{{ var_dict['dict_key_null'] }}"
+
+    - name: Test list
+      debug:
+        msg: "{{ var_list }}"
+
+    - name: Test list item
+      debug:
+        msg: "{{ var_list[1] }}"
+```
+
+```sh
+ansible-playbook demo.yaml --syntax-check
+ansible-playbook demo.yaml --list-hosts
+# playbook: demo.yaml
+#   play #1 (ubuntu): ubuntu      TAGS: []
+#     pattern: ['ubuntu']
+#     hosts (3):
+#       ubuntu1
+#       ubuntu2
+#       ubuntu3
+
+ansible-playbook demo.yaml
+# PLAY [ubuntu] ************************************************************************************************************************
+
+# TASK [Test empty dict] ***************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": {}
+# }
+# ok: [ubuntu2] => {
+#     "msg": {}
+# }
+# ok: [ubuntu3] => {
+#     "msg": {}
+# }
+
+# TASK [Test string value] *************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": "this is a string"
+# }
+# ok: [ubuntu2] => {
+#     "msg": "this is a string"
+# }
+# ok: [ubuntu3] => {
+#     "msg": "this is a string"
+# }
+
+# TASK [Test integer value] ************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": 2
+# }
+# ok: [ubuntu2] => {
+#     "msg": 2
+# }
+# ok: [ubuntu3] => {
+#     "msg": 2
+# }
+
+# TASK [Test dictionary key] ***********************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": "dict value"
+# }
+# ok: [ubuntu2] => {
+#     "msg": "dict value"
+# }
+# ok: [ubuntu3] => {
+#     "msg": "dict value"
+# }
+
+# TASK [Test dictionary empty key] *****************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": {}
+# }
+# ok: [ubuntu2] => {
+#     "msg": {}
+# }
+# ok: [ubuntu3] => {
+#     "msg": {}
+# }
+
+# TASK [Test dictionary null key] ******************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": ""
+# }
+# ok: [ubuntu2] => {
+#     "msg": ""
+# }
+# ok: [ubuntu3] => {
+#     "msg": ""
+# }
+
+# TASK [Test list] *********************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": [
+#         "itm1",
+#         "itm2",
+#         "itm3"
+#     ]
+# }
+# ok: [ubuntu2] => {
+#     "msg": [
+#         "itm1",
+#         "itm2",
+#         "itm3"
+#     ]
+# }
+# ok: [ubuntu3] => {
+#     "msg": [
+#         "itm1",
+#         "itm2",
+#         "itm3"
+#     ]
+# }
+
+# TASK [Test list item] ****************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": "itm2"
+# }
+# ok: [ubuntu2] => {
+#     "msg": "itm2"
+# }
+# ok: [ubuntu3] => {
+#     "msg": "itm2"
+# }
+
+# PLAY RECAP ***************************************************************************************************************************
+# ubuntu1                    : ok=8    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu2                    : ok=8    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu3                    : ok=8    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+---
+
+### Lab: Variables with `vars-prompt` keyword
+
+```yaml
+# demo_vars_prompt.yaml
+- hosts: ubuntu
+  gather_facts: False
+  vars_prompt:
+    - name: username
+      private: False
+
+  tasks:
+    - name: Test empty dict
+      debug:
+        msg: "{{ username }}"
+```
+
+```sh
+ansible-playbook demo_vars_prompt.yaml
+# username: abc
+
+# PLAY [ubuntu] ************************************************************************************************************************
+
+# TASK [Test empty dict] ***************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": "abc"
+# }
+# ok: [ubuntu2] => {
+#     "msg": "abc"
+# }
+# ok: [ubuntu3] => {
+#     "msg": "abc"
+# }
+
+# PLAY RECAP ***************************************************************************************************************************
+# ubuntu1                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu2                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu3                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+# with -e
+ansible-playbook demo_vars_prompt.yaml -e 'username="XYZ"'
+# PLAY [ubuntu] ************************************************************************************************************************
+
+# TASK [Test empty dict] ***************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": "XYZ"
+# }
+# ok: [ubuntu2] => {
+#     "msg": "XYZ"
+# }
+# ok: [ubuntu3] => {
+#     "msg": "XYZ"
+# }
+
+# PLAY RECAP ***************************************************************************************************************************
+# ubuntu1                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu2                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu3                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+- Private Prompt
+
+```yaml
+# demo_vars_prompt_private.yaml
+- hosts: ubuntu
+  gather_facts: False
+  vars_prompt:
+    - name: username
+      private: True
+
+  tasks:
+    - name: Test empty dict
+      debug:
+        msg: "{{ username }}"
+```
+
+```sh
+ansible-playbook demo_vars_prompt_private.yaml
+# username:
+
+# PLAY [ubuntu] ************************************************************************************************************************
+
+# TASK [Test empty dict] ***************************************************************************************************************
+# ok: [ubuntu1] => {
+#     "msg": "qazxsw"
+# }
+# ok: [ubuntu2] => {
+#     "msg": "qazxsw"
+# }
+# ok: [ubuntu3] => {
+#     "msg": "qazxsw"
+# }
+
+# PLAY RECAP ***************************************************************************************************************************
+# ubuntu1                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu2                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# ubuntu3                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+---
+
 ## Register: Output a varialbe
 
 - Output a variable, using `register: var_name`
@@ -180,15 +499,43 @@ ansible-playbook playbook.yml --extra-vars "dns_server=10.5.5.6"
 
 ---
 
-## Variable Scope
+## `host_vars` and `group_vars` Directory
 
-- Scope level:
-  - Host, defined within a host.
-    - ie., dns_server for a host.
-  - Play, defined within a play.
-    - ie., ntp_server a play, cannot be accessible in another play.
-  - Global, defined in configuration file, env var, cli extra-vars.
-    - ie., `ansible-playbook playbook.yml --extra-vars "ntp_server=10.0.0.1"`
+- `host_vars`:
+  - a **dedicated directory** used to store variable files that apply exclusively to **individual, specific hosts**.
+- `group_vars`:
+  - a **dedicated directory** used to store variable files that apply exclusively to **groups of hosts**.
+
+- Ansible automatically looks for a directory named `host_vars` and group_vars in two locations:
+  - adjacent to the inventory file
+  - adjacent to the playbook file.
+
+- Key Behavioral Rules
+  - **File Naming**:
+    - The file extension can be `.yml`, `.yaml`, or omitted entirely.
+    - The filename before the extension **must perfectly match the inventory name**
+      - e.g., webserver1 == webserver1.yml
+  - **Variable Precedence**:
+    - Variables declared inside `host_vars` will automatically **override** identical variables defined inside `group_vars` (such as group_vars/all.yml).
+    - However, they will be **overridden** by variables declared directly **inside the playbook** (`vars`: blocks) or via the command line (`-e`).
+  - **Complex Data Structures**:
+    - `host_vars` files allow to easily define multi-line strings, arrays, nested hashes, and Ansible Vault encrypted secrets.
+
+- Standard Directory Structure
+
+```txt
+├── inventory/
+│   ├── hosts.ini            # Your inventory list
+│   ├── group_vars/
+│   │   ├── all.yml          # Variables applied to EVERY host
+│   │   ├── webservers.yml   # Variables applied to [webservers] group
+│   │   └── databases.yml    # Variables applied to [databases] group
+│   └── host_vars/
+│       ├── web01.yml        # Variables applied ONLY to host 'web01'
+│       └── db01.yaml        # Variables applied ONLY to host 'db01'
+├── site.yml                 # Your playbook file
+└── ansible.cfg              # Ansible configuration
+```
 
 ---
 
@@ -198,29 +545,10 @@ ansible-playbook playbook.yml --extra-vars "dns_server=10.5.5.6"
   - a set of **predefined, immutable variables** automatically provided by Ansible **during playbook execution**.
   - offer **insights** into the **current state** of the Ansible environment, the hosts involved, and the execution context.
 
-### Magic variable - `hostvars`
+### `hostvars`
 
-- Ansible process explanation
-
-- for the following inventroy
-
-```ini
-# /etc/ansible/hosts
-web1 ansible_host=172.20.1.100
-web2 ansible_host=172.20.1.101 dns_server=10.5.5.4
-web3 ansible_host=172.20.1.102
-```
-
-- Subprocesses:
-  - When executing, Ansible will create 3 subprocesses for web1, web2, and web3.
-- Variable Interpolation:
-  - Within each subprocess, variable will be created
-  - web1: inventory_hostname=web1, ansible_host=172.20.1.100
-  - web2: inventory_hostname=web2, ansible_host=172.20.1.101 dns_server=10.5.5.4
-  - web3: inventory_hostname=web3, ansible_host=172.20.1.102
-- As a result, the host varialbes dns_server are not available for others, because it exists only within the subprocess web2.
-
-- The magic variable `hostvars` can be used to share variable only in subprocess web2.
+- `hostvars`:
+  - used to access variables and facts belonging to other hosts in your inventory.
 
 ```yml
 - name: Print dns server
@@ -242,7 +570,10 @@ web3 ansible_host=172.20.1.102
 
 ---
 
-### Magic variable - `groups`
+### `groups`
+
+- `groups`
+  - an ansible magic variable that contains a dictionary mapping all inventory group names to the lists of hostnames belonging to each group.
 
 | Magic variable         | Desc                                               |
 | ---------------------- | -------------------------------------------------- |
@@ -251,64 +582,3 @@ web3 ansible_host=172.20.1.102
 | `inventory_hostname`   | Get the name in the inventory for the current host |
 
 ---
-
-## Ansible Fact
-
-- `Ansible facts`
-
-  - a type of variable automatically **gathered** by Ansible **about the remote systems (managed hosts)** during the **execution** of a playbook or ad-hoc command.
-  - **provide detailed information** about the system's **state** and **configuration**, which can then be used in playbooks for conditional logic, task execution, or templating.
-
-- Ref:
-
-  - https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html
-
-- gathers facts **before executing tasks**
-  - using `setup` module
-  - the host to be gathtered controlled by the playbook
-    - a playbook for a specific host will gather fact only from the specific host, not from all hosts defined in the inventory.
-- Control by
-  - playbook directive `gather_facts`
-    - default: `true`
-    - Disabling Facts: `gather_facts: false`
-  - Ansible configuration
-    - default: `gathering = implicit`, gether facts automatically
-    - Disabling: `gathering = explicit`, not gether facts when executing.
-      - Can be overriden by playbook setting `gather_facts: true`
-- Facts are **stored** in the `ansible_facts` variable
-
----
-
-## Lab: Get Fact Data
-
-```sh
-# inventory.yml
-tee > "inventory.yaml" <<EOF
-all:
-  hosts:
-    server1:
-      ansible_host: 192.168.100.107
-      ansible_user: ubuntuadmin
-EOF
-
-ansible -i inventory.yaml all -m ping
-
-tee >get_fact_variable.yaml << EOF
-- name: Ansible Fact Lab Playbook
-  hosts: all
-  tasks:
-    - name: Print all facts
-      debug:
-        msg: "{{ ansible_facts }}"
-
-    - name: Print host facts
-      debug:
-        msg: "Memory: {{ ansible_memtotal_mb }} MB, Distribution: {{ ansible_distribution }}, Architecture: {{ ansible_architecture }}"
-EOF
-
-ansible-playbook -i inventory.yaml get_fact_variable.yaml
-# TASK [Print host facts] **************************************************************************
-# ok: [server1] => {
-#     "msg": "Memory: 7892 MB, Distribution: Ubuntu, Architecture: x86_64"
-# }
-```

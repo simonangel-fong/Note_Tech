@@ -35,7 +35,7 @@
   - [ ] [SRE Fundamental](./devops/sre/index.md)
 
 - IaC
-  - [x] [\*Terraform](./cloud/terraform/index.md)
+  - [x] [!Terraform(Note-reorg)](./cloud/terraform/index.md)
   - [ ] [\*Ansible](./devops/ansible/ansible.md)
 
 - Testing
@@ -69,6 +69,7 @@
 
 ---
 
+<!--
 - Fundamental
   - [ ] Statictics
   - [ ] [Data Structure & Algorithm](./Fundamental/Data_Structure/index.md)
@@ -108,7 +109,7 @@
   - [ ] Numpy
   - [ ] Panda
   - [ ] Scikit-learn
-  - [ ] OpenCV
+  - [ ] OpenCV -->
 
 <!-- - [F](./F/index.md) -->
 
