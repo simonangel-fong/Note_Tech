@@ -14,9 +14,6 @@
     - [Lab: Variables with `vars-prompt` keyword](#lab-variables-with-vars-prompt-keyword)
   - [Register: Output a varialbe](#register-output-a-varialbe)
   - [`host_vars` and `group_vars` Directory](#host_vars-and-group_vars-directory)
-  - [Magic variable](#magic-variable)
-    - [`hostvars`](#hostvars)
-    - [`groups`](#groups)
 
 ---
 
@@ -536,49 +533,5 @@ ansible-playbook demo_vars_prompt_private.yaml
 ├── site.yml                 # Your playbook file
 └── ansible.cfg              # Ansible configuration
 ```
-
----
-
-## Magic variable
-
-- Ansible `magic variables`
-  - a set of **predefined, immutable variables** automatically provided by Ansible **during playbook execution**.
-  - offer **insights** into the **current state** of the Ansible environment, the hosts involved, and the execution context.
-
-### `hostvars`
-
-- `hostvars`:
-  - used to access variables and facts belonging to other hosts in your inventory.
-
-```yml
-- name: Print dns server
-  hosts: all
-  task:
-    - debug:
-        msg: "{{ hostvars['web2'].dns_server }}"
-```
-
-- Common Parameters of magic variable `hostvars`
-
-| Parameter                                          | Desc                                  |
-| -------------------------------------------------- | ------------------------------------- |
-| `hostvars['host_name'].ansible_host`               | Get the hostname/IP of a host         |
-| `hostvars['host_name'].ansible_facts.architecture` | Get the architecture of a host's fact |
-| `hostvars['host_name'].ansible_facts.devices`      | Get the devices of a host's fact      |
-| `hostvars['host_name'].ansible_facts.mounts`       | Get the mounts of a host's fact       |
-| `hostvars['host_name'].ansible_facts.processor`    | Get the processor of a host's fact    |
-
----
-
-### `groups`
-
-- `groups`
-  - an ansible magic variable that contains a dictionary mapping all inventory group names to the lists of hostnames belonging to each group.
-
-| Magic variable         | Desc                                               |
-| ---------------------- | -------------------------------------------------- |
-| `groups['group_name']` | Get all hosts under a given group                  |
-| `group_names`          | Get the group name of current host                 |
-| `inventory_hostname`   | Get the name in the inventory for the current host |
 
 ---

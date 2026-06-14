@@ -1,6 +1,6 @@
 # Ansible - Module: `command`
 
-[Back](../ansible.md)
+[Back](../../ansible.md)
 
 - [Ansible - Module: `command`](#ansible---module-command)
   - [`command` Module](#command-module)
