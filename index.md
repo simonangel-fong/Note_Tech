@@ -39,3 +39,15 @@
 - Monitoring
   - [x] [Prometheus](./devops/prometheus/index.md)
   - [x] [SRE Fundamental](./devops/sre/index.md)
+---
+
+- Cloud
+  - [x] [AWS](./AWS/aws/index.md)
+    - [x] [AWS CCP](./AWS/ccp/index.md)
+    - [x] [AWS SAA](./AWS/saa/index.md)
+    <!-- - [ ] [AWS DEA](./AWS/dea/index.md) -->
+    <!-- - [ ] [AWS CDA](./AWS/cda/index.md) -->
+      <!-- - [ ] Project: [GitHub:Web hosting - S3](https://github.com/simonangel-fong/AWS_POC_Web_Hosting) -->
+      <!-- - [x] Project: [Import VM into AMI](./AWS/Projects/vm2ami.md) -->
+
+  - [Azure](./azure/azure/index.md)
