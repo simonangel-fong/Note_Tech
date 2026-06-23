@@ -39,3 +39,17 @@
 - Monitoring
   - [x] [Prometheus](./devops/prometheus/index.md)
   - [x] [SRE Fundamental](./devops/sre/index.md)
+
+---
+
+- Cloud
+  - [x] [AWS](./AWS/aws/index.md)
+    - [x] [AWS CCP](./AWS/ccp/index.md)
+    - [x] [AWS SAA](./AWS/saa/index.md)
+  - [ ] [Azure](./azure/azure/index.md)
+
+---
+
+- Security
+  - [OIDC - GitHub with Azure](./security/oidc/azure_github.md)
+  - [OIDC - GitHub with AWS](./security/oidc/aws_github.md)
