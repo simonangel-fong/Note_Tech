@@ -61,3 +61,9 @@ local-exec / remote-exec
 - [RDS](./aws/rds/rds.md)
 - [IAM](./aws/iam/iam.md)
 - [ECS](./aws/ecs/ecs.md)
+
+---
+
+## Runbook
+
+- [state lock](./runbook/state_lock.md)
