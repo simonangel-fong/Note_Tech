@@ -20,6 +20,7 @@
     - [x] [Helm](./container/helm/index.md)
     - [x] [ArgoCD](./container/argocd/index.md)
     - [x] [Argo Rollout](./container/argorollout/index.md)
+    - [ ] [Istio](./container/istio/index.md)
 
 ---
 
