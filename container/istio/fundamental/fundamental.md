@@ -1,8 +1,8 @@
-# Istio - Service Mesh
+# Istio - Fundamental
 
 [Back](../index.md)
 
-- [Istio - Service Mesh](#istio---service-mesh)
+- [Istio - Fundamental](#istio---fundamental)
   - [Service Mesh](#service-mesh)
   - [Istio Architecture](#istio-architecture)
     - [Istiod](#istiod)
@@ -39,7 +39,6 @@
   - Nginx Service Mesh
 
 ---
-
 
 ## Istio Architecture
 

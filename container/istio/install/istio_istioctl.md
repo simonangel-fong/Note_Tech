@@ -50,7 +50,6 @@ KUBECONFIG=./kubeconfig kubectl get pods -n istio-system
 
 ---
 
-
 ### Uninstall
 
 ```sh

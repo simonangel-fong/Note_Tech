@@ -20,7 +20,8 @@
     - [x] [Helm](./container/helm/index.md)
     - [x] [ArgoCD](./container/argocd/index.md)
     - [x] [Argo Rollout](./container/argorollout/index.md)
-    - [ ] [Istio](./container/istio/index.md)
+    - [x] [Istio](./container/istio/index.md)
+    - [x] [cert-manager](./container/cert-manager/index.md)
 
 ---
 

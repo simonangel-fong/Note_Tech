@@ -114,7 +114,7 @@ KUBECONFIG=./kubeconfig k get po -n istio-ingress
 
 ```
 
-## Uninstall 
+## Uninstall
 
 ```sh
 KUBECONFIG=./kubeconfig helm uninstall istio-ingress -n istio-ingress
@@ -161,5 +161,3 @@ KUBECONFIG=./kubeconfig kubectl get crds -oname | grep --color=never 'istio.io' 
 # customresourcedefinition.apiextensions.k8s.io "workloadgroups.networking.istio.io" deleted
 
 ```
-
-
