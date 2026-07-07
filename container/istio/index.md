@@ -5,14 +5,12 @@
 ---
 
 - [Fundamental](./fundamental/fundamental.md)
-- [Sidecar Mode](./sidecar/sidecar.md)
-
----
-
-- Installation
-  - [Install `istioctl`](./install/istioctl.md)
-  - [Install `Istio` via `istioctl`](./install/istio_istioctl.md)
-  - [Install `Istio` via `helm`](./install/istio_helm.md)
+- [Sidecar Mode](./sidecar/index.md)
+  - [Install `istioctl`](./sidecar/istioctl.md)
+  - [Install `Istio` via `istioctl`](./sidecar/istio_istioctl.md)
+  - [Install `Istio` via `helm`](./sidecar/istio_helm.md)
+- [Ambient Mode](./ambient/ambient.md)
+  - [Install `Istio` via `helm`](./ambient/istio_helm.md)
 
 ---
 

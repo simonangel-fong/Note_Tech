@@ -7,6 +7,7 @@
   - [Istio Architecture](#istio-architecture)
     - [Istiod](#istiod)
     - [Ambient Mesh](#ambient-mesh)
+  - [sidecar mode vs Ambient mode](#sidecar-mode-vs-ambient-mode)
 
 ---
 
@@ -91,3 +92,35 @@ An `Istio service mesh` is logically split into a `data plane` and a `control pl
     - It automatically enforces `mutual TLS (mTLS)` and baseline **security** without requiring any application changes.
   - `Waypoint Proxies`:
     - Optional, `Layer 7 (L7) proxies` deployed only when advanced routing, traffic shaping, or L7 policies are required.
+
+---
+
+## sidecar mode vs Ambient mode
+
+| Area                   | Sidecar mode                        | Ambient mode                |
+| ---------------------- | ----------------------------------- | --------------------------- |
+| Proxy location         | One `Envoy sidecar` per pod         | Shared `ztunnel` per node   |
+| App pod modified?      | Yes, sidecar injected               | No sidecar needed           |
+| L4 features            | `Sidecar` handles it                | `ztunnel` handles it        |
+| L7 features            | `Sidecar` handles it                | `waypoint proxy` handles it |
+| Resource usage         | Higher, because every pod has proxy | Usually lower               |
+| Operational complexity | More pod-level proxy management     | More centralized            |
+| Adoption               | Traditional Istio model             | Newer sidecarless model     |
+
+- Classic sidecar mode:
+
+```
+frontend app -> frontend sidecar -> backend sidecar -> backend app
+```
+
+- Ambient mode basic L4:
+
+```
+frontend app -> source ztunnel -> destination ztunnel -> backend app
+```
+
+- Ambient mode with L7:
+
+```
+frontend app -> ztunnel -> waypoint -> ztunnel -> backend app
+```
