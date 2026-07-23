@@ -56,3 +56,18 @@
 - Security
   - [OIDC - GitHub with Azure](./security/oidc/azure_github.md)
   - [OIDC - GitHub with AWS](./security/oidc/aws_github.md)
+
+---
+
+- AI
+
+- [ ] [LLM](./llm/index.md)
+- [ ] [MLOPS](./mlops/index.md)
+- [ ] [Claude Code](./ai/claude_code/index.md)
+
+---
+
+- Runbooks
+  - [ ] [Linux Runbook](./linux/runbook/index.md)
+  - [ ] [K8s Runbook](./k8s/runbook/index.md)
+  - [ ] [Terraform Runbook](./terraform/runbook/index.md)
