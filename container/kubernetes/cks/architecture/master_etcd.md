@@ -9,6 +9,7 @@
     - [Create `etcd` certificates](#create-etcd-certificates)
     - [Install `etcd` certificates](#install-etcd-certificates)
   - [Install `etcd`](#install-etcd)
+    - [Required files and ports](#required-files-and-ports)
 
 ---
 
@@ -158,12 +159,15 @@ ls -l /etc/kubernetes/pki/etcd-server.crt /etc/kubernetes/pki/etcd-server.key
 
 ## Install `etcd`
 
-- required:
-  - `/etc/kubernetes/pki/ca.crt`: Root Certificate Authority (CA) public certificate for a Kubernetes cluster
-  - `/etc/kubernetes/pki/etcd-server.crt`: etcd **public key** certificate file
-  - `/etc/kubernetes/pki/etcd-server.key`: **private key** of an etcd database server
-  - `ip:2380`: etcd server peer-to-peer communication
-  - `ip:2379`: etcd default port for client requests and API communication.
+### Required files and ports
+
+| Requirement                                   | Type               | Purpose                          |
+| --------------------------------------------- | ------------------ | -------------------------------- |
+| `/etc/kubernetes/pki/ca.crt`                  | CA certificate     | Verifies TLS certificates        |
+| `/etc/kubernetes/pki/etcd-server.crt`         | Server certificate | Identifies the etcd server       |
+| `/etc/kubernetes/pki/etcd-server.key`         | Private key        | Private key for the server certificate |
+| `192.168.10.180:2379`                         | Client endpoint    | Receives etcd client requests    |
+| `192.168.10.180:2380`                         | Peer endpoint      | Handles etcd peer communication  |
 
 ```sh
 # version
@@ -173,7 +177,7 @@ export ETCD_VERSION=v3.6.14
 # Download etcd
 # ##############################
 cd /tmp
-curl -LO "https://github.com/etcd-io/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz"
+curl -fLO "https://github.com/etcd-io/etcd/releases/download/${ETCD_VERSION}/etcd-${ETCD_VERSION}-linux-amd64.tar.gz"
 #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 #                                  Dload  Upload   Total   Spent    Left  Speed
 #   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
@@ -181,17 +185,15 @@ curl -LO "https://github.com/etcd-io/etcd/releases/download/${ETCD_VERSION}/etcd
 
 tar xzf "etcd-${ETCD_VERSION}-linux-amd64.tar.gz"
 sudo install -v -m 755 "etcd-${ETCD_VERSION}-linux-amd64/etcd" "etcd-${ETCD_VERSION}-linux-amd64/etcdctl" /usr/local/bin/
-# 'etcd-v3.6.0-linux-amd64/etcd' -> '/usr/local/bin/etcd'
-# 'etcd-v3.6.0-linux-amd64/etcdctl' -> '/usr/local/bin/etcdctl'
+# 'etcd-v3.6.14-linux-amd64/etcd' -> '/usr/local/bin/etcd'
+# 'etcd-v3.6.14-linux-amd64/etcdctl' -> '/usr/local/bin/etcdctl'
 
 etcd --version
-# etcd Version: 3.6.0
-# Git SHA: f5d605a
-# Go Version: go1.23.9
+# etcd Version: 3.6.14
 # Go OS/Arch: linux/amd64
 
 etcdctl version
-# etcdctl version: 3.6.0
+# etcdctl version: 3.6.14
 # API version: 3.6
 
 # ##############################

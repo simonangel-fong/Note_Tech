@@ -3,21 +3,8 @@
 [Back](../../index.md)
 
 - [CKS - Master node: Runtime](#cks---master-node-runtime)
-  - [Version](#version)
   - [Install `containerd`](#install-containerd)
   - [Install `crictl`](#install-crictl)
-
----
-
-## Version
-
-```txt
-export K8S_VERSION=v1.35.8
-export ETCD_VERSION=v3.6.14
-export CONTAINERD_VERSION=2.3.4
-export RUNC_VERSION=v1.5.1
-export CNI_VERSION=v1.9.1
-```
 
 ---
 

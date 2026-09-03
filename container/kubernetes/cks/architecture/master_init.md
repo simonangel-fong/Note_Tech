@@ -221,7 +221,6 @@ sudo systemctl disable --now ufw 2>/dev/null || true
 # #############################
 sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
 
-
 # ##############################
 # Reboot
 # ##############################
