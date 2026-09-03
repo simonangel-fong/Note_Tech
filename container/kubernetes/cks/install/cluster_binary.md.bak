@@ -1,0 +1,50 @@
+# Advanced - Install cluster with binary
+
+[back](../../index.md)
+
+- [Advanced - Install cluster with binary](#advanced---install-cluster-with-binary)
+  - [Create VM](#create-vm)
+  - [Master node](#master-node)
+
+---
+
+## Create VM
+
+- Virtual Network
+  - VMnet2
+  - Type: NAT
+  - DHCP: enabled
+  - Subnet: 192.168.10.0/24
+  - Gateway: 192.168.10.2
+
+- Master Node:
+  - Hostname: controlplane
+  - OS: Ubuntu 24.04 LTS
+  - CPU: 4 vCPU
+  - Memory: 4 GB
+  - Disk: 40GB
+  - IP: 192.168.10.180
+
+- Worker Node 1:
+  - Hostname: node01
+  - OS: Ubuntu 24.04 LTS
+  - CPU: 2 vCPU
+  - Memory: 2 GB
+  - Disk: 40GB
+  - IP: 192.168.10.181
+
+- Worker Node 2:
+  - Hostname: node02
+  - OS: Ubuntu 24.04 LTS
+  - CPU: 2 vCPU
+  - Memory: 2 GB
+  - Disk: 40GB
+  - IP: 192.168.10.182
+
+
+## Master node
+
+```sh
+
+
+```

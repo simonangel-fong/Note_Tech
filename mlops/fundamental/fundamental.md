@@ -4,7 +4,9 @@
 
 - [MLOPS - Fundamental](#mlops---fundamental)
   - [Machine learning](#machine-learning)
-    - [Key steps to train a model](#key-steps-to-train-a-model)
+    - [Stages of the Machine Learning Life Cycle](#stages-of-the-machine-learning-life-cycle)
+  - [MLOps](#mlops)
+  - [`Continuous Training (CT)`](#continuous-training-ct)
 
 ---
 
@@ -37,51 +39,65 @@
 
 ---
 
-### Key steps to train a model
+### Stages of the Machine Learning Life Cycle
 
-1. **Define the Problem**
+1. **Problem Definition**
+   - Define the business problem, machine learning objective, success metrics, and constraints.
 
-- Clearly establish what the model is trying to predict or classify
-  - e.g., forecasting sales, detecting fraud, or translating languages
-- Set **measurable metrics** to evaluate its success
-  - e.g., accuracy, precision, or F1-score
+2. **Data Collection**
+   - Gather relevant data from reliable internal and external sources.
 
-2. **Collect and Prepare Data**
+3. **Data Cleaning**
+   - Handle missing values, duplicates, errors, inconsistencies, and outliers.
 
-- Gather relevant, high-quality data and clean it by handling missing values and removing duplicates.
-- must also **annotate (label)** the data if working with a `supervised learning` task.
+4. **Feature Engineering**
+   - Create, transform, and select useful input features, then split the data into training, validation, and test sets.
 
-3. **Split the Dataset**
+5. **Model Selection**
+   - Compare suitable algorithms and select a model based on the problem, data, and baseline performance.
 
-- Divide the data into **three distinct sets** to prevent the model from simply memorizing the information (overfitting):
-  - `Training Set`:
-    - The bulk of the **data used to train** the model.
-  - `Validation Set`:
-    - Used during training to tune parameters and **check for accuracy**.
-  - `Testing Set`:
-    - Kept entirely separate until the very end to **evaluate real-world performance**.
+6. **Model Training**
+   - Train the selected model on the training data to learn its parameters.
 
-4. **Choose an Algorithm**
+7. **Model Evaluation**
+   - Evaluate generalization on unseen data using metrics appropriate to the problem.
 
-- Select a foundational algorithm or pre-trained model based on the specific task.
-- Common options include
-  - traditional `machine learning models`
-    - e.g., Random Forests, Linear Regression
-  - `deep learning neural networks`.
+8. **Hyperparameter Tuning**
+   - Optimize hyperparameters using validation data or cross-validation, then confirm performance on the test set.
 
-5. **Train and Optimize**
+9. **Model Deployment**
+   - Integrate the validated model into a production system to generate predictions.
 
-- Process the training data in iterative cycles (`epochs`) and batches.
-  - During this stage, the model makes predictions, calculates errors using a `loss function`, and optimizes its internal parameters (weights and biases) via `backpropagation` to minimize that error.
-- adjust `hyperparameters` (like learning rate) to maximize performance.
-
-6. **Evaluate and Validate**
-
-- Test the trained model on the **unseen testing data** to measure its reliability, or use cross-validation techniques for a more robust assessment.
-- Compare training vs. testing metrics to detect `underfitting` or `overfitting`.
-
-7. **Deploy and Monitor**
-
-- Once the model meets the performance criteria, integrate it into a real-world application or API and continuously monitor it to ensure it adapts to changing real-world data over time.
+10. **Model Monitoring and Maintenance**
+    - Track performance, data drift, concept drift, and operational health; retrain or update the model when needed.
 
 ---
+
+## MLOps
+
+- `MLOps (Machine Learning Operations)`
+  - a set of engineering practices that **automates and streamlines the lifecycle** of `machine learning models`.
+  - bridges the gap between `data science` and `IT operations`, allowing teams to build, test, deploy, and continuously monitor models in production reliably and efficiently.
+
+- Features:
+  - **Automation**:
+    - Triggers **automated retraining** when the environment or underlying data changes.
+  - **Model Drift**:
+    - Continuously **monitors** deployed models to ensure they **maintain high accuracy** as real-world data evolves.
+  - **Reproducibility**:
+    - **Tracks** exactly which data, code, and hyperparameters were used to train a specific **model version**.
+
+---
+
+## `Continuous Training (CT)`
+
+- `Continuous Training (CT)`
+  - **automates the re-execution** of the `model training pipeline` without manual intervention.
+- **Automated Triggers**:
+  - Pipelines are automatically kicked off based on schedules, new data arrivals, or when monitoring systems detect performance degradation.
+- **Model Training**:
+  - Automated ingestion of new data, feature engineering, and training algorithms.
+- **Model Evaluation & Registry**:
+  - The newly trained model is evaluated against validation metrics
+    - e.g., accuracy, F1-score
+  - registered only if it outperforms the current production model.

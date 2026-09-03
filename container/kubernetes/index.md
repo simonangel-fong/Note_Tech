@@ -12,9 +12,10 @@
   - [Configuration](#configuration)
   - [Installation](#installation)
   - [CKA](#cka)
+  - [CNI](#cni)
   - [CKS](#cks)
     - [Cluster Setup](#cluster-setup)
-  - [CNI](#cni)
+    - [Recap](#recap)
 
 ---
 
@@ -185,8 +186,8 @@
 - [`minikube` Installation: RHEL9](./install/minikube_rhel9/minikube_rhel9.md)
 - [`minikube` Installation: Ubuntu](./install/minikube_ubuntu/minikube_ubuntu.md)
 - [Windows: `Docker Desktop` enable `Kubernetes`](./install/kube_docker_desktop_win/kube_docker_desktop_win.md)
-
----
+- [`kind` & init cluster](./cluster/kind/kind.md)
+- ***
 
 todo list:
 
@@ -272,6 +273,12 @@ alias kcn="kubectl config set-context --current --namespace"
 
 ---
 
+## CNI
+
+- [Cilium](./cilium.md)
+
+---
+
 ## CKS
 
 https://github.com/zealvora/certified-kubernetes-security-specialist
@@ -285,6 +292,32 @@ Discord Community: https://kplabs.in/chat
 
 ---
 
-## CNI
+### Recap
 
-- [Cilium](./cilium.md)
+- [Install cluster with binary](./cks/install/cluster_binary.md)
+  - Master node:
+  - [1 Node init](./cks/architecture/master_init.md)
+  - [2. Runtime](./cks/architecture/master_runtime.md)
+  - [3. PKI](./cks/architecture/master_pki.md)
+  - [4. `etcd`](./cks/architecture/master_etcd.md)
+  - [5. Controlplane](./cks/architecture/master_controlplane.md)
+  - [6. `kubelet`, `kube-proxy`](./cks/architecture/master_kubelet.md)
+  - [7. CNI](./cks/architecture/master_CNI.md)
+
+- Architecture
+  - [API server](./cks/architecture/api_server.md)
+-
+
+| #   | Layer         | Component                         | Depends on                  |
+| --- | ------------- | --------------------------------- | --------------------------- |
+| 0   | OS            | swap off, kernel modules, sysctl  | --                          |
+| 1   | Runtime       | `containerd` (apt, +`runc`) + CNI | Phase 0                     |
+| 2   | Trust         | CA + all certificates             | --                          |
+| 3   | Trust         | kubeconfig files                  | Phase 2                     |
+| 4   | State         | `etcd`                            | Phase 2 (peer/server certs) |
+| 5   | Control plane | `kube-apiserver`                  | Phase 4                     |
+| 5   | Control plane | `kube-controller-manager`         | apiserver                   |
+| 5   | Control plane | `kube-scheduler`                  | apiserver                   |
+| 6   | Node          | `kubelet`, `kube-proxy`           | runtime + apiserver         |
+| 7   | Network       | CNI plugin (Cilium)               | kubelet running             |
+| 8   | Addon         | CoreDNS                           | CNI ready                   |

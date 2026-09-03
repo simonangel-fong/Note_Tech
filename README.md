@@ -61,13 +61,13 @@
 
 - AI
 
-- [ ] [LLM](./llm/index.md)
-- [ ] [MLOPS](./mlops/index.md)
-- [ ] [Claude Code](./ai/claude_code/index.md)
+- [LLM](./llm/index.md)
+- [MLOPS](./mlops/index.md)
+- [Claude Code](./ai/claude_code/index.md)
 
 ---
 
 - Runbooks
-  - [ ] [Linux Runbook](./linux/runbook/index.md)
-  - [ ] [K8s Runbook](./k8s/runbook/index.md)
-  - [ ] [Terraform Runbook](./terraform/runbook/index.md)
+  - [Linux Runbook](./linux/runbook/index.md)
+  - [K8s Runbook](./k8s/runbook/index.md)
+  - [Terraform Runbook](./terraform/runbook/index.md)
