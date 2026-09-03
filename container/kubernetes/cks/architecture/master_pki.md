@@ -481,46 +481,6 @@ kubectl version --client
 # Client Version: v1.35.8
 # Kustomize Version: v5.7.1
 
-# ##############################
-# Configure kubeconfig: controlplane
-# ##############################
-cd ~/pki
-# set ip -- every kubeconfig below embeds this. If the variable is empty the
-# kubeconfigs get "server: https://:6443" with no host, and the kubelet fails
-# with "tls: either ServerName or InsecureSkipVerify must be specified".
-export KUBERNETES_PUBLIC_ADDRESS=192.168.10.180
-
-# set cluster: ip
-kubectl config set-cluster kubernetes \
-  --certificate-authority=ca.crt --embed-certs=true \
-  --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
-  --kubeconfig=controlplane.kubeconfig
-
-# Cluster "kubernetes" set.
-
-# confirm
-kubectl config get-clusters --kubeconfig=controlplane.kubeconfig
-# NAME
-# kubernetes
-
-# set credential: controlplane
-kubectl config set-credentials system:node:controlplane \
-  --client-certificate=controlplane.crt --client-key=controlplane.key \
-  --embed-certs=true --kubeconfig=controlplane.kubeconfig
-
-# User "system:node:controlplane" set.
-
-# confirm
-kubectl config get-users --kubeconfig=controlplane.kubeconfig
-# NAME
-# system:node:controlplane
-
-# set default context
-kubectl config set-context default \
-  --cluster=kubernetes --user=system:node:controlplane \
-  --kubeconfig=controlplane.kubeconfig
-
-# Context "default" created.
 
 # confirm
 # kubectl config get-contexts --kubeconfig=controlplane.kubeconfig

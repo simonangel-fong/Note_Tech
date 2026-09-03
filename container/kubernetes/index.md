@@ -305,6 +305,7 @@ Discord Community: https://kplabs.in/chat
   - [6. `kube-controller-manager](./cks/architecture/master_controller_manager.md)
   - [6. `kube-scheduler](./cks/architecture/master_scheduler.md)
   - [6. `kubelet`, `kube-proxy`](./cks/architecture/master_kubelet.md)
+  - [6. `kubelet`, `kube-proxy`](./cks/architecture/master_kube_proxy.md)
   - [7. CNI](./cks/architecture/master_CNI.md)
 
 - [Encryption at rest](./cks/encryption_at_rest.md)
