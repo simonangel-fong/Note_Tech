@@ -304,6 +304,9 @@ Discord Community: https://kplabs.in/chat
   - [6. `kubelet`, `kube-proxy`](./cks/architecture/master_kubelet.md)
   - [7. CNI](./cks/architecture/master_CNI.md)
 
+- [Encryption at rest](./cks/encryption_at_rest.md)
+
+
 - Architecture
   - [API server](./cks/architecture/api_server.md)
 -
