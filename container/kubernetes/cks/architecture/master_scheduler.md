@@ -1,12 +1,13 @@
-# CKS - Master node: kube scheduler
+# CKS - Master node: Kubernetes Scheduler
 
 [Back](../../index.md)
 
-- [CKS - Master node: kube scheduler](#cks---master-node-kube-scheduler)
+- [CKS - Master node: Kubernetes Scheduler](#cks---master-node-kubernetes-scheduler)
   - [Kubernetes Scheduler - Overview](#kubernetes-scheduler---overview)
     - [Required files](#required-files)
+    - [Identity](#identity)
   - [PKI](#pki)
-  - [## Configure `kube-scheduler.conf`](#-configure-kube-schedulerconf)
+  - [Configure `kube-scheduler.conf`](#configure-kube-schedulerconf)
   - [Install `kube-scheduler`](#install-kube-scheduler)
   - [Verify control plane](#verify-control-plane)
 
@@ -16,7 +17,18 @@
 
 ### Required files
 
-Files required by the `kube-controller-manager` systemd unit:
+Files required by the `kube-scheduler` systemd unit:
+
+| File                                         | Type          | Purpose                                  |
+| -------------------------------------------- | ------------- | ---------------------------------------- |
+| `/etc/kubernetes/config/kube-scheduler.yaml` | Configuration | Configures the scheduler                 |
+| `/etc/kubernetes/kube-scheduler.conf`        | Kubeconfig    | Connects the scheduler to the API server |
+
+### Identity
+
+| Certificate          | CN                      | O                      | Purpose                         |
+| -------------------- | ----------------------- | ---------------------- | ------------------------------- |
+| `kube-scheduler.crt` | `system:kube-scheduler` | `system:kube-scheduler` | Authenticates to the API server |
 
 ---
 
@@ -35,8 +47,8 @@ gen_client kube-scheduler "/CN=system:kube-scheduler/O=system:kube-scheduler"
 # removed 'kube-scheduler.csr'
 
 ls -l kube-scheduler.*
-# -rw-rw-r-- 1 ubuntuadmin ubuntuadmin 1253 Sep  3 15:50 kube-scheduler.crt
-# -rw------- 1 ubuntuadmin ubuntuadmin 1704 Sep  3 15:50 kube-scheduler.key
+# -rw-rw-r-- 1 ubuntuadmin ubuntuadmin ... kube-scheduler.crt
+# -rw------- 1 ubuntuadmin ubuntuadmin ... kube-scheduler.key
 
 # confirm
 openssl x509 -in "kube-scheduler.crt" -noout -subject
@@ -49,13 +61,15 @@ openssl x509 -in "kube-scheduler.crt" -noout -subject
 sudo install -v -m 644 kube-scheduler.crt /etc/kubernetes/pki/kube-scheduler.crt
 # 'kube-scheduler.crt' -> '/etc/kubernetes/pki/kube-scheduler.crt'
 sudo install -v -m 600 kube-scheduler.key /etc/kubernetes/pki/kube-scheduler.key
-# 'kube-scheduler.key' -> '/etc/kubernetes/pki/kube-scheduler.key
+# 'kube-scheduler.key' -> '/etc/kubernetes/pki/kube-scheduler.key'
 ls -l /etc/kubernetes/pki/kube-scheduler.crt /etc/kubernetes/pki/kube-scheduler.key
-# -rw-r--r-- 1 root root 1253 Sep  3 15:51 /etc/kubernetes/pki/kube-scheduler.crt
-# -rw------- 1 root root 1704 Sep  3 15:51 /etc/kubernetes/pki/kube-scheduler.key
+# -rw-r--r-- 1 root root ... /etc/kubernetes/pki/kube-scheduler.crt
+# -rw------- 1 root root ... /etc/kubernetes/pki/kube-scheduler.key
 ```
 
-## ## Configure `kube-scheduler.conf`
+---
+
+## Configure `kube-scheduler.conf`
 
 The `kube-scheduler.conf` defines _where_ the API server is, _who_ the client is, and _which CA_ to trust.
 
@@ -78,7 +92,8 @@ kubectl config set-cluster kubernetes \
 kubectl config set-credentials system:kube-scheduler \
   --client-certificate=kube-scheduler.crt \
   --client-key=kube-scheduler.key \
-  --embed-certs=true --kubeconfig=kube-scheduler.conf
+  --embed-certs=true \
+  --kubeconfig=kube-scheduler.conf
 
 # User "system:kube-scheduler" set.
 
@@ -95,7 +110,7 @@ kubectl config use-context default --kubeconfig=kube-scheduler.conf
 
 
 # ##############################
-# Install kubeconfig: kube-controller-manager
+# Install kubeconfig: kube-scheduler
 # ##############################
 sudo install -v -m 600 kube-scheduler.conf \
   /etc/kubernetes/kube-scheduler.conf
@@ -114,7 +129,7 @@ export K8S_VERSION=v1.35.8
 # Download kube-scheduler
 # ##############################
 cd /tmp
-curl -L -o kube-scheduler "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kube-scheduler"
+curl -fL -o kube-scheduler "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kube-scheduler"
 #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 #                                  Dload  Upload   Total   Spent    Left  Speed
 # 100 46.1M  100 46.1M    0     0  11.4M      0  0:00:04  0:00:04 --:--:-- 11.4M
@@ -128,7 +143,7 @@ kube-scheduler --version
 # ##############################
 # Configure kube-scheduler
 # ##############################
-mkdir -pv  /etc/kubernetes/config
+sudo mkdir -pv /etc/kubernetes/config
 # mkdir: created directory '/etc/kubernetes/config'
 cat <<'EOF' | sudo tee /etc/kubernetes/config/kube-scheduler.yaml
 apiVersion: kubescheduler.config.k8s.io/v1

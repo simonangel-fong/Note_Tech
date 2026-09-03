@@ -41,10 +41,9 @@ gen_client kube-controller-manager "/CN=system:kube-controller-manager/O=system:
 # subject=CN = system:kube-controller-manager, O = system:kube-controller-manager
 # removed 'kube-controller-manager.csr'
 
-ls -l kube-controller-manager.*
-# -rw------- 1 ubuntuadmin ubuntuadmin 4252 Sep  3 15:29 kube-controller-manager.conf
-# -rw-rw-r-- 1 ubuntuadmin ubuntuadmin 1277 Sep  3 16:42 kube-controller-manager.crt
-# -rw------- 1 ubuntuadmin ubuntuadmin 1708 Sep  3 16:42 kube-controller-manager.key
+ls -l kube-controller-manager.crt kube-controller-manager.key
+# -rw-rw-r-- 1 ubuntuadmin ubuntuadmin ... kube-controller-manager.crt
+# -rw------- 1 ubuntuadmin ubuntuadmin ... kube-controller-manager.key
 
 # confirm
 openssl x509 -in "kube-controller-manager.crt" -noout -subject
@@ -97,7 +96,7 @@ kubectl config set-context default \
   --user=system:kube-controller-manager \
   --kubeconfig=kube-controller-manager.conf
 
-# Context "default" modified.
+# Context "default" created.
 
 kubectl config use-context default \
   --kubeconfig=kube-controller-manager.conf
@@ -113,6 +112,8 @@ sudo install -v -m 600 kube-controller-manager.conf \
 # 'kube-controller-manager.conf' -> '/etc/kubernetes/kube-controller-manager.conf'
 ```
 
+---
+
 ## Install `kube-controller-manager`
 
 ```sh
@@ -123,7 +124,7 @@ export K8S_VERSION=v1.35.8
 # ##############################
 cd /tmp
 
-curl -L -o kube-controller-manager "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kube-controller-manager"
+curl -fL -o kube-controller-manager "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kube-controller-manager"
 #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 #                                  Dload  Upload   Total   Spent    Left  Speed
 # 100 69.5M  100 69.5M    0     0  11.0M      0  0:00:06  0:00:06 --:--:-- 12.7M
@@ -178,26 +179,7 @@ sudo systemctl enable --now kube-controller-manager
 sudo systemctl status kube-controller-manager --no-pager --full
 # ● kube-controller-manager.service - Kubernetes Controller Manager
 #      Loaded: loaded (/etc/systemd/system/kube-controller-manager.service; enabled; preset: enabled)
-#      Active: active (running) since Thu 2026-09-03 15:18:21 EDT; 15min ago
-#        Docs: https://kubernetes.io/docs/concepts/overview/components/
-#    Main PID: 3542 (kube-controller)
-#       Tasks: 6 (limit: 3179)
-#      Memory: 17.7M (peak: 18.0M)
-#         CPU: 3.654s
-#      CGroup: /system.slice/kube-controller-manager.service
-#              └─3542 /usr/local/bin/kube-controller-manager --allocate-node-cidrs=true --authentication-kubeconfig=…
-
-# Sep 03 15:33:10 controlplane kube-controller-manager[3542]: E0903 15:33:10.767925    3542 reflector.go:204] "…gMap"
-# Sep 03 15:33:11 controlplane kube-controller-manager[3542]: E0903 15:33:11.489420    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:14 controlplane kube-controller-manager[3542]: E0903 15:33:14.062028    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:16 controlplane kube-controller-manager[3542]: E0903 15:33:16.944537    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:20 controlplane kube-controller-manager[3542]: E0903 15:33:20.626492    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:24 controlplane kube-controller-manager[3542]: E0903 15:33:24.404425    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:28 controlplane kube-controller-manager[3542]: E0903 15:33:28.106557    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:32 controlplane kube-controller-manager[3542]: E0903 15:33:32.216710    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:36 controlplane kube-controller-manager[3542]: E0903 15:33:36.571366    3542 leaderelection.go:4…ager"
-# Sep 03 15:33:39 controlplane kube-controller-manager[3542]: E0903 15:33:39.093775    3542 leaderelection.go:4…ager"
-# Hint: Some lines were ellipsized, use -l to show in full.
+#      Active: active (running)
 ```
 
 ---

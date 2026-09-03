@@ -4,6 +4,7 @@
 
 - [CKS - Master node: API Server](#cks---master-node-api-server)
   - [API Server - Overview](#api-server---overview)
+    - [Required files](#required-files)
     - [Identity table](#identity-table)
     - [`api server` certificate](#api-server-certificate)
     - [`etcd` client certificate](#etcd-client-certificate)
@@ -18,7 +19,9 @@
 
 ## API Server - Overview
 
-- Required files
+### Required files
+
+Files required by the `kube-apiserver` systemd unit:
 
 | File                           | Type                    | Purpose                                                  |
 | ------------------------------ | ----------------------- | -------------------------------------------------------- |
@@ -35,32 +38,21 @@
 | `front-proxy-client.crt`       | Client certificate      | Authenticates the API server to extension API servers    |
 | `front-proxy-client.key`       | Private key             | Private key for the aggregation-layer client certificate |
 
-- networking:
+- Networking:
   - Service CIDR: 10.96.0.0/12 (Default, about 1 million addresses)
-  - etcd servers: ip:2379
-  - https port: 6443
+  - etcd endpoint: 127.0.0.1:2379
+  - API server port: 6443
 
 ---
 
 ### Identity table
 
-| Cert                       | CN (username)                    | O (group)                        | Purpose                     |
-| -------------------------- | -------------------------------- | -------------------------------- | --------------------------- |
-| `admin`                    | `admin`                          | `system:masters`                 | `kubectl` identity          |
-| `kube-controller-manager`  | `system:kube-controller-manager` | `system:kube-controller-manager` | controller loops            |
-| `kube-scheduler`           | `system:kube-scheduler`          | `system:kube-scheduler`          | scheduling                  |
-| `kube-proxy`               | `system:kube-proxy`              | `system:node-proxier`            | Service rules               |
-| `kubelet` (per node)       | `system:node:<hostname>`         | `system:nodes`                   | Node authorizer             |
-| `kube-apiserver`           | `kube-apiserver`                 | `Kubernetes` (optional)          | serving cert (SANs matter)  |
-| `apiserver-etcd-client`    | `kube-apiserver-etcd-client`     | `Kubernetes`                     | apiserver -> etcd           |
-| `apiserver-kubelet-client` | `kube-apiserver-kubelet-client`  | `system:masters`                 | apiserver -> kubelet        |
-| `service-account`          | --                               | --                               | keypair, signs SA tokens    |
-| `front-proxy-ca`           | `front-proxy-ca`                 | --                               | separate CA for aggregation |
-| `front-proxy-client`       | `front-proxy-client`             | --                               | apiserver -> extension API  |
-
-- Group:
-  - `system:masters`: a built-in, hard-coded Kubernetes group that grants full, unrestricted **super-user access** to the API server,
-  - `system:nodes`: a built-in system group automatically assigned to **all** `Kubelets` (the node agents) for authentication and RBAC authorization.
+| Certificate                     | CN                              | O                | Purpose                         |
+| ------------------------------- | ------------------------------- | ---------------- | ------------------------------- |
+| `apiserver.crt`                 | `kube-apiserver`                | `Kubernetes`     | Serves the Kubernetes API       |
+| `apiserver-etcd-client.crt`     | `kube-apiserver-etcd-client`    | `Kubernetes`     | Authenticates to etcd           |
+| `apiserver-kubelet-client.crt`  | `kube-apiserver-kubelet-client` | `system:masters` | Authenticates to kubelets       |
+| `front-proxy-client.crt`        | `front-proxy-client`            | --               | Authenticates to extension APIs |
 
 ---
 
@@ -119,34 +111,17 @@ openssl x509 -req -in apiserver.csr \
 # Certificate request self-signature ok
 # subject=CN = kube-apiserver, O = Kubernetes
 
-# verify certificate chain, purpose, and SANs
+# verify certificate chain, usage, and SANs
 openssl verify -CAfile ca.crt apiserver.crt
 # apiserver.crt: OK
 
 openssl x509 -in apiserver.crt -noout \
-  -subject -issuer -purpose -ext subjectAltName
+  -subject -issuer -ext extendedKeyUsage,subjectAltName
 
 # subject=CN = kube-apiserver, O = Kubernetes
 # issuer=CN = kubernetes-ca, O = Kubernetes
-# Certificate purposes:
-# SSL client : Yes
-# SSL client CA : No
-# SSL server : Yes
-# SSL server CA : No
-# Netscape SSL server : Yes
-# Netscape SSL server CA : No
-# S/MIME signing : Yes
-# S/MIME signing CA : No
-# S/MIME encryption : Yes
-# S/MIME encryption CA : No
-# CRL signing : Yes
-# CRL signing CA : No
-# Any Purpose : Yes
-# Any Purpose CA : Yes
-# OCSP helper : Yes
-# OCSP helper CA : No
-# Time Stamp signing : No
-# Time Stamp signing CA : No
+# X509v3 Extended Key Usage:
+#     TLS Web Server Authentication
 # X509v3 Subject Alternative Name:
 #     DNS:kubernetes, DNS:kubernetes.default, DNS:kubernetes.default.svc, DNS:kubernetes.default.svc.cluster.local, DNS:controlplane, DNS:localhost, IP Address:10.96.0.1, IP Address:192.168.10.180, IP Address:127.0.0.1
 
@@ -210,34 +185,17 @@ gen_client apiserver-etcd-client "/CN=kube-apiserver-etcd-client/O=Kubernetes"
 # subject=CN = kube-apiserver-etcd-client, O = Kubernetes
 # removed 'apiserver-etcd-client.csr'
 
-# Verify certificate chain and purpose
+# Verify certificate chain and usage
 openssl verify -CAfile ca.crt apiserver-etcd-client.crt
 # apiserver-etcd-client.crt: OK
 
 openssl x509 -in apiserver-etcd-client.crt -noout \
-  -subject -issuer -purpose
+  -subject -issuer -ext extendedKeyUsage
 
 # subject=CN = kube-apiserver-etcd-client, O = Kubernetes
 # issuer=CN = kubernetes-ca, O = Kubernetes
-# Certificate purposes:
-# SSL client : Yes
-# SSL client CA : No
-# SSL server : No
-# SSL server CA : No
-# Netscape SSL server : No
-# Netscape SSL server CA : No
-# S/MIME signing : No
-# S/MIME signing CA : No
-# S/MIME encryption : No
-# S/MIME encryption CA : No
-# CRL signing : No
-# CRL signing CA : No
-# Any Purpose : Yes
-# Any Purpose CA : Yes
-# OCSP helper : Yes
-# OCSP helper CA : No
-# Time Stamp signing : No
-# Time Stamp signing CA : No
+# X509v3 Extended Key Usage:
+#     TLS Web Client Authentication
 
 
 # ##############################
@@ -265,34 +223,17 @@ gen_client apiserver-kubelet-client "/CN=kube-apiserver-kubelet-client/O=system:
 # subject=CN = kube-apiserver-kubelet-client, O = system:masters
 # removed 'apiserver-kubelet-client.csr'
 
-# Verify certificate chain and purpose
+# Verify certificate chain and usage
 openssl verify -CAfile ca.crt apiserver-kubelet-client.crt
 # apiserver-kubelet-client.crt: OK
 
 openssl x509 -in apiserver-kubelet-client.crt -noout \
-  -subject -issuer -purpose
+  -subject -issuer -ext extendedKeyUsage
 
 # subject=CN = kube-apiserver-kubelet-client, O = system:masters
 # issuer=CN = kubernetes-ca, O = Kubernetes
-# Certificate purposes:
-# SSL client : Yes
-# SSL client CA : No
-# SSL server : No
-# SSL server CA : No
-# Netscape SSL server : No
-# Netscape SSL server CA : No
-# S/MIME signing : No
-# S/MIME signing CA : No
-# S/MIME encryption : No
-# S/MIME encryption CA : No
-# CRL signing : No
-# CRL signing CA : No
-# Any Purpose : Yes
-# Any Purpose CA : Yes
-# OCSP helper : Yes
-# OCSP helper CA : No
-# Time Stamp signing : No
-# Time Stamp signing CA : No
+# X509v3 Extended Key Usage:
+#     TLS Web Client Authentication
 
 # ##############################
 # Install the kubelet client certificate
@@ -351,7 +292,7 @@ cd ~/pki
 # create private key
 openssl genrsa -out front-proxy-ca.key 2048
 
-# create csr
+# create self-signed CA certificate
 openssl req -x509 -new -noenc -key front-proxy-ca.key -sha256 -days 3650 \
   -subj "/CN=front-proxy-ca" \
   -addext "basicConstraints=critical,CA:TRUE" \
@@ -376,7 +317,7 @@ openssl genrsa -out front-proxy-client.key 2048
 openssl req -new -key front-proxy-client.key -out front-proxy-client.csr \
   -subj "/CN=front-proxy-client"
 
-# create csr
+# sign the client certificate
 openssl x509 -req -in front-proxy-client.csr \
   -CA front-proxy-ca.crt -CAkey front-proxy-ca.key -CAcreateserial \
   -out front-proxy-client.crt -days 365 -sha256 \
@@ -416,7 +357,7 @@ export K8S_VERSION=v1.35.8
 # ##############################
 cd /tmp
 
-curl -L -o kube-apiserver "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kube-apiserver"
+curl -fL -o kube-apiserver "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kube-apiserver"
 #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 #                                  Dload  Upload   Total   Spent    Left  Speed
 # 100 82.7M  100 82.7M    0     0  11.9M      0  0:00:06  0:00:06 --:--:-- 13.5M
@@ -513,7 +454,7 @@ sudo systemctl status kube-apiserver --no-pager
 ```sh
 # install kubectl
 export K8S_VERSION=v1.35.8
-curl -LO "https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/amd64/kubectl"
+curl -fLO "https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/amd64/kubectl"
 #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 #                                  Dload  Upload   Total   Spent    Left  Speed
 # 100 59.0M  100 59.0M    0     0  6198k      0  0:00:09  0:00:09 --:--:-- 6964k
@@ -536,7 +477,7 @@ cd ~/pki
 # Create client cert: admin
 # ##############################
 # create client certificates: admin
-gen_client admin                    "/CN=admin/O=system:masters"
+gen_client admin "/CN=admin/O=system:masters"
 # Certificate request self-signature ok
 # subject=CN = admin, O = system:masters
 # removed 'admin.csr'

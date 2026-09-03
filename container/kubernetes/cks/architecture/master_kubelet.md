@@ -3,14 +3,33 @@
 [Back](../../index.md)
 
 - [CKS - Master node: `kubelet`](#cks---master-node-kubelet)
-  - [kubelet - Overview](#kubelet---overview)
+  - [Kubelet - Overview](#kubelet---overview)
   - [Install `kubelet`](#install-kubelet)
   - [PKI - Kubelet certificate](#pki---kubelet-certificate)
   - [Configure kubeconfig](#configure-kubeconfig)
 
 ---
 
-## kubelet - Overview
+## Kubelet - Overview
+
+Files required by the `kubelet` systemd unit:
+
+| File                                   | Type            | Purpose                                 |
+| -------------------------------------- | --------------- | --------------------------------------- |
+| `/var/lib/kubelet/kubelet-config.yaml` | Configuration   | Configures the kubelet                  |
+| `/var/lib/kubelet/kubeconfig`          | Kubeconfig      | Connects the kubelet to the API server  |
+| `/var/lib/kubelet/controlplane.crt`    | TLS certificate | Identifies the kubelet                  |
+| `/var/lib/kubelet/controlplane.key`    | Private key     | Private key for the kubelet certificate |
+| `/etc/kubernetes/pki/ca.crt`           | CA certificate  | Verifies kubelet API clients            |
+| `/run/containerd/containerd.sock`      | Unix socket     | Connects the kubelet to containerd      |
+
+- Identity
+
+| Certificate        | CN                         | O              | Purpose                                                |
+| ------------------ | -------------------------- | -------------- | ------------------------------------------------------ |
+| `controlplane.crt` | `system:node:controlplane` | `system:nodes` | Authenticates to the API server and serves kubelet TLS |
+
+---
 
 ## Install `kubelet`
 
@@ -22,12 +41,12 @@ cd /tmp
 # ##############################
 # Install kubelet
 # ##############################
-curl -L -o "kubelet" "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kubelet"
+curl -fL -o kubelet "https://dl.k8s.io/${K8S_VERSION}/bin/linux/amd64/kubelet"
 #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 #                                  Dload  Upload   Total   Spent    Left  Speed
 # 100 56.2M  100 56.2M    0     0  13.4M      0  0:00:04  0:00:04 --:--:-- 13.7M
 
-sudo install -m 755 "kubelet" /usr/local/bin/
+sudo install -v -o root -g root -m 0755 kubelet /usr/local/bin/
 # 'kubelet' -> '/usr/local/bin/kubelet'
 
 kubelet --version
@@ -91,7 +110,7 @@ openssl x509 -in controlplane.crt -noout -subject -ext subjectAltName
 #     DNS:controlplane, IP Address:192.168.10.180
 
 # ##############################
-# Install key and crt
+# Install certificate and key
 # ##############################
 sudo mkdir -pv /var/lib/kubelet
 # mkdir: created directory '/var/lib/kubelet'
@@ -103,39 +122,39 @@ sudo install -v -o root -g root -m 0600 ~/pki/controlplane.key /var/lib/kubelet/
 
 ```
 
+---
+
 ## Configure kubeconfig
 
 ```sh
 cd ~/pki
 
 # ##############################
-# Configure kubeconfig: controlplane
+# Configure kubeconfig: kubelet
 # ##############################
-export KUBERNETES_PUBLIC_ADDRESS=192.168.10.180
-
-# set cluster: ip
+# set cluster
 kubectl config set-cluster kubernetes \
-    --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443  \
-    --certificate-authority=ca.crt  \
-    --embed-certs=true \
-    --kubeconfig=controlplane.config
+  --server=https://192.168.10.180:6443 \
+  --certificate-authority=ca.crt \
+  --embed-certs=true \
+  --kubeconfig=controlplane.config
 
 # Cluster "kubernetes" set.
 
 # set credential: controlplane
 kubectl config set-credentials system:node:controlplane \
-    --client-key=controlplane.key   \
-    --client-certificate=controlplane.crt   \
-    --embed-certs=true  \
-    --kubeconfig=controlplane.config
+  --client-key=controlplane.key \
+  --client-certificate=controlplane.crt \
+  --embed-certs=true \
+  --kubeconfig=controlplane.config
 
 # User "system:node:controlplane" set.
 
 # set default context
 kubectl config set-context default \
-    --cluster=kubernetes    \
-    --user=system:node:controlplane \
-    --kubeconfig=controlplane.config
+  --cluster=kubernetes \
+  --user=system:node:controlplane \
+  --kubeconfig=controlplane.config
 
 # Context "default" created.
 
@@ -153,7 +172,7 @@ sudo install -v -o root -g root -m 0600 controlplane.config /var/lib/kubelet/kub
 
 
 # ##############################
-# config file: kubelet
+# Configure kubelet
 # ##############################
 cat <<'EOF' | sudo tee /var/lib/kubelet/kubelet-config.yaml
 kind: KubeletConfiguration
@@ -180,7 +199,7 @@ seccompDefault: true
 EOF
 
 # ##############################
-# systemd unit: kubelet
+# Configure systemd unit: kubelet
 # ##############################
 cat <<'EOF' | sudo tee /etc/systemd/system/kubelet.service
 [Unit]
@@ -225,9 +244,7 @@ sudo systemctl status kubelet --no-pager --full
 kubectl get nodes
 # NAME           STATUS     ROLES    AGE   VERSION
 # controlplane   NotReady   <none>   23s   v1.35.8
-```
 
-```sh
 # runbook
 sudo journalctl -u kubelet -b -n 20 --no-pager --output=cat
 ```

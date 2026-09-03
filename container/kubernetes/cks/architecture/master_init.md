@@ -28,7 +28,7 @@
   - OS: Ubuntu 24.04 LTS
   - CPU: 4 vCPU
   - Memory: 4 GB
-  - Disk: 40GB
+  - Disk: 40 GB
   - IP: 192.168.10.180
 
 - Worker Node 1:
@@ -36,7 +36,7 @@
   - OS: Ubuntu 24.04 LTS
   - CPU: 2 vCPU
   - Memory: 2 GB
-  - Disk: 40GB
+  - Disk: 40 GB
   - IP: 192.168.10.181
 
 - Worker Node 2:
@@ -44,7 +44,7 @@
   - OS: Ubuntu 24.04 LTS
   - CPU: 2 vCPU
   - Memory: 2 GB
-  - Disk: 40GB
+  - Disk: 40 GB
   - IP: 192.168.10.182
 
 ---
@@ -65,25 +65,20 @@ Network ranges used below:
 | #   | Layer         | Component                         |
 | --- | ------------- | --------------------------------- |
 | 0   | OS            | swap off, kernel modules, sysctl  |
-| 1   | Runtime       | `containerd` (apt, +`runc`) + CNI |
+| 1   | Runtime       | `containerd` and `runc`           |
 | 2   | Trust         | CA + all certificates             |
 | 3   | Trust         | kubeconfig files                  |
 | 4   | State         | `etcd`                            |
-| 5   | Control plane | `kube-apiserver`                  |
-| 5   | Control plane | `kube-controller-manager`         |
-| 5   | Control plane | `kube-scheduler`                  |
+| 5   | Control plane | `kube-apiserver`, `kube-controller-manager`, `kube-scheduler` |
 | 6   | Node          | `kubelet`, `kube-proxy`           |
 | 7   | Network       | CNI plugin                        |
 | 8   | Addon         | CoreDNS                           |
 
 ### Version
 
-```txt
+```sh
 export K8S_VERSION=v1.35.8
 export ETCD_VERSION=v3.6.14
-export CONTAINERD_VERSION=2.3.4
-export RUNC_VERSION=v1.5.1
-export CNI_VERSION=v1.9.1
 ```
 
 ---
@@ -103,7 +98,8 @@ export CNI_VERSION=v1.9.1
 # ##############################
 # update & upgrade
 # ##############################
-sudo apt update && sudo apt upgrade
+sudo apt-get update
+sudo apt-get upgrade -y
 
 
 # ##############################
@@ -140,17 +136,16 @@ sudo netplan apply
 # confirm
 ip -br a
 # lo               UNKNOWN        127.0.0.1/8 ::1/128
-# ens33            UP             192.168.10.180/24 10.0.0.167/24 2607:fea8:2adc:8500:ea46:8bd8:f8c5:e9ed/64 2607:fea8:2adc:8500:20c:29ff:fecd:d439/64 fe80::20c:29ff:fecd:d439/64
+# ens33            UP             192.168.10.180/24
 
 # ##############################
 # Disable swap
 # ##############################
-# Disable swap
 sudo swapoff -a
 sudo sed -i '/[[:space:]]swap[[:space:]]/s/^/#/' /etc/fstab
 
 # confirm
-cat /etc/fstab | grep swap
+grep swap /etc/fstab
 #/swap.img      none    swap    sw      0       0
 
 free -h
@@ -212,13 +207,13 @@ sudo sysctl vm.overcommit_memory vm.panic_on_oom kernel.panic kernel.panic_on_oo
 # kernel.panic_on_oops = 1
 
 # ##############################
-# Disable firewal for lab; not in production
+# Disable firewall for the lab
 # ##############################
 sudo systemctl disable --now ufw 2>/dev/null || true
 
 # ##############################
 # Install tools
-# #############################
+# ##############################
 sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
 
 # ##############################

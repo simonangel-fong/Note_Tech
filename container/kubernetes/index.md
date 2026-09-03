@@ -298,29 +298,11 @@ Discord Community: https://kplabs.in/chat
   - [Init node](./cks/architecture/master_init.md)
   - [Install runtime](./cks/architecture/master_runtime.md)
   - [Install `etcd`](./cks/architecture/master_etcd.md)
-  - [5. `api server`](./cks/architecture/master_apiserver.md)
-  - [6. `kube-controller-manager](./cks/architecture/master_controller_manager.md)
-  - [6. `kube-scheduler](./cks/architecture/master_scheduler.md)
-  - [6. `kubelet`](./cks/architecture/master_kubelet.md)
-  - [6. `kube-proxy`](./cks/architecture/master_kube_proxy.md)
-  - [7. CNI](./cks/architecture/master_CNI.md)
+  - [Install `api server`](./cks/architecture/master_apiserver.md)
+  - [Install `kube-controller-manager](./cks/architecture/master_controller_manager.md)
+  - [Install `kube-scheduler](./cks/architecture/master_scheduler.md)
+  - [Install `kubelet`](./cks/architecture/master_kubelet.md)
+  - [Install `kube-proxy`](./cks/architecture/master_kube_proxy.md)
+  - [Install `calico`(CNI) & `corddns`](./cks/architecture/master_cni_coredns.md)
 
 - [Encryption at rest](./cks/encryption_at_rest.md)
-
-- Architecture
-  - [API server](./cks/architecture/api_server.md)
--
-
-| #   | Layer         | Component                         | Depends on                  |
-| --- | ------------- | --------------------------------- | --------------------------- |
-| 0   | OS            | swap off, kernel modules, sysctl  | --                          |
-| 1   | Runtime       | `containerd` (apt, +`runc`) + CNI | Phase 0                     |
-| 2   | Trust         | CA + all certificates             | --                          |
-| 3   | Trust         | kubeconfig files                  | Phase 2                     |
-| 4   | State         | `etcd`                            | Phase 2 (peer/server certs) |
-| 5   | Control plane | `kube-apiserver`                  | Phase 4                     |
-| 5   | Control plane | `kube-controller-manager`         | apiserver                   |
-| 5   | Control plane | `kube-scheduler`                  | apiserver                   |
-| 6   | Node          | `kubelet`, `kube-proxy`           | runtime + apiserver         |
-| 7   | Network       | CNI plugin (Cilium)               | kubelet running             |
-| 8   | Addon         | CoreDNS                           | CNI ready                   |

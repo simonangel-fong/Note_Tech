@@ -10,7 +10,7 @@
 
 ## Install `containerd`
 
-- ref: https://github.com/containerd/containerd/blob/main/docs/getting-started.md
+- Reference: [containerd getting started](https://github.com/containerd/containerd/blob/main/docs/getting-started.md)
 
 ```sh
 # ##############################
@@ -19,7 +19,7 @@
 sudo apt-get update
 sudo apt-get install -y containerd
 
-# confirm both arrived
+# confirm versions
 containerd --version
 # containerd github.com/containerd/containerd/v2 2.2.1
 runc --version
@@ -28,8 +28,8 @@ runc --version
 # go: go1.24.4
 # libseccomp: 2.5.5
 
-# show binary path
-which containerd runc
+# confirm binary paths
+command -v containerd runc
 # /usr/bin/containerd
 # /usr/sbin/runc
 
@@ -42,9 +42,9 @@ containerd config default | sudo tee /etc/containerd/config.toml >/dev/null
 # Set systemd cgroup driver: Sets SystemdCgroup = true
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 
-# apply the change
+# enable and restart containerd
+sudo systemctl enable containerd
 sudo systemctl restart containerd
-sudo systemctl enable --now containerd
 
 # confirm
 sudo systemctl status containerd --no-pager
@@ -79,13 +79,14 @@ sudo systemctl status containerd --no-pager
 ```sh
 export CRICTL_VERSION=v1.35.0
 
-curl -LO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz"
+cd /tmp
+curl -fLO "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz"
 #   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 #                                  Dload  Upload   Total   Spent    Left  Speed
 #   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
 # 100 18.2M  100 18.2M    0     0  17.7M      0  0:00:01  0:00:01 --:--:-- 28.0M
 
-sudo tar Cxzvf /usr/local/bin "crictl-${CRICTL_VERSION}-linux-amd64.tar.gz"
+sudo tar -xzf "crictl-${CRICTL_VERSION}-linux-amd64.tar.gz" -C /usr/local/bin
 # crictl
 
 # config file
@@ -98,7 +99,7 @@ EOF
 # image-endpoint: unix:///run/containerd/containerd.sock
 # timeout: 10
 
-# confirm
+# confirm CRI connection
 sudo crictl version
 # Version:  0.1.0
 # RuntimeName:  containerd
