@@ -435,7 +435,7 @@ ls -l /etc/kubernetes/pki
 # -rw-r--r-- 1 root root  451 Sep  2 16:04 service-account.pem
 
 # confirm cert chains
- for c in kube-apiserver apiserver-kubelet-client apiserver-etcd-client \
+for c in kube-apiserver apiserver-kubelet-client apiserver-etcd-client \
          etcd-server controlplane; do
   printf '%-26s ' "$c"
   sudo openssl verify -CAfile /etc/kubernetes/pki/ca.pem \
@@ -559,60 +559,7 @@ kubectl config set-context default --cluster=kubernetes \
 kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
 # Switched to context "default".
 
-# ##############################
-# Configure kubeconfig: kube-controller-manager
-# ##############################
-# set cluster
-kubectl config set-cluster kubernetes \
-  --certificate-authority=ca.crt --embed-certs=true \
-  --server=https://127.0.0.1:6443 \
-  --kubeconfig=kube-controller-manager.kubeconfig
 
-# Cluster "kubernetes" set.
-
-# set user
-kubectl config set-credentials system:kube-controller-manager \
-  --client-certificate=kube-controller-manager.crt \
-  --client-key=kube-controller-manager.key \
-  --embed-certs=true --kubeconfig=kube-controller-manager.kubeconfig
-
-# User "system:kube-controller-manager" set.
-
-# set context
-kubectl config set-context default --cluster=kubernetes \
-  --user=system:kube-controller-manager --kubeconfig=kube-controller-manager.kubeconfig
-
-# Context "default" created.
-
-kubectl config use-context default --kubeconfig=kube-controller-manager.kubeconfig
-# Switched to context "default".
-
-# ##############################
-# Configure kubeconfig: kube-scheduler
-# ##############################
-# set cluster
-kubectl config set-cluster kubernetes \
-  --certificate-authority=ca.crt --embed-certs=true \
-  --server=https://127.0.0.1:6443 \
-  --kubeconfig=kube-scheduler.kubeconfig
-
-# Cluster "kubernetes" set.
-
-# set user
-kubectl config set-credentials system:kube-scheduler \
-  --client-certificate=kube-scheduler.crt --client-key=kube-scheduler.key \
-  --embed-certs=true --kubeconfig=kube-scheduler.kubeconfig
-
-# User "system:kube-scheduler" set.
-
-# set context
-kubectl config set-context default --cluster=kubernetes \
-  --user=system:kube-scheduler --kubeconfig=kube-scheduler.kubeconfig
-
-# Context "default" created.
-
-kubectl config use-context default --kubeconfig=kube-scheduler.kubeconfig
-# Switched to context "default".
 
 # ##############################
 # Configure kubeconfig: admin

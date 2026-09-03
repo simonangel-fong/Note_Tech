@@ -51,24 +51,24 @@ ls ca.*
 
 ```sh
 # create default path for Public Key Infrastructure (PKI) certificates and private keys
-mkdir -pv /etc/kubernetes/pki
+sudo mkdir -pv /etc/kubernetes/pki
 # mkdir: created directory '/etc/kubernetes'
 # mkdir: created directory '/etc/kubernetes/pki'
 
 cd ~/pki
 
 # root ca
-sudo install -v -m 644 ca.crt /etc/kubernetes/pki/ca.pem
-# 'ca.crt' -> '/etc/kubernetes/pki/ca.pem'
-sudo install -v -m 600 ca.key /etc/kubernetes/pki/ca-key.pem
-# 'ca.key' -> '/etc/kubernetes/pki/ca-key.pem'
+sudo install -v -m 644 ca.crt /etc/kubernetes/pki/ca.crt
+# 'ca.crt' -> '/etc/kubernetes/pki/ca.crt'
+sudo install -v -m 600 ca.key /etc/kubernetes/pki/ca.key
+# 'ca.key' -> '/etc/kubernetes/pki/ca.key'
 
 # update ownership
-sudo chown -Rv root:root /etc/kubernetes/pki/ca.pem /etc/kubernetes/pki/ca-key.pem
+sudo chown -Rv root:root /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/ca.key
 
-ls -l /etc/kubernetes/pki/ca.pem /etc/kubernetes/pki/ca-key.pem
-# -rw------- 1 root root 1704 Sep  3 08:29 /etc/kubernetes/pki/ca-key.pem
-# -rw-r--r-- 1 root root 1204 Sep  3 08:29 /etc/kubernetes/pki/ca.pem
+ls -l /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/ca.key
+# -rw------- 1 root root 1704 Sep  3 08:29 /etc/kubernetes/pki/ca.key
+# -rw-r--r-- 1 root root 1204 Sep  3 08:29 /etc/kubernetes/pki/ca.crt
 ```
 
 ---
@@ -139,19 +139,19 @@ ls | grep etcd-server
 
 ```sh
 # etcd server
-sudo install -v -m 644 etcd-server.crt /etc/kubernetes/pki/etcd-server.pem
-# 'etcd-server.crt' -> '/etc/kubernetes/pki/etcd-server.pem'
-sudo install -v -m 600 etcd-server.key /etc/kubernetes/pki/etcd-server-key.pem
-# 'etcd-server.key' -> '/etc/kubernetes/pki/etcd-server-key.pem'
+sudo install -v -m 644 etcd-server.crt /etc/kubernetes/pki/etcd-server.crt
+# 'etcd-server.crt' -> '/etc/kubernetes/pki/etcd-server.crt'
+sudo install -v -m 600 etcd-server.key /etc/kubernetes/pki/etcd-server.key
+# 'etcd-server.key' -> '/etc/kubernetes/pki/etcd-server.key'
 
 # update ownership
-sudo chown -Rv root:root /etc/kubernetes/pki/etcd-server.pem /etc/kubernetes/pki/etcd-server-key.pem
-# ownership of '/etc/kubernetes/pki/etcd-server.pem' retained as root:root
-# ownership of '/etc/kubernetes/pki/etcd-server-key.pem' retained as root:root
+sudo chown -Rv root:root /etc/kubernetes/pki/etcd-server.crt /etc/kubernetes/pki/etcd-server.key
+# ownership of '/etc/kubernetes/pki/etcd-server.crt' retained as root:root
+# ownership of '/etc/kubernetes/pki/etcd-server.key' retained as root:root
 
-ls -l /etc/kubernetes/pki/etcd-server.pem /etc/kubernetes/pki/etcd-server-key.pem
-# -rw------- 1 root root 1704 Sep  3 08:26 /etc/kubernetes/pki/etcd-server-key.pem
-# -rw-r--r-- 1 root root 1294 Sep  3 08:26 /etc/kubernetes/pki/etcd-server.pem
+ls -l /etc/kubernetes/pki/etcd-server.crt /etc/kubernetes/pki/etcd-server.key
+# -rw-r--r-- 1 root root 1294 Sep  3 08:26 /etc/kubernetes/pki/etcd-server.crt
+# -rw------- 1 root root 1704 Sep  3 08:26 /etc/kubernetes/pki/etcd-server.key
 ```
 
 ---
@@ -159,9 +159,9 @@ ls -l /etc/kubernetes/pki/etcd-server.pem /etc/kubernetes/pki/etcd-server-key.pe
 ## Install `etcd`
 
 - required:
-  - `/etc/kubernetes/pki/ca.pem`: Root Certificate Authority (CA) public certificate for a Kubernetes cluster
-  - `/etc/kubernetes/pki/etcd-server.pem`: etcd **public key** certificate file
-  - `/etc/kubernetes/pki/etcd-server-key.pem`: **private key** of an etcd database server
+  - `/etc/kubernetes/pki/ca.crt`: Root Certificate Authority (CA) public certificate for a Kubernetes cluster
+  - `/etc/kubernetes/pki/etcd-server.crt`: etcd **public key** certificate file
+  - `/etc/kubernetes/pki/etcd-server.key`: **private key** of an etcd database server
   - `ip:2380`: etcd server peer-to-peer communication
   - `ip:2379`: etcd default port for client requests and API communication.
 
@@ -208,19 +208,19 @@ Wants=network-online.target
 Type=notify
 ExecStart=/usr/local/bin/etcd \
   --name controlplane \
+  --advertise-client-urls https://192.168.10.180:2379 \
+  --trusted-ca-file=/etc/kubernetes/pki/ca.crt \
+  --cert-file=/etc/kubernetes/pki/etcd-server.crt \
   --data-dir=/var/lib/etcd \
-  --cert-file=/etc/kubernetes/pki/etcd-server.pem \
-  --key-file=/etc/kubernetes/pki/etcd-server-key.pem \
-  --peer-cert-file=/etc/kubernetes/pki/etcd-server.pem \
-  --peer-key-file=/etc/kubernetes/pki/etcd-server-key.pem \
-  --trusted-ca-file=/etc/kubernetes/pki/ca.pem \
-  --peer-trusted-ca-file=/etc/kubernetes/pki/ca.pem \
+  --key-file=/etc/kubernetes/pki/etcd-server.key \
+  --peer-cert-file=/etc/kubernetes/pki/etcd-server.crt \
+  --peer-key-file=/etc/kubernetes/pki/etcd-server.key \
+  --peer-trusted-ca-file=/etc/kubernetes/pki/ca.crt \
   --client-cert-auth \
   --peer-client-cert-auth \
   --initial-advertise-peer-urls https://192.168.10.180:2380 \
   --listen-peer-urls https://192.168.10.180:2380 \
   --listen-client-urls https://192.168.10.180:2379,https://127.0.0.1:2379 \
-  --advertise-client-urls https://192.168.10.180:2379 \
   --initial-cluster-token etcd-cluster-0 \
   --initial-cluster controlplane=https://192.168.10.180:2380 \
   --initial-cluster-state new
@@ -266,9 +266,9 @@ sudo systemctl status etcd --no-pager
 # test connection
 sudo etcdctl member list -w table \
   --endpoints=https://127.0.0.1:2379 \
-  --cacert=/etc/kubernetes/pki/ca.pem \
-  --cert=/etc/kubernetes/pki/etcd-server.pem \
-  --key=/etc/kubernetes/pki/etcd-server-key.pem
+  --cacert=/etc/kubernetes/pki/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd-server.crt \
+  --key=/etc/kubernetes/pki/etcd-server.key
 # +------------------+---------+--------------+-----------------------------+-----------------------------+------------+
 # |        ID        | STATUS  |     NAME     |         PEER ADDRS          |        CLIENT ADDRS         | IS LEARNER |
 # +------------------+---------+--------------+-----------------------------+-----------------------------+------------+
@@ -278,8 +278,8 @@ sudo etcdctl member list -w table \
 # health of the endpoint
 sudo etcdctl endpoint health \
   --endpoints=https://127.0.0.1:2379 \
-  --cacert=/etc/kubernetes/pki/ca.pem \
-  --cert=/etc/kubernetes/pki/etcd-server.pem \
-  --key=/etc/kubernetes/pki/etcd-server-key.pem
+  --cacert=/etc/kubernetes/pki/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd-server.crt \
+  --key=/etc/kubernetes/pki/etcd-server.key
 # https://127.0.0.1:2379 is healthy: successfully committed proposal: took = 6.349056ms
 ```

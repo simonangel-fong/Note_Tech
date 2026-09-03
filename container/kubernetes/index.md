@@ -298,14 +298,16 @@ Discord Community: https://kplabs.in/chat
   - Master node:
   - [1 Node init](./cks/architecture/master_init.md)
   - [2. Runtime](./cks/architecture/master_runtime.md)
+  - [2. kubeconfig](./cks/architecture/master_kubeconfig.md)
   - [3. PKI](./cks/architecture/master_pki.md)
   - [4. `etcd`](./cks/architecture/master_etcd.md)
-  - [5. Controlplane](./cks/architecture/master_controlplane.md)
+  - [5. `api server`](./cks/architecture/master_apiserver.md)
+  - [6. `kube-controller-manager](./cks/architecture/master_controller_manager.md)
+  - [6. `kube-scheduler](./cks/architecture/master_scheduler.md)
   - [6. `kubelet`, `kube-proxy`](./cks/architecture/master_kubelet.md)
   - [7. CNI](./cks/architecture/master_CNI.md)
 
 - [Encryption at rest](./cks/encryption_at_rest.md)
-
 
 - Architecture
   - [API server](./cks/architecture/api_server.md)
