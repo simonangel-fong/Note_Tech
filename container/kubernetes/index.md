@@ -311,4 +311,9 @@ Discord Community: https://kplabs.in/chat
   - [Install kubelet](./cks/architecture/worker_kubelet.md)
   - [install kube-proxy](./cks/architecture/worker_kube_proxy.md)
 
+- Architecture components
+  - [api-server](./cks/architecture/apiserver.md)
+  - [etcd](./cks/architecture/etcd.md)
+  - [scheduler](./cks/architecture/scheduler.md)
+
 - [Encryption at rest](./cks/encryption_at_rest.md)
