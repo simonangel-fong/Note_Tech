@@ -94,6 +94,7 @@ kubectl config set-context default \
   --cluster=kubernetes \
   --user=system:kube-proxy \
   --kubeconfig=kube-proxy.config
+
 # Context "default" created.
 
 kubectl config use-context default --kubeconfig=kube-proxy.config
@@ -104,6 +105,7 @@ sudo mkdir -pv /var/lib/kube-proxy
 
 sudo install -v -o root -g root -m 0600 kube-proxy.config \
   /var/lib/kube-proxy/kube-proxy.config
+
 # 'kube-proxy.config' -> '/var/lib/kube-proxy/kube-proxy.config'
 ```
 

@@ -87,6 +87,12 @@ grep -n 'forward' /tmp/coredns.yaml
 # 77:        forward . 8.8.8.8 1.1.1.1 {
 
 kubectl apply -f /tmp/coredns.yaml
+# serviceaccount/coredns created
+# clusterrole.rbac.authorization.k8s.io/system:coredns created
+# clusterrolebinding.rbac.authorization.k8s.io/system:coredns created
+# configmap/coredns created
+# deployment.apps/coredns created
+# service/kube-dns created
 
 kubectl -n kube-system get pods -l k8s-app=kube-dns
 # NAME                       READY   STATUS    RESTARTS   AGE
@@ -97,6 +103,7 @@ kubectl -n kube-system get pods -l k8s-app=kube-dns
 
 ```sh
 kubectl run dnsutils --image=registry.k8s.io/e2e-test-images/agnhost:2.39
+# pod/dnsutils created
 
 kubectl get pod dnsutils
 # NAME       READY   STATUS    RESTARTS   AGE

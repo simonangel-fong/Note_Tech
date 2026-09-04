@@ -179,7 +179,25 @@ sudo systemctl enable --now kube-controller-manager
 sudo systemctl status kube-controller-manager --no-pager --full
 # ● kube-controller-manager.service - Kubernetes Controller Manager
 #      Loaded: loaded (/etc/systemd/system/kube-controller-manager.service; enabled; preset: enabled)
-#      Active: active (running)
+#      Active: active (running) since Thu 2026-09-03 22:41:14 EDT; 4s ago
+#        Docs: https://kubernetes.io/docs/concepts/overview/components/
+#    Main PID: 2291 (kube-controller)
+#       Tasks: 5 (limit: 3179)
+#      Memory: 24.0M (peak: 24.2M)
+#         CPU: 343ms
+#      CGroup: /system.slice/kube-controller-manager.service
+#              └─2291 /usr/local/bin/kube-controller-manager --allocate-node-cidrs=true --authentication-kubeconfig=/etc/kubernetes/kube-controller-manager.conf --authorization-kubeconfig=/etc/kubernetes/kube-controller-manager.conf --bind-address=127.0.0.1 --cluster-name=kubernetes --cluster-cidr=10.244.0.0/16 --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt --cluster-signing-key-file=/etc/kubernetes/pki/ca.key --kubeconfig=/etc/kubernetes/kube-controller-manager.conf --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --leader-elect=true --root-ca-file=/etc/kubernetes/pki/ca.crt --service-account-private-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --use-service-account-credentials=true --v=2
+
+# Sep 03 22:41:17 controlplane kube-controller-manager[2291]: I0903 22:41:17.199777    2291 controllermanager.go:579] "Warning: skipping controller" controller="service-lb-controller"
+# Sep 03 22:41:17 controlplane kube-controller-manager[2291]: I0903 22:41:17.199782    2291 controller_descriptor.go:107] "Skipping a cloud provider controller" controller="node-route-controller"
+# Sep 03 22:41:17 controlplane kube-controller-manager[2291]: I0903 22:41:17.199786    2291 controllermanager.go:579] "Warning: skipping controller" controller="node-route-controller"
+# Sep 03 22:41:17 controlplane kube-controller-manager[2291]: I0903 22:41:17.359557    2291 controller_descriptor.go:99] "Controller is disabled by a feature gate" controller="storageversion-garbage-collector-controller" requiredFeatureGates=["APIServerIdentity","StorageVersionAPI"]
+# Sep 03 22:41:17 controlplane kube-controller-manager[2291]: I0903 22:41:17.359589    2291 controllermanager.go:579] "Warning: skipping controller" controller="storageversion-garbage-collector-controller"
+# Sep 03 22:41:17 controlplane kube-controller-manager[2291]: I0903 22:41:17.505171    2291 controllermanager.go:627] "Warning: controller is disabled" controller="token-cleaner-controller"
+# Sep 03 22:41:17 controlplane kube-controller-manager[2291]: I0903 22:41:17.651073    2291 range_allocator.go:113] "No Secondary Service CIDR provided. Skipping filtering out secondary service addresses" logger="node-ipam-controller"
+# Sep 03 22:41:18 controlplane kube-controller-manager[2291]: I0903 22:41:18.097671    2291 plugins.go:610] "Loaded volume plugin" pluginName="kubernetes.io/host-path"
+# Sep 03 22:41:18 controlplane kube-controller-manager[2291]: I0903 22:41:18.097883    2291 plugins.go:610] "Loaded volume plugin" pluginName="kubernetes.io/nfs"
+# Sep 03 22:41:18 controlplane kube-controller-manager[2291]: I0903 22:41:18.097985    2291 plugins.go:610] "Loaded volume plugin" pluginName="kubernetes.io/portworx-volume"
 ```
 
 ---

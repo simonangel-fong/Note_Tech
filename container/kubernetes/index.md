@@ -304,5 +304,11 @@ Discord Community: https://kplabs.in/chat
   - [Install `kubelet`](./cks/architecture/master_kubelet.md)
   - [Install `kube-proxy`](./cks/architecture/master_kube_proxy.md)
   - [Install `calico`(CNI) & `corddns`](./cks/architecture/master_cni_coredns.md)
+- Install worker node with binary:
+  - [Init node](./cks/architecture/worker_init.md)
+  - [Install runtime](./cks/architecture/worker_runtime.md)
+  - [connect master](./cks/architecture/worker_connect_master.md)
+  - [Install kubelet](./cks/architecture/worker_kubelet.md)
+  - [install kube-proxy](./cks/architecture/worker_kube_proxy.md)
 
 - [Encryption at rest](./cks/encryption_at_rest.md)

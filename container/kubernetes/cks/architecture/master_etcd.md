@@ -183,7 +183,7 @@ curl -fLO "https://github.com/etcd-io/etcd/releases/download/${ETCD_VERSION}/etc
 #   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
 # 100 22.5M  100 22.5M    0     0  20.2M      0  0:00:01  0:00:01 --:--:-- 20.2M
 
-tar xzf "etcd-${ETCD_VERSION}-linux-amd64.tar.gz"
+tar -xzf "etcd-${ETCD_VERSION}-linux-amd64.tar.gz"
 sudo install -v -m 755 "etcd-${ETCD_VERSION}-linux-amd64/etcd" "etcd-${ETCD_VERSION}-linux-amd64/etcdctl" /usr/local/bin/
 # 'etcd-v3.6.14-linux-amd64/etcd' -> '/usr/local/bin/etcd'
 # 'etcd-v3.6.14-linux-amd64/etcdctl' -> '/usr/local/bin/etcdctl'
