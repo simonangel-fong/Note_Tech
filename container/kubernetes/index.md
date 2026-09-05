@@ -315,5 +315,16 @@ Discord Community: https://kplabs.in/chat
   - [api-server](./cks/architecture/apiserver.md)
   - [etcd](./cks/architecture/etcd.md)
   - [scheduler](./cks/architecture/scheduler.md)
+  - [controller manager](./cks/architecture/controller_manager.md)
+  - [kubelet](./cks/architecture/kubelet.md)
+  - [kube-proxy](./cks/architecture/kube_proxy.md)
+  - [CRI runtime](./cks/architecture/runtime.md)
+
+- [Secure etcd](./cks/secure_etcd/secure_etcd.md)
+- [openssl utility](./cks/openssl.md)
+
+- Fundamental
+  - [Certificate creation workflow](./cks/certificate_workflow.md)
+  - [mTLS](./cks/mtls.md)
 
 - [Encryption at rest](./cks/encryption_at_rest.md)
