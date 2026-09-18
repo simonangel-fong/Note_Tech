@@ -282,7 +282,7 @@ alias kcn="kubectl config set-context --current --namespace"
 ## CKS
 
 https://github.com/zealvora/certified-kubernetes-security-specialist
-
+https://github.com/zealvora/certified-kubernetes-security-specialist/blob/main/domain-1-cluster-setup/mutual-tls.md
 Discord Community: https://kplabs.in/chat
 
 ### Cluster Setup
@@ -320,7 +320,10 @@ Discord Community: https://kplabs.in/chat
   - [kube-proxy](./cks/architecture/kube_proxy.md)
   - [CRI runtime](./cks/architecture/runtime.md)
 
-- [Secure etcd](./cks/secure_etcd/secure_etcd.md)
+- [`etcd` security](./cks/etcd/etcd_security.md)
+- API Server Security
+  - [Connect with `etcd`](./cks/apiserver/connect_etcd.md)
+  - [TLS encryption](./cks/apiserver/tls.md)
 - [openssl utility](./cks/openssl.md)
 
 - Fundamental
@@ -328,3 +331,5 @@ Discord Community: https://kplabs.in/chat
   - [mTLS](./cks/mtls.md)
 
 - [Encryption at rest](./cks/encryption_at_rest.md)
+
+- 

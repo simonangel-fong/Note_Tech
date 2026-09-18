@@ -257,8 +257,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # confirm
 kubectl get nodes
-# NAME           STATUS   ROLES           AGE   VERSION
-# controlplane   Ready    control-plane   67s   v1.32.11
+# NAME           STATUS     ROLES           AGE   VERSION
+# controlplane   NotReady   control-plane   25s   v1.32.13
 ```
 
 ---
