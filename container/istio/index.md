@@ -9,6 +9,7 @@
   - [Install `istioctl`](./sidecar/istioctl.md)
   - [Install `Istio` via `istioctl`](./sidecar/istio_istioctl.md)
   - [Install `Istio` via `helm`](./sidecar/istio_helm.md)
+  - [Sidecar Injection](./sidecar/injection.md)
 - [Ambient Mode](./ambient/ambient.md)
   - [Install `Istio` via `helm`](./ambient/istio_helm.md)
 
@@ -27,3 +28,6 @@
   - gateway
   - tls(cert manager) + gateay
   - prometheus + grafana
+
+- [Authentication](./authentication/authentication.md)
+- [PeerAuthentication](./mtls/peerauthentication.md)
