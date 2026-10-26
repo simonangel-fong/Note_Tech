@@ -1,5 +1,7 @@
 # Simon's Tech Notes
 
+<!-- - [System Design](./system_design/system_design.md) -->
+
 - OS
   <!-- -  [Computer Architecture](./Operating_System/computer_architecture/index.md) -->
   - [Linux](./Operating_System/linux/index.md)
@@ -72,5 +74,3 @@
   - [Linux Runbook](./linux/runbook/index.md)
   - [K8s Runbook](./k8s/runbook/index.md)
   - [Terraform Runbook](./terraform/runbook/index.md)
-
-<!-- - [System Design](./system_design/system_design.md) -->
