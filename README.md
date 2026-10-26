@@ -72,3 +72,5 @@
   - [Linux Runbook](./linux/runbook/index.md)
   - [K8s Runbook](./k8s/runbook/index.md)
   - [Terraform Runbook](./terraform/runbook/index.md)
+
+<!-- - [System Design](./system_design/system_design.md) -->
