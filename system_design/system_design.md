@@ -7,9 +7,12 @@
 - [Design rate limiter](./rate_limiter/rate_limiter.md)
 - [Design consistent hashing](./hashing/hashing.md)
 - [Design key-value store](./kv/kv.md)
+- [Design a unique ID generator ](./uid/uid.md)
+- [Design a url shortener](./url/url.md)
+- [Design a web crawler](./crawler/crawler.md)
 
 ---
- 
+
 ## CAP Theorem
 
 - `CAP (Consistency, Availability, Partition Tolerance) theorem`
