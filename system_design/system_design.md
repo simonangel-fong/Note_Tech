@@ -9,7 +9,7 @@
 - [Design key-value store](./kv/kv.md)
 
 ---
-
+ 
 ## CAP Theorem
 
 - `CAP (Consistency, Availability, Partition Tolerance) theorem`
