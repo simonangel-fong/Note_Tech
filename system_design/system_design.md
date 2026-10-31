@@ -10,6 +10,12 @@
 - [Design a unique ID generator ](./uid/uid.md)
 - [Design a url shortener](./url/url.md)
 - [Design a web crawler](./crawler/crawler.md)
+- [Design a notification system](./notification/notification.md)
+- [Design a news feed system](./feed/feed.md)
+- [Design a chat system](./chat/chat.md)
+- [Design a search autocomplete](./autocomplete/autocomplete.md)
+- [Design a youtube](./youtube/youtube.md)
+- [Design Google Drive](./drive/drive.md)
 
 ---
 
