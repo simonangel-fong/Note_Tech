@@ -1,13 +1,26 @@
-- system design interview
+# system design interview
 
-- [SCALE FROM ZERO TO MILLIONS OF USERS](./scale/scale.md)
+[Back](../README.md)
 
-- [BACK-OF-THE-ENVELOPE ESTIMATION](./estimate/estimate.md)
+- [System Design Fundamental](./basics/basics.md)
+  - [Load Balancing](./basics/lb.md)
+  - [Caching](./basics/caching.md)
+  - [Data Partitioning](./basics/partition.md)
+  - [Indexes](./basics/indexes.md)
+  - [Proxies](./basics/proxies.md)
+  - [SQL vs. NoSQL](./basics/sql_nosql.md)
+  - [Communication protocols](./basics/protocols.md)
+  - [Consistent hashing](./basics/hashing.md)
+- [Example: scale from zero to millions of users](./scale/scale.md)
+
 - [Interview](./interview/interview.md)
+
 - [Design rate limiter](./rate_limiter/rate_limiter.md)
-- [Design consistent hashing](./hashing/hashing.md)
 - [Design key-value store](./kv/kv.md)
 - [Design a unique ID generator ](./uid/uid.md)
+
+---
+
 - [Design a url shortener](./url/url.md)
 - [Design a web crawler](./crawler/crawler.md)
 - [Design a notification system](./notification/notification.md)
@@ -35,33 +48,6 @@
   - the system **continues** to operate despite **network partitions**.
 
 ![cap](./img/cap.png)
-
----
-
-- `CP (consistency and partition tolerance) systems`:
-  - a distributed system supports `consistency` and `partition tolerance` while sacrificing `availability`.
-
-- `AP (availability and partition tolerance) systems`:
-  - a distributed system supports `availability` and `partition tolerance` while sacrificing `consistency`.
-
-- `CA (consistency and availability) systems`:
-  - a distributed system supports `consistency` and `availability` while sacrificing `partition tolerance`.
-  - Since network failure is **unavoidable**, a distributed system **must tolerate** `network partition`.
-    - Thus, a CA system **cannot exist** in realworld applications.
-
----
-
-![cap_demo](./img/cap_demo.png)
-
-- Data written to `n1`
-  - automatically replicated to `n2` and `n3`
-- when a partition occurs, `n3` goes down
-  - CP system:
-    - must **block all write** operations to `n1` and `n2` to **avoid data inconsistency** among these three servers
-    - example: Bank systems
-  - AP system:
-    - keeps accepting reads, even though it might return **stale data**
-    - keeps accepting writes, and data will be **synced** to n3 when the network partition is resolved.
 
 ---
 

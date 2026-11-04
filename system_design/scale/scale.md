@@ -1,9 +1,9 @@
-# System Design - SCALE FROM ZERO TO MILLIONS OF USERS
+# System Design - Scale from zero to millions of users
 
 [Back](../system_design.md)
 
-- [System Design - SCALE FROM ZERO TO MILLIONS OF USERS](#system-design---scale-from-zero-to-millions-of-users)
-  - [SCALE FROM ZERO TO MILLIONS OF USERS](#scale-from-zero-to-millions-of-users)
+- [System Design - Scale from zero to millions of users](#system-design---scale-from-zero-to-millions-of-users)
+  - [Scale from zero to millions of users](#scale-from-zero-to-millions-of-users)
     - [Single server setup](#single-server-setup)
     - [Database](#database)
     - [horizontal scaling \& load balancer](#horizontal-scaling--load-balancer)
@@ -18,7 +18,7 @@
 
 ---
 
-## SCALE FROM ZERO TO MILLIONS OF USERS
+## Scale from zero to millions of users
 
 - a **single user** and gradually scale it up to serve **millions of users**
 
@@ -87,7 +87,7 @@
 
 - stateless
   - servers do **not retain** any user **session data** or **context** between requests
-- statefule
+- stateful
   - a server that **saves** and remembers client **session data**, **context**, and **transaction history** from one request to the next.
 - `sticky sessions` in load balancers
   - a configuration technique where a load balancer routes all sequential requests from **a specific user** to the **exact same backend server** for the entire duration of their session

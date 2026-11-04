@@ -52,6 +52,7 @@
   - [AWS](./AWS/aws/index.md)
   - [AWS CCP](./AWS/ccp/index.md)
   - [AWS SAA](./AWS/saa/index.md)
+  - [AWS AIP-C01](./AWS/aip/index.md)
   - [Azure](./azure/azure/index.md)
 
 ---

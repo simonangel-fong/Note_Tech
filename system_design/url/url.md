@@ -3,101 +3,176 @@
 [Back](../system_design.md)
 
 - [System Design - URL shortening service](#system-design---url-shortening-service)
-  - [URL shortening service](#url-shortening-service)
-  - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
-  - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
-    - [API Endpoints](#api-endpoints)
-    - [URL redirecting](#url-redirecting)
-    - [URL shortening](#url-shortening)
-  - [Step 3 - Design deep dive](#step-3---design-deep-dive)
-    - [Data model](#data-model)
-    - [Hash function](#hash-function)
-    - [URL shortening deep dive](#url-shortening-deep-dive)
-    - [URL redirecting deep dive](#url-redirecting-deep-dive)
-    - [Step 4 - Wrap up](#step-4---wrap-up)
+  - [URL shortening servic](#url-shortening-servic)
+  - [Steps](#steps)
+    - [Step 1 - Requirements](#step-1---requirements)
+    - [Estimation](#estimation)
+    - [Step 2 - API Design](#step-2---api-design)
+    - [Step 3 - Data Model](#step-3---data-model)
+    - [Step 4 - High-level design](#step-4---high-level-design)
+    - [Step 5 - Detailed design](#step-5---detailed-design)
+      - [Hash function](#hash-function)
+      - [URL redirecting deep dive](#url-redirecting-deep-dive)
+    - [Step 6 - Wrap up](#step-6---wrap-up)
 
 ---
 
-## URL shortening service
+## URL shortening servic
 
-## Step 1 - Understand the problem and establish design scope
+- `URL shortening`
+  - create shorter aliases, named short links, for long URLs.
+  - Users are redirected to the original URL when they hit these short links.
+
+- benefit
+  - save a lot of space when displayed, printed, messaged, or tweeted.
+  - optimize links across devices, tracking individual links to analyze audience and campaign performance, and hiding affiliated original URLs.
+
+---
+
+## Steps
+
+### Step 1 - Requirements
 
 - Q:
   - Can you give an example of how a URL shortener work?
   - What is the traffic volume?
-    - 100 million URLs are generated per day.
   - How long is the shortened URL?
   - What characters are allowed in the shortened URL?
   - Can shortened URLs be deleted or updated?
 
-- estimation
-  - Write operation: 100 million URLs are generated per day.
-    - Write operation per second: 100 million / 24 /3600 = 1160
-  - Read operation: Assuming ratio of read operation to write operation is 10:1, read operation per second: 1160 \* 10 = 11,600
-  - Assuming the URL shortener service will run for 10 years, this means we must support 100 million \* 365 \* 10 = 365 billion records.
-  - Assume average URL length is 100.
-    - Storage requirement over 10 years: 365 billion _ 100 bytes _ 10 years = 365 TB
+---
 
-## Step 2 - Propose high-level design and get buy-in
+- **Functional Requirements**:
+  1. Given a URL, our service should generate a shorter and unique alias of it. This is called a short link.
+  2. When users access a short link, our service should redirect them to the original link.
+  3. Users should optionally be able to pick a custom short link for their URL.
+  4. Links will expire after a standard default timespan. Users should be able to specify the expiration time.
 
-- the API endpoints, URL redirecting, and URL shortening flows.
+- **Non-Functional Requirements:**
+  1. The system should be **highly available**. This is required because, if our service is down, all the URL redirections will start failing.
+  2. URL redirection should happen in real-time with **minimal latency**.
+  3. Shortened links should not be guessable (not predictable).
 
-### API Endpoints
+- **Extended Requirements:**
+  1. Analytics; e.g., how many times a redirection happened?
+  2. Our service should also be accessible through REST APIs by other services.
 
-- design the APIs REST-style
-- 1.URL shortening.
-  - To create a new short URL, a client sends a POST request, which contains one parameter: the original long URL.
-  - `POST api/v1/data/shorten`
-    - request parameter: `{longUrl: longURLString}`
-    - return `shortURL`
-- 2.URL redirecting.
-  - To redirect a short URL to the corresponding long URL, a client sends a GET request.
-  - `GET api/v1/shortUrl`
-    - Return `longURL` for HTTP redirection
-
-### URL redirecting
-
-- communication between clients and servers:
-
-![url_communication](./img/url_communication.png)
-
-- 301 redirect.
-  - **permanently** moved to the long URL.
-  - the browser caches the response.
-  - subsequent requests for the same URL will not be sent to the URL shortening service.
-- 302 redirect.
-  - **temporarily** moved to the long URL
-  - subsequent requests for the same URL will be sent to the URL shortening service first.
+- **Capacity**
+  - 100:1 ratio between read and write
+  - 500M **new** URL shortenings per month
 
 ---
 
-### URL shortening
+### Estimation
 
-- hash function must satisfy the following requirements:
-  - Each longURL must be hashed to one hashValue.
-  - Each hashValue can be mapped back to the longURL.
-
----
-
-## Step 3 - Design deep dive
-
-- data model, hash function, URL shortening and URL redirecting.
-
----
-
-### Data model
-
-- A better option is to store `<shortURL, longURL>` mapping in a relational database
-
-| Colume   | description |
-| -------- | ----------- |
-| id       |             |
-| shortURL |             |
-| longURL  |             |
+- **read/redirection**: 100 \* 500M => 50B
+- **qps write**: 500M / (30 days \* 24 hours \* 3600 seconds) = ~200 URLs/s
+- **qps read**: 100 \* 200 URLs/s = 20K/s
+- **Storage**:
+  - total urls: 500 million \* 5 years \* 12 months = 30 billion
+  - assumed 500 bytes per url: 30 billion \* 500 bytes = 15 TB
+- **Bandwidth**
+  - **write/incoming**: 200 \* 500 bytes = 100 KB/s
+  - **read/outgoing**: 20K \* 500 bytes = ~10 MB/s
+- **Memory**(if cache)
+  - **read request per day**: 20K \* 3600 seconds \* 24 hours = ~1.7 billion
+  - **assumed 20% are hot url** to be cached: 0.2 \* 1.7 billion \* 500 bytes = ~170GB
 
 ---
 
-### Hash function
+### Step 2 - API Design
+
+- Feature: generate short link
+  - `POST /api/v1/url`
+  - param:
+    - api-token
+    - long-url
+    - expire-time: option
+  - return:
+    - short-link
+    - 200
+- Feature: get short link
+  - `GET /api/v1/url`
+  - param:
+    - api-token
+    - long-url
+  - return:
+    - short-link
+    - 301/302
+- Feature: expire short link
+  - `DELETE /api/v1/url`
+  - param:
+    - api-token
+    - url-id
+  - return:
+    - none
+    - 200
+
+---
+
+### Step 3 - Data Model
+
+for all urls
+
+| feild     | Datatype | description     |
+| --------- | -------- | --------------- |
+| uuid      | num      | unique id       |
+| long-url  | varchar  | long url        |
+| short-url | varchar  | short url       |
+| expired   | boolean  | whether expired |
+
+for user urls
+
+| feild   | datatype | description |
+| ------- | -------- | ----------- |
+| user_id | int      | user id     |
+| url_id  | int      | url id      |
+
+nosql: key-value
+
+---
+
+### Step 4 - High-level design
+
+client -> LB -> web server -> database
+
+- Evaluate: generate short url
+- Evaluate: get short url
+
+---
+
+### Step 5 - Detailed design
+
+- Database
+  - data partition
+    - **hashing function** will **randomly distribute** URLs into different partitions
+
+- Cache
+  - cache eviction policy: `Least Recently Used (LRU)` discard the least recently used URL first
+
+- LB
+  - between client and app server
+  - between app server and caches
+  - between app server and db
+
+- Flowchart
+  - POST: client -> lb -> web server (authen) -> app server -> DB -> return shorten url
+  - GET: client -> LB -> web server (authen) -> app server -> cache
+    - -> if exists, return shorten url
+    - -> if not exists, read DB -> write cache -> return short url
+
+- expired:
+  - backend clean up
+
+- Telemetory & Analytics:
+  - aggregate: user location; hot urls
+
+- Seurity:
+  - api key: authen
+
+---
+
+#### Hash function
 
 - Hash value length
   - hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62
@@ -114,25 +189,18 @@
 
 ---
 
-### URL shortening deep dive
-
-- as Base 62 conversion is chosen
-  - process:
-    - post input longURL -> gen ID -> shortURL -> save -> return shortURL
-
----
-
-### URL redirecting deep dive
+#### URL redirecting deep dive
 
 ![url_diagram](./img/url_diagram.png)
 
 ---
 
-### Step 4 - Wrap up
+### Step 6 - Wrap up
 
-- additional talking points
-  - Rate limiter
-  - Web server scaling
-  - Database scalin
-  - Analytics
-  - Availability, consistency, and reliability
+- functional
+  - generate
+  - get
+- non-functional
+  - scale/performance: rqs, cache
+  - reliability/avalialbility: lb, nosql
+  - security

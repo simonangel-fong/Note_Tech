@@ -112,7 +112,7 @@
 
 ![high_streaming](./img/high_streaming.png)
 
---
+---
 
 ### Step 3 - Design deep dive
 
@@ -143,4 +143,3 @@
   - Scale the API tier: Because API servers are stateless, it is easy to scale API tier horizontally.
   - Scale the database: You can talk about database replication and sharding.
   - Video takedowns: Videos that violate copyrights, pornography, or other illegal acts shall be removed.
-    s

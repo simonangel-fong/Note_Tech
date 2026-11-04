@@ -3,42 +3,62 @@
 [Back](../system_design.md)
 
 - [System Design - Interview](#system-design---interview)
-  - [4-step process](#4-step-process)
-    - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
-    - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
-    - [Step 3 - Design deep dive](#step-3---design-deep-dive)
-    - [Step 4 - Wrap up](#step-4---wrap-up)
+  - [Steps](#steps)
+    - [Step 1: Requirements clarifications](#step-1-requirements-clarifications)
+    - [Step 2: System interface definition](#step-2-system-interface-definition)
+    - [Step 3: Defining data model](#step-3-defining-data-model)
+    - [Step 4: High-level design](#step-4-high-level-design)
+    - [Step 5: Detailed design](#step-5-detailed-design)
+    - [Step 6: Wrap up](#step-6-wrap-up)
   - [Dos and Don’ts.](#dos-and-donts)
   - [Time allocation](#time-allocation)
 
 ---
 
-## 4-step process
+## Steps
 
-- no one-size-fits-all solution
+### Step 1: Requirements clarifications
+
+- **functional** requirements
+  - key features
+  - UI: webapp + mobile
+
+- **non-functional** requirements
+  - Performance
+  - Reliability & Availability
+  - Security
+
+- **estimation**
+  - Daily Active Users (DAU) -> RPS
+  - average media files size -> storage
 
 ---
 
-### Step 1 - Understand the problem and establish design scope
+### Step 2: System interface definition
 
-- Don't rush for the answer
-- Ask questions to understand the exact requirements.
-  - What specific **features** are we going to build?
-  - How many **users** does the product have? What is the traffic volume? (daily active users (DAU))
-  - How **fast** does the company anticipate to **scale up**? What are the anticipated scales in **3 months, 6 months, and a year**?
-  - What is the company’s **technology stack**? What **existing services** you might leverage to simplify the design?
-  - Is this a mobile app? Or a web app? Or both?
+- UI: web + mobile
+- Define what **APIs** are expected from the system **per feature**.
+  - endpoints
+  - param
+  - return
 
 ---
 
-### Step 2 - Propose high-level design and get buy-in
+### Step 3: Defining data model
 
-- collaborate with the interviewer
-  - 1. initial blueprint for the design
-    - Ask for feedback
-  - 2. Draw box diagrams with key components on the whiteboard or paper.
-  - 3. Evaluate if the blueprint fits the scales constraints
-- If possible, go through a few **concrete use cases.**
+- identify various **entities** of the system per **feature**
+- **sql vs nosql**
+- block **storage** for images and videos
+
+---
+
+### Step 4: High-level design
+
+- Draw a block diagram with 5-6 boxes representing the **core components** of our system.
+
+- Front-end -> backend -> database
+
+- Evaluate each feature and scale
 
 ---
 
@@ -53,13 +73,28 @@
 
 ---
 
-### Step 3 - Design deep dive
+### Step 5: Detailed design
 
-- both already have:
-  - **Agreed** on the overall **goals** and feature scope
-  - Sketched out a **high-level blueprint** for the overall design
-  - Obtained **feedback** from your interviewer on the high-level design
-  - Had some initial ideas about areas to focus on in deep dive based on her feedback
+- Obtained **feedback** from your interviewer on the high-level design
+- Dig **deeper** into **two or three components**
+  - pick **key features**, scale
+  - present different approaches
+  - pros and cons
+  - consider **tradeoffs** between different options
+- Common:
+  - detailed **steps**;
+    - Sequence diagram
+    - Flowcharts
+- **bottlenecks** and solution:
+  - **single point of failure**:
+    - LB
+    - replication
+    - master-repliac DB
+  - **perfomance**/sacle:
+    - scale out
+    - CDN/cache
+    - MQ
+  - Add **monitoring**
 
 ---
 
@@ -72,25 +107,18 @@
 
 ![new_feed_publishing](./img/new_feed_publishing.png)
 
-1. News feed retrieva
+2. News feed retrieva
 
 ![new_feed_get_feed](./img/new_feed_get_feed.png)
 
 ---
 
-### Step 4 - Wrap up
+### Step 6: Wrap up
 
-In this final step, the interviewer might ask you a few **follow-up questions** or give you the freedom to discuss other additional points.
-
-Here are a few directions to follow:
-
-- identify the system bottlenecks and discuss potential improvements.
-  - show your critical thinking and leave a good final impression
-- recap of your design.
-- Error cases (server failure, network loss, etc.)
-- Operation issues are worth mentioning. How do you monitor metrics and error logs? How to roll out the system?
-- How to handle the next scale curve is also an interesting topic. For example, if your current design supports 1 million users, what changes do you need to make to support 10 million users?
-- Propose other refinements you need if you had more time.
+- verify
+  - Resolved
+  - Open-ended
+  - roadmap
 
 ---
 
@@ -100,7 +128,8 @@ Dos
 
 - Always ask for **clarification**. Do not assume your assumption is correct.
 - Understand the **requirements** of the problem.
-- There is neither the right answer nor the best answer. A solution designed to solve the problems of a young startup is different from that of an established company with millions of users. Make sure you understand the requirements.
+- There is neither the right answer nor the best answer.
+  - A solution designed to solve the problems of a young startup is different from that of an established company with millions of users. Make sure you understand the requirements.
 - Let the **interviewer know what you are thinking**. **Communicate** with your interview.
 - Suggest **multiple approaches** if possible.
 - Once you agree with your interviewer on the blueprint, go into details on each component. **Design the most critical components first**.
@@ -126,3 +155,5 @@ Don’ts
 - Step 2 Propose high-level design and get buy-in: 10 - 15 minutes
 - Step 3 Design deep dive: 10 - 25 minutes
 - Step 4 Wrap: 3 - 5 minutes
+
+---

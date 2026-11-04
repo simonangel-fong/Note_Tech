@@ -78,7 +78,7 @@ requirements are listed as follows:
 
 ### Ticket Server
 
-![ticket](./img/ticket.png)
+![ticket](./img/ticket_server.png)
 
 - use a centralized auto_increment feature **in a single database server** (Ticket Server).
 
