@@ -1,6 +1,6 @@
 # Simon's Tech Notes
 
-<!-- - [System Design](./system_design/system_design.md) -->
+- [System Design](./system_design/system_design.md)
 
 - OS
   <!-- -  [Computer Architecture](./Operating_System/computer_architecture/index.md) -->

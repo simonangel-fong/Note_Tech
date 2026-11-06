@@ -21,3 +21,10 @@
   - [Knowledge Bases](./bedrock/kb.md)
   - [Guardrails](./bedrock/grl.md)
   - [Flows](./bedrock/flow.md)
+
+---
+
+- Managing Data for Generative AI
+  - [Data Fundamental](./data/data.md)
+  - [Bedrock Data Automation](./bedrock/da.md)
+  - [SageMaker Data Wrangler](./sagemaker/dw.md)

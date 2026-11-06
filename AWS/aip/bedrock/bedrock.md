@@ -13,6 +13,8 @@
     - [Bedrock Flows with Prompts](#bedrock-flows-with-prompts)
   - [Lab: Prompt Management](#lab-prompt-management)
   - [Structured Data Responses](#structured-data-responses)
+  - [Enterprise Integration](#enterprise-integration)
+  - [AWS Well-Architected Generative AI Lens](#aws-well-architected-generative-ai-lens)
 
 ---
 
@@ -201,3 +203,39 @@
 - Under the hood, it may just be doing that anyhow!
 - The point that’s important for the exam is that you can get structured JSON output from a prompt.
 - This might be referred to as a `response format template`
+
+---
+
+## Enterprise Integration
+
+- `Knowledge Bases` are the **integration point for internal data / document management systems**
+  - S3, SharePoint, Atlassian Confluence, etc.
+  - Bedrock will integrate this data into vector stores.
+- **Cross-account access**
+  - This comes up in every exam.
+  - Specific scenario:
+    - `Bedrock` models and `OpenSearch` are in different accounts
+    - `OpenSearch` has a remote-inference connector that supports **semantic search across accounts**.
+  - still need appropriate **IAM roles**
+    - The **Bedrock account** needs a role to **allow** `InvokeModel` access from the **OpenSearch account**
+- **Event-Driven architecture**
+  - Enables loose **coupling** when integrating with downstream systems
+    - SQS, Kafka, or some other pub/sub system
+
+---
+
+## AWS Well-Architected Generative AI Lens
+
+- An **overview** of GenAI and best practices
+- Aligns GenAI to the “six pillars” of the WellArchitected Framework
+  - Operational Excellence;
+  - Security;
+  - Reliability;
+  - Performance Efficiency;
+  - Cost Optimization;
+  - Sustainability
+- ref: https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html
+
+- The Generative AI Lifecycle:
+
+![](./img/gen_ai_lifecycle.png)
