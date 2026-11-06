@@ -22,6 +22,7 @@
 ---
 
 - [Design a url shortener](./url/url.md)
+- [Design Pastebin](./pastebin/pastebin.md)
 - [Design a web crawler](./crawler/crawler.md)
 - [Design a notification system](./notification/notification.md)
 - [Design a news feed system](./feed/feed.md)

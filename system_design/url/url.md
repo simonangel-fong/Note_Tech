@@ -6,7 +6,7 @@
   - [URL shortening servic](#url-shortening-servic)
   - [Steps](#steps)
     - [Step 1 - Requirements](#step-1---requirements)
-    - [Estimation](#estimation)
+      - [Estimation](#estimation)
     - [Step 2 - API Design](#step-2---api-design)
     - [Step 3 - Data Model](#step-3---data-model)
     - [Step 4 - High-level design](#step-4---high-level-design)
@@ -63,7 +63,7 @@
 
 ---
 
-### Estimation
+#### Estimation
 
 - **read/redirection**: 100 \* 500M => 50B
 - **qps write**: 500M / (30 days \* 24 hours \* 3600 seconds) = ~200 URLs/s
@@ -84,8 +84,8 @@
 
 - Feature: generate short link
   - `POST /api/v1/url`
+  - header: api-token
   - param:
-    - api-token
     - long-url
     - expire-time: option
   - return:
@@ -93,16 +93,16 @@
     - 200
 - Feature: get short link
   - `GET /api/v1/url`
+  - header: api-token
   - param:
-    - api-token
     - long-url
   - return:
     - short-link
     - 301/302
 - Feature: expire short link
   - `DELETE /api/v1/url`
+  - header: api-token
   - param:
-    - api-token
     - url-id
   - return:
     - none
