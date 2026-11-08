@@ -29,8 +29,13 @@
   - Security
 
 - **estimation**
-  - Daily Active Users (DAU) -> RPS
-  - average media files size -> storage
+  - assumption:
+    - Daily Active Users (DAU)
+    - data/file size
+  - traffic: read/write RPS
+  - storage
+  - bandwith
+  - UUID
 
 ---
 
@@ -39,6 +44,7 @@
 - UI: web + mobile
 - Define what **APIs** are expected from the system **per feature**.
   - endpoints
+  - header
   - param
   - return
 
@@ -54,11 +60,8 @@
 
 ### Step 4: High-level design
 
-- Draw a block diagram with 5-6 boxes representing the **core components** of our system.
-
-- Front-end -> backend -> database
-
-- Evaluate each feature and scale
+- Draw a block diagram with boxes representing the **core components** of our system.
+  - client -> app server -> database
 
 ---
 
@@ -75,41 +78,23 @@
 
 ### Step 5: Detailed design
 
-- Obtained **feedback** from your interviewer on the high-level design
-- Dig **deeper** into **two or three components**
-  - pick **key features**, scale
-  - present different approaches
-  - pros and cons
-  - consider **tradeoffs** between different options
-- Common:
-  - detailed **steps**;
-    - Sequence diagram
-    - Flowcharts
-- **bottlenecks** and solution:
-  - **single point of failure**:
-    - LB
-    - replication
-    - master-repliac DB
-  - **perfomance**/sacle:
-    - scale out
-    - CDN/cache
-    - MQ
-  - Add **monitoring**
+- Get interviewer feedback and pick **one or two system-specific challenges**.
+- For each, trace **requirement → bottleneck or failure → choice and trade-off → verification**.
+- **Performance.**
+  - Use peak load and the latency target to decide:
+    - index,
+    - cache,
+    - or CDN
+- **Reliability and availability.**
+  - Consider overload (scaling, queues),
+  - Failover (load balancers, replicas)
+  - and recovery (RTO/RPO, 3-2-1 backups).
+- **Security.**
+  - Cover authentication
+  - authorization
+  - and the most likely abuse.
 
----
-
-- example:
-  - investigate two of the most important use cases:
-    1. Feed publishing
-    2. News feed retrieva
-
-1. Feed publishing
-
-![new_feed_publishing](./img/new_feed_publishing.png)
-
-2. News feed retrieva
-
-![new_feed_get_feed](./img/new_feed_get_feed.png)
+[Worked example: News Feed](../feed/feed.md#step-3---design-deep-dive)
 
 ---
 

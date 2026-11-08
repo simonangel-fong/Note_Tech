@@ -11,8 +11,11 @@
     - [Step 3 - Data Model](#step-3---data-model)
     - [Step 4 - High-level design](#step-4---high-level-design)
     - [Step 5 - Detailed design](#step-5---detailed-design)
-      - [Hash function](#hash-function)
-      - [URL redirecting deep dive](#url-redirecting-deep-dive)
+      - [Performance](#performance)
+      - [Reliability and availability](#reliability-and-availability)
+      - [Security](#security)
+      - [Specific issues](#specific-issues)
+      - [Flowchart](#flowchart)
     - [Step 6 - Wrap up](#step-6---wrap-up)
 
 ---
@@ -57,20 +60,21 @@
   1. Analytics; e.g., how many times a redirection happened?
   2. Our service should also be accessible through REST APIs by other services.
 
-- **Capacity**
-  - 100:1 ratio between read and write
-  - 500M **new** URL shortenings per month
-
 ---
 
 #### Estimation
 
-- **read/redirection**: 100 \* 500M => 50B
-- **qps write**: 500M / (30 days \* 24 hours \* 3600 seconds) = ~200 URLs/s
-- **qps read**: 100 \* 200 URLs/s = 20K/s
+- **Assumption**
+  - read/write ratio: 100:1
+  - **new** URL shortenings per month: 500M
+  - size per url: 500 bytes
+- Traffic
+  - **read/redirection** : 100 \* 500M => 50B per month
+  - **qps write**: 500M / (30 days \* 24 hours \* 3600 seconds) = ~200 URLs/s
+  - **qps read**: 100 \* 200 URLs/s = 20K/s
 - **Storage**:
-  - total urls: 500 million \* 5 years \* 12 months = 30 billion
-  - assumed 500 bytes per url: 30 billion \* 500 bytes = 15 TB
+  - total urls in 5 years: 500 million \* 5 years \* 12 months = 30 billion
+  - size in 5 years: 30 billion \* 500 bytes = 15 TB
 - **Bandwidth**
   - **write/incoming**: 200 \* 500 bytes = 100 KB/s
   - **read/outgoing**: 20K \* 500 bytes = ~10 MB/s
@@ -82,125 +86,149 @@
 
 ### Step 2 - API Design
 
-- Feature: generate short link
+- Feature: Create short link
   - `POST /api/v1/url`
-  - header: api-token
-  - param:
-    - long-url
-    - expire-time: option
+  - header: `api-token`
+  - param (body):
+    - `destination_url`
+    - `custom_alias` (optional)
+    - `expires_at` (optional, defaults to the standard expiration)
   - return:
-    - short-link
-    - 200
-- Feature: get short link
-  - `GET /api/v1/url`
-  - header: api-token
-  - param:
-    - long-url
+    - `201 Created` with `short_url`
+    - `409 Conflict` if the custom alias is taken
+
+---
+
+- Feature: Follow short link
+  - `GET /{short_code}`
+  - header: none required for public links
+  - param (path): `short_code` (e.g., `aB3x7` in `GET /aB3x7`)
   - return:
-    - short-link
-    - 301/302
-- Feature: expire short link
-  - `DELETE /api/v1/url`
-  - header: api-token
-  - param:
-    - url-id
-  - return:
-    - none
-    - 200
+    - `302 Found` with the destination URL in the `Location` header
+    - `404 Not Found` if the link is unknown, expired, or revoked
+
+---
+
+- Feature: Revoke short link (if in scope)
+  - `DELETE /api/v1/url/{short_code}`
+  - header: `api-token` (link owner only)
+  - param (path): `short_code`
+  - return: `204 No Content`
 
 ---
 
 ### Step 3 - Data Model
 
-for all urls
+**Short link mapping**
 
-| feild     | Datatype | description     |
-| --------- | -------- | --------------- |
-| uuid      | num      | unique id       |
-| long-url  | varchar  | long url        |
-| short-url | varchar  | short url       |
-| expired   | boolean  | whether expired |
+| Field             | Data type | Description                                       |
+| ----------------- | --------- | ------------------------------------------------- |
+| `short_code`      | String    | Unique key, generated or chosen as a custom alias |
+| `destination_url` | String    | URL returned in the redirect                      |
+| `expires_at`      | Timestamp | Time when the link stops working                  |
+| `revoked_at`      | Timestamp | Set only when the owner revokes the link          |
 
-for user urls
+**User links (if owner-only revocation is in scope)**
 
-| feild   | datatype | description |
-| ------- | -------- | ----------- |
-| user_id | int      | user id     |
-| url_id  | int      | url id      |
+| Field        | Data type | Description                             |
+| ------------ | --------- | --------------------------------------- |
+| `short_code` | String    | Unique key referencing the link mapping |
+| `user_id`    | String    | User who owns the link                  |
 
-nosql: key-value
+- NoSQL key-value
+  - ~15 TB raw over 5 years; partitioning is challenge for SQL
 
 ---
 
 ### Step 4 - High-level design
 
-client -> LB -> web server -> database
-
-- Evaluate: generate short url
-- Evaluate: get short url
+client -> app server -> database
 
 ---
 
 ### Step 5 - Detailed design
 
-- Database
-  - data partition
-    - **hashing function** will **randomly distribute** URLs into different partitions
+#### Performance
 
-- Cache
-  - cache eviction policy: `Least Recently Used (LRU)` discard the least recently used URL first
-
-- LB
-  - between client and app server
-  - between app server and caches
-  - between app server and db
-
-- Flowchart
-  - POST: client -> lb -> web server (authen) -> app server -> DB -> return shorten url
-  - GET: client -> LB -> web server (authen) -> app server -> cache
-    - -> if exists, return shorten url
-    - -> if not exists, read DB -> write cache -> return short url
-
-- expired:
-  - backend clean up
-
-- Telemetory & Analytics:
-  - aggregate: user location; hot urls
-
-- Seurity:
-  - api key: authen
+- Estimated average load: ~20K redirects/s and ~200 creates/s.
+- Issue: repeated **database reads** for popular links
+  - Solution: **Redis caching**
+    - Cache hot mappings by `short_code`.
+    - A high-memory Redis node can hold ~170 GB of raw cache data plus overhead.
+    - Eviction policy: least recently used (LRU).
 
 ---
 
-#### Hash function
+#### Reliability and availability
 
-- Hash value length
-  - hashValue consists of characters from [0-9, a-z, A-Z], containing 10 + 26 + 26 = 62
-  - if length is n, then maximal number of URLs it can support:
-    - 62^n
-    - n =7, supports ~3.5 trillion
-
-- Hash + collision resolution
-  - common hash functions: CRC32, MD5, or SHA-1
-    - drawback: > 7
-  - solved by Base 62 conversion
-    - depends on unique ID generator
-    - no collicsion as UID
+- Issue: app server **scaling and failure**
+  - Solution: **Load balancing**
+    - Route requests to healthy app servers across availability zones.
+    - App servers use the Redis and database service endpoints.
+- Issue: **database failure**
+  - Solution: **Primary–standby failover**
+    - Replicate data to a standby in another availability zone.
+    - Promote the standby if the primary fails.
+- Issue: data growth to ~15 TB raw over 5 years
+  - Solution: **Sharding**
+    - Partition mappings by `short_code`.
 
 ---
 
-#### URL redirecting deep dive
+#### Security
 
-![url_diagram](./img/url_diagram.png)
+- Issue: unauthorized link management
+  - Solution: **Token authentication and ownership checks**
+    - Require `api-token` for creation and revocation. Verify ownership on revoke.
+    - Public redirects are anonymous.
+- Issue: abusive traffic
+  - Solution: **Rate limiting**
+    - Limit link creation and repeated requests for invalid codes.
+
+---
+
+#### Specific issues
+
+- Issue: short-code collisions and predictability
+  - Solution: **Key generation service (KGS)**
+    - Pre-generate secure random Base62 codes in batches.
+    - Reserve each generated code atomically. Insert the mapping only if `short_code` is unused, including when a user requests a custom alias.
+    - Use a standby KGS with access to the same durable reservation state.
+    - Seven characters give `62^7 ≈ 3.5T` possible codes. Choose the length based on the number of active links and the risk of guessing one.
+- Issue: expired links
+  - Solution: **Expiration checks and scheduled cleanup**
+    - Check `expires_at` during redirects and cap cache TTL at expiration.
+    - Remove expired records with a scheduled job.
+    - Evict cached mappings on revocation if that feature is in scope.
+
+---
+
+#### Flowchart
+
+- Create short link
+
+```text
+Client -> LB -> App server(authentication+rate limiter) -> KGS(get short code) -> LB -> DB(insert)
+```
+
+---
+
+- Get full link
+
+```text
+Client -> LB -> App server(authentication + rate limtier) -> Cache
+    -> if hit -> return
+    -> if miss -> LB -> DB -> cache -> return
+```
+
+![Redirect path through the load balancer, cache, and database](./img/url_diagram.png)
 
 ---
 
 ### Step 6 - Wrap up
 
-- functional
-  - generate
-  - get
-- non-functional
-  - scale/performance: rqs, cache
-  - reliability/avalialbility: lb, nosql
-  - security
+- feature
+  - functional
+  - non-functional
+- resolved vs open-end
+- road map

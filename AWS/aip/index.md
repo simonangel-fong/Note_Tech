@@ -28,3 +28,7 @@
   - [Data Fundamental](./data/data.md)
   - [Bedrock Data Automation](./bedrock/da.md)
   - [SageMaker Data Wrangler](./sagemaker/dw.md)
+  - [Glue](./glue/glue.md)
+  - [Cloudwatch](./cloudwatch/cloudwatch.md)
+  - [Transcribe](./transcribe/transcribe.md)
+  - [Comprehend](./comprehend/comprehend.md)
