@@ -1,0 +1,70 @@
+<mxfile host="65bd71144e">
+    <diagram id="pastebin-architecture" name="Pastebin architecture">
+        <mxGraphModel dx="614" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1040" pageHeight="510" background="#FFFFFF" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;spacing=0;fontFamily=Arial;fontSize=30;fontStyle=1;fontColor=#0F172A;" value="Pastebin architecture" vertex="1">
+                    <mxGeometry height="40" width="420" x="25" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="client" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=1.5;fontFamily=Arial;fontSize=16;fontStyle=1;fontColor=#0F172A;" value="Client" vertex="1">
+                    <mxGeometry height="78" width="145" x="40" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="load-balancer" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#60A5FA;strokeWidth=1.5;fontFamily=Arial;fontSize=16;fontStyle=1;fontColor=#0F172A;" value="Load balancer" vertex="1">
+                    <mxGeometry height="78" width="150" x="355" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="app" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=1.5;fontFamily=Arial;fontSize=17;fontStyle=1;fontColor=#0F172A;align=center;" value="App server&lt;div&gt;&lt;font style=&quot;font-size: 13px;&quot;&gt;authentication&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 13px;&quot;&gt;rate limiter&lt;/font&gt;&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="78" width="180" x="340" y="216" as="geometry"/>
+                </mxCell>
+                <mxCell id="kgs" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=1.5;fontFamily=Arial;fontSize=15;fontColor=#0F172A;" value="&lt;b&gt;Key generation service&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:12px;color:#475569;&quot;&gt;Generate paste codes&lt;/span&gt;" vertex="1">
+                    <mxGeometry height="70" width="190" x="720" y="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="cache" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=1.5;dashed=1;fontFamily=Arial;fontSize=15;fontColor=#0F172A;" value="&lt;b&gt;Cache&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 12px; color: rgb(71, 85, 105);&quot;&gt;Hot pastes&lt;/span&gt;" vertex="1">
+                    <mxGeometry height="70" width="190" x="40" y="319" as="geometry"/>
+                </mxCell>
+                <mxCell id="sql" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#F0FDFA;strokeColor=#2AA394;strokeWidth=1.5;fontFamily=Arial;fontSize=15;fontColor=#0F172A;" value="&lt;b&gt;SQL database&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:12px;color:#475569;&quot;&gt;Paste metadata and users&lt;/span&gt;" vertex="1">
+                    <mxGeometry height="70" width="190" x="720" y="224" as="geometry"/>
+                </mxCell>
+                <mxCell id="object-store" parent="1" style="rounded=1;arcSize=14;whiteSpace=wrap;html=1;fillColor=#F0FDFA;strokeColor=#2AA394;strokeWidth=1.5;fontFamily=Arial;fontSize=15;fontColor=#0F172A;" value="&lt;b&gt;Object storage&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:12px;color:#475569;&quot;&gt;Paste text&lt;/span&gt;" vertex="1">
+                    <mxGeometry height="70" width="190" x="340" y="410" as="geometry"/>
+                </mxCell>
+                <mxCell id="client-to-lb" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2563EB;strokeWidth=2;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="load-balancer">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lb-to-app" edge="1" parent="1" source="load-balancer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2563EB;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="app">
+                    <mxGeometry relative="1" x="0.5945" as="geometry"/>
+                </mxCell>
+                <mxCell id="app-to-kgs" edge="1" parent="1" source="app" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#64748B;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.128205;entryX=0;entryY=0.5;" target="kgs" value="1. Get key">
+                    <mxGeometry relative="1" x="0.6168" y="21" as="geometry">
+                        <mxPoint as="offset"/>
+                        <Array as="points">
+                            <mxPoint x="520" y="236"/>
+                            <mxPoint x="580" y="236"/>
+                            <mxPoint x="580" y="71"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="app-to-cache" edge="1" parent="1" source="app" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#64748B;strokeWidth=1.5;dashed=1;endArrow=block;endFill=1;exitX=0;exitY=0.5;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="cache" value="2. Get cache">
+                    <mxGeometry relative="1" x="-0.2565" y="-15" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="app-to-sql" edge="1" parent="1" source="app" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#64748B;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.666667;entryX=-0.005;entryY=0.633;entryDx=0;entryDy=0;entryPerimeter=0;" target="sql" value="3. Get meta">
+                    <mxGeometry relative="1" x="0.0033" y="13" as="geometry">
+                        <mxPoint x="1" as="offset"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="app-to-objects" edge="1" parent="1" source="app" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#64748B;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="object-store" value="4. Get paste">
+                    <mxGeometry relative="1" x="-0.0345" y="40" as="geometry">
+                        <mxPoint as="offset"/>
+                        <Array as="points">
+                            <mxPoint x="430" y="350"/>
+                            <mxPoint x="430" y="350"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

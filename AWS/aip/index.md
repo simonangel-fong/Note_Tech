@@ -31,4 +31,5 @@
   - [Glue](./glue/glue.md)
   - [Cloudwatch](./cloudwatch/cloudwatch.md)
   - [Transcribe](./transcribe/transcribe.md)
-  - [Comprehend](./comprehend/comprehend.md)
+  - [Opensearch](./opensearch/opensearch.md)
+  - [S3 Vector](./s3/s3.md)
