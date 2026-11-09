@@ -33,3 +33,5 @@
   - [Transcribe](./transcribe/transcribe.md)
   - [Opensearch](./opensearch/opensearch.md)
   - [S3 Vector](./s3/s3.md)
+  - [RDS](./rds/rds.md)
+  - [DynamoDB](./dynamodb/dynamodb.md)
