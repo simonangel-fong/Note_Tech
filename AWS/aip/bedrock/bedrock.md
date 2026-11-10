@@ -15,6 +15,7 @@
   - [Structured Data Responses](#structured-data-responses)
   - [Enterprise Integration](#enterprise-integration)
   - [AWS Well-Architected Generative AI Lens](#aws-well-architected-generative-ai-lens)
+  - [`Re-ranker Models` in Amazon Bedrock](#re-ranker-models-in-amazon-bedrock)
 
 ---
 
@@ -239,3 +240,20 @@
 - The Generative AI Lifecycle:
 
 ![](./img/gen_ai_lifecycle.png)
+
+---
+
+## `Re-ranker Models` in Amazon Bedrock
+
+- Attempts to **improve relevance of retrieved results** for `RAG` from your `KB`
+- **Calculates relevance** of chunks to the query, orders results accordingly
+- methods:
+  - the **Rerank operation in the API** you can use to rank whatever documents you want relative to a query
+  - can **specify** a reranker model when hitting your `Knowledge Base`
+
+- Currently availabl models:
+  - `Amazon`
+  - `Cohere`
+- In limited regions
+
+- ref: https://docs.aws.amazon.com/bedrock/latest/userguide/rerank.html

@@ -204,7 +204,7 @@ Client -> LB -> App server (validate token and size) -> KGS (get paste_code) -> 
 
 - Read paste
 
-![pastebin-architecture](./pastebin-architecture.png)
+![pastebin](./pastebin.drawio.png)
 
 ```text
 Client -> LB -> App server -> Cache (look up paste_code, if enabled)

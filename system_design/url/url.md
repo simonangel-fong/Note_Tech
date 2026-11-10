@@ -221,7 +221,13 @@ Client -> LB -> App server(authentication + rate limtier) -> Cache
     -> if miss -> LB -> DB -> cache -> return
 ```
 
+- book:
 ![Redirect path through the load balancer, cache, and database](./img/url_diagram.png)
+
+
+- my design
+
+![](./img/tinyurl.drawio.png)
 
 ---
 

@@ -24,6 +24,7 @@
 - [Design a url shortener](./url/url.md)
 - [Design Pastebin](./pastebin/pastebin.md)
 - [Design Instagram](./instagram/instagram.md)
+- [Design Cloud file storage](./drive/drive.md)
 
 ---
 
@@ -33,7 +34,6 @@
 - [Design a chat system](./chat/chat.md)
 - [Design a search autocomplete](./autocomplete/autocomplete.md)
 - [Design a youtube](./youtube/youtube.md)
-- [Design Google Drive](./drive/drive.md)
 
 ---
 

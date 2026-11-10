@@ -245,7 +245,7 @@ client -> app server -> storage
   - Solution: **Precomputed feed**
     - feed list is computed after the post to improve performance.
   - Solution: **Feed cache**
-    - Cache hot pages of photo IDs with a TTL. 
+    - Cache hot pages of photo IDs with a TTL.
     - On a miss, read the precomputed page from the feed store.
 - Issue: updating followers’ feeds can delay the upload response
   - Solution: **Message queue (MQ)**
@@ -310,6 +310,8 @@ Pull: Client -> LB -> App server (authenticate) -> Feed cache (Feed store on mis
     -> Metadata DB (batch read and check access) -> return feed page
 Push: App server -> Client (new feed updates)
 ```
+
+![instagram](./image/instagram.drawio.png)
 
 ---
 

@@ -14,6 +14,7 @@
     - [Retrieval](#retrieval)
     - [Chunking Techniques](#chunking-techniques)
     - [RAG flow](#rag-flow)
+    - [Re-ranker Model](#re-ranker-model)
 
 ---
 
@@ -255,3 +256,35 @@
   - Question → embedding model → **search** for similar vectors → **retrieve** matching TEXT → question + retrieved text → LLM → answer
 
 ---
+
+### Re-ranker Model
+
+- `reranker model`/ `cross-encoder`
+  - a specialized **AI model** used as a **second-stage filter** in search and `Retrieval-Augmented Generation (RAG)` systems to **re-order an initial list of documents** by true semantic relevance.
+
+- **How It Works (Two-Stage Retrieval)**
+
+1. **First-Stage Retrieval (Bi-encoder / Vector Search)**:
+   - A fast, lightweight search tool (such as vector embeddings or BM25) quickly scans a massive database and pulls the top 50 to 1,000 potentially relevant documents.
+   - It prioritizes speed over **deep comprehension**.
+2. **Second-Stage Retrieval (Reranker / Cross-encoder)**:
+   - The reranker takes the **user's query** and **each candidate document**, feeding them into the model together in a single pass.
+   - Because it processes the query and text side-by-side using full cross-attention, it **deeply evaluates** context, nuance, and exact phrasing.
+   - It outputs a **refined score and reorders the shortlist**—typically promoting the top 5 to 20 results to be fed into a Large Language Model (LLM).
+
+- benefits:
+  - **Prevents Hallucinations & Context Rot**:
+    - Surfaces **crucial details** that get buried further down in initial vector searches, stopping the LLM from missing the answer or making things up.
+  - **Higher Precision**:
+    - Dramatically improves **search accuracy** (measured by metrics like NDCG) compared to vector similarity alone.
+  - **Token Cost Efficiency**:
+    - By feeding the LLM only the **top 3–5 truly relevant chunks** instead of a noisy 20-chunk block, you save API costs and speed up response generation.
+
+- **Trade-Offs**
+  - **Higher Latency**:
+    - Cross-encoders are computationally expensive and scale linearly (O(M)) with the number of candidate documents, meaning you cannot afford to run them across millions of raw documents at once.
+  - **Token Length Limits**:
+    - Most standard rerankers have tight input caps (e.g., 512 tokens for many open-source models), meaning long text chunks can get truncated.
+
+---
+

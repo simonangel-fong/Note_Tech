@@ -1,27 +1,38 @@
-# System Design - Google Drive
+# System Design - Cloud file storage
 
 [Back](../system_design.md)
 
-- [System Design - Google Drive](#system-design---google-drive)
-  - [Google Drive](#google-drive)
-  - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
-  - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
-    - [API](#api)
-    - [Sync conflicts](#sync-conflicts)
+- [System Design - Cloud file storage](#system-design---cloud-file-storage)
+  - [Cloud file storage](#cloud-file-storage)
+  - [Steps](#steps)
+    - [Step 1 - Requirements](#step-1---requirements)
+      - [Estimation](#estimation)
+    - [Step 2 - API \& UI](#step-2---api--ui)
+    - [Step 3 - Database](#step-3---database)
+    - [Step 4 - high level](#step-4---high-level)
+    - [Step 5 - Detailed design](#step-5---detailed-design)
+      - [Reliability \& HA](#reliability--ha)
+      - [Performance](#performance)
+      - [Security](#security)
+      - [Specific issues](#specific-issues)
+      - [Diagram](#diagram)
+    - [Step 6 - Wrap up](#step-6---wrap-up)
+  - [Reference](#reference)
     - [High level](#high-level)
   - [Step 3 - Design deep dive](#step-3---design-deep-dive)
     - [Block servers](#block-servers)
     - [High consistency requirement](#high-consistency-requirement)
     - [Save storage space](#save-storage-space)
-  - [Step 4 - Wrap up](#step-4---wrap-up)
 
 ---
 
-## Google Drive
+## Cloud file storage
 
-- cloud storage services such as Google Drive, Dropbox, Microsoft OneDrive, and Apple iCloud
+- cloud storage services such as `Google Drive`, `Dropbox`, `Microsoft OneDrive`, and `Apple iCloud`
 
-## Step 1 - Understand the problem and establish design scope
+## Steps
+
+### Step 1 - Requirements
 
 - Q:
   - What are the most important features?
@@ -43,58 +54,193 @@
   - Share files with your friends, family, and coworkers
   - Send a notification when a file is edited, deleted, or shared with you.
 - non-functional:
-  - Reliability
-  - Fast sync speed.
-  - Bandwidth usage
-  - Scalability
-  - High availability
-
-- estimation
-  - Assume the application has 50 million signed up users and **10 million** DAU.
-  - Users get **10 GB** free space.
-  - Assume users upload 2 files per day. The average file size is 500 KB.
-  - 1:1 read to write ratio.
-  - Total space allocated: 50 million \* 10 GB = 500 Petabyte
-  - QPS for upload API: 10 million \* 2 uploads / 24 hours / 3600 seconds = ~ 240
-  - Peak QPS = QPS \* 2 = 480
+  - performance
+  - reliability & HA
+  - security
 
 ---
 
-## Step 2 - Propose high-level design and get buy-in
+#### Estimation
 
-- start with a single server
+- **Assume**
+  - user: 50M
+  - DAU: 10M
+  - available free space: 10GB
+  - average upload files per day: 2 files
+  - average file size: 500KB
+  - R/W: 1:1
+- **Traffic estimates**
+  - avg read/write /s: 2files \* 10M / (3600\*24) = 230/s
+  - peak QPS: 2 \* avg QPS = 460/s
+- **Storage**
+  - Total space: 50M \* 10GB = 500 PB
+- **Bandwith**
+  - read/write: 230/s \* 500KB = 115MB
 
-### API
+---
 
-- 1. Upload a file
-  - Two types of uploads
-    - Simple upload: file size is small.
-    - Resumable upload: file size is large; high chance of network interruption
-- 2. Download a file
-- 3. Get file revisions
+### Step 2 - API & UI
 
-- use HTTPS. Secure Sockets Layer (SSL) protects data transfer
+- UI:
+  - desktop app (agent)
+  - web
+  - mobile
 
 ---
 
-- from distributed system
-- Storage
-  - option1: share storage on multiple storage servers
-    - data loss
-  - option2: Amazon S3(replication)
+- feature: upload file
+  - `POST /api/v1/upload/`
+  - header: `api-token`
+  - param (body): chunked files
 
 ---
+
+- feature: check sync
+  - `GET /api/v1/sync`
+  - header: `api-token`
+  - param: fs hash
+  - return:
+    - []: empty is sync
+    - unsync list: if unsync
+
+---
+
+- feature: download file
+  - `GET /api/v1/download/{file_id}`
+  - header: `api-token`
+  - param: file_id
+  - return:
+    - file
+
+---
+
+### Step 3 - Database
+
+- **User table**
+
+| field     | data type | desc          |
+| --------- | --------- | ------------- |
+| `user_id` | int       | user id       |
+| `email`   | varchar2  | email address |
+
+- file system metadata
+
+| field        | data type | DESC               |
+| ------------ | --------- | ------------------ |
+| `uuid`       | uuid      | unique id          |
+| `user_id`    | int       | user id            |
+| `storage_id` | varchar   | storage id(s3 arn) |
+| `create_at`  | datetime  | creation datetime  |
+
+---
+
+### Step 4 - high level
 
 - high level api
   ![high_api](./img/high_api.png)
 
 ---
 
-### Sync conflicts
+### Step 5 - Detailed design
 
-- the first version that gets processed wins, and the version that gets processed later receives a conflict.
+#### Reliability & HA
+
+- Issue: SPOF due to app server
+  - Solution: **load balancing**
+    - Route traffic to healthy app servers across availability zones.
+
+- Issue: DB SPOF
+  - Solution: **database replication**
+    - master-replica; standby promote to master
+
+- Issue: data loss of storage
+  - Solution: **Replication and recovery**
+    - Use multi-AZ object storage for failover.
 
 ---
+
+#### Performance
+
+- Issue: file delivery leads to latency
+  - Solution: **Separate metadata from file system**
+    - file server for file sync
+    - metadata server for metadata sync
+
+---
+
+#### Security
+
+- Issue: unauthorized media access
+  - Solution: **Token authentication**
+    - Require `api-token` for uploads, follows, and feed reads. Keep object storage private.
+    - Check current visibility and viewer access for restricted media, search results, and feed items.
+- Issue: abusive traffic
+  - Solution: **Rate limiting**
+    - Limit paste creation and repeated requests for invalid codes.
+
+---
+
+#### Specific issues
+
+- Issue: Sync conflicts on same file
+  - Solution: **first modification wins**
+    - the first version that gets processed wins, and the version that gets processed later receives a conflict.
+
+- Issue: file sync; entire file or data block
+  - Solution: **chunck files into data block**
+    - sync only the unsync data block
+
+- Issue: file changes monitoring
+  - Solution: **client side agent**
+    - local agent:
+      - manage local metadata database
+      - harsh file: to check whether get changed
+      - Sync local metedata DB with remote metedata DB
+      - chunck file into data block
+      - compress data block to utilize bandwidth
+      - Sync data block
+
+- Issue: manage the growth of storage
+  - Solution: **harsh data block**
+    - local: harsh data block
+    - remote: check if harsh already exists
+      - if so, only update the reference
+      - if not, upload data block
+
+- Issue: how to connection remote metadata db; leadind to overhead
+  - Solution: **period + long polling**
+    - local: monitor and update local metadata periodically
+    - connect with remote: long polling
+      - reduce TCP overhead
+
+- Issue: cost due to high volume storage
+  - Solution: **storage tier**
+    - background process: hot -> infrequent access -> glacier
+
+- Issue: offline user sync
+  - Solution: **MQ subscriber**
+    - local agent store local file system modification
+    - Sync when back online
+    - MQ async the data sync
+
+---
+
+#### Diagram
+
+![drives](./img/drive.drawio.png)
+
+---
+
+### Step 6 - Wrap up
+
+- talking point:
+  - celebrity data grow
+    - monitoring
+    - maintainant: move to new shard
+
+---
+
+## Reference
 
 ### High level
 
@@ -158,5 +304,3 @@
   - Amazon S3 glacier
 
 ---
-
-## Step 4 - Wrap up
