@@ -4,7 +4,20 @@
 
 - [System Design - Chat system](#system-design---chat-system)
   - [Chat system](#chat-system)
-  - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
+  - [Steps](#steps)
+  - [Step 1 - Requirements](#step-1---requirements)
+      - [Estimation](#estimation)
+  - [Step 2 - API](#step-2---api)
+  - [Step 3 - data model](#step-3---data-model)
+  - [Step 4 - high level desgin](#step-4---high-level-desgin)
+  - [Step 5 - Details](#step-5---details)
+    - [Reliability \& HA](#reliability--ha)
+    - [Performance](#performance)
+    - [Security](#security)
+    - [Specific issues](#specific-issues)
+    - [Diagram](#diagram)
+  - [Step 6 - Wrap up](#step-6---wrap-up)
+  - [Reference](#reference)
   - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
     - [Storage](#storage)
     - [Data models](#data-models)
@@ -23,7 +36,11 @@
   - group chat: Slack,
   - game chat apps, like Discord,
 
-## Step 1 - Understand the problem and establish design scope
+---
+
+## Steps
+
+## Step 1 - Requirements
 
 - Q:
   - What kind of chat app shall we design? 1 on 1 or group based?
@@ -47,6 +64,222 @@
   - Push notifications
 
 ---
+
+- **Functional Requirements:**
+
+1. Messenger should support **one-on-one** conversations between users.
+2. Messenger should keep track of the **online/offline statuses** of its users.
+3. Messenger should support **persistent storage** of chat history.
+
+- **Non-functional Requirements:**
+
+1. Users should have real-time chat experience with **minimum latency**.
+2. Our system should be **highly consistent**; users should be able to see the **same chat history** on all their devices.
+3. Messenger’s **high availability** is desirable; we can **tolerate lower availability** in the interest of **consistency**.
+
+- **Extended Requirements:**
+
+1. **Group Chats**: Messenger should support multiple people talking to each other in a group.
+2. **Push notifications**: Messenger should be able to notify users of new messages when they are offline.
+
+---
+
+#### Estimation
+
+- **Assume**:
+  - DAU: 5M
+  - message per user per day: 40
+  - total messages per day: 20B
+  - average a message size: 100 bytes
+- **Performance**
+  - Write/read 1:1 : 20B / (24 \* 3600) = 230k rps
+- **Storage**
+  - storage size per day: 20 billion messages \* 100 bytes => 2 TB/day
+  - 5 years: 2 TB \* 365 days \* 5 years ~= 3.6 PB
+- **Bandwith**
+  - 2 TB / 86400 sec ~= 25 MB/s
+
+---
+
+## Step 2 - API
+
+- **Feature: send message**
+  - `POST /api/v1/msg`
+  - header: api_token
+  - param:
+    - sender_id
+    - receiver_id
+    - message_time
+    - message_body
+
+---
+
+- **Feature: receive message**
+  - `GET /api/v1/<receiver_id>`
+  - header: api_token
+  - param:
+    - receiver_id
+  - method:
+    - web socket: bi-directional communication
+
+---
+
+- **Feature: status update**
+  - `GET /api/v1/status`
+  - header: api_token
+  - param:
+    - user_id
+    - timestamp
+
+---
+
+- **Feature: chat hisory**
+  - `GET /api/<receiver_id>`
+  - header: api_token
+  - param:
+    - receiver_id
+    - timestamp_start optional
+    - timestamp_end optional
+
+---
+
+## Step 3 - data model
+
+- **User info**: SQLs
+
+  | field   | data type | DESC       |
+  | ------- | --------- | ---------- |
+  | user_id | int/uuid  | user id    |
+  | email   | varchar   | user email |
+
+- **msg table**: NoSQL - KV
+
+  | field       | data type | desc              |
+  | ----------- | --------- | ----------------- |
+  | msg_id      | int       | message id        |
+  | sender_id   | int       | sender id         |
+  | receiver_id | int       | receiver id       |
+  | message     | varchar   | message body      |
+  | create_time | timestamp | message sent time |
+
+- **status table**: NoSQL - KV
+
+  | field      | data type | desc                   |
+  | ---------- | --------- | ---------------------- |
+  | user_id    | int       | user id                |
+  | is_oneline | boolean   | whether user is online |
+
+---
+
+## Step 4 - high level desgin
+
+```
+sender -> app server  -> db
+```
+
+---
+
+## Step 5 - Details
+
+### Reliability & HA
+
+- Issue: app server failure (SPOF)
+  - Solution: **load balancer**
+    - distribute traffic to multiple app servers
+    - app server health check; route to healthy app server
+
+- Issue: DB SPOF
+  - Solution: **replication**
+    - user db: primary-standby; write-reads
+    - msg db: NoSQL replication
+
+---
+
+### Performance
+
+- Issue: high rps
+  - Solution: **horizontal scaling**
+    - Multitple app server handle incomming traffic
+  - Solution: **edge server list**
+    - client connect app endpoint;
+    - API server found the closest edge server
+    - route client to the closest edge server
+      - Sender connect to sender's edge server
+      - Receiver connect to receiver's edge server
+
+---
+
+### Security
+
+- Issue: annonymous connection
+  - Solution: **authentication**
+    - Header with token
+- Issue: abusive traffic
+  - Solution: **rate limtie**
+    - request throttle
+
+---
+
+### Specific issues
+
+- Issue: get chat history based on recipent; get message from partitions is solw
+  - Solution: **partition data by hash user_id + pagenation**
+    - data related to a user is sharded together
+    - pagenation improve performance
+
+- Issue: msg sent from sender server to receiver server
+  - Solution: **MQ**
+    - msg sent by sender
+    - MQ put it in a queue, consumed by receiver
+    - decouple sender and receiver
+
+- Issue: Group chat; one-to-many
+  - Solution: **MQ multiple subscribers**
+    - msg sent by sender
+    - MQ create multiple queues/channels, one per group member
+    - group member get msg
+- Issue: Status update
+  - Solution: **period heartbeat**
+    - client UI send heartbeat periodically
+    - if lost 3 times, offline
+    - message keep in MQ until next online
+
+- Issue: notification
+  - Solution: **MQ + nofitication service providers**
+    - new message -> MQ -> service provider -> notification
+
+- Issue: Connection between client and server
+  - Solution: **web socket**
+    - bi-directiona
+
+- Issue: message status(sent, read)
+  - Solution: **MQ + Knowledgement**
+    - msg -> sender server -> MQ -> receiver server -> receiver
+    - recipient ack -> recipient server ack -> MQ -> sender server ack -> sender ack
+
+- Issue: message consistent in device;how to sequence the msg
+  - Soluion: **create timestamp + sequence number**
+    - message are sored by sequence number based on the message create timestamp
+    - keep chat history consistent in both side
+
+---
+
+### Diagram
+
+![chat](./img/chat.drawio.png)
+
+---
+
+## Step 6 - Wrap up
+
+- talking point:
+  - celebrity data grow
+    - monitoring
+    - maintainant: move to new shard
+
+---
+
+## Reference
 
 ## Step 2 - Propose high-level design and get buy-in
 
