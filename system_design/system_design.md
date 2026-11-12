@@ -2,6 +2,8 @@
 
 [Back](../README.md)
 
+- [Interview](./interview/interview.md)
+- [Example: scale from zero to millions of users](./scale/scale.md)
 - [System Design Fundamental](./basics/basics.md)
   - [Load Balancing](./basics/lb.md)
   - [Caching](./basics/caching.md)
@@ -11,21 +13,23 @@
   - [SQL vs. NoSQL](./basics/sql_nosql.md)
   - [Communication protocols](./basics/protocols.md)
   - [Consistent hashing](./basics/hashing.md)
-- [Example: scale from zero to millions of users](./scale/scale.md)
-
-- [Interview](./interview/interview.md)
-
-- [Design rate limiter](./rate_limiter/rate_limiter.md)
-- [Design key-value store](./kv/kv.md)
-- [Design a unique ID generator ](./uid/uid.md)
 
 ---
 
-- [Design a url shortener](./url/url.md)
-- [Design Pastebin](./pastebin/pastebin.md)
-- [Design Cloud file storage](./drive/drive.md)
-- [Design Instagram](./instagram/instagram.md)
-- [Design a chat system](./chat/chat.md)
+- Features
+  - [Design rate limiter](./rate_limiter/rate_limiter.md)
+  - [Design key-value store](./kv/kv.md)
+  - [Design a unique ID generator ](./uid/uid.md)
+
+---
+
+- Products
+  - [Design url shortener](./url/url.md)
+  - [Design Pastebin](./pastebin/pastebin.md)
+  - [Design Cloud file storage](./drive/drive.md)
+  - [Design Instagram](./instagram/instagram.md)
+  - [Design chat system](./chat/chat.md)
+  - [Design Twitter](./twitter/twitter.md)
 
 ---
 

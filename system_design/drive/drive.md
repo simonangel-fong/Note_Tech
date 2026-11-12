@@ -233,10 +233,11 @@
 
 ### Step 6 - Wrap up
 
-- talking point:
-  - celebrity data grow
-    - monitoring
-    - maintainant: move to new shard
+- feature
+  - functional
+  - non-functional
+- resolved vs open-end
+- road map
 
 ---
 
