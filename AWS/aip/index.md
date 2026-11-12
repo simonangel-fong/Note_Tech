@@ -16,11 +16,18 @@
   - [Training](./fundamental/train.md)
   - [Inference](./fundamental/inference.md)
   - [Prompt engineering](./fundamental/prompt.md)
+  - [Agentic AI](./fundamental/agent.md)
+    - [Multi-agent System](./fundamental/multi_agent.md)
+
+---
 
 - [Amazone Bedrock](./bedrock/bedrock.md)
   - [Knowledge Bases](./bedrock/kb.md)
   - [Guardrails](./bedrock/grl.md)
   - [Flows](./bedrock/flow.md)
+  - [AgentCore](./bedrock/agentcore.md)
+  - [Agents Classic](./bedrock/classic.md)
+  - [Strands Agents](./bedrock/strand.md)
 
 ---
 
