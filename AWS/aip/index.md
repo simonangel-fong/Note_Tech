@@ -18,6 +18,7 @@
   - [Prompt engineering](./fundamental/prompt.md)
   - [Agentic AI](./fundamental/agent.md)
     - [Multi-agent System](./fundamental/multi_agent.md)
+  - [MCP](./fundamental/mcp.md)
 
 ---
 
@@ -28,6 +29,9 @@
   - [AgentCore](./bedrock/agentcore.md)
   - [Agents Classic](./bedrock/classic.md)
   - [Strands Agents](./bedrock/strand.md)
+
+- [MCP in AWS](./aws/mcp.md)
+- [Amazon Q Business](./q_business/q_business.md)
 
 ---
 

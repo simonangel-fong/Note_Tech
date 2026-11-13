@@ -16,6 +16,8 @@
   - [Enterprise Integration](#enterprise-integration)
   - [AWS Well-Architected Generative AI Lens](#aws-well-architected-generative-ai-lens)
   - [`Re-ranker Models` in Amazon Bedrock](#re-ranker-models-in-amazon-bedrock)
+  - [OpenAPI and GenAI](#openapi-and-genai)
+  - [Humans in the Loop](#humans-in-the-loop)
 
 ---
 
@@ -257,3 +259,42 @@
 - In limited regions
 
 - ref: https://docs.aws.amazon.com/bedrock/latest/userguide/rerank.html
+
+---
+
+## OpenAPI and GenAI
+
+- `OpenAPI` / `OpenAPI Specification (OAS)`
+  - an open-source, language-agnostic format used to **define and describe HTTP APIs** (most notably `RESTful APIs`).
+- a spec for **defining interfaces for web services**
+- Originally `Swagger`
+
+- Can also be used to **define interfaces between FMs and tools**
+  - Helps with reliable tool operations
+
+- **Standardize** function definitions
+- Define input parameters, expected outputs, error conditions per tool
+
+- May be used with `Bedrock action groups`
+  - Upload OpenAPI schema to S3
+    - Or edit it in the console
+  - The `action group` can then **refer** to it to guide its tool use
+
+---
+
+## Humans in the Loop
+
+- Can be low-tech
+  - `Human augmentation pattern`:
+    - AI prepares drafts,
+    - humans refine
+- AI systems can implement **escalation criteria**
+  - **Route** complex or uncertain cases **to human** experts
+  - Based on confidence **scores** or risk **assessments**
+- Human feedback enables **continuous improvement**
+  - Front feedback collection with **API Gateway** to just ask humans if they like the output
+  - Store that feedback in `DynamoDB`
+    - With `indexing` to allow **later analysis**
+    - Use to **measure** which model / variant is preferred
+
+![hitl](./img/hitl.png)

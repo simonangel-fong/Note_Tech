@@ -14,6 +14,9 @@
     - [Policy Enforcement](#policy-enforcement)
   - [Identity](#identity)
   - [Evaluations](#evaluations)
+    - [Built-In Evaluations (prompt templates)](#built-in-evaluations-prompt-templates)
+    - [Custom Evaluators](#custom-evaluators)
+  - [Lab: Strands Agent](#lab-strands-agent)
 
 ---
 
@@ -164,7 +167,67 @@
 
 ## Evaluations
 
-Core Services & Features
+- Assess how well your agent:
+  - Performs **task**
+  - **Handles** edge cases
+  - Maintains **consistency**
+- **Integrates** with:
+  - `Strands`
+  - `LangGraph`
+  - `OpenTelemetry`
+  - `OpenInference`
+- **Visualize** results in `CloudWatch`
+  - `AgentCore Observability Insights`
+  - The usual `CloudWatch alerts` / `alarms`
+- **Cross-region** inference
+  - Automatically **selects optimal region** for processing
+  - **Data remains** resident to where the request **originated**
+  - But may be transmitted and processed – **encrypted** – to other regions
 
-- Policy & Observability: Uses plain-English rules converted to Cedar to intercept unauthorized tool calls, alongside OpenTelemetry tracing for debugging and evaluations.
-- Auxiliary Sandboxes: Includes built-in tools like a cloud browser and a code interpreter.
+---
+
+### Built-In Evaluations (prompt templates)
+
+- Correctness (is it **factually correct**)
+- Helpfulness (from the **user’s** standpoint)
+- Conciseness
+- Instruction following
+- Faithfulness (is response supported by context/sources)
+- Response relevance (to user query)
+- Coherence (logical structure)
+- Refusal (is it evasive)
+- Goal success rate
+- Tool selection and parameter accuracy
+- Harmfulness, Stereotyping
+- Evaluation may be limited by filters and sampling rate you specify
+
+---
+
+### Custom Evaluators
+
+- **Specify a model** to use as a judge
+  - And configure it
+- And define it with a **prompt**
+  - Maybe start with a built-in one
+- Define **scales**
+  - Maps ranges of results to labels
+- Define **evaluation level**
+  - Session, trace, tool call
+
+---
+
+## Lab: Strands Agent
+
+- **Prerequisite**
+  - Git
+  - Python UV
+  - Nodejs
+  - Bedrock api key
+    - set environment variable `AWS_BEARER_TOKEN_BEDROCK`
+
+- Skip
+- hands-on project idea(not required for exam)
+  - deploy with agentcore cli
+  - deploy with terraform
+  - integrate with cicd
+  - multiple tenant
