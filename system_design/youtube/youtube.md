@@ -4,6 +4,20 @@
 
 - [System Design - YouTube](#system-design---youtube)
   - [YouTube](#youtube)
+  - [Step 1: Requirements](#step-1-requirements)
+    - [Estimation](#estimation)
+  - [Step 2: API design](#step-2-api-design)
+  - [Step 3: Data model](#step-3-data-model)
+  - [Step 4: High](#step-4-high)
+  - [Step 5: details](#step-5-details)
+    - [Reliability \& HA](#reliability--ha)
+    - [Performance](#performance)
+    - [Security](#security)
+    - [Specific](#specific)
+    - [FlowChart](#flowchart)
+    - [Diagram](#diagram)
+  - [Step 6: Wrap up](#step-6-wrap-up)
+  - [Reference](#reference)
   - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
   - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
     - [Video uploading flow](#video-uploading-flow)
@@ -20,6 +34,252 @@
 
 - video sharing platform
   - e.g., YouTube, Netflix, Hulu
+
+---
+
+## Step 1: Requirements
+
+**Functional Requirements:**
+
+1. Users should be able to **upload** videos.
+2. Users should be able to **share** and view videos.
+3. Users should be able to perform **searches** based on video **titles**.
+4. Our services should be able to **record stats** of videos, e.g., likes/dislikes, total number of views, etc.
+5. Users should be able to add and view **comments** on videos.
+
+**Non-Functional Requirements:**
+
+1. The system should be highly **reliable**, any video uploaded should not be lost.
+2. The system should be highly **available**. **Consistency** can take a hit (in the interest of availability); if a user doesn’t see a video for a while, it should be fine.
+3. Users should have a **real time** experience while watching videos and should not feel any lag.
+
+**Not in scope:**
+Video recommendations, most popular videos, channels, subscriptions, watch later, favorites, etc.
+
+---
+
+### Estimation
+
+- **Assume**
+  - total users: 1.5B
+  - DAU: 800M
+  - viewed per user per day: 5 videos
+  - upload/view ratio: 1:200
+- **Performance**:
+  - read/view: 800M \* 5 videos / 3600 /24 = 46k rps
+  - write/upload: 46k/s / 200 = 230 rps
+- **Storage:**
+  - 5 years storage: avg video size \* write rps \* 3600 \* 24 \* 365
+- **Bandwidth:**
+
+---
+
+## Step 2: API design
+
+- feature: upload
+- `POST /api/v1/video`
+- header: api_token
+- param:
+  - video_title
+  - video_shownote
+  - video_data
+
+---
+
+- feature: view
+- `GET /api/v1/<video_id>`
+- header: api_token optional
+- param: video_id
+
+---
+
+- feature: search
+- `GET /api/v1/q?title=<video_title>`
+- header: api_token optional
+- param: video_title
+
+---
+
+- feature: comment
+- `POST /api/v1/comment/<video_id>`
+- header: api_token
+- param:
+  - video_id
+  - comment_data
+
+---
+
+- feature: like
+- `POST /api/v1/like/<video_id>`
+- header: api_token
+- param:
+  - video_id
+  - like/dislike
+
+---
+
+- feature: stat metadata
+- `POST /api/v1/stat/<video_id>`
+- header: api_token optional
+- param:
+  - video_id
+  - stat_data
+
+---
+
+## Step 3: Data model
+
+- user table: SQL
+
+| Field   | datatype | desc       |
+| ------- | -------- | ---------- |
+| user_id | int      | user id    |
+| email   | varchar  | user email |
+
+- video metadata: NoSQL
+
+| Field       | datatype | desc                      |
+| ----------- | -------- | ------------------------- |
+| video_id    | int      | video id                  |
+| length      | int      | length of video in second |
+| title       | varchar  | video title               |
+| storage_url | varchar  | video storage url/arn     |
+
+- comment table: NoSQL kv
+
+| Field      | datatype | desc            |
+| ---------- | -------- | --------------- |
+| comment_id | int      | comment id      |
+| video_id   | int      | video id        |
+| comment    | varchar  | comment content |
+
+- stat table: NoSQL kv
+
+| Field     | datatype | desc                                      |
+| --------- | -------- | ----------------------------------------- |
+| user_id   | int      | user id                                   |
+| video_id  | int      | video id                                  |
+| like      | int      | whether like video (check: like, dislike) |
+| stat_data | int      |                                           |
+
+---
+
+## Step 4: High
+
+```
+client -> app server -> database
+```
+
+---
+
+## Step 5: details
+
+### Reliability & HA
+
+- Issue: API server == SPOF
+  - Solution: **LB**
+    - LB health check app server
+    - distribute traffic
+
+- Issue: DB == SPOF
+  - Solution: **Partitioning + master-standby**
+    - **data shard**
+    - **master-standby**:
+      - if master fails, one replica promote to master
+
+- Issue: video data loss
+  - Solution: **Partitioning**
+    - multiple replica storage
+
+---
+
+### Performance
+
+- Issue: high volume rps
+  - Solution: **horizontal scaling + master-replicas**
+    - H scaling: handle high traffic
+    - read replicas: make HA of read requests
+
+- Issue: upload video takes time
+  - Solution: **Separate download and upload workload**
+    - download api: download request
+    - upload api: upload request
+
+- Issue: download video takes time
+  - Solution: **Cache videos in CDN**
+    - close to client
+
+- Issue: request direct to DB
+  - Solution: **memory Cache(redis)**
+    - cache common data in memory
+      - like/dislike
+      - metadata (cache for 7 seven days)
+      - comment (pagenation)
+      - user
+    - eviction police: `Least Recently Used (LRU)`
+
+### Security
+
+- Issue: anonymous user upload
+  - Solution: **Authentication**
+    - header: api_token
+
+- Issue: abusive request
+  - Solution: **rate limiter**
+    - limit request in a period
+
+### Specific
+
+- Issue: unify video format
+  - Solution: **formating process + MQ**
+    - user upload video -> format video into unified schema -> storage (replication) -> add CDN
+    - MQ decouple submition and processing
+
+- Issue: preprocess
+  - Solution: **DAG**
+    - sequence + parallel
+
+---
+
+### FlowChart
+
+- upload video
+
+```
+client -> LB -> API server -> preprocess server -> MQ -> storage -> video metadata DB -> update cache -> upload CDN
+```
+
+- view video
+
+```
+client -> LB -> API serer -> cache -> database -> CDN -> download video
+```
+
+- comment/stat
+
+```
+client -> LB -> API server -> cache -> database
+```
+
+---
+
+### Diagram
+
+![](./img/youtube.drawio.png)
+
+---
+
+## Step 6: Wrap up
+
+- feature
+  - functional
+  - non-functional
+- resolved vs open-end
+- road map
+
+---
+
+## Reference
 
 ## Step 1 - Understand the problem and establish design scope
 

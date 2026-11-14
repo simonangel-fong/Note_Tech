@@ -4,6 +4,19 @@
 
 - [System Design - Search autocomplete](#system-design---search-autocomplete)
   - [Search autocomplete](#search-autocomplete)
+  - [Step 1 - Requirements](#step-1---requirements)
+    - [Estimation](#estimation)
+  - [Step 2 - API design](#step-2---api-design)
+  - [Step 3 - Data model](#step-3---data-model)
+  - [Step 4 - high level](#step-4---high-level)
+  - [Step 5 - Details](#step-5---details)
+    - [reliability \& HA](#reliability--ha)
+    - [Performance](#performance)
+    - [Security](#security)
+    - [Specifc](#specifc)
+    - [Flowchart](#flowchart)
+    - [Diagram](#diagram)
+  - [Reference](#reference)
   - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
   - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
     - [Data gathering service](#data-gathering-service)
@@ -25,6 +38,135 @@
   - design top k most searched queries
 
 ---
+
+## Step 1 - Requirements
+
+**Functional Requirements:**
+
+- As the user types in their query, our service should suggest top 10 terms starting with whatever the user has typed.
+
+**Non-function Requirements:**
+
+- The suggestions should appear in real-time.
+- The user should be able to see the suggestions within 200ms.
+
+### Estimation
+
+---
+
+## Step 2 - API design
+
+- Feature: type query
+  - Ajax
+  - `GET /api/v1/type/<prefix>`
+  - param:
+    - prefix
+  - return:
+    - top_5_str
+
+---
+
+## Step 3 - Data model
+
+- hot_query table
+
+| field     | datatype | desc            |
+| --------- | -------- | --------------- |
+| query_id  | int      | query string id |
+| query_str | varchar  | query string    |
+| count     | int      | count           |
+
+---
+
+## Step 4 - high level
+
+```
+client -> app server -> database
+```
+
+---
+
+## Step 5 - Details
+
+### reliability & HA
+
+- Issue: server == SPOF
+  - Solution: **LB**
+    - LB health check server
+    - route & distribute traffic to servers
+
+- Issue: DB == SPOF
+  - Solution: **Primary-Replica;replication**
+    - when primary fails, replica(standby) promote to primary
+    - Across AZ
+
+---
+
+### Performance
+
+- Issue: high rps
+  - Solution: **horizontal scaling**
+    - multiple app servers
+- Issue: DB
+  - Solution: **Primary-replica; Indexing**
+    - multiple read servers
+    - indexing
+- Issue: hot query string; direct query db
+  - Solution: **Cache(Redis)**
+    - cache hot query string in memory
+    - eviction policy: LRU
+
+---
+
+### Security
+
+- Issue: abusive request
+  - Solution: **Rate limiter**
+    - Limite request per second
+    - prevent DDOS
+
+---
+
+### Specifc
+
+- Issue: seed data
+  - Solution: **Import from log**
+    - Scheduled job: extract query string from log -> aggregate -> update DB
+
+- Issue: DB structure; large volume string
+  - Solution: **TRIE data structure**
+    - tree structure; improve performance
+
+  ![](./img/trie.png)
+
+---
+
+### Flowchart
+
+- Feature: autocomplete
+
+```
+client type(Ajax) -> LB -> app server -> cache -> DB
+```
+
+- Feature: scheduled job update DB
+
+```
+scheduled job -> client type log -> aggregate server -> DB -> Cache
+```
+
+---
+
+### Diagram
+
+
+![](./img/autocomplete.drawio.png)
+
+
+
+---
+
+## Reference
 
 ## Step 1 - Understand the problem and establish design scope
 

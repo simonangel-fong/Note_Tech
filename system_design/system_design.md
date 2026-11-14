@@ -20,24 +20,24 @@
   - [Design rate limiter](./rate_limiter/rate_limiter.md)
   - [Design key-value store](./kv/kv.md)
   - [Design a unique ID generator ](./uid/uid.md)
+  - [Design Search autocomplete](./autocomplete/autocomplete.md)
 
 ---
 
 - Products
-  - [Design url shortener](./url/url.md)
+  - [Design TinyURL](./url/url.md)
   - [Design Pastebin](./pastebin/pastebin.md)
   - [Design Cloud file storage](./drive/drive.md)
   - [Design Instagram](./instagram/instagram.md)
-  - [Design chat system](./chat/chat.md)
+  - [Design Chat system](./chat/chat.md)
   - [Design Twitter](./twitter/twitter.md)
+  - [Design Youtube](./youtube/youtube.md)
 
 ---
 
 - [Design a web crawler](./crawler/crawler.md)
 - [Design a notification system](./notification/notification.md)
 - [Design a news feed system](./feed/feed.md)
-- [Design a search autocomplete](./autocomplete/autocomplete.md)
-- [Design a youtube](./youtube/youtube.md)
 
 ---
 
