@@ -32,6 +32,12 @@
 
 - [MCP in AWS](./aws/mcp.md)
 - [Amazon Q Business](./q_business/q_business.md)
+- [Amazon Quick](./quick/quick.md)
+
+---
+
+- **Optimization**
+  - [Token](./opt/token.md)
 
 ---
 
