@@ -12,34 +12,35 @@
 
 ---
 
-- LLM Fundamental
-  - [LLM](./fundamental/llm.md)
-  - [Training](./fundamental/train.md)
-  - [Inference](./fundamental/inference.md)
-  - [Prompt engineering](./fundamental/prompt.md)
-  - [Agentic AI](./fundamental/agent.md)
-    - [Multi-agent System](./fundamental/multi_agent.md)
-  - [MCP](./fundamental/mcp.md)
+LLM Fundamental
+
+- [LLM](./fundamental/llm.md)
+- [Training](./fundamental/train.md)
+- [Inference](./fundamental/inference.md)
+- [Prompt engineering](./fundamental/prompt.md)
+- [Agentic AI](./fundamental/agent.md)
+  - [Multi-agent System](./fundamental/multi_agent.md)
+- [MCP](./fundamental/mcp.md)
 
 ---
 
-- [Amazone Bedrock](./bedrock/bedrock.md)
-  - [Knowledge Bases](./bedrock/kb.md)
-  - [Guardrails](./bedrock/grl.md)
-  - [Flows](./bedrock/flow.md)
-  - [AgentCore](./bedrock/agentcore.md)
-  - [Agents Classic](./bedrock/classic.md)
-  - [Strands Agents](./bedrock/strand.md)
+[Amazone Bedrock](./bedrock/bedrock.md)
 
-- [MCP in AWS](./aws/mcp.md)
-- [Amazon Q Business](./q_business/q_business.md)
-- [Amazon Quick](./quick/quick.md)
-- [SageMaker AI](./sagemaker/sagemaker.md)
+- [Knowledge Bases](./bedrock/kb.md)
+- [Guardrails](./bedrock/grl.md)
+- [Flows](./bedrock/flow.md)
+- [AgentCore](./bedrock/agentcore.md)
+- [Agents Classic](./bedrock/classic.md)
+- [Strands Agents](./bedrock/strand.md)
 
----
+[MCP in AWS](./aws/mcp.md)
+[Amazon Q Business](./q_business/q_business.md)
+[Amazon Quick](./quick/quick.md)
+[SageMaker AI](./sagemaker/sagemaker.md)
 
-- **Optimization**
-  - [Token](./opt/token.md)
+Optimization
+
+- [Token](./opt/token.md)
 
 ---
 

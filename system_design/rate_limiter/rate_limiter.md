@@ -4,6 +4,17 @@
 
 - [System Design - Rate limiter](#system-design---rate-limiter)
   - [Rate limiter](#rate-limiter)
+  - [Step 1 - requirements](#step-1---requirements)
+  - [Step 2 - API Design](#step-2---api-design)
+  - [Step 3 - Algorithms](#step-3---algorithms)
+  - [Step 4 - Data model](#step-4---data-model)
+  - [Step 5 - High level](#step-5---high-level)
+  - [Step 6 - Details](#step-6---details)
+    - [Reliability \& HA](#reliability--ha)
+    - [Performance](#performance)
+    - [Specific Issue](#specific-issue)
+    - [Diagram](#diagram)
+  - [Reference](#reference)
   - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
   - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
     - [Token bucket algorithm](#token-bucket-algorithm)
@@ -31,6 +42,110 @@
   - Prevent resource starvation caused by Denial of Service (DoS) attack.
   - Reduce cost.
     - Limiting excess requests means **fewer servers**
+
+---
+
+## Step 1 - requirements
+
+**Functional Requirements:**
+
+1. **Limit** the number of requests an entity can send to an API within a time window,
+   - e.g., 15 requests per second.
+2. The APIs are **accessible through a cluster**, so the rate limit should be considered across different servers. The user should get an **error message** whenever the defined threshold is crossed within a single server or across a combination of servers.
+
+**Non-Functional Requirements:**
+
+1. The system should be **highly available**. The rate limiter should always work since it protects our service from external attacks.
+2. Our rate limiter should not introduce substantial **latencies** affecting the user experience.
+
+---
+
+## Step 2 - API Design
+
+Feature: rate limit
+
+- `GET /api/v1/rate-limit`
+- param:
+  - timestamp
+  - IP
+  - user_id
+
+---
+
+## Step 3 - Algorithms
+
+- **Token bucket algorithm**
+  - Bucket size + refill rate
+  - request handle requires token; if no token, require gets dropped.
+- **Leaking bucket algorithm**
+  - first-in-first-out (FIFO) queue
+  - Bucket size + Outflow rate
+  - request arrive; check if queue full; if not, process; otherwise, drop
+  - limit: sync, if handel delay; block queue.
+- **Fixed window counter algorithm**
+  - divides the timeline into fix-sized time windows; **count** per window; request > count, drop
+  - limit: spike at the window edge
+- **Sliding window log algorithm**
+  - track of request timestamps; new request removes all the outdated timestamps; log size > count, drop
+  - limit: consume memory due to timestamps
+- **Sliding window counter algorithm**
+  - combines the **fixed window counter** and **sliding window log**.
+
+---
+
+## Step 4 - Data model
+
+- rate counter table
+
+| field     | datatype  | description       |
+| --------- | --------- | ----------------- |
+| user_id   | int       | user id           |
+| timestamp | timestamp | request timestamp |
+
+- NoSQL: KV store
+
+---
+
+## Step 5 - High level
+
+```
+client -> rate limiter -> rate DB
+  -> if request <= limit -> app server
+  -> if request > limit -> drop
+```
+
+---
+
+## Step 6 - Details
+
+### Reliability & HA
+
+- Issue: rate server == SPOF
+  - Solution: **scale + LB**
+    - if one server fails, route to another server
+
+### Performance
+
+- Issue: direct to DB -> pressure + latency
+  - Solution: **Cache(redis)**
+    - Cache rate count in memory
+
+---
+
+### Specific Issue
+
+- Issue: Race condition; data consistency under concurrent
+  - Solution: **Lua script** and **sorted sets data structure** in Redis
+
+---
+
+### Diagram
+
+![](./img/rate-limiter.drawio.png)
+
+---
+
+## Reference
 
 ---
 
