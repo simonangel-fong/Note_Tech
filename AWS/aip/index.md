@@ -3,6 +3,7 @@
 [All Note](../../README.md)
 
 - [AWS Certified Generative AI Developer - Professional (AIP-C01)](#aws-certified-generative-ai-developer---professional-aip-c01)
+  - [Common services for AI application](#common-services-for-ai-application)
 
 ---
 
@@ -55,3 +56,12 @@
   - [RDS](./rds/rds.md)
   - [DynamoDB](./dynamodb/dynamodb.md)
   - [EventBridge](./eventbridge/eventbridge.md)
+
+---
+
+## Common services for AI application
+
+- [Lambda](./lambda/lambda.md)
+- [API Gateway](./api_gtw/api_gtw.md)
+- [AppConfig](./appconfig/appconfig.md)
+- [Step Functions](./step_func/step_func.md)
