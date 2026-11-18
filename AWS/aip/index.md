@@ -66,3 +66,4 @@ Optimization
 - [API Gateway](./api_gtw/api_gtw.md)
 - [AppConfig](./appconfig/appconfig.md)
 - [Step Functions](./step_func/step_func.md)
+- [CodePipeline](./codepipeline/codepipeline.md)
