@@ -56,7 +56,6 @@ Optimization
     - [S3 Vector](./s3/s3_vector.md)
   - [RDS](./rds/rds.md)
   - [DynamoDB](./dynamodb/dynamodb.md)
-  - [EventBridge](./eventbridge/eventbridge.md)
 
 ---
 
@@ -67,3 +66,12 @@ Optimization
 - [AppConfig](./appconfig/appconfig.md)
 - [Step Functions](./step_func/step_func.md)
 - [CodePipeline](./codepipeline/codepipeline.md)
+- [MLFlow](./mlflow/mlflow.md)
+- [AppSync](./appsync/appsync.md)
+- [AppFlow](./appflow/appflow.md)
+- [Outposts](./outposts/outposts.md)
+- [WaveLength](./waveLength/waveLength.md)
+- [Amplify](./amplify/amplify.md)
+- [EventBridge](./eventbridge/eventbridge.md)
+- [SQS](./sqs/sqs.md)
+- [SNS](./sns/sns.md)
