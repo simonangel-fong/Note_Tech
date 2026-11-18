@@ -32,10 +32,10 @@
   - [Design Chat system](./chat/chat.md)
   - [Design Twitter](./twitter/twitter.md)
   - [Design Youtube](./youtube/youtube.md)
+  - [Design web crawler](./crawler/crawler.md)
 
 ---
 
-- [Design a web crawler](./crawler/crawler.md)
 - [Design a notification system](./notification/notification.md)
 - [Design a news feed system](./feed/feed.md)
 

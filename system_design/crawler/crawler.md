@@ -12,6 +12,7 @@
     - [HTML Downloader](#html-downloader)
     - [Detect and avoid problematic content](#detect-and-avoid-problematic-content)
   - [Step 4 - Wrap up](#step-4---wrap-up)
+  - [Diagram](#diagram)
 
 ---
 
@@ -142,3 +143,9 @@
   - Database replication and sharding
   - Horizontal scaling
   - Analytics
+
+---
+
+## Diagram
+
+![crawler](./img/crawler.drawio.png)
