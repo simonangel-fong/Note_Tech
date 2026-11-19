@@ -4,6 +4,7 @@
 
 - [AWS Certified Generative AI Developer - Professional (AIP-C01)](#aws-certified-generative-ai-developer---professional-aip-c01)
   - [Common services for AI application](#common-services-for-ai-application)
+  - [Monitoring](#monitoring)
 
 ---
 
@@ -21,6 +22,7 @@ LLM Fundamental
 - [Agentic AI](./fundamental/agent.md)
   - [Multi-agent System](./fundamental/multi_agent.md)
 - [MCP](./fundamental/mcp.md)
+- [Evaluation](./fundamental/eval.md)
 
 ---
 
@@ -32,6 +34,7 @@ LLM Fundamental
 - [AgentCore](./bedrock/agentcore.md)
 - [Agents Classic](./bedrock/classic.md)
 - [Strands Agents](./bedrock/strand.md)
+- [Evaluation](./bedrock/eval.md)
 
 [MCP in AWS](./aws/mcp.md)
 [Amazon Q Business](./q_business/q_business.md)
@@ -42,6 +45,10 @@ Optimization
 
 - [Token](./opt/token.md)
 
+- [Bedrock Agents Classic](./qa/classic.md)
+
+---
+
 ---
 
 - Managing Data for Generative AI
@@ -49,7 +56,6 @@ Optimization
   - [Bedrock Data Automation](./bedrock/da.md)
   - [SageMaker Data Wrangler](./sagemaker/dw.md)
   - [Glue](./glue/glue.md)
-  - [Cloudwatch](./cloudwatch/cloudwatch.md)
   - [Transcribe](./transcribe/transcribe.md)
   - [Opensearch](./opensearch/opensearch.md)
   - [S3](./s3/s3.md)
@@ -75,3 +81,12 @@ Optimization
 - [EventBridge](./eventbridge/eventbridge.md)
 - [SQS](./sqs/sqs.md)
 - [SNS](./sns/sns.md)
+
+---
+
+## Monitoring
+
+- [CloudWatch](./cloudwatch/cloudwatch.md)
+- [CloudTrail](./cloudtrail/cloudtrail.md)
+- [X-Ray](./x_ray/x_ray.md)
+- [Lake Formation](./lake_formation/lake_formation.md)
