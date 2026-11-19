@@ -19,8 +19,9 @@
 - Features
   - [Design rate limiter](./rate_limiter/rate_limiter.md)
   - [Design key-value store](./kv/kv.md)
-  - [Design a unique ID generator ](./uid/uid.md)
-  - [Design Search autocomplete](./autocomplete/autocomplete.md)
+  - [Design unique ID generator ](./uid/uid.md)
+  - [Design search autocomplete](./autocomplete/autocomplete.md)
+  - [Design feed system](./feed/feed.md)
 
 ---
 
@@ -37,7 +38,6 @@
 ---
 
 - [Design a notification system](./notification/notification.md)
-- [Design a news feed system](./feed/feed.md)
 
 ---
 

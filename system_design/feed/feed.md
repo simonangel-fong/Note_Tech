@@ -4,6 +4,19 @@
 
 - [System Design - News Feed System](#system-design---news-feed-system)
   - [News Feed System](#news-feed-system)
+  - [Step 1 - requirements](#step-1---requirements)
+    - [Estimation](#estimation)
+  - [Step 2 - API design](#step-2---api-design)
+  - [Step 3 - Data model](#step-3---data-model)
+  - [Step 4 - High level](#step-4---high-level)
+  - [Step 5 - details](#step-5---details)
+    - [Reliability \& HA](#reliability--ha)
+    - [Performance](#performance)
+    - [Security](#security)
+    - [Specific issue](#specific-issue)
+    - [Diagram](#diagram)
+  - [Step 6 - wrap up](#step-6---wrap-up)
+  - [Reference](#reference)
   - [Step 1 - Understand the problem and establish design scope](#step-1---understand-the-problem-and-establish-design-scope)
   - [Step 2 - Propose high-level design and get buy-in](#step-2---propose-high-level-design-and-get-buy-in)
     - [Newsfeed APIs](#newsfeed-apis)
@@ -27,6 +40,163 @@
   - Twitter timeline, etc.
 
 ---
+
+## Step 1 - requirements
+
+**Functional requirements:**
+
+1. Newsfeed will be generated based on the posts from the people, pages, and groups that a user **follows**.
+2. A user may have many friends and follow a large number of pages/groups.
+3. Feeds may contain images, videos, or just text.
+4. Our service should support appending new posts as they arrive to the newsfeed for all active users.
+
+**Non-functional requirements:**
+
+1. Our system should be able to generate any user’s newsfeed in **real-time** - maximum latency seen by the end user would be 2s.
+2. A post shouldn’t take more than 5s to make it to a user’s feed assuming a new newsfeed request comes in.
+
+---
+
+### Estimation
+
+- **Assume:**
+  - average friends per user: 300
+  - average pages follwed per user: 200
+  - DAU: 300M
+  - avg fetch per day per user: 5
+  - avg size per post: 1KB
+- **Performance**:
+  - read/query: 300M \* 5 / 24 / 3600 = 17.4K rps
+- **Bandwidth**:
+  - read/query: 17.4K rps \* 1KB = 18M/s
+
+---
+
+## Step 2 - API design
+
+Feature: get feed
+
+- `GET /api/v1/feed`
+- header: api_token
+
+---
+
+## Step 3 - Data model
+
+- user tb(SQL)
+
+| field   | datatype | desc       |
+| ------- | -------- | ---------- |
+| user_id | int      | user id    |
+| email   | varchar  | user email |
+
+- post tb(NoSQL - kv)
+
+| field      | datatype  | DESC               |
+| ---------- | --------- | ------------------ |
+| post_id    | int       | post id            |
+| content    | varchar   | post content       |
+| created_at | timestamp | post creation time |
+
+- follow tb(NoSQL Graph)
+
+| field     | datatype | DESC           |
+| --------- | -------- | -------------- |
+| user_id   | int      | user id        |
+| follow_id | int      | follow user id |
+
+- feed tb(NoSQL document)
+
+| field        | datatype  | desc                  |
+| ------------ | --------- | --------------------- |
+| user_id      | int       | user id               |
+| feed_content | json      | post list             |
+| last_update  | timestamp | last update timestamp |
+
+---
+
+## Step 4 - High level
+
+```
+client -> app server -> database
+```
+
+---
+
+## Step 5 - details
+
+### Reliability & HA
+
+- Issue: app servers == SPOF
+  - Solution: **app server scaling + LB**
+    - LB health check app server
+    - route traffic only to healthy server
+- Issue: DB server == SPOF
+  - Solution: **primary-standby**
+    - if master fails, standby -> master
+
+### Performance
+
+- Issue: app server handle high volume request
+  - Solution: **horizontal scaling**
+
+- Issue: DB handle high rps
+  - Solution: **master-replicas**
+    - master=wriet; replicas=read; replication: master->relicas
+
+- Issue: DB high volume of data
+  - Solution: **partitioning**
+    - sharding data to multiple servers
+
+- Issue: request hit DB
+  - Solution: **Cache**
+    - cache data in memory
+
+### Security
+
+- Issue: unauthorized request
+  - Solution: **Authentication**
+    - use api_token in header
+
+- Issue: abusive user
+  - Solution: **rate limiter**
+    - throttle request
+
+### Specific issue
+
+- Issue: Sort post in feed
+  - Solution: **Snowflake algorithm**
+    - timestemp_region_serverSequence
+
+- Issue: push or pull mode
+  - Solution: **hybrid**
+    - push mode: generate feed when post publish
+    - pull mode: generate feed when user pull feed
+    - hybrid:
+      - active user: push
+      - inactive user: pull
+
+- Issues: Feed update time consuming(celebrity)
+  - Solution: **MQ decouple**
+    - fanout server to decouple feed update per user
+    - feed worker handle specific feed generations
+
+### Diagram
+
+![feed](./img/feed.drawio.png)
+
+---
+
+## Step 6 - wrap up
+
+- features
+- no-functions
+- open issue
+- road map
+
+---
+
+## Reference
 
 ## Step 1 - Understand the problem and establish design scope
 
