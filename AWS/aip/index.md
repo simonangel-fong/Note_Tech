@@ -5,6 +5,7 @@
 - [AWS Certified Generative AI Developer - Professional (AIP-C01)](#aws-certified-generative-ai-developer---professional-aip-c01)
   - [Common services for AI application](#common-services-for-ai-application)
   - [Monitoring](#monitoring)
+  - [Security \& Compliance](#security--compliance)
 
 ---
 
@@ -90,3 +91,13 @@ Optimization
 - [CloudTrail](./cloudtrail/cloudtrail.md)
 - [X-Ray](./x_ray/x_ray.md)
 - [Lake Formation](./lake_formation/lake_formation.md)
+
+---
+
+## Security & Compliance
+
+[Security](./security/security.md)
+
+- [IAM](./iam/iam.md)
+- [Control Tower](./control_tower/control_tower.md)
+- [KMS](./kms/kms.md)
